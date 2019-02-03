@@ -47,7 +47,7 @@ function finit()
 function form()
 {
   let group = this;
-  _.assert( group.sys instanceof _.AbstractGraphSystem );
+  _.assert( group.sys instanceof group.System );
   _.arrayAppendOnceStrictly( group.sys.groups, group );
 }
 
@@ -1089,6 +1089,6 @@ _.Copyable.mixin( Self );
 
 if( typeof module !== 'undefined' && module !== null )
 module[ 'exports' ] = Self;
-_[ Self.shortName ] = Self;
+_.graph[ Self.shortName ] = Self;
 
 })();

@@ -7,7 +7,7 @@
 Graph :: set of nodes and set of edges or arcs connecting some or all nodes.
 Incident edges :: of the node, are edges connected to the node.
 Connected nodes :: nodes are connected if them have edge connecting both of them.
-Reachable :: node v is reachable from u if there is a path from v to u.
+Reachable node :: node v is reachable from u if there is a path from v to u.
 DFS :: depth-first search.
 BFS :: breadth-first search.
 DAG :: directed acycled graph.
@@ -206,8 +206,7 @@ let Restricts =
 
 let Statics =
 {
-  Node : _.AbstractGraphNode,
-  Group : _.AbstractGraphGroup,
+  Group : _.graph.AbstractGraphGroup,
 }
 
 // --
@@ -271,10 +270,17 @@ _.classDeclare
 
 _.Copyable.mixin( Self );
 
+_.staticDecalre
+({
+  prototype : _.graph.AbstractGraphGroup.prototype,
+  name : 'System',
+  value : Self,
+});
+
 //
 
 if( typeof module !== 'undefined' && module !== null )
 module[ 'exports' ] = Self;
-_[ Self.shortName ] = Self;
+_.graph[ Self.shortName ] = Self;
 
 })();

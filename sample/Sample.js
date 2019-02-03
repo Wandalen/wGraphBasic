@@ -1,5 +1,6 @@
 
-let _ = require( '..' );
+require( '..' );
+let _ = wTools;
 
 /**/
 
@@ -25,17 +26,18 @@ h.nodes.push( i ); // 8
 i.nodes.push( f, h ); // 9
 j.nodes.push(); // 10
 
-var sys = new _.AbstractGraphSystem();
+var sys = new _.graph.AbstractGraphSystem();
 var group = sys.groupMake();
 
 group.nodesAdd([ a, b, c, d, e, f, g, h, i, j ]);
-logger.log( group.exportInfo() );
+console.log( group.exportInfo() );
 
 /*
 xxx
 */
 
 var layers = group.topologicalSortSourceBasedBfs();
+console.log( layers.map( ( nodes ) => group.nodesToNames( nodes ) ) );
 
 /*
 [

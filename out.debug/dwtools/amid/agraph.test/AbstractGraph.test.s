@@ -22,7 +22,7 @@ function makeByNodes( test )
 
   test.case = 'init, add, delete, finit';
 
-  var sys = new _.AbstractGraphSystem();
+  var sys = new _.graph.AbstractGraphSystem();
   var group = sys.groupMake();
 
   test.is( sys === group.sys );
@@ -73,7 +73,7 @@ function makeByNodes( test )
 
   test.case = 'nodesDelete';
 
-  var sys = new _.AbstractGraphSystem();
+  var sys = new _.graph.AbstractGraphSystem();
   var group = sys.groupMake();
 
   var a = { name : 'a', nodes : [] }
@@ -137,7 +137,7 @@ function clone( test )
   c.nodes.push( a, e );
   e.nodes.push( c );
 
-  var sys = new _.AbstractGraphSystem();
+  var sys = new _.graph.AbstractGraphSystem();
   var group = sys.groupMake();
   group.nodesAdd([ a, b, c, d, e ]);
   var group2 = group.clone();
@@ -182,7 +182,7 @@ function clone( test )
   c.nodes.push( a, e );
   e.nodes.push( c );
 
-  var sys = new _.AbstractGraphSystem();
+  var sys = new _.graph.AbstractGraphSystem();
   var group = sys.groupMake();
   group.nodesAdd([ a, b, c, d, e ]);
   var group2 = group.clone();
@@ -261,7 +261,7 @@ function reverse( test )
   c.nodes.push( e );
   e.nodes.push( b );
 
-  var sys = new _.AbstractGraphSystem();
+  var sys = new _.graph.AbstractGraphSystem();
   var group = sys.groupMake();
   group.nodesAdd([ a, b, c, d, e ]);
   var group2 = group.clone();
@@ -359,7 +359,7 @@ function sinksAmong( test )
   i.nodes.push( f, h ); // 9
   j.nodes.push(); // 10
 
-  var sys = new _.AbstractGraphSystem();
+  var sys = new _.graph.AbstractGraphSystem();
   var group = sys.groupMake();
 
   group.nodesAdd([ a, b, c, d, e, f, g, h, i, j ]);
@@ -398,7 +398,7 @@ function sourcesAmong( test )
   i.nodes.push( f, h ); // 9
   j.nodes.push(); // 10
 
-  var sys = new _.AbstractGraphSystem();
+  var sys = new _.graph.AbstractGraphSystem();
   var group = sys.groupMake();
 
   group.nodesAdd([ a, b, c, d, e, f, g, h, i, j ]);
@@ -463,7 +463,7 @@ function lookDfs( test )
   i.nodes.push( f, h ); // 9
   j.nodes.push(); // 10
 
-  var sys = new _.AbstractGraphSystem();
+  var sys = new _.graph.AbstractGraphSystem();
   var group = sys.groupMake();
 
   group.nodesAdd([ a, b, c, d, e, f, g, h, i, j ]);
@@ -579,7 +579,7 @@ function lookBfs( test )
   i.nodes.push( f, h ); // 9
   j.nodes.push(); // 10
 
-  var sys = new _.AbstractGraphSystem();
+  var sys = new _.graph.AbstractGraphSystem();
   var group = sys.groupMake();
 
   group.nodesAdd([ a, b, c, d, e, f, g, h, i, j ]);
@@ -760,7 +760,7 @@ function topologicalSortDfs( test )
   e.nodes.push( f );
   f.nodes.push();
 
-  var sys = new _.AbstractGraphSystem();
+  var sys = new _.graph.AbstractGraphSystem();
   var group = sys.groupMake();
   group.nodesAdd([ a, b, c, d, e, f ]);
   logger.log( 'DAG' )
@@ -804,7 +804,7 @@ function topologicalSortSourceBasedBfs( test )
   i.nodes.push( f, h ); // 9
   j.nodes.push(); // 10
 
-  var sys = new _.AbstractGraphSystem();
+  var sys = new _.graph.AbstractGraphSystem();
   var group = sys.groupMake();
 
   group.nodesAdd([ a, b, c, d, e, f, g, h, i, j ]);
@@ -890,7 +890,7 @@ function nodesAreConnectedDfs( test )
   g.nodes.push( f, h );
   h.nodes.push( g );
 
-  var sys = new _.AbstractGraphSystem();
+  var sys = new _.graph.AbstractGraphSystem();
   var group = sys.groupMake();
   group.nodesAdd([ a, b, c, d, e, f, g, h ]);
   test.identical( group.nodes.length, 8 );
@@ -945,7 +945,7 @@ function groupByConnectivityDfs( test )
 
   test.case = 'setup';
 
-  var sys = new _.AbstractGraphSystem();
+  var sys = new _.graph.AbstractGraphSystem();
   var group = sys.groupMake();
 
   var a = { name : 'a', nodes : [] } // 1
@@ -1005,7 +1005,7 @@ function groupByStrongConnectivityDfs( test )
   10 :
 */
 
-  var sys = new _.AbstractGraphSystem();
+  var sys = new _.graph.AbstractGraphSystem();
   var group = sys.groupMake();
 
   // 3, 2, 5, 1 -> c, b, e, a
