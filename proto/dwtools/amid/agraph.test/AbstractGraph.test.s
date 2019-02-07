@@ -37,6 +37,7 @@ function makeByNodes( test )
   a.nodes.push( b, c );
   b.nodes.push( a );
   c.nodes.push( a, e );
+  d.nodes.push();
   e.nodes.push( c );
 
   test.identical( group.nodeHas( a ), false );
@@ -85,9 +86,147 @@ function makeByNodes( test )
   a.nodes.push( b, c );
   b.nodes.push( a );
   c.nodes.push( a, e );
+  d.nodes.push();
   e.nodes.push( c );
 
+  test.identical( group.nodeHas( a ), false );
+  test.identical( sys.nodeHas( a ), false );
+
   group.nodesAdd([ a, b, c, d, e ]);
+
+  test.identical( sys.nodeDescriptorsHash.size, 0 );
+  test.identical( sys.idToNodeHash.size, 5 );
+  test.identical( sys.nodeToIdHash.size, 5 );
+  test.identical( group.nodes.length, 5 );
+  test.identical( group.nodesToIds( group.nodes ), [ 1, 2, 3, 4, 5 ] );
+  logger.log( group.exportInfo() );
+
+  group.nodesDelete([ a, d, e ]);
+  test.identical( sys.nodeDescriptorsHash.size, 0 );
+  test.identical( sys.idToNodeHash.size, 2 );
+  test.identical( sys.nodeToIdHash.size, 2 );
+  test.identical( group.nodes.length, 2 );
+  test.identical( group.nodesToIds( group.nodes ), [ 2, 3 ] );
+  logger.log( group.exportInfo() );
+
+  group.nodesDelete();
+  test.identical( sys.nodeDescriptorsHash.size, 0 );
+  test.identical( sys.idToNodeHash.size, 0 );
+  test.identical( sys.nodeToIdHash.size, 0 );
+  test.identical( group.nodes.length, 0 );
+  test.identical( group.nodesToIds( group.nodes ), [] );
+  logger.log( group.exportInfo() );
+
+  group.finit();
+  test.identical( sys.nodeDescriptorsHash.size, 0 );
+  test.identical( sys.idToNodeHash.size, 0 );
+  test.identical( sys.nodeToIdHash.size, 0 );
+  sys.finit();
+
+}
+
+//
+
+function makeByNodesWithInts( test )
+{
+
+  test.case = 'init, add, delete, finit';
+
+  var sys = new _.graph.AbstractGraphSystem();
+  var group = sys.groupMake();
+
+  group.onOutNodesFor = function onOutNodesFor( node )
+  {
+    _.assert( arguments.length === 1 );
+    _.assert( 11 <= node && node < 11+nodes.length );
+    let result = nodes[ node-11 ];
+    _.assert( _.arrayIs( result ) );
+    return result;
+  }
+
+  test.is( sys === group.sys );
+  test.identical( sys.groups.length, 1 );
+
+  var a = 11;
+  var b = 12;
+  var c = 13;
+  var d = 14;
+  var e = 15;
+
+  var nodes = [];
+  nodes[ 0 ] = [ b, c ];
+  nodes[ 1 ] = [ a ];
+  nodes[ 2 ] = [ a, e ];
+  nodes[ 3 ] = [];
+  nodes[ 4 ] = [ c ];
+
+  test.identical( group.nodeHas( a ), false );
+  test.identical( sys.nodeHas( a ), false );
+
+  group.nodesAdd([ a, b, c, d, e ]);
+
+  test.identical( group.nodeHas( a ), true );
+  test.identical( sys.nodeHas( a ), true );
+
+  test.identical( sys.nodeDescriptorsHash.size, 0 );
+  test.identical( sys.idToNodeHash.size, 5 );
+  test.identical( sys.nodeToIdHash.size, 5 );
+  test.identical( group.nodes.length, 5 );
+  test.identical( group.nodesToIds( group.nodes ), [ 1, 2, 3, 4, 5 ] );
+  logger.log( group.exportInfo() );
+
+  group.nodeDelete( d );
+  test.identical( sys.nodeDescriptorsHash.size, 0 );
+  test.identical( sys.idToNodeHash.size, 4 );
+  test.identical( sys.nodeToIdHash.size, 4 );
+  test.identical( group.nodes.length, 4 );
+  test.identical( group.nodesToIds( group.nodes ), [ 1, 2, 3, 5 ] );
+  logger.log( group.exportInfo() );
+
+  group.finit();
+  test.identical( sys.nodeDescriptorsHash.size, 0 );
+  test.identical( sys.idToNodeHash.size, 0 );
+  test.identical( sys.nodeToIdHash.size, 0 );
+  test.identical( group.sys.groups.length, 0 );
+  sys.finit();
+
+  /* */
+
+  test.case = 'nodesDelete';
+
+  var sys = new _.graph.AbstractGraphSystem();
+  var group = sys.groupMake();
+
+  group.onOutNodesFor = function onOutNodesFor( node )
+  {
+    _.assert( arguments.length === 1 );
+    _.assert( 11 <= node && node < 11+nodes.length );
+    let result = nodes[ node-11 ];
+    _.assert( _.arrayIs( result ) );
+    return result;
+  }
+
+  test.is( sys === group.sys );
+  test.identical( sys.groups.length, 1 );
+
+  var a = 11;
+  var b = 12;
+  var c = 13;
+  var d = 14;
+  var e = 15;
+
+  var nodes = [];
+  nodes[ 0 ] = [ b, c ];
+  nodes[ 1 ] = [ a ];
+  nodes[ 2 ] = [ a, e ];
+  nodes[ 3 ] = [];
+  nodes[ 4 ] = [ c ];
+
+  test.identical( group.nodeHas( a ), false );
+  test.identical( sys.nodeHas( a ), false );
+
+  group.nodesAdd([ a, b, c, d, e ]);
+
   test.identical( sys.nodeDescriptorsHash.size, 0 );
   test.identical( sys.idToNodeHash.size, 5 );
   test.identical( sys.nodeToIdHash.size, 5 );
@@ -266,8 +405,7 @@ function reverse( test )
   group.nodesAdd([ a, b, c, d, e ]);
   var group2 = group.clone();
 
-  group2.onReverseNeighbourNodesGet = group2.cahcedOnReverseNeighbourNodesGet;
-  group2.cacheReverseFromDirectNeigbourNodes();
+  group2.cacheInNodesFromOutNodes();
   group2.reverse();
 
   logger.log( 'direct' );
@@ -285,13 +423,13 @@ function reverse( test )
   test.identical( group.nodesToIds( group.nodes ), [ 1, 2, 3, 4, 5 ] );
   test.identical( group2.nodesToIds( group2.nodes ), [ 1, 2, 3, 4, 5 ] );
   var expected = [ [ 2, 3 ], [ 1 ], [ 5 ], [], [ 2 ] ];
-  var neighbours = group.nodesDirectNeigbourNodesGet( group.nodes ).map( ( nodes ) => group.nodesToIds( nodes ) );
+  var neighbours = group.nodesOutNodesFor( group.nodes ).map( ( nodes ) => group.nodesToIds( nodes ) );
   test.identical( neighbours, expected );
   var expected = [ [ 2 ], [ 1, 5 ], [ 1 ], [], [ 3 ] ];
-  var neighbours = group2.nodesDirectNeigbourNodesGet( group2.nodes ).map( ( nodes ) => group2.nodesToIds( nodes ) );
+  var neighbours = group2.nodesOutNodesFor( group2.nodes ).map( ( nodes ) => group2.nodesToIds( nodes ) );
   test.identical( neighbours, expected );
   var expected = [ [ 2, 3 ], [ 1 ], [ 5 ], [], [ 2 ] ];
-  var neighbours = group2.nodesReverseNeigbourNodesGet( group2.nodes ).map( ( nodes ) => group2.nodesToIds( nodes ) );
+  var neighbours = group2.nodesInNodesFor( group2.nodes ).map( ( nodes ) => group2.nodesToIds( nodes ) );
   test.identical( neighbours, expected );
 
   group2.reverse();
@@ -305,13 +443,13 @@ function reverse( test )
   test.identical( group.nodesToIds( group.nodes ), [ 1, 2, 3, 4, 5 ] );
   test.identical( group2.nodesToIds( group2.nodes ), [ 1, 2, 3, 4, 5 ] );
   var expected = [ [ 2, 3 ], [ 1 ], [ 5 ], [], [ 2 ] ];
-  var neighbours = group.nodesDirectNeigbourNodesGet( group.nodes ).map( ( nodes ) => group.nodesToIds( nodes ) );
+  var neighbours = group.nodesOutNodesFor( group.nodes ).map( ( nodes ) => group.nodesToIds( nodes ) );
   test.identical( neighbours, expected );
   var expected = [ [ 2, 3 ], [ 1 ], [ 5 ], [], [ 2 ] ];
-  var neighbours = group2.nodesDirectNeigbourNodesGet( group2.nodes ).map( ( nodes ) => group2.nodesToIds( nodes ) );
+  var neighbours = group2.nodesOutNodesFor( group2.nodes ).map( ( nodes ) => group2.nodesToIds( nodes ) );
   test.identical( neighbours, expected );
   var expected = [ [ 2 ], [ 1, 5 ], [ 1 ], [], [ 3 ] ];
-  var neighbours = group2.nodesReverseNeigbourNodesGet( group2.nodes ).map( ( nodes ) => group2.nodesToIds( nodes ) );
+  var neighbours = group2.nodesInNodesFor( group2.nodes ).map( ( nodes ) => group2.nodesToIds( nodes ) );
   test.identical( neighbours, expected );
 
   group.finit();
@@ -332,7 +470,7 @@ function reverse( test )
 
 //
 
-function sinksAmong( test )
+function sinksOnlyAmong( test )
 {
 
   test.case = 'setup';
@@ -363,7 +501,7 @@ function sinksAmong( test )
   var group = sys.groupMake();
 
   group.nodesAdd([ a, b, c, d, e, f, g, h, i, j ]);
-  var got = group.sinksAmong();
+  var got = group.sinksOnlyAmong();
   var expected = [ 'f', 'j' ];
   test.identical( group.nodesToNames( got ), expected );
 
@@ -371,7 +509,7 @@ function sinksAmong( test )
 
 //
 
-function sourcesAmong( test )
+function sourcesOnlyAmong( test )
 {
 
   test.case = 'setup';
@@ -402,8 +540,193 @@ function sourcesAmong( test )
   var group = sys.groupMake();
 
   group.nodesAdd([ a, b, c, d, e, f, g, h, i, j ]);
-  var got = group.sourcesAmong();
+  var got = group.sourcesOnlyAmong();
   var expected = [ 'd', 'j' ];
+  test.identical( group.nodesToNames( got ), expected );
+
+}
+
+//
+
+function leastMostDegreeAmong( test )
+{
+
+  test.case = 'setup';
+
+  var a = { name : 'a', nodes : [] } // 1
+  var b = { name : 'b', nodes : [] } // 2
+  var c = { name : 'c', nodes : [] } // 3
+  var d = { name : 'd', nodes : [] } // 4
+  var e = { name : 'e', nodes : [] } // 5
+  var f = { name : 'f', nodes : [] } // 6
+  var g = { name : 'g', nodes : [] } // 7
+  var h = { name : 'h', nodes : [] } // 8
+  var i = { name : 'i', nodes : [] } // 9
+  var j = { name : 'j', nodes : [] } // 10
+
+  a.nodes.push( b ); // 1
+  b.nodes.push( e, f ); // 2
+  c.nodes.push( b ); // 3
+  d.nodes.push( a, g ); // 4
+  e.nodes.push( a, c, h ); // 5
+  f.nodes.push(); // 6
+  g.nodes.push( h ); // 7
+  h.nodes.push( i ); // 8
+  i.nodes.push( f, h ); // 9
+  j.nodes.push(); // 10
+
+  var sys = new _.graph.AbstractGraphSystem();
+  var group = sys.groupMake();
+  group.nodesAdd([ a, b, c, d, e, f, g, h, i, j ]);
+
+  test.case = 'all nodes';
+
+  var got = group.leastIndegreeAmong();
+  var expected = 0;
+  test.identical( got, expected );
+  var got = group.leastIndegreeOnlyAmong();
+  var expected = [ 'd', 'j' ];
+  test.identical( group.nodesToNames( got ), expected );
+
+  var got = group.mostIndegreeAmong();
+  var expected = 3;
+  test.identical( got, expected );
+  var got = group.mostIndegreeOnlyAmong();
+  var expected = [ 'h' ];
+  test.identical( group.nodesToNames( got ), expected );
+
+  var got = group.leastOutdegreeAmong();
+  var expected = 0;
+  test.identical( got, expected );
+  var got = group.leastOutdegreeOnlyAmong();
+  var expected = [ 'f', 'j' ];
+  test.identical( group.nodesToNames( got ), expected );
+
+  var got = group.mostOutdegreeAmong();
+  var expected = 3;
+  test.identical( got, expected );
+  var got = group.mostOutdegreeOnlyAmong();
+  var expected = [ 'e' ];
+  test.identical( group.nodesToNames( got ), expected );
+
+  test.case = 'no least indegree';
+
+  var got = group.leastIndegreeAmong([ a, b, c, e, f, g, h, i ]);
+  var expected = 1;
+  test.identical( got, expected );
+  var got = group.leastIndegreeOnlyAmong([ a, b, c, e, f, g, h, i ]);
+  var expected = [ 'c', 'e', 'g', 'i' ];
+  test.identical( group.nodesToNames( got ), expected );
+
+  var got = group.mostIndegreeAmong([ a, b, c, e, f, g, h, i ]);
+  var expected = 3;
+  test.identical( got, expected );
+  var got = group.mostIndegreeOnlyAmong([ a, b, c, e, f, g, h, i ]);
+  var expected = [ 'h' ];
+  test.identical( group.nodesToNames( got ), expected );
+
+  var got = group.leastOutdegreeAmong([ a, b, c, e, f, g, h, i ]);
+  var expected = 0;
+  test.identical( got, expected );
+  var got = group.leastOutdegreeOnlyAmong([ a, b, c, e, f, g, h, i ]);
+  var expected = [ 'f' ];
+  test.identical( group.nodesToNames( got ), expected );
+
+  var got = group.mostOutdegreeAmong([ a, b, c, e, f, g, h, i ]);
+  var expected = 3;
+  test.identical( got, expected );
+  var got = group.mostOutdegreeOnlyAmong([ a, b, c, e, f, g, h, i ]);
+  var expected = [ 'e' ];
+  test.identical( group.nodesToNames( got ), expected );
+
+  test.case = 'no most indegree';
+
+  var got = group.leastIndegreeAmong([ a, b, c, d, e, f, g, i, j ]);
+  var expected = 0;
+  test.identical( got, expected );
+  var got = group.leastIndegreeOnlyAmong([ a, b, c, d, e, f, g, i, j ]);
+  var expected = [ 'd', 'j' ];
+  test.identical( group.nodesToNames( got ), expected );
+
+  var got = group.mostIndegreeAmong([ a, b, c, d, e, f, g, i, j ]);
+  var expected = 2;
+  test.identical( got, expected );
+  var got = group.mostIndegreeOnlyAmong([ a, b, c, d, e, f, g, i, j ]);
+  var expected = [ 'a', 'b', 'f' ];
+  test.identical( group.nodesToNames( got ), expected );
+
+  var got = group.leastOutdegreeAmong([ a, b, c, d, e, f, g, i, j ]);
+  var expected = 0;
+  test.identical( got, expected );
+  var got = group.leastOutdegreeOnlyAmong([ a, b, c, d, e, f, g, i, j ]);
+  var expected = [ 'f', 'j' ];
+  test.identical( group.nodesToNames( got ), expected );
+
+  var got = group.mostOutdegreeAmong([ a, b, c, d, e, f, g, i, j ]);
+  var expected = 3;
+  test.identical( got, expected );
+  var got = group.mostOutdegreeOnlyAmong([ a, b, c, d, e, f, g, i, j ]);
+  var expected = [ 'e' ];
+  test.identical( group.nodesToNames( got ), expected );
+
+  test.case = 'no leasr outdegree';
+
+  var got = group.leastIndegreeAmong([ a, b, c, d, e, g, h, i ]);
+  var expected = 0;
+  test.identical( got, expected );
+  var got = group.leastIndegreeOnlyAmong([ a, b, c, d, e, g, h, i ]);
+  var expected = [ 'd' ];
+  test.identical( group.nodesToNames( got ), expected );
+
+  var got = group.mostIndegreeAmong([ a, b, c, d, e, g, h, i ]);
+  var expected = 3;
+  test.identical( got, expected );
+  var got = group.mostIndegreeOnlyAmong([ a, b, c, d, e, g, h, i ]);
+  var expected = [ 'h' ];
+  test.identical( group.nodesToNames( got ), expected );
+
+  var got = group.leastOutdegreeAmong([ a, b, c, d, e, g, h, i ]);
+  var expected = 1;
+  test.identical( got, expected );
+  var got = group.leastOutdegreeOnlyAmong([ a, b, c, d, e, g, h, i ]);
+  var expected = [ 'a', 'c', 'g', 'h' ];
+  test.identical( group.nodesToNames( got ), expected );
+
+  var got = group.mostOutdegreeAmong([ a, b, c, d, e, g, h, i ]);
+  var expected = 3;
+  test.identical( got, expected );
+  var got = group.mostOutdegreeOnlyAmong([ a, b, c, d, e, g, h, i ]);
+  var expected = [ 'e' ];
+  test.identical( group.nodesToNames( got ), expected );
+
+  test.case = 'no most outdegree';
+
+  var got = group.leastIndegreeAmong([ a, b, c, d, f, g, h, i, j ]);
+  var expected = 0;
+  test.identical( got, expected );
+  var got = group.leastIndegreeOnlyAmong([ a, b, c, d, f, g, h, i, j ]);
+  var expected = [ 'd', 'j' ];
+  test.identical( group.nodesToNames( got ), expected );
+
+  var got = group.mostIndegreeAmong([ a, b, c, d, f, g, h, i, j ]);
+  var expected = 3;
+  test.identical( got, expected );
+  var got = group.mostIndegreeOnlyAmong([ a, b, c, d, f, g, h, i, j ]);
+  var expected = [ 'h' ];
+  test.identical( group.nodesToNames( got ), expected );
+
+  var got = group.leastOutdegreeAmong([ a, b, c, d, f, g, h, i, j ]);
+  var expected = 0;
+  test.identical( got, expected );
+  var got = group.leastOutdegreeOnlyAmong([ a, b, c, d, f, g, h, i, j ]);
+  var expected = [ 'f', 'j' ];
+  test.identical( group.nodesToNames( got ), expected );
+
+  var got = group.mostOutdegreeAmong([ a, b, c, d, f, g, h, i, j ]);
+  var expected = 2;
+  test.identical( got, expected );
+  var got = group.mostOutdegreeOnlyAmong([ a, b, c, d, f, g, h, i, j ]);
+  var expected = [ 'b', 'd', 'i' ];
   test.identical( group.nodesToNames( got ), expected );
 
 }
@@ -808,7 +1131,6 @@ function topologicalSortSourceBasedBfs( test )
   var group = sys.groupMake();
 
   group.nodesAdd([ a, b, c, d, e, f, g, h, i, j ]);
-  test.identical( group.nodes.length, 10 );
   logger.log( group.exportInfo() );
 
   /* */
@@ -847,6 +1169,20 @@ function topologicalSortSourceBasedBfs( test )
 
   /* */
 
+  test.case = 'not j, not d';
+
+  var layers = group.topologicalSortSourceBasedBfs([ a, b, c, e, f, g, h, i ]);
+
+  var expected =
+  [
+    [ 'c', 'e', 'g', 'i' ],
+    [ 'b', 'a', 'h', 'f' ]
+  ];
+
+  test.identical( layers.map( ( nodes ) => group.nodesToNames( nodes ) ), expected );
+
+  /* */
+
   test.case = 'c, e';
 
   var layers = group.topologicalSortSourceBasedBfs([ c, e ]);
@@ -856,6 +1192,167 @@ function topologicalSortSourceBasedBfs( test )
     [ 'c', 'e' ],
     [ 'b', 'a', 'h' ],
     [ 'f', 'i' ],
+  ];
+
+  test.identical( layers.map( ( nodes ) => group.nodesToNames( nodes ) ), expected );
+
+  /* */
+
+  sys.finit();
+  test.case = 'setup';
+
+  var a = { name : 'a', nodes : [] } // 1
+  var b = { name : 'b', nodes : [] } // 2
+  var c = { name : 'c', nodes : [] } // 3
+
+  a.nodes.push( b, c ); // 1
+  b.nodes.push( a ); // 2
+  c.nodes.push(); // 3
+
+  var sys = new _.graph.AbstractGraphSystem();
+  var group = sys.groupMake();
+
+  group.nodesAdd([ a, b, c ]);
+  logger.log( group.exportInfo() );
+
+  /* */
+
+  var layers = group.topologicalSortSourceBasedBfs();
+
+  var expected =
+  [
+    [ 'a', 'b', 'c' ],
+  ];
+
+  test.identical( layers.map( ( nodes ) => group.nodesToNames( nodes ) ), expected );
+
+  /* */
+
+  sys.finit();
+
+}
+
+//
+
+function topologicalSortCycledSourceBasedBfs( test )
+{
+
+  test.case = 'setup';
+
+  var a = { name : 'a', nodes : [] } // 1
+  var b = { name : 'b', nodes : [] } // 2
+  var c = { name : 'c', nodes : [] } // 3
+  var d = { name : 'd', nodes : [] } // 4
+  var e = { name : 'e', nodes : [] } // 5
+  var f = { name : 'f', nodes : [] } // 6
+  var g = { name : 'g', nodes : [] } // 7
+  var h = { name : 'h', nodes : [] } // 8
+  var i = { name : 'i', nodes : [] } // 9
+  var j = { name : 'j', nodes : [] } // 10
+
+  a.nodes.push( b ); // 1
+  b.nodes.push( e, f ); // 2
+  c.nodes.push( b ); // 3
+  d.nodes.push( a, g ); // 4
+  e.nodes.push( a, c, h ); // 5
+  f.nodes.push(); // 6
+  g.nodes.push( h ); // 7
+  h.nodes.push( i ); // 8
+  i.nodes.push( f, h ); // 9
+  j.nodes.push(); // 10
+
+  var sys = new _.graph.AbstractGraphSystem();
+  var group = sys.groupMake();
+
+  group.nodesAdd([ a, b, c, d, e, f, g, h, i, j ]);
+  logger.log( group.exportInfo() );
+
+  /* */
+
+  test.case = 'all';
+
+  var layers = group.topologicalSortCycledSourceBasedBfs();
+
+  var expected =
+  [
+    [ 'j', 'd' ],
+    [ 'a', 'g' ],
+    [ 'b', 'h' ],
+    [ 'e', 'f', 'i' ],
+    [ 'c' ]
+  ]
+
+  test.identical( layers.map( ( nodes ) => group.nodesToNames( nodes ) ), expected );
+
+  /* */
+
+  test.case = 'not j';
+
+  var layers = group.topologicalSortCycledSourceBasedBfs([ a, b, c, d, e, f, g, h, i ]);
+
+  var expected =
+  [
+    [ 'd' ],
+    [ 'a', 'g' ],
+    [ 'b', 'h' ],
+    [ 'e', 'f', 'i' ],
+    [ 'c' ]
+  ]
+
+  test.identical( layers.map( ( nodes ) => group.nodesToNames( nodes ) ), expected );
+
+  /* */
+
+  test.case = 'not j, not d';
+
+  var layers = group.topologicalSortCycledSourceBasedBfs([ a, b, c, e, f, g, h, i ]);
+
+  var expected =
+  [
+    [ 'd' ],
+    [ 'a', 'g' ],
+    [ 'b', 'h' ],
+    [ 'e', 'f', 'i' ],
+    [ 'c' ]
+  ];
+
+  test.identical( layers.map( ( nodes ) => group.nodesToNames( nodes ) ), expected );
+
+  /* */
+
+  test.case = 'c, e';
+
+  test.shouldThrowErrorSync( () => group.topologicalSortCycledSourceBasedBfs([ c, e ]) );
+
+  var expected = [];
+
+  /* */
+
+  sys.finit();
+  test.case = 'setup';
+
+  var a = { name : 'a', nodes : [] } // 1
+  var b = { name : 'b', nodes : [] } // 2
+  var c = { name : 'c', nodes : [] } // 3
+
+  a.nodes.push( b, c ); // 1
+  b.nodes.push( a ); // 2
+  c.nodes.push(); // 3
+
+  var sys = new _.graph.AbstractGraphSystem();
+  var group = sys.groupMake();
+
+  group.nodesAdd([ a, b, c ]);
+  logger.log( group.exportInfo() );
+
+  /* */
+
+  var layers = group.topologicalSortCycledSourceBasedBfs();
+
+  var expected =
+  [
+    [ 'a', 'b' ],
+    [ 'c' ],
   ];
 
   test.identical( layers.map( ( nodes ) => group.nodesToNames( nodes ) ), expected );
@@ -1005,9 +1502,6 @@ function groupByStrongConnectivityDfs( test )
   10 :
 */
 
-  var sys = new _.graph.AbstractGraphSystem();
-  var group = sys.groupMake();
-
   // 3, 2, 5, 1 -> c, b, e, a
 
   var a = { name : 'a', nodes : [] } // 1
@@ -1032,6 +1526,8 @@ function groupByStrongConnectivityDfs( test )
   i.nodes.push( f, h ); // 9
   j.nodes.push(); // 10
 
+  var sys = new _.graph.AbstractGraphSystem();
+  var group = sys.groupMake();
   group.nodesAdd([ a, b, c, d, e, f, g, h, i, j ]);
   test.identical( group.nodes.length, 10 );
   logger.log( group.exportInfo() );
@@ -1048,6 +1544,116 @@ function groupByStrongConnectivityDfs( test )
 
 //
 
+function stronglyConnectedTreeForDfs( test )
+{
+
+  /* - */
+
+  test.case = 'trivial';
+
+  var a = { name : 'a', nodes : [] } // 1
+  var b = { name : 'b', nodes : [] } // 2
+  var c = { name : 'c', nodes : [] } // 3
+
+  a.nodes.push( b, c ); // 1
+  b.nodes.push( a ); // 2
+  c.nodes.push(); // 3
+
+  var sys = new _.graph.AbstractGraphSystem();
+  var group = sys.groupMake();
+
+  group.nodesAdd([ a, b, c ]);
+  logger.log( 'Original' );
+  logger.log( group.exportInfo() );
+
+  /* */
+
+  var group2 = group.stronglyConnectedTreeForDfs();
+
+  var originalNodes = group2.nodes.map( ( node ) => sys.idsToNodes( node.originalNodes ) );
+  var originalNodesNames = originalNodes.map( ( node ) => group.nodesToNames( node ) );
+  var expected = [ [ 'c' ], [ 'a', 'b' ] ];
+  test.identical( originalNodesNames, expected );
+
+  var outNodes = group2.nodes.map( ( node ) => node.outNodes );
+  var expected = [ [], [ 4 ] ];
+  test.identical( outNodes, expected );
+
+  logger.log( 'Tree' );
+  logger.log( group2.exportInfo() );
+
+  sys.finit();
+
+  /* - */
+
+  var a = { name : 'a', nodes : [] } // 1
+  var b = { name : 'b', nodes : [] } // 2
+  var c = { name : 'c', nodes : [] } // 3
+  var d = { name : 'd', nodes : [] } // 4
+  var e = { name : 'e', nodes : [] } // 5
+  var f = { name : 'f', nodes : [] } // 6
+  var g = { name : 'g', nodes : [] } // 7
+  var h = { name : 'h', nodes : [] } // 8
+  var i = { name : 'i', nodes : [] } // 9
+  var j = { name : 'j', nodes : [] } // 10
+
+  a.nodes.push( b ); // 1
+  b.nodes.push( e, f ); // 2
+  c.nodes.push( b ); // 3
+  d.nodes.push( a, g ); // 4
+  e.nodes.push( a, c, h ); // 5
+  f.nodes.push(); // 6
+  g.nodes.push( h ); // 7
+  h.nodes.push( i ); // 8
+  i.nodes.push( f, h ); // 9
+  j.nodes.push(); // 10
+
+  var sys = new _.graph.AbstractGraphSystem();
+  var group = sys.groupMake();
+  group.nodesAdd([ a, b, c, d, e, f, g, h, i, j ]);
+  logger.log( 'Original' );
+  logger.log( group.exportInfo() );
+
+  /* */
+
+  var group2 = group.stronglyConnectedTreeForDfs();
+
+  var originalNodes = group2.nodes.map( ( node ) => sys.idsToNodes( node.originalNodes ) );
+  var originalNodesNames = originalNodes.map( ( node ) => group.nodesToNames( node ) );
+  var expected =
+  [
+    [ 'j' ], // 11
+    [ 'f' ], // 12
+    [ 'i', 'h' ], // 13
+    [ 'g' ], // 14
+    [ 'a', 'b', 'e', 'c' ], // 15
+    [ 'd' ], // 16
+  ]
+  test.identical( originalNodesNames, expected );
+
+  var outNodes = group2.nodes.map( ( node ) => node.outNodes );
+  var expected =
+  [
+    [],
+    [],
+    [ 12 ],
+    [ 13 ],
+    [ 12, 13 ],
+    [ 15, 14 ]
+  ];
+  test.identical( outNodes, expected );
+
+  logger.log( 'Tree' );
+  logger.log( group2.exportInfo() );
+
+  sys.finit();
+
+  /* - */
+
+}
+
+//
+
 var Self =
 {
 
@@ -1058,20 +1664,25 @@ var Self =
   {
 
     makeByNodes,
+    makeByNodesWithInts,
     clone,
     reverse,
 
-    sinksAmong,
-    sourcesAmong,
+    sinksOnlyAmong,
+    sourcesOnlyAmong,
+    leastMostDegreeAmong,
+
     lookDfs,
     lookBfs,
 
     topologicalSortDfs,
     topologicalSortSourceBasedBfs,
+    topologicalSortCycledSourceBasedBfs,
 
     nodesAreConnectedDfs,
     groupByConnectivityDfs,
     groupByStrongConnectivityDfs,
+    stronglyConnectedTreeForDfs,
 
   },
 

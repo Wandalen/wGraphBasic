@@ -109,20 +109,17 @@ function reverse( val )
   if( group.direct === val )
   return group;
 
-  if( !val && !group.onReverseNeighbourNodesGet )
-  {
-    group.onReverseNeighbourNodesGet = group.cahcedOnReverseNeighbourNodesGet;
-    group.cacheReverseFromDirectNeigbourNodes();
-  }
+  if( !val && !group.onInNodesFor )
+  group.cacheInNodesFromOutNodes();
 
-  let onDirectNeighbourNodesGet = group.onDirectNeighbourNodesGet;
-  let onReverseNeighbourNodesGet = group.onReverseNeighbourNodesGet;
+  let onOutNodesFor = group.onOutNodesFor;
+  let onInNodesFor = group.onInNodesFor;
 
-  _.assert( _.routineIs( onDirectNeighbourNodesGet ), 'Direct neighbour nodes getter is not defined' );
-  _.assert( _.routineIs( onReverseNeighbourNodesGet ), 'Reverse neighbour nodes getter is not defined' );
+  _.assert( _.routineIs( onOutNodesFor ), 'Direct neighbour nodes getter is not defined' );
+  _.assert( _.routineIs( onInNodesFor ), 'Reverse neighbour nodes getter is not defined' );
 
-  group.onDirectNeighbourNodesGet = onReverseNeighbourNodesGet;
-  group.onReverseNeighbourNodesGet = onDirectNeighbourNodesGet;
+  group.onOutNodesFor = onInNodesFor;
+  group.onInNodesFor = onOutNodesFor;
 
   group[ directSymbol ] = val;
   return group;
@@ -130,28 +127,33 @@ function reverse( val )
 
 //
 
-function cacheReverseFromDirectNeigbourNodes()
+function cacheInNodesFromOutNodes()
 {
   let group = this;
   let nodes = group.nodes;
 
   _.assert( arguments.length === 0 );
 
-  if( group.cahceOfReverseNeighbourNodesHash )
+  if( group._inNodesCacheHash )
   return group;
 
-  group.cahceOfReverseNeighbourNodesHash = new Map();
+  if( !group.onInNodesFor )
+  group.onInNodesFor = group.fromCachedOnInNodesFor;
+  if( !group.onInNodesIdsFor )
+  group.onInNodesIdsFor = group.fromInNodesOnInNodesIdsFor;
+
+  group._inNodesCacheHash = new Map();
   group.nodes.forEach( ( nodeHandle1 ) =>
   {
-    group.cahceOfReverseNeighbourNodesHash.set( nodeHandle1, new Array );
+    group._inNodesCacheHash.set( nodeHandle1, new Array );
   });
 
   group.nodes.forEach( ( nodeHandle1 ) =>
   {
-    let directNeighbours = group.nodeDirectNeigbourNodesGet( nodeHandle1 );
+    let directNeighbours = group.nodeOutNodesFor( nodeHandle1 );
     directNeighbours.forEach( ( nodeHandle2 ) =>
     {
-      let reverseNeighbours = group.cahceOfReverseNeighbourNodesHash.get( nodeHandle2 );
+      let reverseNeighbours = group._inNodesCacheHash.get( nodeHandle2 );
       _.assert( !!reverseNeighbours, 'Node is not on the list of the graph group' );
       reverseNeighbours.push( nodeHandle1 );
     });
@@ -167,9 +169,9 @@ function cachesInvalidate()
   let group = this;
   debugger;
   _.assert( 'not tested' );
-  if( group.cahceOfReverseNeighbourNodesHash )
-  group.cahceOfReverseNeighbourNodesHash.clear();
-  group.cahceOfReverseNeighbourNodesHash = null;
+  if( group._inNodesCacheHash )
+  group._inNodesCacheHash.clear();
+  group._inNodesCacheHash = null;
   return group;
 }
 
@@ -189,7 +191,7 @@ function _exportData( it )
   let sys = group.sys;
 
   let result = Object.create( null );
-  result.nodeHandles = group.nodesExportData( group.nodes );
+  result./**/nodes = group.nodesExportData( group.nodes );
 
   return result;
 }
@@ -245,31 +247,83 @@ function nodeIs( nodeHandle )
 // nodeHandle
 // --
 
-function nodeDirectNeigbourNodesGet( nodeHandle )
+function nodeIndegree( nodeHandle )
+{
+  let group = this;
+  let nodes = group.nodeInNodesFor( nodeHandle );
+  return nodes.length;
+}
+
+//
+
+function nodeOutdegree( nodeHandle )
+{
+  let group = this;
+  let nodes = group.nodeOutNodesFor( nodeHandle );
+  return nodes.length;
+}
+
+//
+
+function nodeDegree( nodeHandle )
+{
+  let group = this;
+  let nodes1 = group.nodeInNodesFor( nodeHandle );
+  let nodes2 = group.nodeOutNodesFor( nodeHandle );
+  return nodes1.length + nodes2.length;
+}
+
+//
+
+function nodeOutNodesFor( nodeHandle )
+{
+  let group = this;
+  _.assert( !!group.nodeIs( nodeHandle ), 'Bad node' );
+  _.assert( arguments.length === 1 );
+  let result = group.onOutNodesFor( nodeHandle );
+  _.assert( _.arrayIs( result ), 'Bad node' );
+  return result;
+}
+
+//
+
+function nodeInNodesFor( nodeHandle )
+{
+  let group = this;
+  _.assert( !!group.nodeIs( nodeHandle ), 'Bad node' );
+  _.assert( arguments.length === 1 );
+  let result = group.onInNodesFor( nodeHandle );
+  _.assert( _.arrayIs( result ), 'Bad node' );
+  return result;
+}
+
+//
+
+function nodeOutNodesIdsFor( nodeHandle )
 {
   let group = this;
   _.assert( !!group.nodeIs( nodeHandle ) );
   _.assert( arguments.length === 1 );
-  let result = group.onDirectNeighbourNodesGet( nodeHandle );
+  let result = group.onOutNodesIdsFor( nodeHandle );
   _.assert( _.arrayIs( result ) );
   return result;
 }
 
 //
 
-function nodeReverseNeigbourNodesGet( nodeHandle )
+function nodeInNodesIdsFor( nodeHandle )
 {
   let group = this;
   _.assert( !!group.nodeIs( nodeHandle ) );
   _.assert( arguments.length === 1 );
-  let result = group.onReverseNeighbourNodesGet( nodeHandle );
+  let result = group.onInNodesIdsFor( nodeHandle );
   _.assert( _.arrayIs( result ) );
   return result;
 }
 
 //
 
-function nodeCount( nodeId )
+function nodeRefNumber( nodeId )
 {
   let group = this;
   let sys = group.sys;
@@ -297,9 +351,9 @@ function nodeCount( nodeId )
   else
   return 0;
 
-  _.assert( result >= 0 );
+  _.assert( descriptor.count >= 0 );
 
-  return result;
+  return descriptor.count;
 }
 
 //
@@ -410,7 +464,7 @@ function nodeExportData( nodeHandle )
 
   let result = Object.create( null );
   result.id = group.nodeToId( nodeHandle );
-  result.neighbours = group.nodesToIdsTry( group.nodeDirectNeigbourNodesGet( nodeHandle ) );
+  result.neighbours = group.nodesToIdsTry( group.nodeOutNodesFor( nodeHandle ) );
 
   return result;
 }
@@ -490,48 +544,214 @@ function idToNodes( nodeId )
 }
 
 // --
-// algos
+// filter
 // --
 
-function sinksAmong( nodes )
+function leastIndegreeAmong( nodes )
 {
   let group = this;
 
   if( nodes === undefined )
   nodes = group.nodes;
 
-  _.assert( group.nodesAreAll( nodes ) );
+  // _.assert( group.nodesAreAll( nodes ) );
   _.assert( arguments.length === 0 || arguments.length === 1 );
 
-  let result = nodes.filter( ( node ) => group.nodesDirectNeigbourNodesGet( node ).length === 0 );
+  if( !group.onInNodesFor )
+  group.cacheInNodesFromOutNodes();
 
-  return result;
-}
+  let result = Infinity;
 
-//
-
-function sourcesAmong( nodes )
-{
-  let group = this;
-
-  if( nodes === undefined )
-  nodes = group.nodes;
-
-  _.assert( group.nodesAreAll( nodes ) );
-  _.assert( arguments.length === 0 || arguments.length === 1 );
-
-  if( !group.onReverseNeighbourNodesGet )
+  nodes.forEach( ( node ) =>
   {
-    group.onReverseNeighbourNodesGet = group.cahcedOnReverseNeighbourNodesGet;
-    group.cacheReverseFromDirectNeigbourNodes();
-  }
+    let d = group.nodeIndegree( node );
+    if( d < result )
+    result = d;
+  });
 
-  let result = nodes.filter( ( node ) => group.nodeReverseNeigbourNodesGet( node ).length === 0 );
+  if( result === Infinity )
+  result = 0;
 
   return result;
 }
 
 //
+
+function mostIndegreeAmong( nodes )
+{
+  let group = this;
+
+  if( nodes === undefined )
+  nodes = group.nodes;
+
+  // _.assert( group.nodesAreAll( nodes ) );
+  _.assert( arguments.length === 0 || arguments.length === 1 );
+
+  if( !group.onInNodesFor )
+  group.cacheInNodesFromOutNodes();
+
+  let result = 0;
+
+  nodes.forEach( ( node ) =>
+  {
+    let d = group.nodeIndegree( node );
+    if( d > result )
+    result = d;
+  });
+
+  return result;
+}
+
+//
+
+function leastOutdegreeAmong( nodes )
+{
+  let group = this;
+
+  if( nodes === undefined )
+  nodes = group.nodes;
+
+  // _.assert( group.nodesAreAll( nodes ) );
+  _.assert( arguments.length === 0 || arguments.length === 1 );
+
+  if( !group.onInNodesFor )
+  group.cacheInNodesFromOutNodes();
+
+  let result = Infinity;
+
+  nodes.forEach( ( node ) =>
+  {
+    let d = group.nodeOutdegree( node );
+    if( d < result )
+    result = d;
+  });
+
+  if( result === Infinity )
+  result = 0;
+
+  return result;
+}
+
+//
+
+function mostOutdegreeAmong( nodes )
+{
+  let group = this;
+
+  if( nodes === undefined )
+  nodes = group.nodes;
+
+  // _.assert( group.nodesAreAll( nodes ) );
+  _.assert( arguments.length === 0 || arguments.length === 1 );
+
+  if( !group.onInNodesFor )
+  group.cacheInNodesFromOutNodes();
+
+  let result = 0;
+
+  nodes.forEach( ( node ) =>
+  {
+    let d = group.nodeOutdegree( node );
+    if( d > result )
+    result = d;
+  });
+
+  return result;
+}
+
+//
+
+function leastIndegreeOnlyAmong( nodes )
+{
+  let group = this;
+  if( nodes === undefined )
+  nodes = group.nodes;
+  _.assert( arguments.length === 0 || arguments.length === 1 );
+  let degree = group.leastIndegreeAmong( nodes );
+  let result = nodes.filter( ( node ) => group.nodeIndegree( node ) === degree );
+  return result;
+}
+
+//
+
+function mostIndegreeOnlyAmong( nodes )
+{
+  let group = this;
+  if( nodes === undefined )
+  nodes = group.nodes;
+  _.assert( arguments.length === 0 || arguments.length === 1 );
+  let degree = group.mostIndegreeAmong( nodes );
+  let result = nodes.filter( ( node ) => group.nodeIndegree( node ) === degree );
+  return result;
+}
+
+
+//
+
+function leastOutdegreeOnlyAmong( nodes )
+{
+  let group = this;
+  if( nodes === undefined )
+  nodes = group.nodes;
+  _.assert( arguments.length === 0 || arguments.length === 1 );
+  let degree = group.leastOutdegreeAmong( nodes );
+  let result = nodes.filter( ( node ) => group.nodeOutdegree( node ) === degree );
+  return result;
+}
+
+//
+
+function mostOutdegreeOnlyAmong( nodes )
+{
+  let group = this;
+  if( nodes === undefined )
+  nodes = group.nodes;
+  _.assert( arguments.length === 0 || arguments.length === 1 );
+  let degree = group.mostOutdegreeAmong( nodes );
+  let result = nodes.filter( ( node ) => group.nodeOutdegree( node ) === degree );
+  return result;
+}
+
+//
+
+function sourcesOnlyAmong( nodes )
+{
+  let group = this;
+
+  if( nodes === undefined )
+  nodes = group.nodes;
+
+  // _.assert( group.nodesAreAll( nodes ) );
+  _.assert( arguments.length === 0 || arguments.length === 1 );
+
+  if( !group.onInNodesFor )
+  group.cacheInNodesFromOutNodes();
+
+  let result = nodes.filter( ( node ) => group.nodeInNodesFor( node ).length === 0 );
+
+  return result;
+}
+
+//
+
+function sinksOnlyAmong( nodes )
+{
+  let group = this;
+
+  if( nodes === undefined )
+  nodes = group.nodes;
+
+  // _.assert( group.nodesAreAll( nodes ) );
+  _.assert( arguments.length === 0 || arguments.length === 1 );
+
+  let result = nodes.filter( ( node ) => group.nodesOutNodesFor( node ).length === 0 );
+
+  return result;
+}
+
+// --
+// algos
+// --
 
 function lookBfs( o )
 {
@@ -592,7 +812,7 @@ function lookBfs( o )
 
         nodes2.every( ( nodeHandle ) =>
         {
-          let neigbours = group.nodeDirectNeigbourNodesGet( nodeHandle );
+          let neigbours = group.nodeOutNodesFor( nodeHandle );
           _.arrayAppendArray( nodes3, neigbours );
           return true;
         });
@@ -637,40 +857,48 @@ function lookDfs( o )
   it.result = false;
   it.options = o;
 
-  o.nodes.forEach( ( node ) => visit( node, it ) );
+  o.nodes.forEach( ( node ) =>
+  {
+    it.node = node;
+    it.id = group.nodeToId( node );
+    visit( it )
+  });
 
   return it.result;
 
   /* */
 
-  function visit( nodeHandle, it )
+  function visit( it )
   {
 
-    // let id = group.nodeToId( nodeHandle );
-    // if( _.arrayHas( it.visited, id ) )
-    // return;
-    // it.visited.push( id );
-
-    if( _.arrayHas( it.visited, nodeHandle ) )
+    if( _.arrayHas( it.visited, it.node ) )
     return;
-    it.visited.push( nodeHandle );
+    it.visited.push( it.node );
 
     if( o.onUp )
-    o.onUp( nodeHandle, it );
+    o.onUp( it.node, it );
+
+    let node = it.node;
+    let id = it.id;
 
     if( it.continue && it.continueUp )
     {
-      let neigbours = group.nodeDirectNeigbourNodesGet( nodeHandle );
+      let neigbours = group.nodeOutNodesFor( it.node );
       for( let n = 0 ; n < neigbours.length ; n++ )
       {
-        visit( neigbours[ n ], it );
+        it.node = neigbours[ n ];
+        it.id = group.nodeToId( it.node );
+        visit( it );
         if( !it.continue )
         break;
       }
     }
 
+    it.node = node;
+    it.id = id;
+
     if( o.onDown )
-    o.onDown( nodeHandle, it );
+    o.onDown( it.node, it );
 
     it.continueUp = true;
 
@@ -687,26 +915,26 @@ lookDfs.defaults =
 
 //
 
-function topologicalSortDfs( nodeHandles )
+function topologicalSortDfs( /**/nodes )
 {
   let group = this;
   let ordering = [];
   let visited = [];
 
-  if( nodeHandles === undefined )
-  nodeHandles = group.nodes;
+  if( /**/nodes === undefined )
+  /**/nodes = group.nodes;
 
   _.assert( arguments.length === 0 || arguments.length === 1 );
-  _.assert( group.nodesAreAll( nodeHandles ) );
+  _.assert( group.nodesAreAll( /**/nodes ) );
 
-  nodeHandles.forEach( ( nodeHandle ) =>
+  /**/nodes.forEach( ( nodeHandle ) =>
   {
     if( _.arrayHas( visited, nodeHandle ) )
     return;
     group.lookDfs({ nodes : nodeHandle, onDown : handleDown });
   });
 
-  _.assert( ordering.length === nodeHandles.length );
+  _.assert( ordering.length === /**/nodes.length );
 
   return ordering;
 
@@ -714,7 +942,7 @@ function topologicalSortDfs( nodeHandles )
 
   function handleDown( nodeHandle, it )
   {
-    let neigbours = group.nodeDirectNeigbourNodesGet( nodeHandle );
+    let neigbours = group.nodeOutNodesFor( nodeHandle );
     neigbours = neigbours.filter( ( nodeHandle2 ) => !_.arrayHas( visited, nodeHandle2 ) );
     if( neigbours.length === 0 )
     {
@@ -727,19 +955,49 @@ function topologicalSortDfs( nodeHandles )
 
 //
 
-function topologicalSortSourceBasedBfs( nodeHandles )
+function topologicalSortSourceBasedBfs( nodes )
 {
   let group = this;
 
-  if( nodeHandles === undefined )
-  nodeHandles = group.nodes;
+  if( nodes === undefined )
+  nodes = group.nodes;
 
   _.assert( arguments.length === 0 || arguments.length === 1 );
 
-  let sources = group.sourcesAmong( nodeHandles );
+  let sources = group.leastIndegreeOnlyAmong( /**/nodes );
+  let result = group.lookBfs({ nodes : sources });
 
-  if( !sources.length )
-  sources = nodeHandles;
+  return result;
+}
+
+//
+
+function topologicalSortCycledSourceBasedBfs( nodes )
+{
+  let group = this;
+
+  if( nodes === undefined )
+  nodes = group.nodes;
+
+  _.assert( arguments.length === 0 || arguments.length === 1 );
+
+  if( !nodes.length )
+  return [];
+
+  debugger;
+  let sources = [];
+  let tree = group.stronglyConnectedTreeFor( nodes );
+  debugger;
+  tree.nodes.forEach( ( node ) =>
+  {
+    if( tree.nodeIndegree( node ) === 0 )
+    _.arrayAppendArray( sources, group.idsToNodes( node.originalNodes ) );
+  });
+  debugger;
+
+  tree.finit();
+
+  _.assert( sources.length > 0 );
 
   let result = group.lookBfs({ nodes : sources });
 
@@ -777,19 +1035,19 @@ function nodesAreConnectedDfs( handle1, handle2 )
 
 //
 
-function groupByConnectivityDfs( nodeHandles )
+function groupByConnectivityDfs( /**/nodes )
 {
   let group = this;
   let groups = [];
   let visited = [];
 
-  if( nodeHandles === undefined )
-  nodeHandles = group.nodes;
+  if( /**/nodes === undefined )
+  /**/nodes = group.nodes;
 
   _.assert( arguments.length === 0 || arguments.length === 1 );
-  _.assert( group.nodesAreAll( nodeHandles ) );
+  _.assert( group.nodesAreAll( /**/nodes ) );
 
-  nodeHandles.forEach( ( nodeHandle ) =>
+  /**/nodes.forEach( ( nodeHandle ) =>
   {
     let id = group.nodeToId( nodeHandle );
     if( _.arrayHas( visited, id ) )
@@ -813,22 +1071,25 @@ function groupByConnectivityDfs( nodeHandles )
 
 //
 
-function groupByStrongConnectivityDfs( nodeHandles )
+function groupByStrongConnectivityDfs( /**/nodes )
 {
   let group = this;
   let visited1 = [];
   let visited2 = [];
-  let groups = [];
+  let layers = [];
+
+  if( /**/nodes === undefined )
+  /**/nodes = group.nodes;
+  /**/nodes = _.arrayAs( /**/nodes );
+
+  _.assert( arguments.length === 0 || arguments.length === 1 );
+  _.assert( group.nodesAreAll( /**/nodes ) );
+
+  /* mark */
 
   group.reverse();
 
-  if( nodeHandles === undefined )
-  nodeHandles = group.nodes;
-
-  _.assert( arguments.length === 0 || arguments.length === 1 );
-  _.assert( group.nodesAreAll( nodeHandles ) );
-
-  nodeHandles.forEach( ( nodeHandle ) =>
+  /**/nodes.forEach( ( nodeHandle ) =>
   {
     if( visited1.indexOf( nodeHandle ) !== -1 )
     return;
@@ -837,16 +1098,20 @@ function groupByStrongConnectivityDfs( nodeHandles )
 
   group.reverse();
 
+  /* collect layers */
+
   for( let i = visited1.length-1 ; i >= 0 ; i-- )
   {
     let nodeHandle = visited1[ i ];
     if( visited2.indexOf( nodeHandle ) !== -1 )
     continue;
-    groups.push( [] );
+    layers.push( [] );
     group.lookDfs({ nodes : nodeHandle, onUp : handleUp2 });
   }
 
-  return groups;
+  /* */
+
+  return layers;
 
   /* */
 
@@ -877,8 +1142,133 @@ function groupByStrongConnectivityDfs( nodeHandles )
       it.continueUp = false;
       return;
     }
+    _.assert( _.arrayHas( visited1, nodeHandle ), () => 'Input set of nodes does not have a node #' + group.nodeToId( nodeHandle ) );
     visited2.push( nodeHandle );
-    groups[ groups.length - 1 ].push( nodeHandle );
+    layers[ layers.length - 1 ].push( nodeHandle );
+  }
+
+}
+
+//
+
+function stronglyConnectedTreeForDfs( /**/nodes )
+{
+  let group = this;
+  let sys = group.sys;
+  let visited1 = [];
+  let visited2 = [];
+  let layers = [];
+  let outs = [];
+  let fromOriginal = new Map();
+
+  if( /**/nodes === undefined )
+  /**/nodes = group.nodes;
+  /**/nodes = _.arrayAs( /**/nodes );
+
+  _.assert( arguments.length === 0 || arguments.length === 1 );
+  _.assert( group.nodesAreAll( /**/nodes ) );
+
+  /* mark */
+
+  group.reverse();
+
+  /**/nodes.forEach( ( nodeHandle ) =>
+  {
+    if( visited1.indexOf( nodeHandle ) !== -1 )
+    return;
+    group.lookDfs({ nodes : nodeHandle, onUp : handleUp1, onDown : handleDown1 });
+  });
+
+  group.reverse();
+
+  /* collect layers */
+
+  for( let i = visited1.length-1 ; i >= 0 ; i-- )
+  {
+    let nodeHandle = visited1[ i ];
+    if( visited2.indexOf( nodeHandle ) !== -1 )
+    continue;
+    layers.push( [] );
+    outs.push( [] );
+    group.lookDfs({ nodes : nodeHandle, onUp : handleUp2 });
+  }
+
+  /* construct new graph */
+
+  let group2 = sys.groupMake
+  ({
+    onOutNodesFor : group.fromOutNodesIdsOnOutNodesFor,
+    onInNodesFor : group.fromInNodesIdsOnInNodesFor,
+    onOutNodesIdsFor : group.fromOutNodesIdsOnOutNodesIdsFor,
+    onInNodesIdsFor : group.fromInNodesIdsOnInNodesIdsFor,
+  });
+
+  for( let l = 0 ; l < layers.length ; l++ )
+  {
+    let node = Object.create( null );
+    node.inNodes = [];
+    node.outNodes = [];
+    node.originalNodes = group.nodesToIds( layers[ l ] );
+    group2.nodeAdd( node )
+  }
+
+  /* add edges */
+
+  for( let l = 0 ; l < group2.nodes.length ; l++ )
+  {
+    let node = group2.nodes[ l ];
+    let originalOutNodes = outs[ l ];
+    for( let t = 0 ; t < originalOutNodes.length ; t++ )
+    {
+      let originalOutId = originalOutNodes[ t ];
+      if( _.arrayHas( node.originalNodes, originalOutId ) )
+      continue;
+      let node2 = group2.nodes[ fromOriginal.get( originalOutId ) ];
+      _.arrayAppendOnce( node.outNodes, sys.nodeToId( node2 ) );
+      _.arrayAppendOnce( node2.inNodes, sys.nodeToId( node ) );
+    }
+  }
+
+  /* */
+
+  return group2;
+
+  /* */
+
+  function handleUp1( nodeHandle, it )
+  {
+    if( visited1.indexOf( nodeHandle ) !== -1 )
+    {
+      it.continueUp = false;
+      return;
+    }
+  }
+
+  /* */
+
+  function handleDown1( nodeHandle, it )
+  {
+    if( !it.continueUp )
+    return;
+    visited1.push( nodeHandle );
+  }
+
+  /* */
+
+  function handleUp2( nodeHandle, it )
+  {
+    if( visited2.indexOf( nodeHandle ) !== -1 )
+    {
+      it.continueUp = false;
+      return;
+    }
+    _.assert( _.arrayHas( visited1, nodeHandle ), () => 'Input set of nodes does not have a node #' + group.nodeToId( nodeHandle ) );
+    visited2.push( nodeHandle );
+    let index = layers.length - 1;
+    _.assert( sys.idIs( it.id ) );
+    fromOriginal.set( it.id, index );
+    layers[ index ].push( nodeHandle );
+    _.arrayAppendArray( outs[ index ], group.nodeOutNodesIdsFor( nodeHandle ) );
   }
 
 }
@@ -896,14 +1286,24 @@ function defaultOnNodeName( nodeHandle )
 
 function defaultOnNodeIs( nodeHandle )
 {
-  if( !_.objectIs( nodeHandle ) )
+  if( nodeHandle === null || nodeHandle === undefined )
   return false;
   return _.maybe;
 }
 
 //
 
-function defaultOnDirectNeighbourNodesGet( nodeHandle )
+function fromCachedOnInNodesFor( nodeHandle )
+{
+  let group = this;
+  let neigbours = group._inNodesCacheHash.get( nodeHandle );
+  _.assert( _.arrayIs( neigbours ), 'No cache for the node' );
+  return neigbours;
+}
+
+//
+
+function fromNodesOnOutNodesFor( nodeHandle )
 {
   let group = this;
   return nodeHandle.nodes;
@@ -911,12 +1311,90 @@ function defaultOnDirectNeighbourNodesGet( nodeHandle )
 
 //
 
-function cahcedOnReverseNeighbourNodesGet( nodeHandle )
+function fromOutNodesOnOutNodesFor( nodeHandle )
 {
   let group = this;
-  let neigbours = group.cahceOfReverseNeighbourNodesHash.get( nodeHandle );
-  _.assert( _.arrayIs( neigbours ), 'No cache for the node' );
-  return neigbours;
+  return nodeHandle.outNodes;
+}
+
+//
+
+function fromInNodesOnInNodesFor( nodeHandle )
+{
+  let group = this;
+  return nodeHandle.inNodes;
+}
+
+//
+
+function fromNodesIdsOnOutNodesFor( nodeHandle )
+{
+  let group = this;
+  return group.idsToNodes( nodeHandle.nodes );
+}
+
+//
+
+function fromOutNodesIdsOnOutNodesFor( nodeHandle )
+{
+  let group = this;
+  return group.idsToNodes( nodeHandle.outNodes );
+}
+
+//
+
+function fromInNodesIdsOnInNodesFor( nodeHandle )
+{
+  let group = this;
+  return group.idsToNodes( nodeHandle.inNodes );
+}
+
+//
+
+function fromNodesOnOutNodesIdsFor( nodeHandle )
+{
+  let group = this;
+  return group.nodesToIds( nodeHandle.nodes );
+}
+
+//
+
+function fromOutNodesOnOutNodesIdsFor( nodeHandle )
+{
+  let group = this;
+  return group.nodesToIds( nodeHandle.outNodes );
+}
+
+//
+
+function fromInNodesOnInNodesIdsFor( nodeHandle )
+{
+  let group = this;
+  return group.nodesToIds( nodeHandle.inNodes );
+}
+
+//
+
+function fromNodesIdsOnOutNodesIdsFor( nodeHandle )
+{
+  let group = this;
+  return nodeHandle.nodes;
+}
+
+//
+
+function fromOutNodesIdsOnOutNodesIdsFor( nodeHandle )
+{
+  let group = this;
+  return nodeHandle.outNodes;
+}
+
+//
+
+function fromInNodesIdsOnInNodesIdsFor( nodeHandle )
+{
+  let group = this;
+  return nodeHandle.inNodes;
 }
 
 // --
@@ -935,8 +1413,10 @@ let Aggregates =
 {
   onNodeNameGet : defaultOnNodeName,
   onNodeIs : defaultOnNodeIs,
-  onDirectNeighbourNodesGet : defaultOnDirectNeighbourNodesGet,
-  onReverseNeighbourNodesGet : null,
+  onOutNodesFor : fromNodesOnOutNodesFor,
+  onInNodesFor : null,
+  onOutNodesIdsFor : fromNodesOnOutNodesIdsFor,
+  onInNodesIdsFor : null,
 }
 
 let Associates =
@@ -947,7 +1427,7 @@ let Associates =
 
 let Restricts =
 {
-  cahceOfReverseNeighbourNodesHash : null,
+  _inNodesCacheHash : null,
 }
 
 let Statics =
@@ -977,7 +1457,7 @@ let Extend =
 
   directSet,
   reverse,
-  cacheReverseFromDirectNeigbourNodes,
+  cacheInNodesFromOutNodes,
   cachesInvalidate,
 
   // export
@@ -1005,11 +1485,21 @@ let Extend =
   nodesAreAny : _.vectorizeAny( nodeIs ),
   nodesAreNone : _.vectorizeNone( nodeIs ),
 
-  nodeDirectNeigbourNodesGet,
-  nodesDirectNeigbourNodesGet : _.vectorize( nodeDirectNeigbourNodesGet ),
-  nodeReverseNeigbourNodesGet,
-  nodesReverseNeigbourNodesGet : _.vectorize( nodeReverseNeigbourNodesGet ),
-  nodeCount,
+  nodeIndegree,
+  nodesIndegree : _.vectorize( nodeIndegree ),
+  nodeOutdegree,
+  nodesOutdegree : _.vectorize( nodeOutdegree ),
+  nodeDegree,
+  nodesDegree : _.vectorize( nodeDegree ),
+  nodeOutNodesFor,
+  nodesOutNodesFor : _.vectorize( nodeOutNodesFor ),
+  nodeInNodesFor,
+  nodesInNodesFor : _.vectorize( nodeInNodesFor ),
+  nodeOutNodesIdsFor,
+  nodesOutNodesIdsFor : _.vectorize( nodeOutNodesIdsFor ),
+  nodeInNodesIdsFor,
+  nodesInNodesIdsFor : _.vectorize( nodeInNodesIdsFor ),
+  nodeRefNumber,
   nodesSet,
 
   nodeAdd,
@@ -1033,10 +1523,22 @@ let Extend =
   idToNodes,
   idsToNodes : _.vectorize( idToNodes ),
 
-  // algos
+  // filter
 
-  sinksAmong,
-  sourcesAmong,
+  leastIndegreeAmong,
+  mostIndegreeAmong,
+  leastOutdegreeAmong,
+  mostOutdegreeAmong,
+
+  leastIndegreeOnlyAmong,
+  mostIndegreeOnlyAmong,
+  leastOutdegreeOnlyAmong,
+  mostOutdegreeOnlyAmong,
+
+  sourcesOnlyAmong,
+  sinksOnlyAmong,
+
+  // algos
 
   lookBfs,
   lookDfs,
@@ -1046,6 +1548,8 @@ let Extend =
   topologicalSort : topologicalSortDfs,
   topologicalSortSourceBasedBfs,
   topologicalSortSourceBased : topologicalSortSourceBasedBfs,
+  topologicalSortCycledSourceBasedBfs,
+  topologicalSortCycledSourceBased : topologicalSortCycledSourceBasedBfs,
 
   // connectivity algos
 
@@ -1055,13 +1559,28 @@ let Extend =
   groupByConnectivity : groupByConnectivityDfs,
   groupByStrongConnectivityDfs,
   groupByStrongConnectivity : groupByStrongConnectivityDfs,
+  stronglyConnectedTreeForDfs,
+  stronglyConnectedTreeFor : stronglyConnectedTreeForDfs,
 
   // default
 
   defaultOnNodeName,
   defaultOnNodeIs,
-  defaultOnDirectNeighbourNodesGet,
-  cahcedOnReverseNeighbourNodesGet,
+  fromCachedOnInNodesFor,
+
+  fromNodesOnOutNodesFor,
+  fromOutNodesOnOutNodesFor,
+  fromInNodesOnInNodesFor,
+  fromNodesIdsOnOutNodesFor,
+  fromOutNodesIdsOnOutNodesFor,
+  fromInNodesIdsOnInNodesFor,
+
+  fromNodesOnOutNodesIdsFor,
+  fromOutNodesOnOutNodesIdsFor,
+  fromInNodesOnInNodesIdsFor,
+  fromNodesIdsOnOutNodesIdsFor,
+  fromOutNodesIdsOnOutNodesIdsFor,
+  fromInNodesIdsOnInNodesIdsFor,
 
   // relations
 

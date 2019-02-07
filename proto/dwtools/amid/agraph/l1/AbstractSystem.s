@@ -132,7 +132,7 @@ function idToNodes( nodeId )
 {
   let sys = this;
   let nodeHandle = sys.idToNodeHash.get( nodeId );
-  _.assert( !!group.nodeIs( nodeHandle ), 'Id for nodeHandle was not found' );
+  _.assert( !!nodeHandle, 'Id for the node was not found' );
   return nodeHandle;
 }
 
