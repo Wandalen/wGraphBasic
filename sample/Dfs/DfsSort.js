@@ -1,8 +1,7 @@
-
 require( '../..' );
 let _ = wTools;
 
-/* This example shows how to use bfs-based algorimths on graph */
+/* This example shows how to use dfs-based algorimths on directed acycled graph(DAG) */
 
 /* declaring nodes and relations */
 
@@ -20,19 +19,18 @@ var sys = new _.graph.AbstractGraphSystem(); // make container for groups( graph
 var group = sys.groupMake(); // create graph( empty group of nodes )
 group.nodesAdd([ a,b,c,d ]); // add nodes to the group
 
-/* breadth-first topological sort */
+/* depth first topological sort */
 
-var ordering = group.topologicalSortSourceBasedBfs(); // arrange nodes so that for each connection "uv" node "u" comes before "v"
+var ordering = group.topologicalSortDfs(); // arrange nodes so that for each connection "uv" node "u" comes before "v"
 ordering = ordering.map( ( nodes ) => group.nodesToNames( nodes ) ); // get names of nodes to simplify output
 console.log( ordering );
 
-/*
-[
-   [ 'a' ],
-   [ 'b', 'c' ],
-   [ 'd' ]
-]
-*/
+/* [ 'b', 'd', 'c', 'a' ] */
+
+
+
+
+
 
 
 
