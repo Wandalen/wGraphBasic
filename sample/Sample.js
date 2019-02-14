@@ -2,7 +2,12 @@
 require( '..' );
 let _ = wTools;
 
-/**/
+/*
+This example shows basics.
+Graph :: set of nodes( vertices ) and set of edges or arcs connecting some or all nodes.
+*/
+
+/* define a graph of arbitrary structure */
 
 var a = { name : 'a', nodes : [] } // 1
 var b = { name : 'b', nodes : [] } // 2
@@ -26,15 +31,17 @@ h.nodes.push( i ); // 8
 i.nodes.push( f, h ); // 9
 j.nodes.push(); // 10
 
-var sys = new _.graph.AbstractGraphSystem();
-var group = sys.groupMake();
+/* declare the graph */
 
-group.nodesAdd([ a, b, c, d, e, f, g, h, i, j ]);
+var sys = new _.graph.AbstractGraphSystem(); // declare sysyem of graphs
+var group = sys.groupMake(); // declare group of nodes
+group.nodesAdd([ a, b, c, d, e, f, g, h, i, j ]); // add nodes to the group
+
+// print nodes lists
+
 console.log( group.exportInfo() );
 
-/*
-xxx
-*/
+// do topological sort
 
 var layers = group.topologicalSortSourceBasedBfs();
 console.log( layers.map( ( nodes ) => group.nodesToNames( nodes ) ) );
