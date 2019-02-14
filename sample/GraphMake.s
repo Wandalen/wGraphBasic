@@ -28,6 +28,7 @@ var group = sys.groupMake(); // declare group of nodes
 group.nodesAdd([ a, b, c ]); // add nodes to the group
 
 console.log( group.nodesExportInfo() ); // print information about nodes relation
+
 /*
     1 : 2
     2 : 3
