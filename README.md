@@ -28,7 +28,7 @@ Collection of abstract data structures and algorithms to process graphs. The mod
 **Distance between nodes** :: minimal number of edges to get from one given node to another given node. </br>
 **Distance layers** :: array of arrays of nodes. First layer has origin or zero-distance set of nodes. Second layer has nodes on distance one from origin. And os on. </br>
 
-### Sample
+## Sample
 
 ```
 require( '..' );
@@ -74,4 +74,3 @@ console.log( group.nodesExportInfo() ); // print information about nodes relatio
 npm install
 node sample/Sample.s
 ```
-
