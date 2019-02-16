@@ -3,7 +3,7 @@
 
 Collection of abstract data structures and algorithms to process graphs. The module does not bound to any specific format of a graph, so providing adapters toy may use it with anyone. It implements depth-first search, breadth-first search, extracting strongly connected components, topological sort, shortest path search, and others.
 
-## Glossary
+## Concepts
 
 **Graph** :: set of nodes and set of edges or arcs connecting some or all nodes. </br>
 **Incident edges** :: of the node, are edges connected to the node. </br>
