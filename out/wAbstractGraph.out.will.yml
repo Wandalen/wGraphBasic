@@ -7,7 +7,7 @@ about:
     adapters toy may use it with anyone. It implements depth-first search,
     breadth-first search, extracting strongly connected components, topological
     sort, shortest path search, and others.
-  version: 0.3.6
+  version: 0.3.11
   enabled: 1
   interpreters:
     - nodejs >= 6.0.0
@@ -20,10 +20,10 @@ execution:
     test: wtest staging
     docgen: wdocgen staging
 path:
-  proto:
-    path: ./proto
   in:
     path: .
+  temp:
+    path: out
   out:
     path: out
   out.debug:
@@ -34,6 +34,8 @@ path:
     path: ./out/release
     criterion:
       debug: 0
+  proto:
+    path: ./proto
   repository:
     path: 'git+https://github.com/Wandalen/wAbstractGraph.git'
   bugs:
@@ -75,9 +77,9 @@ path:
 submodule: {}
 reflector:
   reflect.proto.:
-    srcFilter:
+    src:
       filePath:
-        ./proto: ./out/release
+        proto: out/release
       maskAll:
         excludeAny:
           - !<tag:yaml.org,2002:js/regexp> /(\W|^)node_modules(\W|$)/
@@ -96,9 +98,9 @@ reflector:
     inherit:
       - predefined.*
   reflect.proto.debug:
-    srcFilter:
+    src:
       filePath:
-        ./proto: ./out/debug
+        proto: out/debug
       maskAll:
         excludeAny:
           - !<tag:yaml.org,2002:js/regexp> /(\W|^)node_modules(\W|$)/
@@ -115,7 +117,7 @@ reflector:
     inherit:
       - predefined.*
   reflect.submodules:
-    srcFilter:
+    src:
       maskAll:
         excludeAny:
           - !<tag:yaml.org,2002:js/regexp> /(\W|^)node_modules(\W|$)/
@@ -132,9 +134,9 @@ reflector:
     inherit:
       - predefined.*
   exported.proto.export:
-    srcFilter:
+    src:
       filePath:
-        ./proto: true
+        proto: true
       prefixPath: .
     criterion:
       default: 1
@@ -146,7 +148,7 @@ reflector:
       public: 1
   exportedFiles.proto.export:
     recursive: 0
-    srcFilter:
+    src:
       filePath:
         .: true
         dwtools: true
@@ -292,7 +294,7 @@ build:
       - 'step::export.proto'
 exported:
   proto.export:
-    version: 0.3.6
+    version: 0.3.11
     criterion:
       default: 1
       debug: 1
