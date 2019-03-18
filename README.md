@@ -74,3 +74,4 @@ console.log( group.nodesExportInfo() ); // print information about nodes relatio
 npm install
 node sample/Sample.s
 ```
+
