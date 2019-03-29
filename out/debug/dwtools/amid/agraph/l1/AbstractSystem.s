@@ -270,7 +270,7 @@ _.classDeclare
 
 _.Copyable.mixin( Self );
 
-_.staticDecalre
+_.staticDeclare
 ({
   prototype : _.graph.AbstractGraphGroup.prototype,
   name : 'System',
