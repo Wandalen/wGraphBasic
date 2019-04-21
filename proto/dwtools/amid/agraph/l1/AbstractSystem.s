@@ -29,6 +29,12 @@ Distance layers :: array of arrays of nodes. First layer has origin or zero-dist
 
 */
 
+/**
+ * @classdesc Class to operate system of graphs.
+ * @class wAbstractGraphSystem
+ * @memberof module:Tools/mid/AbstractGraphs.wTools.graph
+ */
+
 let _ = _global_.wTools;
 let Parent = null;
 let Self = function wAbstractGraphSystem( o )
@@ -65,6 +71,13 @@ function finit()
 
 //
 
+/**
+ * @summary Declares group of nodes. Returns instance of {@link module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractGraphGroup wTools.graph.AbstractGraphGroup}
+ * @param {Object} o Options for instance.
+ * @function groupMake
+ * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractGraphSystem
+ */
+
 function groupMake( o )
 {
   let sys = this;
@@ -76,6 +89,13 @@ function groupMake( o )
 }
 
 //
+
+/**
+ * @summary Returns true if entity `id` is a node id.
+ * @param {} id Source entity
+ * @function idIs
+ * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractGraphSystem
+ */
 
 function idIs( id )
 {
@@ -91,6 +111,14 @@ function idIs( id )
 
 //
 
+/**
+ * @summary Returns true system has node with descriptor `nodeHandle`.
+ * @param {Object} nodeHandle Node descriptor.
+ * @function nodeHas
+ * @throws {Error} If system doesn't have a node `nodeHandle`.
+ * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractGraphSystem
+ */
+
 function nodeHas( nodeHandle )
 {
   let sys = this;
@@ -100,6 +128,14 @@ function nodeHas( nodeHandle )
 
 //
 
+/**
+ * @summary Returns id of node with descriptor `nodeHandle`.
+ * @description Doesn't throw error if can't get id of node.
+ * @param {Object} nodeHandle Node descriptor.
+ * @function nodeToIdTry
+ * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractGraphSystem
+ */
+
 function nodeToIdTry( nodeHandle )
 {
   let sys = this;
@@ -108,6 +144,14 @@ function nodeToIdTry( nodeHandle )
 }
 
 //
+
+/**
+ * @summary Returns id of node with descriptor `nodeHandle`.
+ * @param {Object} nodeHandle Node descriptor.
+ * @function nodeToId
+ * @throws {Error} If node with descriptor `nodeHandle` doesn't exist in system.
+ * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractGraphSystem
+ */
 
 function nodeToId( nodeHandle )
 {
@@ -138,6 +182,13 @@ function idToNodes( nodeId )
 
 //
 
+/**
+ * @summary Returns descriptor of node with id `nodeId`
+ * @param {Number} nodeId Id of target node.
+ * @function nodeDescriptorGet
+ * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractGraphSystem
+ */
+
 function nodeDescriptorGet( nodeId )
 {
   let sys = this;
@@ -153,6 +204,13 @@ function nodeDescriptorGet( nodeId )
 }
 
 //
+
+/**
+ * @summary Returns descriptor of node with id `nodeId`. Creates new descriptor if needed.
+ * @param {Number} nodeId Id of target node.
+ * @function nodeDescriptorGet
+ * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractGraphSystem
+ */
 
 function nodeDescriptorProduce( nodeId )
 {

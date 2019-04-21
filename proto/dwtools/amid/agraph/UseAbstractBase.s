@@ -14,6 +14,12 @@ if( typeof module !== 'undefined' )
 
 //
 
+/**
+ * @summary Collection of abstract data structures and algorithms to process graphs.
+ * @namespace "wTools.graph"
+ * @mebmerof module:Tools/mid/AbstractGraphs
+*/
+
 var _ = _global_.wTools;
 var Parent = null;
 var Self = _global_.wTools.graph = _global_.wTools.graph || Object.create( null );
