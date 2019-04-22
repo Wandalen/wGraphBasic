@@ -2,6 +2,12 @@
 
 'use strict';
 
+/**
+ * @classdesc Class to operate graph as group of nodes.
+ * @class wAbstractGraphGroup
+ * @memberof module:Tools/mid/AbstractGraphs.wTools.graph
+ */
+
 let _ = _global_.wTools;
 let Parent = null;
 let Self = function wAbstractGraphGroup( o )
@@ -198,6 +204,19 @@ function _exportData( it )
 
 //
 
+/**
+ * @summary Returns string with information about nodes relation.
+ * @description
+ * For example we have three nodes 'a','b','c' with ids: 1,2,3.
+ * Edges between nodes: 'a','b' and 'b','c'.
+ * Relation info will look like:
+ *  1 : 2
+ *  2 : 3
+ *  3 :
+ * @function exportInfo
+ * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractGraphGroup#
+ */
+
 function exportInfo( o )
 {
   let group = this;
@@ -208,6 +227,13 @@ function exportInfo( o )
 
 //
 
+/**
+ * @summary Returns descriptor of node with id `nodeId`.
+ * @param {Number} nodeId Id of target node.
+ * @function nodeDescriptorGet
+ * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractGraphGroup#
+ */
+
 function nodeDescriptorGet( nodeId )
 {
   let group = this;
@@ -216,6 +242,13 @@ function nodeDescriptorGet( nodeId )
 }
 
 //
+
+/**
+ * @summary Returns descriptor of node with id `nodeId`. Creates new descriptor if it doesn't exist.
+ * @param {Number} nodeId Id of target node.
+ * @function nodeDescriptorGet
+ * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractGraphGroup#
+ */
 
 function nodeDescriptorProduce( nodeId )
 {
@@ -228,6 +261,13 @@ function nodeDescriptorProduce( nodeId )
 // nodeHandle
 // --
 
+/**
+ * @summary Returns true if group has provided node. Takes node handle as argument.
+ * @param {Object} nodeHandle Node descriptor.
+ * @function nodeHas
+ * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractGraphGroup#
+ */
+
 function nodeHas( nodeHandle )
 {
   let group = this;
@@ -236,6 +276,13 @@ function nodeHas( nodeHandle )
 }
 
 //
+
+/**
+ * @summary Returns true if provided entity `nodeHandle` is a node.
+ * @param {Object} nodeHandle Node descriptor.
+ * @function nodeIs
+ * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractGraphGroup#
+ */
 
 function nodeIs( nodeHandle )
 {
@@ -375,6 +422,22 @@ function nodesSet( nodes )
 
 //
 
+/**
+ * @summary Adds provided node `nodeHandle` to current group.
+ * @param {Object} nodeHandle Node descriptor.
+ * @function nodeAdd
+ * @returns {Number} Returns id of added node.
+ * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractGraphGroup#
+ */
+
+ /**
+ * @summary Adds several nodes to the system.
+ * @param {Array} nodeHandle Array with node descriptors.
+ * @function nodesAdd
+ * @returns {Array} Returns array with ids of added nodes.
+ * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractGraphGroup#
+ */
+
 function nodeAdd( nodeHandle )
 {
   let group = this;
@@ -415,6 +478,15 @@ function nodeAdd( nodeHandle )
 
 //
 
+/**
+ * @summary Removes node `nodeHandle` from current group.
+ * @param {Object} nodeHandle Node descriptor.
+ * @function nodeDelete
+ * @returns {Number} Returns id of removed node.
+ * @throws {Error} If system doesn't have node with such `nodeHandle`.
+ * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractGraphGroup#
+ */
+
 function nodeDelete( nodeHandle )
 {
   let group = this;
@@ -444,6 +516,15 @@ function nodeDelete( nodeHandle )
 }
 
 //
+
+/**
+ * @summary Removes several nodes from system.
+ * @param {Array} nodeHandle Array with node descriptors.
+ * @function nodesDelete
+ * @returns {Array} Returns array with ids of removed nodes.
+ * @throws {Error} If system doesn't have node with such `nodeHandle`.
+ * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractGraphGroup#
+ */
 
 let _nodesDelete = _.vectorize( nodeDelete );
 function nodesDelete()
@@ -497,6 +578,14 @@ function nodesExportInfo( nodes )
 
 //
 
+/**
+ * @summary Returns name of node. Takes single argument - node descriptor `nodeHandle`.
+ * @param {Object} nodeHandle Node descriptor.
+ * @function nodeToName
+ * @returns {String} Returns name of node.
+ * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractGraphGroup#
+ */
+
 function nodeToName( nodeHandle )
 {
   let group = this;
@@ -509,6 +598,14 @@ function nodeToName( nodeHandle )
 
 //
 
+/**
+ * @summary Returns id of node. Takes single argument - node descriptor `nodeHandle`.
+ * @description Returns undefined if can't get id of provided node.
+ * @param {Object} nodeHandle Node descriptor.
+ * @function nodeToIdTry
+ * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractGraphGroup#
+ */
+
 function nodeToIdTry( nodeHandle )
 {
   let group = this;
@@ -517,6 +614,14 @@ function nodeToIdTry( nodeHandle )
 }
 
 //
+
+/**
+ * @summary Returns id of node. Takes single argument - node descriptor `nodeHandle`.
+ * @param {Object} nodeHandle Node descriptor.
+ * @function nodeToId
+ * @throws {Error} If can't get id of provided node.
+ * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractGraphGroup#
+ */
 
 function nodeToId( nodeHandle )
 {
@@ -753,6 +858,43 @@ function sinksOnlyAmong( nodes )
 // algos
 // --
 
+/**
+ * @summary Performs breadth-first search on graph.
+ * @param {Object} o Options map.
+ * @param {Array|Object} o.nodes Nodes to use as start point.
+ * @param {Function} o.onUp Handler called before visiting each layer.
+ * @param {Function} o.onDown Handler called after visiting each layer.
+ * @param {Function} o.onNode Handler called for each node.
+ *
+ * @example
+ * //define a graph of arbitrary structure
+ *
+ * var a = { name : 'a', nodes : [] } // 1
+ * var b = { name : 'b', nodes : [] } // 2
+ * var c = { name : 'c', nodes : [] } // 3
+ * var d = { name : 'd', nodes : [] } // 4
+ *
+ * a.nodes.push( b,c ); // add connections between node a and b, c nodes
+ * c.nodes.push( d ); // add connection between node c and d
+ *
+ * //declare the graph
+ *
+ * var sys = new _.graph.AbstractGraphSystem(); // declare sysyem of graphs
+ * var group = sys.groupMake(); // declare group of nodes
+ * group.nodesAdd([ a,b,c,d ]); // add nodes to the group
+ *
+ * // breadth-first search for reachable nodes using provided node as start point
+ *
+ * var layers = group.lookBfs({ nodes : a }); // node 'a' is start node
+ * layers = layers.map( ( nodes ) => group.nodesToNames( nodes ) ) // extract name of nodes from node handles to simplify the output
+ * console.log( layers )
+ *
+ *
+ * @function lookBfs
+ * @return {Array} Returns array of layers that are reachable from provided nodes `o.nodes`.
+ * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractGraphGroup#
+ */
+
 function lookBfs( o )
 {
   let group = this;
@@ -840,6 +982,41 @@ lookBfs.defaults =
 
 //
 
+/**
+ * @summary Performs depth-first search on graph.
+ * @param {Object} o Options map.
+ * @param {Array|Object} o.nodes Nodes to use as start point.
+ * @param {Function} o.onUp Handler called before visiting each layer.
+ * @param {Function} o.onDown Handler called after visiting each layer.
+ *
+ * @example
+ * //define a graph of arbitrary structure
+ *
+ * var a = { name : 'a', nodes : [] } // 1
+ * var b = { name : 'b', nodes : [] } // 2
+ * var c = { name : 'c', nodes : [] } // 3
+ * var d = { name : 'd', nodes : [] } // 4
+ *
+ * a.nodes.push( b,c ); // add connections between node a and b, c nodes
+ * c.nodes.push( d ); // add connection between node c and d
+ *
+ * //declare the graph
+ *
+ * var sys = new _.graph.AbstractGraphSystem(); // declare sysyem of graphs
+ * var group = sys.groupMake(); // declare group of nodes
+ * group.nodesAdd([ a,b,c,d ]); // add nodes to the group
+ *
+ * // breadth-first search for reachable nodes using provided node as start point
+ *
+ * var layers = group.lookDfs({ nodes : a }); // node 'a' is start node
+ * layers = layers.map( ( nodes ) => group.nodesToNames( nodes ) ) // extract name of nodes from node handles to simplify the output
+ * console.log( layers )
+ *
+ * @function lookDfs
+ * @return {Array} Returns array of layers that are reachable from provided nodes `o.nodes`.
+ * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractGraphGroup#
+ */
+
 function lookDfs( o )
 {
   let group = this;
@@ -915,6 +1092,40 @@ lookDfs.defaults =
 
 //
 
+/**
+ * @summary Algorithm of linear ordering of directed acycled graph. Based on depth-first search.
+ * @param {Array} nodes Array of nodes.
+ *
+ * @example
+ * //define a graph of arbitrary structure
+ *
+ * var a = { name : 'a', nodes : [] } // 1
+ * var b = { name : 'b', nodes : [] } // 2
+ * var c = { name : 'c', nodes : [] } // 3
+ * var d = { name : 'd', nodes : [] } // 4
+ *
+ * a.nodes.push( b,c );
+ * c.nodes.push( d );
+ *
+ * //declare the graph
+ *
+ * var sys = new _.graph.AbstractGraphSystem(); // declare sysyem of graphs
+ * var group = sys.groupMake(); // declare group of nodes
+ * group.nodesAdd([ a,b,c,d ]); // add nodes to the group
+ *
+ * //topological sort based on depth first search
+ *
+ * var ordering = group.topologicalSortDfs();
+ * ordering = ordering.map( ( nodes ) => group.nodesToNames( nodes ) ); // get names of nodes to simplify output
+ * console.log( ordering );
+ *
+ * //[ 'b', 'd', 'c', 'a' ]
+ *
+ * @function topologicalSortDfs
+ * @return {Array} Returns array with sorted nodes.
+ * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractGraphGroup#
+ */
+
 function topologicalSortDfs( /**/nodes )
 {
   let group = this;
@@ -954,6 +1165,48 @@ function topologicalSortDfs( /**/nodes )
 }
 
 //
+
+/**
+ * @summary Algorithm of linear ordering of directed acycled graph. Based on breadth-first search.
+ * @description
+ * Performs ordering using nodes with zero indegree.
+ * Uses nodes of current group if `nodes` argument is not provided.
+ * @param {Array} [nodes] Array of nodes.
+ *
+ * @example
+ *
+ * // define a graph of arbitrary structure
+ * var a = { name : 'a', nodes : [] } // 1
+ * var b = { name : 'b', nodes : [] } // 2
+ * var c = { name : 'c', nodes : [] } // 3
+ * var d = { name : 'd', nodes : [] } // 4
+ *
+ * a.nodes.push( b,c );
+ * c.nodes.push( d );
+ *
+ * // declare the graph
+ *
+ * var sys = new _.graph.AbstractGraphSystem(); // declare sysyem of graphs
+ * var group = sys.groupMake(); // declare group of nodes
+ * group.nodesAdd([ a,b,c,d ]); // add nodes to the group
+ *
+ * // topological sort based on depth first search
+ *
+ * var ordering = group.topologicalSortSourceBasedBfs();
+ * ordering = ordering.map( ( nodes ) => group.nodesToNames( nodes ) ); // get names of nodes to simplify output
+ * console.log( ordering );
+ *
+ * //
+ * //[
+ * //  [ 'a' ],
+ * //   [ 'b', 'c' ],
+ * //  [ 'd' ]
+ * //]
+ *
+ * @function topologicalSortSourceBasedBfs
+ * @return {Array} Returns array with sorted layers.
+ * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractGraphGroup#
+ */
 
 function topologicalSortSourceBasedBfs( nodes )
 {
@@ -1008,6 +1261,15 @@ function topologicalSortCycledSourceBasedBfs( nodes )
 // connectivity algos
 // --
 
+/**
+ * @summary Returns true if two nodes are connected.
+ * @description Performs check using dfs algorithm.
+ * @param {Object} handle1 First node.
+ * @param {Object} handle2 Second node.
+ * @function nodesAreConnectedDfs
+ * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractGraphGroup#
+ */
+
 function nodesAreConnectedDfs( handle1, handle2 )
 {
   let group = this;
@@ -1034,6 +1296,54 @@ function nodesAreConnectedDfs( handle1, handle2 )
 }
 
 //
+
+/**
+ * @summary Group connected nodes.
+ * @description Performs look using dfs algorithm.
+ * @param {Array} nodes Array with node descriptors.]
+ *
+ * @example
+ *
+ * //define a graph of arbitrary structure
+ *
+ * var a = { name : 'a', nodes : [] } // 1
+ * var b = { name : 'b', nodes : [] } // 2
+ * var c = { name : 'c', nodes : [] } // 3
+ * var d = { name : 'd', nodes : [] } // 4
+ *
+ * a.nodes.push( b,c );
+ * c.nodes.push( d );
+ *
+ * // declare the graph
+ *
+ * var sys = new _.graph.AbstractGraphSystem(); // declare sysyem of graphs
+ * var group = sys.groupMake(); // declare group of nodes
+ * group.nodesAdd([ a,b,c,d ]); // add nodes to the group
+ *
+ * // checking if nodes are connected using dfs algorithm
+ *
+ * var connected = group.nodesAreConnectedDfs( a, d );
+ * console.log( 'Nodes a and d are connected:', connected )
+ *
+ * var connected = group.nodesAreConnectedDfs( b, d );
+ * console.log( 'Nodes b and d are connected:', connected )
+ *
+ * // group connected nodes
+ *
+ * c.nodes = []; // break connection between c and d nodes
+ * d.nodes.push( c ); // connect d and c nodes to make second group
+ * var connectedNodes = group.groupByConnectivity();
+ * console.log( 'Nodes grouped by connectivity:', connectedNodes )
+ *
+ * //[
+ * //   a  b  c      d  c
+ * //  [ 1, 2, 3 ], [ 4, 3 ]
+ * //]
+ *
+ * @function groupByConnectivityDfs
+ * @returns {Array} Returns array of arrays. Each inner array contains ids of connected nodes.
+ * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractGraphGroup#
+ */
 
 function groupByConnectivityDfs( /**/nodes )
 {
