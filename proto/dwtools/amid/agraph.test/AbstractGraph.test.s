@@ -24,6 +24,7 @@ function makeByNodes( test )
 
   var sys = new _.graph.AbstractGraphSystem();
   var group = sys.groupMake();
+  test.identical( group.nodes, [] );
 
   test.is( sys === group.sys );
   test.identical( sys.groups.length, 1 );
@@ -132,7 +133,8 @@ function makeByNodesWithInts( test )
 
   test.case = 'init, add, delete, finit';
 
-  var sys = new _.graph.AbstractGraphSystem();
+  function onNodeNameGet( node ){ return node };
+  var sys = new _.graph.AbstractGraphSystem({ onNodeNameGet : onNodeNameGet });
   var group = sys.groupMake();
 
   group.onOutNodesFor = function onOutNodesFor( node )
@@ -194,8 +196,12 @@ function makeByNodesWithInts( test )
 
   test.case = 'nodesDelete';
 
-  var sys = new _.graph.AbstractGraphSystem();
+  function onNodeNameGet( node ){ return node };
+  var sys = new _.graph.AbstractGraphSystem({ onNodeNameGet : onNodeNameGet });
   var group = sys.groupMake();
+
+  test.is( sys.onNodeNameGet === onNodeNameGet );
+  test.is( group.onNodeNameGet === onNodeNameGet );
 
   group.onOutNodesFor = function onOutNodesFor( node )
   {
@@ -280,6 +286,7 @@ function clone( test )
   var group = sys.groupMake();
   group.nodesAdd([ a, b, c, d, e ]);
   var group2 = group.clone();
+  debugger;
 
   test.identical( sys.nodeDescriptorsHash.size, 5 );
   test.identical( sys.idToNodeHash.size, 5 );
@@ -423,14 +430,14 @@ function reverse( test )
   test.identical( group.nodesToIds( group.nodes ), [ 1, 2, 3, 4, 5 ] );
   test.identical( group2.nodesToIds( group2.nodes ), [ 1, 2, 3, 4, 5 ] );
   var expected = [ [ 2, 3 ], [ 1 ], [ 5 ], [], [ 2 ] ];
-  var neighbours = group.nodesOutNodesFor( group.nodes ).map( ( nodes ) => group.nodesToIds( nodes ) );
-  test.identical( neighbours, expected );
+  var outNodes = group.nodesOutNodesFor( group.nodes ).map( ( nodes ) => group.nodesToIds( nodes ) );
+  test.identical( outNodes, expected );
   var expected = [ [ 2 ], [ 1, 5 ], [ 1 ], [], [ 3 ] ];
-  var neighbours = group2.nodesOutNodesFor( group2.nodes ).map( ( nodes ) => group2.nodesToIds( nodes ) );
-  test.identical( neighbours, expected );
+  var outNodes = group2.nodesOutNodesFor( group2.nodes ).map( ( nodes ) => group2.nodesToIds( nodes ) );
+  test.identical( outNodes, expected );
   var expected = [ [ 2, 3 ], [ 1 ], [ 5 ], [], [ 2 ] ];
-  var neighbours = group2.nodesInNodesFor( group2.nodes ).map( ( nodes ) => group2.nodesToIds( nodes ) );
-  test.identical( neighbours, expected );
+  var outNodes = group2.nodesInNodesFor( group2.nodes ).map( ( nodes ) => group2.nodesToIds( nodes ) );
+  test.identical( outNodes, expected );
 
   group2.reverse();
   test.identical( sys.nodeDescriptorsHash.size, 5 );
@@ -443,14 +450,14 @@ function reverse( test )
   test.identical( group.nodesToIds( group.nodes ), [ 1, 2, 3, 4, 5 ] );
   test.identical( group2.nodesToIds( group2.nodes ), [ 1, 2, 3, 4, 5 ] );
   var expected = [ [ 2, 3 ], [ 1 ], [ 5 ], [], [ 2 ] ];
-  var neighbours = group.nodesOutNodesFor( group.nodes ).map( ( nodes ) => group.nodesToIds( nodes ) );
-  test.identical( neighbours, expected );
+  var outNodes = group.nodesOutNodesFor( group.nodes ).map( ( nodes ) => group.nodesToIds( nodes ) );
+  test.identical( outNodes, expected );
   var expected = [ [ 2, 3 ], [ 1 ], [ 5 ], [], [ 2 ] ];
-  var neighbours = group2.nodesOutNodesFor( group2.nodes ).map( ( nodes ) => group2.nodesToIds( nodes ) );
-  test.identical( neighbours, expected );
+  var outNodes = group2.nodesOutNodesFor( group2.nodes ).map( ( nodes ) => group2.nodesToIds( nodes ) );
+  test.identical( outNodes, expected );
   var expected = [ [ 2 ], [ 1, 5 ], [ 1 ], [], [ 3 ] ];
-  var neighbours = group2.nodesInNodesFor( group2.nodes ).map( ( nodes ) => group2.nodesToIds( nodes ) );
-  test.identical( neighbours, expected );
+  var outNodes = group2.nodesInNodesFor( group2.nodes ).map( ( nodes ) => group2.nodesToIds( nodes ) );
+  test.identical( outNodes, expected );
 
   group.finit();
   test.identical( sys.nodeDescriptorsHash.size, 5 );
@@ -497,7 +504,7 @@ function sinksOnlyAmong( test )
   i.nodes.push( f, h ); // 9
   j.nodes.push(); // 10
 
-  var sys = new _.graph.AbstractGraphSystem();
+  var sys = new _.graph.AbstractGraphSystem({ onNodeNameGet : ( node ) => node.name });
   var group = sys.groupMake();
 
   group.nodesAdd([ a, b, c, d, e, f, g, h, i, j ]);
@@ -536,7 +543,7 @@ function sourcesOnlyAmong( test )
   i.nodes.push( f, h ); // 9
   j.nodes.push(); // 10
 
-  var sys = new _.graph.AbstractGraphSystem();
+  var sys = new _.graph.AbstractGraphSystem({ onNodeNameGet : ( node ) => node.name });
   var group = sys.groupMake();
 
   group.nodesAdd([ a, b, c, d, e, f, g, h, i, j ]);
@@ -575,7 +582,7 @@ function leastMostDegreeAmong( test )
   i.nodes.push( f, h ); // 9
   j.nodes.push(); // 10
 
-  var sys = new _.graph.AbstractGraphSystem();
+  var sys = new _.graph.AbstractGraphSystem({ onNodeNameGet : ( node ) => node.name });
   var group = sys.groupMake();
   group.nodesAdd([ a, b, c, d, e, f, g, h, i, j ]);
 
@@ -786,7 +793,7 @@ function lookDfs( test )
   i.nodes.push( f, h ); // 9
   j.nodes.push(); // 10
 
-  var sys = new _.graph.AbstractGraphSystem();
+  var sys = new _.graph.AbstractGraphSystem({ onNodeNameGet : ( node ) => node.name });
   var group = sys.groupMake();
 
   group.nodesAdd([ a, b, c, d, e, f, g, h, i, j ]);
@@ -902,7 +909,7 @@ function lookBfs( test )
   i.nodes.push( f, h ); // 9
   j.nodes.push(); // 10
 
-  var sys = new _.graph.AbstractGraphSystem();
+  var sys = new _.graph.AbstractGraphSystem({ onNodeNameGet : ( node ) => node.name });
   var group = sys.groupMake();
 
   group.nodesAdd([ a, b, c, d, e, f, g, h, i, j ]);
@@ -1083,15 +1090,15 @@ function topologicalSortDfs( test )
   e.nodes.push( f );
   f.nodes.push();
 
-  var sys = new _.graph.AbstractGraphSystem();
+  var sys = new _.graph.AbstractGraphSystem({ onNodeNameGet : ( node ) => node.name });
   var group = sys.groupMake();
   group.nodesAdd([ a, b, c, d, e, f ]);
   logger.log( 'DAG' )
-  logger.log( group.nodesExportInfo() );
+  logger.log( group.nodesInfoExport() );
 
   var ordering = group.topologicalSortDfs();
   logger.log( 'Ordering' )
-  logger.log( group.nodesExportInfo( ordering ) );
+  logger.log( group.nodesInfoExport( ordering ) );
 
   var expected = [ 3, 4, 6, 5, 2, 1 ];
   test.identical( group.nodesToIds( ordering ), expected );
@@ -1127,7 +1134,7 @@ function topologicalSortSourceBasedBfs( test )
   i.nodes.push( f, h ); // 9
   j.nodes.push(); // 10
 
-  var sys = new _.graph.AbstractGraphSystem();
+  var sys = new _.graph.AbstractGraphSystem({ onNodeNameGet : ( node ) => node.name });
   var group = sys.groupMake();
 
   group.nodesAdd([ a, b, c, d, e, f, g, h, i, j ]);
@@ -1209,7 +1216,7 @@ function topologicalSortSourceBasedBfs( test )
   b.nodes.push( a ); // 2
   c.nodes.push(); // 3
 
-  var sys = new _.graph.AbstractGraphSystem();
+  var sys = new _.graph.AbstractGraphSystem({ onNodeNameGet : ( node ) => node.name });
   var group = sys.groupMake();
 
   group.nodesAdd([ a, b, c ]);
@@ -1261,7 +1268,7 @@ function topologicalSortCycledSourceBasedBfs( test )
   i.nodes.push( f, h ); // 9
   j.nodes.push(); // 10
 
-  var sys = new _.graph.AbstractGraphSystem();
+  var sys = new _.graph.AbstractGraphSystem({ onNodeNameGet : ( node ) => node.name });
   var group = sys.groupMake();
 
   group.nodesAdd([ a, b, c, d, e, f, g, h, i, j ]);
@@ -1339,7 +1346,7 @@ function topologicalSortCycledSourceBasedBfs( test )
   b.nodes.push( a ); // 2
   c.nodes.push(); // 3
 
-  var sys = new _.graph.AbstractGraphSystem();
+  var sys = new _.graph.AbstractGraphSystem({ onNodeNameGet : ( node ) => node.name });
   var group = sys.groupMake();
 
   group.nodesAdd([ a, b, c ]);
@@ -1387,7 +1394,7 @@ function nodesAreConnectedDfs( test )
   g.nodes.push( f, h );
   h.nodes.push( g );
 
-  var sys = new _.graph.AbstractGraphSystem();
+  var sys = new _.graph.AbstractGraphSystem({ onNodeNameGet : ( node ) => node.name });
   var group = sys.groupMake();
   group.nodesAdd([ a, b, c, d, e, f, g, h ]);
   test.identical( group.nodes.length, 8 );
@@ -1442,7 +1449,7 @@ function groupByConnectivityDfs( test )
 
   test.case = 'setup';
 
-  var sys = new _.graph.AbstractGraphSystem();
+  var sys = new _.graph.AbstractGraphSystem({ onNodeNameGet : ( node ) => node.name });
   var group = sys.groupMake();
 
   var a = { name : 'a', nodes : [] } // 1
@@ -1526,7 +1533,7 @@ function groupByStrongConnectivityDfs( test )
   i.nodes.push( f, h ); // 9
   j.nodes.push(); // 10
 
-  var sys = new _.graph.AbstractGraphSystem();
+  var sys = new _.graph.AbstractGraphSystem({ onNodeNameGet : ( node ) => node.name });
   var group = sys.groupMake();
   group.nodesAdd([ a, b, c, d, e, f, g, h, i, j ]);
   test.identical( group.nodes.length, 10 );
@@ -1559,8 +1566,8 @@ function stronglyConnectedTreeForDfs( test )
   b.nodes.push( a ); // 2
   c.nodes.push(); // 3
 
-  var sys = new _.graph.AbstractGraphSystem();
-  var group = sys.groupMake();
+  var sys = new _.graph.AbstractGraphSystem({ onNodeNameGet : ( node ) => node.name });
+  var group = sys.groupMake({});
 
   group.nodesAdd([ a, b, c ]);
   logger.log( 'Original' );
@@ -1608,7 +1615,7 @@ function stronglyConnectedTreeForDfs( test )
   i.nodes.push( f, h ); // 9
   j.nodes.push(); // 10
 
-  var sys = new _.graph.AbstractGraphSystem();
+  var sys = new _.graph.AbstractGraphSystem({ onNodeNameGet : ( node ) => node.name });
   var group = sys.groupMake();
   group.nodesAdd([ a, b, c, d, e, f, g, h, i, j ]);
   logger.log( 'Original' );
@@ -1654,6 +1661,142 @@ function stronglyConnectedTreeForDfs( test )
 
 //
 
+function nodesInfoExportAsTree( test )
+{
+
+  test.case = 'trivial';
+
+  var a = { name : 'a', nodes : [] } // 1
+  var b = { name : 'b', nodes : [] } // 2
+  var c = { name : 'c', nodes : [] } // 3
+  var d = { name : 'd', nodes : [] } // 4
+  var e = { name : 'e', nodes : [] } // 5
+  var f = { name : 'f', nodes : [] } // 6
+  var g = { name : 'g', nodes : [] } // 7
+  var h = { name : 'h', nodes : [] } // 8
+  var i = { name : 'i', nodes : [] } // 9
+  var j = { name : 'j', nodes : [] } // 10
+
+  a.nodes.push( b ); // 1
+  b.nodes.push( e, f ); // 2
+  c.nodes.push( b ); // 3
+  d.nodes.push( a, g ); // 4
+  e.nodes.push( a, c, h ); // 5
+  f.nodes.push(); // 6
+  g.nodes.push( h ); // 7
+  h.nodes.push( i ); // 8
+  i.nodes.push( f, h ); // 9
+  j.nodes.push(); // 10
+
+  var sys = new _.graph.AbstractGraphSystem({ onNodeNameGet : ( node ) => node.name });
+  var group = sys.groupMake();
+  group.nodesAdd([ a, b, c, d, e, f, g, h, i, j ]);
+
+  // logger.log( 'DAG' )
+  // logger.log( group.nodesInfoExport() );
+
+  test.case = 'single a';
+  var expected =
+  `+-- a
+     +-- b
+       +-- e
+       | +-- c
+       | +-- h
+       |   +-- i
+       |     +-- f
+       +-- f
+  `
+  var infoAsTree = group.nodesInfoExportAsTree([ a ]);
+  test.equivalent( infoAsTree, expected );
+  logger.log( 'Tree' );
+  logger.log( infoAsTree );
+
+  test.case = 'single b';
+  var expected =
+  `+-- b
+     +-- e
+     | +-- a
+     | +-- c
+     | +-- h
+     |   +-- i
+     |     +-- f
+     +-- f
+  `
+  var infoAsTree = group.nodesInfoExportAsTree([ b ]);
+  test.equivalent( infoAsTree, expected );
+  logger.log( 'Tree' );
+  logger.log( infoAsTree );
+
+  test.case = 'multiple: a, b, c';
+  var expected =
+  `+-- a
+     | +-- b
+     |   +-- e
+     |   | +-- c
+     |   | +-- h
+     |   |   +-- i
+     |   |     +-- f
+     |   +-- f
+     |
+     +-- b
+     | +-- e
+     | | +-- a
+     | | +-- c
+     | | +-- h
+     | |   +-- i
+     | |     +-- f
+     | +-- f
+     |
+     +-- c
+       +-- b
+         +-- e
+         | +-- a
+         | +-- h
+         |   +-- i
+         |     +-- f
+         +-- f
+  `
+  var infoAsTree = group.nodesInfoExportAsTree([ a, b, c ]);
+  test.equivalent( infoAsTree, expected );
+  logger.log( 'Tree' );
+  logger.log( infoAsTree );
+
+  test.case = 'multiple, topsDelimiting : 0';
+  var expected =
+  `+-- a
+     | +-- b
+     |   +-- e
+     |   | +-- c
+     |   | +-- h
+     |   |   +-- i
+     |   |     +-- f
+     |   +-- f
+     +-- b
+     | +-- e
+     | | +-- a
+     | | +-- c
+     | | +-- h
+     | |   +-- i
+     | |     +-- f
+     | +-- f
+     +-- c
+       +-- b
+         +-- e
+         | +-- a
+         | +-- h
+         |   +-- i
+         |     +-- f
+         +-- f
+  `
+  var infoAsTree = group.nodesInfoExportAsTree( [ a, b, c ], { topsDelimiting : 0 } );
+  test.equivalent( infoAsTree, expected );
+  logger.log( 'Tree' );
+  logger.log( infoAsTree );
+
+}
+
+//
+
 var Self =
 {
 
@@ -1683,6 +1826,8 @@ var Self =
     groupByConnectivityDfs,
     groupByStrongConnectivityDfs,
     stronglyConnectedTreeForDfs,
+
+    nodesInfoExportAsTree,
 
   },
 
