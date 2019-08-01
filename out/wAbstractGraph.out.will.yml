@@ -8,7 +8,7 @@ about:
     breadth-first search, extracting strongly connected components, topological
     sort, shortest path search, and others.
   enabled: 1
-  version: 0.3.12
+  version: 0.3.28
   interpreters: &ref_0
     - nodejs >= 6.0.0
     - chrome >= 60.0.0
@@ -57,9 +57,9 @@ path:
   proto:
     path: ../proto
   repository:
-    path: 'git+https:///github.com/Wandalen/wAbstractGraph.git'
+    path: 'git+https://../github.com/Wandalen/wAbstractGraph.git'
   bugs:
-    path: 'https:///github.com/Wandalen/wAbstractGraph/issues'
+    path: 'https://../github.com/Wandalen/wAbstractGraph/issues'
   exported.dir.proto.export:
     path: ../proto
     criterion:
@@ -280,7 +280,7 @@ build:
       - 'step::export.proto'
 exported:
   proto.export:
-    version: 0.3.12
+    version: 0.3.28
     criterion:
       default: 1
       debug: 1
@@ -304,7 +304,7 @@ module:
         search, breadth-first search, extracting strongly connected components,
         topological sort, shortest path search, and others.
       enabled: 1
-      version: 0.3.12
+      version: 0.3.28
       interpreters: *ref_0
       keywords: *ref_1
     path:
@@ -351,9 +351,9 @@ module:
       proto:
         path: ./proto
       repository:
-        path: 'git+https:///github.com/Wandalen/wAbstractGraph.git'
+        path: 'git+https://github.com/Wandalen/wAbstractGraph.git'
       bugs:
-        path: 'https:///github.com/Wandalen/wAbstractGraph/issues'
+        path: 'https://github.com/Wandalen/wAbstractGraph/issues'
       exported.dir.proto.export:
         path: ./proto
         criterion:
@@ -574,7 +574,7 @@ module:
           - 'step::export.proto'
     exported:
       proto.export:
-        version: 0.3.12
+        version: 0.3.28
         criterion:
           default: 1
           debug: 1
