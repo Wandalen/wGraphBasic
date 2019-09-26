@@ -25,7 +25,7 @@ function makeByNodes( test )
 
   var sys = new _.graph.AbstractGraphSystem();
   var group = sys.nodesGroup();
-  test.identical( group.nodes, [] );
+  test.identical( group.nodes.toArray().original, [] );
 
   test.is( sys === group.sys );
   test.identical( sys.groups.length, 1 );
@@ -42,19 +42,19 @@ function makeByNodes( test )
   d.nodes.push();
   e.nodes.push( c );
 
-  test.identical( group.nodeHas( a ), false );
-  test.identical( sys.nodeHas( a ), false );
+  test.identical( group.hasNode( a ), false );
+  test.identical( sys.hasNode( a ), false );
 
   group.nodesAdd([ a, b, c, d, e ]);
 
-  test.identical( group.nodeHas( a ), true );
-  test.identical( sys.nodeHas( a ), true );
+  test.identical( group.hasNode( a ), true );
+  test.identical( sys.hasNode( a ), true );
 
   test.identical( sys.nodeDescriptorsHash.size, 0 );
   test.identical( sys.idToNodeHash.size, 5 );
   test.identical( sys.nodeToIdHash.size, 5 );
   test.identical( group.nodes.length, 5 );
-  test.identical( group.nodesToIds( group.nodes ), [ 1, 2, 3, 4, 5 ] );
+  test.identical( group.nodesToIds( group.nodes.toArray().original ), [ 1, 2, 3, 4, 5 ] );
   logger.log( group.infoExport() );
 
   group.nodeDelete( d );
@@ -62,7 +62,7 @@ function makeByNodes( test )
   test.identical( sys.idToNodeHash.size, 4 );
   test.identical( sys.nodeToIdHash.size, 4 );
   test.identical( group.nodes.length, 4 );
-  test.identical( group.nodesToIds( group.nodes ), [ 1, 2, 3, 5 ] );
+  test.identical( group.nodesToIds( group.nodes.toArray().original ), [ 1, 2, 3, 5 ] );
   logger.log( group.infoExport() );
 
   group.finit();
@@ -94,8 +94,8 @@ function makeByNodes( test )
   d.nodes.push();
   e.nodes.push( c );
 
-  test.identical( group.nodeHas( a ), false );
-  test.identical( sys.nodeHas( a ), false );
+  test.identical( group.hasNode( a ), false );
+  test.identical( sys.hasNode( a ), false );
 
   group.nodesAdd([ a, b, c, d, e ]);
 
@@ -103,7 +103,7 @@ function makeByNodes( test )
   test.identical( sys.idToNodeHash.size, 5 );
   test.identical( sys.nodeToIdHash.size, 5 );
   test.identical( group.nodes.length, 5 );
-  test.identical( group.nodesToIds( group.nodes ), [ 1, 2, 3, 4, 5 ] );
+  test.identical( group.nodesToIds( group.nodes.toArray().original ), [ 1, 2, 3, 4, 5 ] );
   logger.log( group.infoExport() );
 
   group.nodesDelete([ a, d, e ]);
@@ -111,7 +111,7 @@ function makeByNodes( test )
   test.identical( sys.idToNodeHash.size, 2 );
   test.identical( sys.nodeToIdHash.size, 2 );
   test.identical( group.nodes.length, 2 );
-  test.identical( group.nodesToIds( group.nodes ), [ 2, 3 ] );
+  test.identical( group.nodesToIds( group.nodes.toArray().original ), [ 2, 3 ] );
   logger.log( group.infoExport() );
 
   group.nodesDelete();
@@ -119,7 +119,7 @@ function makeByNodes( test )
   test.identical( sys.idToNodeHash.size, 0 );
   test.identical( sys.nodeToIdHash.size, 0 );
   test.identical( group.nodes.length, 0 );
-  test.identical( group.nodesToIds( group.nodes ), [] );
+  test.identical( group.nodesToIds( group.nodes.toArray().original ), [] );
   logger.log( group.infoExport() );
 
   group.finit();
@@ -167,19 +167,19 @@ function makeByNodesWithInts( test )
   nodes[ 3 ] = [];
   nodes[ 4 ] = [ c ];
 
-  test.identical( group.nodeHas( a ), false );
-  test.identical( sys.nodeHas( a ), false );
+  test.identical( group.hasNode( a ), false );
+  test.identical( sys.hasNode( a ), false );
 
   group.nodesAdd([ a, b, c, d, e ]);
 
-  test.identical( group.nodeHas( a ), true );
-  test.identical( sys.nodeHas( a ), true );
+  test.identical( group.hasNode( a ), true );
+  test.identical( sys.hasNode( a ), true );
 
   test.identical( sys.nodeDescriptorsHash.size, 0 );
   test.identical( sys.idToNodeHash.size, 5 );
   test.identical( sys.nodeToIdHash.size, 5 );
   test.identical( group.nodes.length, 5 );
-  test.identical( group.nodesToIds( group.nodes ), [ 1, 2, 3, 4, 5 ] );
+  test.identical( group.nodesToIds( group.nodes ).toArray().original, [ 1, 2, 3, 4, 5 ] );
   logger.log( group.infoExport() );
 
   group.nodeDelete( d );
@@ -187,7 +187,7 @@ function makeByNodesWithInts( test )
   test.identical( sys.idToNodeHash.size, 4 );
   test.identical( sys.nodeToIdHash.size, 4 );
   test.identical( group.nodes.length, 4 );
-  test.identical( group.nodesToIds( group.nodes ), [ 1, 2, 3, 5 ] );
+  test.identical( group.nodesToIds( group.nodes ).toArray().original, [ 1, 2, 3, 5 ] );
   logger.log( group.infoExport() );
 
   group.finit();
@@ -233,8 +233,8 @@ function makeByNodesWithInts( test )
   nodes[ 3 ] = [];
   nodes[ 4 ] = [ c ];
 
-  test.identical( group.nodeHas( a ), false );
-  test.identical( sys.nodeHas( a ), false );
+  test.identical( group.hasNode( a ), false );
+  test.identical( sys.hasNode( a ), false );
 
   group.nodesAdd([ a, b, c, d, e ]);
 
@@ -242,7 +242,7 @@ function makeByNodesWithInts( test )
   test.identical( sys.idToNodeHash.size, 5 );
   test.identical( sys.nodeToIdHash.size, 5 );
   test.identical( group.nodes.length, 5 );
-  test.identical( group.nodesToIds( group.nodes ), [ 1, 2, 3, 4, 5 ] );
+  test.identical( group.nodesToIds( group.nodes ).toArray().original, [ 1, 2, 3, 4, 5 ] );
   logger.log( group.infoExport() );
 
   group.nodesDelete([ a, d, e ]);
@@ -250,7 +250,7 @@ function makeByNodesWithInts( test )
   test.identical( sys.idToNodeHash.size, 2 );
   test.identical( sys.nodeToIdHash.size, 2 );
   test.identical( group.nodes.length, 2 );
-  test.identical( group.nodesToIds( group.nodes ), [ 2, 3 ] );
+  test.identical( group.nodesToIds( group.nodes ).toArray().original, [ 2, 3 ] );
   logger.log( group.infoExport() );
 
   group.nodesDelete();
@@ -258,7 +258,7 @@ function makeByNodesWithInts( test )
   test.identical( sys.idToNodeHash.size, 0 );
   test.identical( sys.nodeToIdHash.size, 0 );
   test.identical( group.nodes.length, 0 );
-  test.identical( group.nodesToIds( group.nodes ), [] );
+  test.identical( group.nodesToIds( group.nodes ).toArray().original, [] );
   logger.log( group.infoExport() );
 
   group.finit();
@@ -300,8 +300,8 @@ function clone( test )
   test.identical( group2.nodes.length, 5 );
   test.identical( sys.groups.length, 2 );
   test.is( group.nodes !== group2.nodes );
-  test.identical( group.nodesToIds( group.nodes ), [ 1, 2, 3, 4, 5 ] );
-  test.identical( group2.nodesToIds( group2.nodes ), [ 1, 2, 3, 4, 5 ] );
+  test.identical( group.nodesToIds( group.nodes ).toArray().original, [ 1, 2, 3, 4, 5 ] );
+  test.identical( group2.nodesToIds( group2.nodes ).toArray().original, [ 1, 2, 3, 4, 5 ] );
   logger.log( group.infoExport() );
 
   group.finit();
@@ -345,12 +345,12 @@ function clone( test )
   group.nodeDelete( a );
   group2.nodeDelete( b );
 
-  test.identical( group.nodeHas( a ), false );
-  test.identical( group.nodeHas( b ), true );
-  test.identical( group2.nodeHas( a ), true );
-  test.identical( group2.nodeHas( b ), false );
-  test.identical( sys.nodeHas( a ), true );
-  test.identical( sys.nodeHas( b ), true );
+  test.identical( group.hasNode( a ), false );
+  test.identical( group.hasNode( b ), true );
+  test.identical( group2.hasNode( a ), true );
+  test.identical( group2.hasNode( b ), false );
+  test.identical( sys.hasNode( a ), true );
+  test.identical( sys.hasNode( b ), true );
 
   test.identical( sys.nodeDescriptorsHash.size, 5 );
   test.identical( sys.idToNodeHash.size, 5 );
@@ -358,19 +358,19 @@ function clone( test )
   test.identical( group.nodes.length, 4 );
   test.identical( group2.nodes.length, 4 );
   test.identical( sys.groups.length, 2 );
-  test.identical( group.nodesToIds( group.nodes ), [ 2, 3, 4, 5 ] );
-  test.identical( group2.nodesToIds( group2.nodes ), [ 1, 3, 4, 5 ] );
+  test.identical( group.nodesToIds( group.nodes ).toArray().original, [ 2, 3, 4, 5 ] );
+  test.identical( group2.nodesToIds( group2.nodes ).toArray().original, [ 1, 3, 4, 5 ] );
   logger.log( group.infoExport() );
 
   group2.nodeDelete( a )
   group.nodeDelete( b );
 
-  test.identical( group.nodeHas( a ), false );
-  test.identical( group.nodeHas( b ), false );
-  test.identical( group2.nodeHas( a ), false );
-  test.identical( group2.nodeHas( b ), false );
-  test.identical( sys.nodeHas( a ), false );
-  test.identical( sys.nodeHas( b ), false );
+  test.identical( group.hasNode( a ), false );
+  test.identical( group.hasNode( b ), false );
+  test.identical( group2.hasNode( a ), false );
+  test.identical( group2.hasNode( b ), false );
+  test.identical( sys.hasNode( a ), false );
+  test.identical( sys.hasNode( b ), false );
 
   test.identical( sys.nodeDescriptorsHash.size, 3 );
   test.identical( sys.idToNodeHash.size, 3 );
@@ -378,8 +378,8 @@ function clone( test )
   test.identical( group.nodes.length, 3 );
   test.identical( group2.nodes.length, 3 );
   test.identical( sys.groups.length, 2 );
-  test.identical( group.nodesToIds( group.nodes ), [ 3, 4, 5 ] );
-  test.identical( group2.nodesToIds( group2.nodes ), [ 3, 4, 5 ] );
+  test.identical( group.nodesToIds( group.nodes ).toArray().original, [ 3, 4, 5 ] );
+  test.identical( group2.nodesToIds( group2.nodes ).toArray().original, [ 3, 4, 5 ] );
   logger.log( group.infoExport() );
 
   group.finit();
@@ -437,16 +437,16 @@ function reverse( test )
   test.identical( group2.nodes.length, 5 );
   test.identical( sys.groups.length, 2 );
   test.is( group.nodes !== group2.nodes );
-  test.identical( group.nodesToIds( group.nodes ), [ 1, 2, 3, 4, 5 ] );
-  test.identical( group2.nodesToIds( group2.nodes ), [ 1, 2, 3, 4, 5 ] );
+  test.identical( group.nodesToIds( group.nodes ).toArray().original, [ 1, 2, 3, 4, 5 ] );
+  test.identical( group2.nodesToIds( group2.nodes ).toArray().original, [ 1, 2, 3, 4, 5 ] );
   var expected = [ [ 2, 3 ], [ 1 ], [ 5 ], [], [ 2 ] ];
-  var outNodes = group.nodesOutNodesFor( group.nodes ).map( ( nodes ) => group.nodesToIds( nodes ) );
+  var outNodes = group.nodesOutNodesFor( group.nodes ).map( ( nodes ) => group.nodesToIds( nodes ).toArray().original ).toArray().original;
   test.identical( outNodes, expected );
   var expected = [ [ 2 ], [ 1, 5 ], [ 1 ], [], [ 3 ] ];
-  var outNodes = group2.nodesOutNodesFor( group2.nodes ).map( ( nodes ) => group2.nodesToIds( nodes ) );
+  var outNodes = group2.nodesOutNodesFor( group2.nodes ).map( ( nodes ) => group2.nodesToIds( nodes ).toArray().original ).toArray().original;
   test.identical( outNodes, expected );
   var expected = [ [ 2, 3 ], [ 1 ], [ 5 ], [], [ 2 ] ];
-  var outNodes = group2.nodesInNodesFor( group2.nodes ).map( ( nodes ) => group2.nodesToIds( nodes ) );
+  var outNodes = group2.nodesInNodesFor( group2.nodes ).map( ( nodes ) => group2.nodesToIds( nodes ).toArray().original ).toArray().original;
   test.identical( outNodes, expected );
 
   group2.reverse();
@@ -457,16 +457,16 @@ function reverse( test )
   test.identical( group2.nodes.length, 5 );
   test.identical( sys.groups.length, 2 );
   test.is( group.nodes !== group2.nodes );
-  test.identical( group.nodesToIds( group.nodes ), [ 1, 2, 3, 4, 5 ] );
-  test.identical( group2.nodesToIds( group2.nodes ), [ 1, 2, 3, 4, 5 ] );
+  test.identical( group.nodesToIds( group.nodes ).toArray().original, [ 1, 2, 3, 4, 5 ] );
+  test.identical( group2.nodesToIds( group2.nodes ).toArray().original, [ 1, 2, 3, 4, 5 ] );
   var expected = [ [ 2, 3 ], [ 1 ], [ 5 ], [], [ 2 ] ];
-  var outNodes = group.nodesOutNodesFor( group.nodes ).map( ( nodes ) => group.nodesToIds( nodes ) );
+  var outNodes = group.nodesOutNodesFor( group.nodes ).map( ( nodes ) => group.nodesToIds( nodes ).toArray().original ).toArray().original;
   test.identical( outNodes, expected );
   var expected = [ [ 2, 3 ], [ 1 ], [ 5 ], [], [ 2 ] ];
-  var outNodes = group2.nodesOutNodesFor( group2.nodes ).map( ( nodes ) => group2.nodesToIds( nodes ) );
+  var outNodes = group2.nodesOutNodesFor( group2.nodes ).map( ( nodes ) => group2.nodesToIds( nodes ).toArray().original ).toArray().original;
   test.identical( outNodes, expected );
   var expected = [ [ 2 ], [ 1, 5 ], [ 1 ], [], [ 3 ] ];
-  var outNodes = group2.nodesInNodesFor( group2.nodes ).map( ( nodes ) => group2.nodesToIds( nodes ) );
+  var outNodes = group2.nodesInNodesFor( group2.nodes ).map( ( nodes ) => group2.nodesToIds( nodes ).toArray().original ).toArray().original;
   test.identical( outNodes, expected );
 
   group.finit();
@@ -491,19 +491,23 @@ function nodesAs( test )
 {
   let context = this;
 
+  /* - */
+
+  test.open( 'array' );
+
   var g = context.cycled4StronglyConnectedLayers();
   var group = g.sys.nodesGroup();
 
   test.case = 'a';
   var exp = [ 'a' ];
-  var dst = a;
+  var dst = g.a;
   var got = group.nodesAs( dst );
   test.identical( group.nodesToNames( got ), exp );
   test.is( _.arrayIs( got ) );
 
   test.case = '[ a ]';
   var exp = [ 'a' ];
-  var dst = [ a ];
+  var dst = [ g.a ];
   var got = group.nodesAs( dst );
   test.identical( group.nodesToNames( got ), exp );
   test.is( _.arrayIs( got ) );
@@ -511,7 +515,7 @@ function nodesAs( test )
 
   test.case = '[ a, b ]';
   var exp = [ 'a', 'b' ];
-  var dst = [ a, b ];
+  var dst = [ g.a, g.b ];
   var got = group.nodesAs( dst );
   test.identical( group.nodesToNames( got ), exp );
   test.is( _.arrayIs( got ) );
@@ -519,60 +523,51 @@ function nodesAs( test )
 
   g.sys.finit();
 
-  /* xxx : extend test routine nodesAs with set cases */
+  test.close( 'array' );
+
+  /* - */
+
+  test.open( 'set' );
+
+  var g = context.cycled4StronglyConnectedLayers();
+  var group = g.sys.nodesGroup();
+
+  test.case = 'a';
+  var exp = [ 'a' ];
+  var dst = g.a;
+  var got = group.nodesAs( dst );
+  test.identical( group.nodesToNames( got ), exp );
+  test.is( _.arrayIs( got ) );
+
+  test.case = '[ a ]';
+  var exp = new Set([ 'a' ]);
+  var dst = new Set([ g.a ]);
+  var got = group.nodesAs( dst );
+  test.identical( group.nodesToNames( got ), exp );
+  test.is( _.setIs( got ) );
+  test.is( got === dst )
+
+  test.case = '[ a, b ]';
+  var exp = new Set([ 'a', 'b' ]);
+  var dst = new Set([ g.a, g.b ]);
+  var got = group.nodesAs( dst );
+  test.identical( group.nodesToNames( got ), exp );
+  test.is( _.setIs( got ) );
+  test.is( got === dst )
+
+  g.sys.finit();
+
+  test.close( 'set' );
+
+  /* - */
 
 }
 
 //
 
-function rootsAllReachable( test )
+function sourcesFromRoots( test )
 {
-  let context = this; // xxx
-
-  /* - */
-
-  // test.open( 'array' );
-  //
-  // var g = context.cycled4StronglyConnectedLayers();
-  // var group = g.sys.nodesGroup();
-  //
-  // test.case = 'a';
-  // var exp = [ 'a', 'b', 'e', 'c', 'h', 'i', 'f' ];
-  // var dst = g.a;
-  // var got = group.rootsAllReachable( dst );
-  // test.identical( group.nodesToNames( got ), exp );
-  //
-  // test.case = '[ a ]';
-  // var exp = [ 'a', 'b', 'e', 'c', 'h', 'i', 'f' ];
-  // var dst = [ g.a ];
-  // var got = group.rootsAllReachable( dst );
-  // test.identical( group.nodesToNames( got ), exp );
-  // test.is( got === dst )
-  //
-  // test.case = '[ a, c ]';
-  // var exp = [ 'a', 'c', 'b', 'e', 'h', 'i', 'f' ];
-  // var dst = [ g.a, g.c ];
-  // var got = group.rootsAllReachable( dst );
-  // test.identical( group.nodesToNames( got ), exp );
-  // test.is( got === dst )
-  //
-  // test.case = '[ a, b ]';
-  // var exp = [ 'a', 'b', 'e', 'c', 'h', 'i', 'f' ];
-  // var dst = [ g.a, g.b ];
-  // var got = group.rootsAllReachable( dst );
-  // test.identical( group.nodesToNames( got ), exp );
-  // test.is( got === dst )
-  //
-  // test.case = '[ j, a, b ]';
-  // var exp = [ 'j', 'a', 'b', 'e', 'c', 'h', 'i', 'f' ];
-  // var dst = [ g.j, g.a, g.b ];
-  // var got = group.rootsAllReachable( dst );
-  // test.identical( group.nodesToNames( got ), exp );
-  // test.is( got === dst )
-  //
-  // g.sys.finit();
-  //
-  // test.close( 'array' );
+  let context = this;
 
   /* - */
 
@@ -581,38 +576,143 @@ function rootsAllReachable( test )
   var g = context.cycled4StronglyConnectedLayers();
   var group = g.sys.nodesGroup();
 
-  // test.case = 'a';
-  // var exp = [ 'a', 'b', 'e', 'c', 'h', 'i', 'f' ];
-  // var dst = g.a;
-  // var got = group.rootsAllReachable( dst );
-  // test.identical( group.nodesToNames( got ), exp );
+  test.case = 'all';
+  var exp = [ 'a', 'b', 'e', 'c', 'h', 'i', 'f' ];
+  var got = group.sourcesFromRoots( null, g.nodes );
+  debugger;
+  test.identical( group.nodesToNames( got ).original, exp );
+  debugger;
+
+  test.case = 'a';
+  var exp = [ 'a', 'b', 'e', 'c', 'h', 'i', 'f' ];
+  var dst = g.a;
+  var got = group.sourcesFromRoots( dst );
+  test.identical( group.nodesToNames( got ).original, exp );
 
   test.case = '[ a ]';
-  var exp = new Set([ 'a', 'b', 'e', 'c', 'h', 'i', 'f' ]);
-  var dst = new Set([ g.a ]);
-  var got = group.rootsAllReachable( dst );
-  debugger;
-  test.identical( group.nodesToNames( got ), exp );
-  debugger;
+  var exp = [ 'a', 'b', 'e', 'c', 'h', 'i', 'f' ];
+  var dst = [ g.a ];
+  var got = group.sourcesFromRoots( dst );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.is( got === dst )
 
   test.case = '[ a, c ]';
   var exp = [ 'a', 'c', 'b', 'e', 'h', 'i', 'f' ];
+  var dst = [ g.a, g.c ];
+  var got = group.sourcesFromRoots( dst );
+  test.identical( group.nodesToNames( got ).original, exp );
+  test.is( got === dst )
+
+  test.case = '[ a, b ]';
+  var exp = [ 'a', 'b', 'e', 'c', 'h', 'i', 'f' ];
+  var dst = [ g.a, g.b ];
+  var got = group.sourcesFromRoots( dst );
+  test.identical( group.nodesToNames( got ).original, exp );
+  test.is( got === dst )
+
+  test.case = '[ j, a, b ]';
+  var exp = [ 'j', 'a', 'b', 'e', 'c', 'h', 'i', 'f' ];
+  var dst = [ g.j, g.a, g.b ];
+  var got = group.sourcesFromRoots( dst );
+  test.identical( group.nodesToNames( got ).original, exp );
+  test.is( got === dst )
+
+  g.sys.finit();
+
+  test.close( 'array' );
+
+  /* - */
+
+  test.open( 'set' );
+
+  var g = context.cycled4StronglyConnectedLayers();
+  var group = g.sys.nodesGroup();
+
+  test.case = 'a';
+  var exp = [ 'a', 'b', 'e', 'c', 'h', 'i', 'f' ];
+  var dst = g.a;
+  var got = group.sourcesFromRoots( dst );
+  test.identical( group.nodesToNames( got ).original, exp );
+
+  test.case = '[ a ]';
+  var exp = new Set([ 'a', 'b', 'e', 'c', 'h', 'i', 'f' ]);
+  var dst = new Set([ g.a ]);
+  var got = group.sourcesFromRoots( dst );
+  test.identical( group.nodesToNames( got ).original, exp );
+  test.is( got === dst )
+
+  test.case = '[ a, c ]';
+  var exp = new Set([ 'a', 'c', 'b', 'e', 'h', 'i', 'f' ]);
   var dst = new Set([ g.a, g.c ]);
+  var got = group.sourcesFromRoots( dst );
+  test.identical( group.nodesToNames( got ).original, exp );
+  test.is( got === dst )
+
+  test.case = '[ a, b ]';
+  var exp = new Set([ 'a', 'b', 'e', 'c', 'h', 'i', 'f' ]);
+  var dst = new Set([ g.a, g.b ]);
+  var got = group.sourcesFromRoots( dst );
+  test.identical( group.nodesToNames( got ).original, exp );
+  test.is( got === dst )
+
+  test.case = '[ j, a, b ]';
+  var exp = new Set([ 'j', 'a', 'b', 'e', 'c', 'h', 'i', 'f' ]);
+  var dst = new Set([ g.j, g.a, g.b ]);
+  var got = group.sourcesFromRoots( dst );
+  test.identical( group.nodesToNames( got ).original, exp );
+  test.is( got === dst )
+
+  g.sys.finit();
+
+  test.close( 'set' );
+
+  /* - */
+
+}
+
+//
+
+function rootsAllReachable( test )
+{
+  let context = this;
+
+  /* - */
+
+  test.open( 'array' );
+
+  var g = context.cycled4StronglyConnectedLayers();
+  var group = g.sys.nodesGroup();
+
+  test.case = 'a';
+  var exp = [ 'a', 'b', 'e', 'c', 'h', 'i', 'f' ];
+  var dst = g.a;
+  var got = group.rootsAllReachable( dst );
+  test.identical( group.nodesToNames( got ), exp );
+
+  test.case = '[ a ]';
+  var exp = [ 'a', 'b', 'e', 'c', 'h', 'i', 'f' ];
+  var dst = [ g.a ];
+  var got = group.rootsAllReachable( dst );
+  test.identical( group.nodesToNames( got ), exp );
+  test.is( got === dst )
+
+  test.case = '[ a, c ]';
+  var exp = [ 'a', 'c', 'b', 'e', 'h', 'i', 'f' ];
+  var dst = [ g.a, g.c ];
   var got = group.rootsAllReachable( dst );
   test.identical( group.nodesToNames( got ), exp );
   test.is( got === dst )
 
   test.case = '[ a, b ]';
   var exp = [ 'a', 'b', 'e', 'c', 'h', 'i', 'f' ];
-  var dst = new Set([ g.a, g.b ]);
+  var dst = [ g.a, g.b ];
   var got = group.rootsAllReachable( dst );
   test.identical( group.nodesToNames( got ), exp );
   test.is( got === dst )
 
   test.case = '[ j, a, b ]';
   var exp = [ 'j', 'a', 'b', 'e', 'c', 'h', 'i', 'f' ];
-  var dst = new Set([ g.j, g.a, g.b ]);
+  var dst = [ g.j, g.a, g.b ];
   var got = group.rootsAllReachable( dst );
   test.identical( group.nodesToNames( got ), exp );
   test.is( got === dst )
@@ -623,7 +723,50 @@ function rootsAllReachable( test )
 
   /* - */
 
-  /* xxx : extend test routine rootsAllReachable with set cases */
+  test.open( 'set' );
+
+  var g = context.cycled4StronglyConnectedLayers();
+  var group = g.sys.nodesGroup();
+
+  test.case = 'a';
+  var exp = [ 'a', 'b', 'e', 'c', 'h', 'i', 'f' ];
+  var dst = g.a;
+  var got = group.rootsAllReachable( dst );
+  test.identical( group.nodesToNames( got ), exp );
+
+  test.case = '[ a ]';
+  var exp = new Set([ 'a', 'b', 'e', 'c', 'h', 'i', 'f' ]);
+  var dst = new Set([ g.a ]);
+  var got = group.rootsAllReachable( dst );
+  test.identical( group.nodesToNames( got ), exp );
+  test.is( got === dst )
+
+  test.case = '[ a, c ]';
+  var exp = new Set([ 'a', 'c', 'b', 'e', 'h', 'i', 'f' ]);
+  var dst = new Set([ g.a, g.c ]);
+  var got = group.rootsAllReachable( dst );
+  test.identical( group.nodesToNames( got ), exp );
+  test.is( got === dst )
+
+  test.case = '[ a, b ]';
+  var exp = new Set([ 'a', 'b', 'e', 'c', 'h', 'i', 'f' ]);
+  var dst = new Set([ g.a, g.b ]);
+  var got = group.rootsAllReachable( dst );
+  test.identical( group.nodesToNames( got ), exp );
+  test.is( got === dst )
+
+  test.case = '[ j, a, b ]';
+  var exp = new Set([ 'j', 'a', 'b', 'e', 'c', 'h', 'i', 'f' ]);
+  var dst = new Set([ g.j, g.a, g.b ]);
+  var got = group.rootsAllReachable( dst );
+  test.identical( group.nodesToNames( got ), exp );
+  test.is( got === dst )
+
+  g.sys.finit();
+
+  test.close( 'set' );
+
+  /* - */
 
 }
 
@@ -631,50 +774,102 @@ function rootsAllReachable( test )
 
 function rootsAll( test )
 {
-  let context = this; // xxx
+  let context = this;
+
+  /* - */
+
+  test.open( 'array' );
 
   var g = context.cycled4StronglyConnectedLayers();
   var group = g.sys.nodesGroup();
 
   test.case = 'a';
   var exp = [ 'a', 'b', 'e', 'c', 'h', 'i', 'f' ];
-  var dst = a;
+  var dst = g.a;
   var got = group.rootsAll( dst );
   test.identical( group.nodesToNames( got ), exp );
 
   test.case = '[ a ]';
   var exp = [ 'a', 'b', 'e', 'c', 'h', 'i', 'f' ];
-  var dst = [ a ];
+  var dst = [ g.a ];
   var got = group.rootsAll( dst );
   test.identical( group.nodesToNames( got ), exp );
   test.is( got === dst )
 
   test.case = '[ a, c ]';
   var exp = [ 'a', 'c', 'b', 'e', 'h', 'i', 'f' ];
-  var dst = [ a, c ];
+  var dst = [ g.a, g.c ];
   var got = group.rootsAll( dst );
   test.identical( group.nodesToNames( got ), exp );
   test.is( got === dst )
 
   test.case = '[ a, b ]';
   var exp = [ 'a', 'b', 'e', 'c', 'h', 'i', 'f' ];
-  var dst = [ a, b ];
+  var dst = [ g.a, g.b ];
   var got = group.rootsAll( dst );
   test.identical( group.nodesToNames( got ), exp );
   test.is( got === dst )
 
   test.case = '[ j, a, b ]';
   var exp = [ 'j', 'a', 'b', 'e', 'c', 'h', 'i', 'f' ];
-  var dst = [ j, a, b ];
+  var dst = [ g.j, g.a, g.b ];
   var got = group.rootsAll( dst );
   test.identical( group.nodesToNames( got ), exp );
   test.is( got === dst )
 
   g.sys.finit();
 
-  /* xxx : extend test routine rootsAll with set cases */
+  test.close( 'array' );
+
+  /* - */
+
+  test.open( 'set' );
+
+  var g = context.cycled4StronglyConnectedLayers();
+  var group = g.sys.nodesGroup();
+
+  test.case = 'a';
+  var exp = [ 'a', 'b', 'e', 'c', 'h', 'i', 'f' ];
+  var dst = g.a;
+  var got = group.rootsAll( dst );
+  test.identical( group.nodesToNames( got ), exp );
+
+  test.case = '[ a ]';
+  var exp = new Set([ 'a', 'b', 'e', 'c', 'h', 'i', 'f' ]);
+  var dst = new Set([ g.a ]);
+  var got = group.rootsAll( dst );
+  test.identical( group.nodesToNames( got ), exp );
+  test.is( got === dst )
+
+  test.case = '[ a, c ]';
+  var exp = new Set([ 'a', 'c', 'b', 'e', 'h', 'i', 'f' ]);
+  var dst = new Set([ g.a, g.c ]);
+  var got = group.rootsAll( dst );
+  test.identical( group.nodesToNames( got ), exp );
+  test.is( got === dst )
+
+  test.case = '[ a, b ]';
+  var exp = new Set([ 'a', 'b', 'e', 'c', 'h', 'i', 'f' ]);
+  var dst = new Set([ g.a, g.b ]);
+  var got = group.rootsAll( dst );
+  test.identical( group.nodesToNames( got ), exp );
+  test.is( got === dst )
+
+  test.case = '[ j, a, b ]';
+  var exp = new Set([ 'j', 'a', 'b', 'e', 'c', 'h', 'i', 'f' ]);
+  var dst = new Set([ g.j, g.a, g.b ]);
+  var got = group.rootsAll( dst );
+  test.identical( group.nodesToNames( got ), exp );
+  test.is( got === dst )
+
+  g.sys.finit();
+
+  test.close( 'set' );
+
+  /* - */
 
 }
+
 
 //
 
@@ -682,15 +877,21 @@ function sinksOnlyAmong( test )
 {
   let context = this;
 
-  test.case = 'setup';
+  test.case = 'cycled4';
 
   var g = context.cycled4StronglyConnectedLayers();
   var group = g.sys.nodesGroup();
 
-  group.nodesAdd([ a, b, c, d, e, f, g, h, i, j ]);
-  var got = group.sinksOnlyAmong();
+  test.case = 'explicit';
+  var got = group.sinksOnlyAmong( g.nodes );
   var expected = [ 'f', 'j' ];
-  test.identical( group.nodesToNames( got ), expected );
+  test.identical( group.nodesToNames( got ).original, expected );
+
+  test.case = 'implicit';
+  group.nodesAdd( g.nodes );
+  var got = group.sinksOnlyAmong();
+  var expected = new Set([ 'f', 'j' ]);
+  test.identical( group.nodesToNames( got ).original, expected );
 
   g.sys.finit();
 }
@@ -706,10 +907,10 @@ function sourcesOnlyAmong( test )
   var g = context.cycled4StronglyConnectedLayers();
   var group = g.sys.nodesGroup();
 
-  group.nodesAdd([ a, b, c, d, e, f, g, h, i, j ]);
+  group.nodesAdd( g.nodes );
   var got = group.sourcesOnlyAmong();
-  var expected = [ 'd', 'j' ];
-  test.identical( group.nodesToNames( got ), expected );
+  var expected = new Set([ 'd', 'j' ]);
+  test.identical( group.nodesToNames( got ).original, expected );
 
   g.sys.finit();
 }
@@ -720,161 +921,159 @@ function leastMostDegreeAmong( test )
 {
   let context = this;
 
-  test.case = 'setup';
+  test.case = 'cycled4';
 
   var g = context.cycled4StronglyConnectedLayers();
   var group = g.sys.nodesGroup();
-  group.nodesAdd([ a, b, c, d, e, f, g, h, i, j ]);
-
-  test.case = 'all nodes';
+  group.nodesAdd( g.nodes );
 
   var got = group.leastIndegreeAmong();
   var expected = 0;
   test.identical( got, expected );
   var got = group.leastIndegreeOnlyAmong();
-  var expected = [ 'd', 'j' ];
-  test.identical( group.nodesToNames( got ), expected );
+  var expected = new Set([ 'd', 'j' ]);
+  test.identical( group.nodesToNames( got ).original, expected );
 
   var got = group.mostIndegreeAmong();
   var expected = 3;
   test.identical( got, expected );
   var got = group.mostIndegreeOnlyAmong();
-  var expected = [ 'h' ];
-  test.identical( group.nodesToNames( got ), expected );
+  var expected = new Set([ 'h' ]);
+  test.identical( group.nodesToNames( got ).original, expected );
 
   var got = group.leastOutdegreeAmong();
   var expected = 0;
   test.identical( got, expected );
   var got = group.leastOutdegreeOnlyAmong();
-  var expected = [ 'f', 'j' ];
-  test.identical( group.nodesToNames( got ), expected );
+  var expected = new Set([ 'f', 'j' ]);
+  test.identical( group.nodesToNames( got ).original, expected );
 
   var got = group.mostOutdegreeAmong();
   var expected = 3;
   test.identical( got, expected );
   var got = group.mostOutdegreeOnlyAmong();
-  var expected = [ 'e' ];
-  test.identical( group.nodesToNames( got ), expected );
+  var expected = new Set([ 'e' ]);
+  test.identical( group.nodesToNames( got ).original, expected );
 
   test.case = 'no least indegree';
 
-  var got = group.leastIndegreeAmong([ a, b, c, e, f, g, h, i ]);
+  var got = group.leastIndegreeAmong([ g.a, g.b, g.c, g.e, g.f, g.g, g.h, g.i ]);
   var expected = 1;
   test.identical( got, expected );
-  var got = group.leastIndegreeOnlyAmong([ a, b, c, e, f, g, h, i ]);
+  var got = group.leastIndegreeOnlyAmong([ g.a, g.b, g.c, g.e, g.f, g.g, g.h, g.i ]);
   var expected = [ 'c', 'e', 'g', 'i' ];
-  test.identical( group.nodesToNames( got ), expected );
+  test.identical( group.nodesToNames( got ).original, expected );
 
-  var got = group.mostIndegreeAmong([ a, b, c, e, f, g, h, i ]);
+  var got = group.mostIndegreeAmong([ g.a, g.b, g.c, g.e, g.f, g.g, g.h, g.i ]);
   var expected = 3;
   test.identical( got, expected );
-  var got = group.mostIndegreeOnlyAmong([ a, b, c, e, f, g, h, i ]);
+  var got = group.mostIndegreeOnlyAmong([ g.a, g.b, g.c, g.e, g.f, g.g, g.h, g.i ]);
   var expected = [ 'h' ];
-  test.identical( group.nodesToNames( got ), expected );
+  test.identical( group.nodesToNames( got ).original, expected );
 
-  var got = group.leastOutdegreeAmong([ a, b, c, e, f, g, h, i ]);
+  var got = group.leastOutdegreeAmong([ g.a, g.b, g.c, g.e, g.f, g.g, g.h, g.i ]);
   var expected = 0;
   test.identical( got, expected );
-  var got = group.leastOutdegreeOnlyAmong([ a, b, c, e, f, g, h, i ]);
+  var got = group.leastOutdegreeOnlyAmong([ g.a, g.b, g.c, g.e, g.f, g.g, g.h, g.i ]);
   var expected = [ 'f' ];
-  test.identical( group.nodesToNames( got ), expected );
+  test.identical( group.nodesToNames( got ).original, expected );
 
-  var got = group.mostOutdegreeAmong([ a, b, c, e, f, g, h, i ]);
+  var got = group.mostOutdegreeAmong([ g.a, g.b, g.c, g.e, g.f, g.g, g.h, g.i ]);
   var expected = 3;
   test.identical( got, expected );
-  var got = group.mostOutdegreeOnlyAmong([ a, b, c, e, f, g, h, i ]);
+  var got = group.mostOutdegreeOnlyAmong([ g.a, g.b, g.c, g.e, g.f, g.g, g.h, g.i ]);
   var expected = [ 'e' ];
-  test.identical( group.nodesToNames( got ), expected );
+  test.identical( group.nodesToNames( got ).original, expected );
 
   test.case = 'no most indegree';
 
-  var got = group.leastIndegreeAmong([ a, b, c, d, e, f, g, i, j ]);
+  var got = group.leastIndegreeAmong([ g.a, g.b, g.c, g.d, g.e, g.f, g.g, g.i, g.j ]);
   var expected = 0;
   test.identical( got, expected );
-  var got = group.leastIndegreeOnlyAmong([ a, b, c, d, e, f, g, i, j ]);
+  var got = group.leastIndegreeOnlyAmong([ g.a, g.b, g.c, g.d, g.e, g.f, g.g, g.i, g.j ]);
   var expected = [ 'd', 'j' ];
-  test.identical( group.nodesToNames( got ), expected );
+  test.identical( group.nodesToNames( got ).original, expected );
 
-  var got = group.mostIndegreeAmong([ a, b, c, d, e, f, g, i, j ]);
+  var got = group.mostIndegreeAmong([ g.a, g.b, g.c, g.d, g.e, g.f, g.g, g.i, g.j ]);
   var expected = 2;
   test.identical( got, expected );
-  var got = group.mostIndegreeOnlyAmong([ a, b, c, d, e, f, g, i, j ]);
+  var got = group.mostIndegreeOnlyAmong([ g.a, g.b, g.c, g.d, g.e, g.f, g.g, g.i, g.j ]);
   var expected = [ 'a', 'b', 'f' ];
-  test.identical( group.nodesToNames( got ), expected );
+  test.identical( group.nodesToNames( got ).original, expected );
 
-  var got = group.leastOutdegreeAmong([ a, b, c, d, e, f, g, i, j ]);
+  var got = group.leastOutdegreeAmong([ g.a, g.b, g.c, g.d, g.e, g.f, g.g, g.i, g.j ]);
   var expected = 0;
   test.identical( got, expected );
-  var got = group.leastOutdegreeOnlyAmong([ a, b, c, d, e, f, g, i, j ]);
+  var got = group.leastOutdegreeOnlyAmong([ g.a, g.b, g.c, g.d, g.e, g.f, g.g, g.i, g.j ]);
   var expected = [ 'f', 'j' ];
-  test.identical( group.nodesToNames( got ), expected );
+  test.identical( group.nodesToNames( got ).original, expected );
 
-  var got = group.mostOutdegreeAmong([ a, b, c, d, e, f, g, i, j ]);
+  var got = group.mostOutdegreeAmong([ g.a, g.b, g.c, g.d, g.e, g.f, g.g, g.i, g.j ]);
   var expected = 3;
   test.identical( got, expected );
-  var got = group.mostOutdegreeOnlyAmong([ a, b, c, d, e, f, g, i, j ]);
+  var got = group.mostOutdegreeOnlyAmong([ g.a, g.b, g.c, g.d, g.e, g.f, g.g, g.i, g.j ]);
   var expected = [ 'e' ];
-  test.identical( group.nodesToNames( got ), expected );
+  test.identical( group.nodesToNames( got ).original, expected );
 
   test.case = 'no leasr outdegree';
 
-  var got = group.leastIndegreeAmong([ a, b, c, d, e, g, h, i ]);
+  var got = group.leastIndegreeAmong([ g.a, g.b, g.c, g.d, g.e, g.g, g.h, g.i ]);
   var expected = 0;
   test.identical( got, expected );
-  var got = group.leastIndegreeOnlyAmong([ a, b, c, d, e, g, h, i ]);
+  var got = group.leastIndegreeOnlyAmong([ g.a, g.b, g.c, g.d, g.e, g.g, g.h, g.i ]);
   var expected = [ 'd' ];
-  test.identical( group.nodesToNames( got ), expected );
+  test.identical( group.nodesToNames( got ).original, expected );
 
-  var got = group.mostIndegreeAmong([ a, b, c, d, e, g, h, i ]);
+  var got = group.mostIndegreeAmong([ g.a, g.b, g.c, g.d, g.e, g.g, g.h, g.i ]);
   var expected = 3;
   test.identical( got, expected );
-  var got = group.mostIndegreeOnlyAmong([ a, b, c, d, e, g, h, i ]);
+  var got = group.mostIndegreeOnlyAmong([ g.a, g.b, g.c, g.d, g.e, g.g, g.h, g.i ]);
   var expected = [ 'h' ];
-  test.identical( group.nodesToNames( got ), expected );
+  test.identical( group.nodesToNames( got ).original, expected );
 
-  var got = group.leastOutdegreeAmong([ a, b, c, d, e, g, h, i ]);
+  var got = group.leastOutdegreeAmong([ g.a, g.b, g.c, g.d, g.e, g.g, g.h, g.i ]);
   var expected = 1;
   test.identical( got, expected );
-  var got = group.leastOutdegreeOnlyAmong([ a, b, c, d, e, g, h, i ]);
+  var got = group.leastOutdegreeOnlyAmong([ g.a, g.b, g.c, g.d, g.e, g.g, g.h, g.i ]);
   var expected = [ 'a', 'c', 'g', 'h' ];
-  test.identical( group.nodesToNames( got ), expected );
+  test.identical( group.nodesToNames( got ).original, expected );
 
-  var got = group.mostOutdegreeAmong([ a, b, c, d, e, g, h, i ]);
+  var got = group.mostOutdegreeAmong([ g.a, g.b, g.c, g.d, g.e, g.g, g.h, g.i ]);
   var expected = 3;
   test.identical( got, expected );
-  var got = group.mostOutdegreeOnlyAmong([ a, b, c, d, e, g, h, i ]);
+  var got = group.mostOutdegreeOnlyAmong([ g.a, g.b, g.c, g.d, g.e, g.g, g.h, g.i ]);
   var expected = [ 'e' ];
-  test.identical( group.nodesToNames( got ), expected );
+  test.identical( group.nodesToNames( got ).original, expected );
 
   test.case = 'no most outdegree';
 
-  var got = group.leastIndegreeAmong([ a, b, c, d, f, g, h, i, j ]);
+  var got = group.leastIndegreeAmong([ g.a, g.b, g.c, g.d, g.f, g.g, g.h, g.i, g.j ]);
   var expected = 0;
   test.identical( got, expected );
-  var got = group.leastIndegreeOnlyAmong([ a, b, c, d, f, g, h, i, j ]);
+  var got = group.leastIndegreeOnlyAmong([ g.a, g.b, g.c, g.d, g.f, g.g, g.h, g.i, g.j ]);
   var expected = [ 'd', 'j' ];
-  test.identical( group.nodesToNames( got ), expected );
+  test.identical( group.nodesToNames( got ).original, expected );
 
-  var got = group.mostIndegreeAmong([ a, b, c, d, f, g, h, i, j ]);
+  var got = group.mostIndegreeAmong([ g.a, g.b, g.c, g.d, g.f, g.g, g.h, g.i, g.j ]);
   var expected = 3;
   test.identical( got, expected );
-  var got = group.mostIndegreeOnlyAmong([ a, b, c, d, f, g, h, i, j ]);
+  var got = group.mostIndegreeOnlyAmong([ g.a, g.b, g.c, g.d, g.f, g.g, g.h, g.i, g.j ]);
   var expected = [ 'h' ];
-  test.identical( group.nodesToNames( got ), expected );
+  test.identical( group.nodesToNames( got ).original, expected );
 
-  var got = group.leastOutdegreeAmong([ a, b, c, d, f, g, h, i, j ]);
+  var got = group.leastOutdegreeAmong([ g.a, g.b, g.c, g.d, g.f, g.g, g.h, g.i, g.j ]);
   var expected = 0;
   test.identical( got, expected );
-  var got = group.leastOutdegreeOnlyAmong([ a, b, c, d, f, g, h, i, j ]);
+  var got = group.leastOutdegreeOnlyAmong([ g.a, g.b, g.c, g.d, g.f, g.g, g.h, g.i, g.j ]);
   var expected = [ 'f', 'j' ];
-  test.identical( group.nodesToNames( got ), expected );
+  test.identical( group.nodesToNames( got ).original, expected );
 
-  var got = group.mostOutdegreeAmong([ a, b, c, d, f, g, h, i, j ]);
+  var got = group.mostOutdegreeAmong([ g.a, g.b, g.c, g.d, g.f, g.g, g.h, g.i, g.j ]);
   var expected = 2;
   test.identical( got, expected );
-  var got = group.mostOutdegreeOnlyAmong([ a, b, c, d, f, g, h, i, j ]);
+  var got = group.mostOutdegreeOnlyAmong([ g.a, g.b, g.c, g.d, g.f, g.g, g.h, g.i, g.j ]);
   var expected = [ 'b', 'd', 'i' ];
-  test.identical( group.nodesToNames( got ), expected );
+  test.identical( group.nodesToNames( got ).original, expected );
 
   g.sys.finit();
 }
@@ -917,12 +1116,13 @@ function lookBfs( test )
 
   function onLayerUp( nodes, it )
   {
-    lups.push( group.nodesToNames( nodes ) );
+    debugger;
+    lups.push( _.containerAdapter.toOriginal( group.nodesToNames( nodes ) ) );
   }
 
   function onLayerDown( nodes, it )
   {
-    ldws.push( group.nodesToNames( nodes ) );
+    ldws.push( _.containerAdapter.toOriginal( group.nodesToNames( nodes ) ) );
   }
 
 /*
@@ -943,7 +1143,7 @@ function lookBfs( test )
   var g = context.cycled4StronglyConnectedLayers();
   var group = g.sys.nodesGroup();
 
-  group.nodesAdd([ a, b, c, d, e, f, g, h, i, j ]);
+  group.nodesAdd( g.nodes );
   test.identical( group.nodes.length, 10 );
   logger.log( group.infoExport() );
 
@@ -955,14 +1155,14 @@ function lookBfs( test )
   var layers = group.lookBfs({ roots : group.nodes, onNode, onUp, onDown, onLayerUp, onLayerDown });
 
   var expected = [ [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j' ] ];
-  test.identical( layers.map( ( nodes ) => group.nodesToNames( nodes ) ), expected );
+  test.identical( layers.map( ( nodes ) => group.nodesToNames( nodes ).original ), expected );
 
   var expectedNds = [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j' ];
   var expectedUps = [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j' ];
   var expectedDws = [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j' ];
   var expectedLups =
   [
-    [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j' ],
+    new Set([ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j' ]),
     [ 'b', 'e', 'f', 'b', 'a', 'g', 'a', 'c', 'h', 'h', 'i', 'f', 'h' ],
   ];
   var expectedLdws =
@@ -976,16 +1176,17 @@ function lookBfs( test )
   test.identical( dws, expectedDws );
   test.identical( lups, expectedLups );
   test.identical( ldws, expectedLdws );
+  debugger;
 
   /* */
 
   test.case = 'only a';
 
   clean();
-  var layers = group.lookBfs({ roots : a, onNode, onUp, onDown, onLayerUp, onLayerDown });
+  var layers = group.lookBfs({ roots : g.a, onNode, onUp, onDown, onLayerUp, onLayerDown });
 
   var expected = [ [ 'a' ], [ 'b' ], [ 'e', 'f' ], [ 'c', 'h' ], [ 'i' ] ];
-  test.identical( layers.map( ( nodes ) => group.nodesToNames( nodes ) ), expected );
+  test.identical( layers.map( ( nodes ) => group.nodesToNames( nodes ).original ), expected );
 
   var expectedNds = [ 'a', 'b', 'e', 'f', 'c', 'h', 'i' ];
   var expectedUps = [ 'a', 'b', 'e', 'f', 'c', 'h', 'i' ];
@@ -1020,7 +1221,7 @@ function lookBfs( test )
   test.case = 'only d';
 
   clean();
-  var layers = group.lookBfs({ roots : d, onNode, onUp, onDown, onLayerUp, onLayerDown });
+  var layers = group.lookBfs({ roots : g.d, onNode, onUp, onDown, onLayerUp, onLayerDown });
 
   var expected =
   [
@@ -1030,7 +1231,7 @@ function lookBfs( test )
     [ 'e', 'f', 'i' ],
     [ 'c' ]
   ]
-  test.identical( layers.map( ( nodes ) => group.nodesToNames( nodes ) ), expected );
+  test.identical( layers.map( ( nodes ) => group.nodesToNames( nodes ).original ), expected );
 
   var expectedNds = [ 'd', 'a', 'g', 'b', 'h', 'e', 'f', 'i', 'c' ];
   var expectedUps = [ 'd', 'a', 'g', 'b', 'h', 'e', 'f', 'i', 'c' ];
@@ -1065,7 +1266,7 @@ function lookBfs( test )
   test.case = 'd and a';
 
   clean();
-  var layers = group.lookBfs({ roots : [ d, a ], onNode, onUp, onDown, onLayerUp, onLayerDown });
+  var layers = group.lookBfs({ roots : [ g.d, g.a ], onNode, onUp, onDown, onLayerUp, onLayerDown });
 
   var expected =
   [
@@ -1074,7 +1275,7 @@ function lookBfs( test )
     [ 'h', 'e', 'f' ],
     [ 'i', 'c' ]
   ]
-  test.identical( layers.map( ( nodes ) => group.nodesToNames( nodes ) ), expected );
+  test.identical( layers.map( ( nodes ) => group.nodesToNames( nodes ).original ), expected );
 
   var expectedNds = [ 'd', 'a', 'g', 'b', 'h', 'e', 'f', 'i', 'c' ];
   var expectedUps = [ 'd', 'a', 'g', 'b', 'h', 'e', 'f', 'i', 'c' ];
@@ -1153,19 +1354,22 @@ function lookBfsRevisiting( test )
 
   function onLayerUp( nodes, it )
   {
-    lups.push( group.nodesToNames( nodes ) );
+    debugger;
+    lups.push( _.containerAdapter.toOriginal( group.nodesToNames( nodes ) ) );
   }
 
   function onLayerUp2( nodes, it )
   {
+    debugger;
     if( it.level > 4 )
     it.continueUp = 0;
-    lups.push( group.nodesToNames( nodes ) );
+    lups.push( _.containerAdapter.toOriginal( group.nodesToNames( nodes ) ) );
   }
 
   function onLayerDown( nodes, it )
   {
-    ldws.push( group.nodesToNames( nodes ) );
+    debugger;
+    ldws.push( _.containerAdapter.toOriginal( group.nodesToNames( nodes ) ) );
   }
 
   test.case = 'setup';
@@ -1222,20 +1426,20 @@ function lookBfsRevisiting( test )
     var expectedUps = [ 'a', 'b', 'd', 'c', 'e', 'f' ];
     var expectedDws = [ 'c', 'e', 'f', 'b', 'd', 'a' ];
 
-    var expectedLups =
-    [
+    var expectedLups = _.setsFrom
+    ([
       [ 'a' ],
       [ 'b', 'd' ],
       [ 'c', 'd', 'b', 'c', 'e', 'f' ],
       [ 'a', 'f' ]
-    ]
-    var expectedLdws =
-    [
+    ])
+    var expectedLdws = _.setsFrom
+    ([
       [],
       [ 'c', 'e', 'f' ],
       [ 'b', 'd' ],
       [ 'a' ]
-    ]
+    ])
 
     test.identical( nds, expectedNds );
     test.identical( ups, expectedUps );
@@ -1264,20 +1468,20 @@ function lookBfsRevisiting( test )
     var expectedUps = [ 'b', 'c', 'd', 'a', 'e', 'f' ];
     var expectedDws = [ 'a', 'e', 'f', 'c', 'd', 'b' ];
 
-    var expectedLups =
-    [
+    var expectedLups = _.setsFrom
+    ([
       [ 'b' ],
       [ 'c', 'd', 'b' ],
       [ 'a', 'c', 'e', 'f' ],
       [ 'b', 'd', 'f' ]
-    ]
-    var expectedLdws =
-    [
+    ])
+    var expectedLdws = _.setsFrom
+    ([
       [],
       [ 'a', 'e', 'f' ],
       [ 'c', 'd' ],
       [ 'b' ]
-    ]
+    ])
 
     test.identical( nds, expectedNds );
     test.identical( ups, expectedUps );
@@ -1306,16 +1510,16 @@ function lookBfsRevisiting( test )
     var expectedUps = [ 'e' ];
     var expectedDws = [ 'e' ];
 
-    var expectedLups =
-    [
+    var expectedLups = _.setsFrom
+    ([
       [ 'e' ],
       []
-    ]
-    var expectedLdws =
-    [
+    ])
+    var expectedLdws = _.setsFrom
+    ([
       [],
       [ 'e' ]
-    ]
+    ])
 
     test.identical( nds, expectedNds );
     test.identical( ups, expectedUps );
@@ -1344,16 +1548,16 @@ function lookBfsRevisiting( test )
     var expectedUps = [ 'f' ];
     var expectedDws = [ 'f' ];
 
-    var expectedLups =
-    [
+    var expectedLups = _.setsFrom
+    ([
       [ 'f' ],
       [ 'f' ]
-    ]
-    var expectedLdws =
-    [
+    ])
+    var expectedLdws = _.setsFrom
+    ([
       [],
       [ 'f' ]
-    ]
+    ])
 
     test.identical( nds, expectedNds );
     test.identical( ups, expectedUps );
@@ -1388,20 +1592,20 @@ function lookBfsRevisiting( test )
     var expectedUps = [ 'a', 'b', 'd', 'c', 'e', 'f' ];
     var expectedDws = [ 'c', 'e', 'f', 'b', 'd', 'a' ];
 
-    var expectedLups =
-    [
+    var expectedLups = _.setsFrom
+    ([
       [ 'a' ],
       [ 'b', 'd' ],
       [ 'c', 'd', 'b', 'c', 'e', 'f' ],
       [ 'a', 'f' ]
-    ]
-    var expectedLdws =
-    [
+    ])
+    var expectedLdws = _.setsFrom
+    ([
       [],
       [ 'c', 'e', 'f' ],
       [ 'b', 'd' ],
       [ 'a' ]
-    ]
+    ])
 
     test.identical( nds, expectedNds );
     test.identical( ups, expectedUps );
@@ -1430,20 +1634,20 @@ function lookBfsRevisiting( test )
     var expectedUps = [ 'b', 'c', 'd', 'a', 'e', 'f' ];
     var expectedDws = [ 'a', 'e', 'f', 'c', 'd', 'b' ];
 
-    var expectedLups =
-    [
+    var expectedLups = _.setsFrom
+    ([
       [ 'b' ],
       [ 'c', 'd', 'b' ],
       [ 'a', 'c', 'e', 'f' ],
       [ 'b', 'd', 'f' ]
-    ]
-    var expectedLdws =
-    [
+    ])
+    var expectedLdws = _.setsFrom
+    ([
       [],
       [ 'a', 'e', 'f' ],
       [ 'c', 'd' ],
       [ 'b' ]
-    ]
+    ])
 
     test.identical( nds, expectedNds );
     test.identical( ups, expectedUps );
@@ -1472,16 +1676,16 @@ function lookBfsRevisiting( test )
     var expectedUps = [ 'e' ];
     var expectedDws = [ 'e' ];
 
-    var expectedLups =
-    [
+    var expectedLups = _.setsFrom
+    ([
       [ 'e' ],
       []
-    ]
-    var expectedLdws =
-    [
+    ])
+    var expectedLdws = _.setsFrom
+    ([
       [],
       [ 'e' ]
-    ]
+    ])
 
     test.identical( nds, expectedNds );
     test.identical( ups, expectedUps );
@@ -1510,16 +1714,16 @@ function lookBfsRevisiting( test )
     var expectedUps = [ 'f' ];
     var expectedDws = [ 'f' ];
 
-    var expectedLups =
-    [
+    var expectedLups = _.setsFrom
+    ([
       [ 'f' ],
       [ 'f' ]
-    ]
-    var expectedLdws =
-    [
+    ])
+    var expectedLdws = _.setsFrom
+    ([
       [],
       [ 'f' ]
-    ]
+    ])
 
     test.identical( nds, expectedNds );
     test.identical( ups, expectedUps );
@@ -1554,20 +1758,20 @@ function lookBfsRevisiting( test )
     var expectedUps = [ 'a', 'b', 'd', 'c', 'd', 'b', 'c', 'e', 'f', 'a', 'f' ];
     var expectedDws = [ 'a', 'f', 'c', 'd', 'b', 'c', 'e', 'f', 'b', 'd', 'a' ];
 
-    var expectedLups =
-    [
+    var expectedLups = _.setsFrom
+    ([
       [ 'a' ],
       [ 'b', 'd' ],
       [ 'c', 'd', 'b', 'c', 'e', 'f' ],
       [ 'a', 'f' ]
-    ]
-    var expectedLdws =
-    [
+    ])
+    var expectedLdws = _.setsFrom
+    ([
       [],
       [ 'c', 'e', 'f' ],
       [ 'b', 'd' ],
       [ 'a' ]
-    ]
+    ])
 
     test.identical( nds, expectedNds );
     test.identical( ups, expectedUps );
@@ -1596,20 +1800,20 @@ function lookBfsRevisiting( test )
     var expectedUps = [ 'b', 'c', 'd', 'b', 'a', 'c', 'e', 'f', 'd', 'f' ];
     var expectedDws = [ 'd', 'f', 'a', 'c', 'e', 'f', 'c', 'd', 'b', 'b' ];
 
-    var expectedLups =
-    [
+    var expectedLups = _.setsFrom
+    ([
       [ 'b' ],
       [ 'c', 'd', 'b' ],
       [ 'a', 'c', 'e', 'f' ],
       [ 'b', 'd', 'f' ]
-    ]
-    var expectedLdws =
-    [
+    ])
+    var expectedLdws = _.setsFrom
+    ([
       [],
       [ 'a', 'e', 'f' ],
       [ 'c', 'd' ],
       [ 'b' ]
-    ]
+    ])
 
     test.identical( nds, expectedNds );
     test.identical( ups, expectedUps );
@@ -1638,16 +1842,16 @@ function lookBfsRevisiting( test )
     var expectedUps = [ 'e' ];
     var expectedDws = [ 'e' ];
 
-    var expectedLups =
-    [
+    var expectedLups = _.setsFrom
+    ([
       [ 'e' ],
       []
-    ]
-    var expectedLdws =
-    [
+    ])
+    var expectedLdws = _.setsFrom
+    ([
       [],
       [ 'e' ]
-    ]
+    ])
 
     test.identical( nds, expectedNds );
     test.identical( ups, expectedUps );
@@ -1676,16 +1880,16 @@ function lookBfsRevisiting( test )
     var expectedUps = [ 'f', 'f' ];
     var expectedDws = [ 'f', 'f' ];
 
-    var expectedLups =
-    [
+    var expectedLups = _.setsFrom
+    ([
       [ 'f' ],
       [ 'f' ]
-    ]
-    var expectedLdws =
-    [
+    ])
+    var expectedLdws = _.setsFrom
+    ([
       [],
       [ 'f' ]
-    ]
+    ])
 
     test.identical( nds, expectedNds );
     test.identical( ups, expectedUps );
@@ -1720,24 +1924,24 @@ function lookBfsRevisiting( test )
     var expectedUps = [ 'a', 'b', 'd', 'c', 'd', 'b', 'c', 'e', 'f', 'a', 'c', 'e', 'f', 'c', 'd', 'b', 'a', 'f', 'b', 'd', 'a', 'f', 'a', 'c', 'e', 'f', 'c', 'd', 'b', 'b', 'd', 'f', 'c', 'd', 'b', 'c', 'e', 'f', 'b', 'd', 'f', 'b', 'd', 'a', 'f', 'a', 'c', 'e', 'f', 'c', 'd', 'b', 'c', 'd', 'b', 'c', 'e', 'f', 'f' ];
     var expectedDws = [ 'c', 'd', 'b', 'c', 'e', 'f', 'b', 'd', 'f', 'b', 'd', 'a', 'f', 'a', 'c', 'e', 'f', 'c', 'd', 'b', 'c', 'd', 'b', 'c', 'e', 'f', 'f', 'b', 'd', 'a', 'f', 'a', 'c', 'e', 'f', 'c', 'd', 'b', 'b', 'd', 'f', 'a', 'c', 'e', 'f', 'c', 'd', 'b', 'a', 'f', 'c', 'd', 'b', 'c', 'e', 'f', 'b', 'd', 'a' ];
 
-    var expectedLups =
-    [
+    var expectedLups = _.setsFrom
+    ([
       [ 'a' ],
       [ 'b', 'd' ],
       [ 'c', 'd', 'b', 'c', 'e', 'f' ],
       [ 'a', 'c', 'e', 'f', 'c', 'd', 'b', 'a', 'f' ],
       [ 'b', 'd', 'a', 'f', 'a', 'c', 'e', 'f', 'c', 'd', 'b', 'b', 'd', 'f' ],
       [ 'c', 'd', 'b', 'c', 'e', 'f', 'b', 'd', 'f', 'b', 'd', 'a', 'f', 'a', 'c', 'e', 'f', 'c', 'd', 'b', 'c', 'd', 'b', 'c', 'e', 'f', 'f' ]
-    ]
-    var expectedLdws =
-    [
+    ])
+    var expectedLdws = _.setsFrom
+    ([
       [],
       [ 'b', 'd', 'a', 'f', 'a', 'c', 'e', 'f', 'c', 'd', 'b', 'b', 'd', 'f' ],
       [ 'a', 'c', 'e', 'f', 'c', 'd', 'b', 'a', 'f' ],
       [ 'c', 'd', 'b', 'c', 'e', 'f' ],
       [ 'b', 'd' ],
       [ 'a' ]
-    ]
+    ])
 
     test.identical( nds, expectedNds );
     test.identical( ups, expectedUps );
@@ -1766,24 +1970,24 @@ function lookBfsRevisiting( test )
     var expectedUps = [ 'b', 'c', 'd', 'b', 'a', 'c', 'e', 'f', 'c', 'd', 'b', 'b', 'd', 'a', 'f', 'a', 'c', 'e', 'f', 'c', 'd', 'b', 'c', 'd', 'b', 'c', 'e', 'f', 'b', 'd', 'f', 'b', 'd', 'a', 'f', 'a', 'c', 'e', 'f', 'c', 'd', 'b', 'a', 'c', 'e', 'f', 'c', 'd', 'b', 'a', 'f', 'c', 'd', 'b', 'c', 'e', 'f', 'f', 'c', 'd', 'b', 'c', 'e', 'f', 'b', 'd', 'f', 'b', 'd', 'a', 'f', 'a', 'c', 'e', 'f', 'c', 'd', 'b' ];
     var expectedDws = [ 'a', 'c', 'e', 'f', 'c', 'd', 'b', 'a', 'f', 'c', 'd', 'b', 'c', 'e', 'f', 'f', 'c', 'd', 'b', 'c', 'e', 'f', 'b', 'd', 'f', 'b', 'd', 'a', 'f', 'a', 'c', 'e', 'f', 'c', 'd', 'b', 'c', 'd', 'b', 'c', 'e', 'f', 'b', 'd', 'f', 'b', 'd', 'a', 'f', 'a', 'c', 'e', 'f', 'c', 'd', 'b', 'b', 'd', 'a', 'f', 'a', 'c', 'e', 'f', 'c', 'd', 'b', 'a', 'c', 'e', 'f', 'c', 'd', 'b', 'c', 'd', 'b', 'b' ];
 
-    var expectedLups =
-    [
+    var expectedLups = _.setsFrom
+    ([
       [ 'b' ],
       [ 'c', 'd', 'b' ],
       [ 'a', 'c', 'e', 'f', 'c', 'd', 'b' ],
       [ 'b', 'd', 'a', 'f', 'a', 'c', 'e', 'f', 'c', 'd', 'b' ],
       [ 'c', 'd', 'b', 'c', 'e', 'f', 'b', 'd', 'f', 'b', 'd', 'a', 'f', 'a', 'c', 'e', 'f', 'c', 'd', 'b' ],
       [ 'a', 'c', 'e', 'f', 'c', 'd', 'b', 'a', 'f', 'c', 'd', 'b', 'c', 'e', 'f', 'f', 'c', 'd', 'b', 'c', 'e', 'f', 'b', 'd', 'f', 'b', 'd', 'a', 'f', 'a', 'c', 'e', 'f', 'c', 'd', 'b' ]
-    ]
-    var expectedLdws =
-    [
+    ])
+    var expectedLdws = _.setsFrom
+    ([
       [],
       [ 'c', 'd', 'b', 'c', 'e', 'f', 'b', 'd', 'f', 'b', 'd', 'a', 'f', 'a', 'c', 'e', 'f', 'c', 'd', 'b' ],
       [ 'b', 'd', 'a', 'f', 'a', 'c', 'e', 'f', 'c', 'd', 'b' ],
       [ 'a', 'c', 'e', 'f', 'c', 'd', 'b' ],
       [ 'c', 'd', 'b' ],
       [ 'b' ]
-    ]
+    ])
 
     test.identical( nds, expectedNds );
     test.identical( ups, expectedUps );
@@ -1812,16 +2016,16 @@ function lookBfsRevisiting( test )
     var expectedUps = [ 'e' ];
     var expectedDws = [ 'e' ];
 
-    var expectedLups =
-    [
+    var expectedLups = _.setsFrom
+    ([
       [ 'e' ],
       []
-    ]
-    var expectedLdws =
-    [
+    ])
+    var expectedLdws = _.setsFrom
+    ([
       [],
       [ 'e' ]
-    ]
+    ])
 
     test.identical( nds, expectedNds );
     test.identical( ups, expectedUps );
@@ -1850,24 +2054,24 @@ function lookBfsRevisiting( test )
     var expectedUps = [ 'f', 'f', 'f', 'f', 'f', 'f' ];
     var expectedDws = [ 'f', 'f', 'f', 'f', 'f', 'f' ];
 
-    var expectedLups =
-    [
+    var expectedLups = _.setsFrom
+    ([
       [ 'f' ],
       [ 'f' ],
       [ 'f' ],
       [ 'f' ],
       [ 'f' ],
       [ 'f' ]
-    ]
-    var expectedLdws =
-    [
+    ])
+    var expectedLdws = _.setsFrom
+    ([
       [],
       [ 'f' ],
       [ 'f' ],
       [ 'f' ],
       [ 'f' ],
       [ 'f' ]
-    ]
+    ])
 
 
     test.identical( nds, expectedNds );
@@ -1903,24 +2107,24 @@ function lookBfsRevisiting( test )
     var expectedUps = [ 'a', 'b', 'd', 'c', 'd', 'b', 'c', 'e', 'f', 'a', 'c', 'e', 'f', 'c', 'd', 'b', 'a', 'f', 'b', 'd', 'a', 'f', 'a', 'c', 'e', 'f', 'c', 'd', 'b', 'b', 'd', 'f', 'c', 'd', 'b', 'c', 'e', 'f', 'b', 'd', 'f', 'b', 'd', 'a', 'f', 'a', 'c', 'e', 'f', 'c', 'd', 'b', 'c', 'd', 'b', 'c', 'e', 'f', 'f' ];
     var expectedDws = [ 'c', 'd', 'b', 'c', 'e', 'f', 'b', 'd', 'f', 'b', 'd', 'a', 'f', 'a', 'c', 'e', 'f', 'c', 'd', 'b', 'c', 'd', 'b', 'c', 'e', 'f', 'f', 'b', 'd', 'a', 'f', 'a', 'c', 'e', 'f', 'c', 'd', 'b', 'b', 'd', 'f', 'a', 'c', 'e', 'f', 'c', 'd', 'b', 'a', 'f', 'c', 'd', 'b', 'c', 'e', 'f', 'b', 'd', 'a' ];
 
-    var expectedLups =
-    [
+    var expectedLups = _.setsFrom
+    ([
       [ 'a' ],
       [ 'b', 'd' ],
       [ 'c', 'd', 'b', 'c', 'e', 'f' ],
       [ 'a', 'c', 'e', 'f', 'c', 'd', 'b', 'a', 'f' ],
       [ 'b', 'd', 'a', 'f', 'a', 'c', 'e', 'f', 'c', 'd', 'b', 'b', 'd', 'f' ],
       [ 'c', 'd', 'b', 'c', 'e', 'f', 'b', 'd', 'f', 'b', 'd', 'a', 'f', 'a', 'c', 'e', 'f', 'c', 'd', 'b', 'c', 'd', 'b', 'c', 'e', 'f', 'f' ]
-    ]
-    var expectedLdws =
-    [
+    ])
+    var expectedLdws = _.setsFrom
+    ([
       [],
       [ 'b', 'd', 'a', 'f', 'a', 'c', 'e', 'f', 'c', 'd', 'b', 'b', 'd', 'f' ],
       [ 'a', 'c', 'e', 'f', 'c', 'd', 'b', 'a', 'f' ],
       [ 'c', 'd', 'b', 'c', 'e', 'f' ],
       [ 'b', 'd' ],
       [ 'a' ]
-    ]
+    ])
 
     test.identical( nds, expectedNds );
     test.identical( ups, expectedUps );
@@ -1949,24 +2153,24 @@ function lookBfsRevisiting( test )
     var expectedUps = [ 'b', 'c', 'd', 'b', 'a', 'c', 'e', 'f', 'c', 'd', 'b', 'b', 'd', 'a', 'f', 'a', 'c', 'e', 'f', 'c', 'd', 'b', 'c', 'd', 'b', 'c', 'e', 'f', 'b', 'd', 'f', 'b', 'd', 'a', 'f', 'a', 'c', 'e', 'f', 'c', 'd', 'b', 'a', 'c', 'e', 'f', 'c', 'd', 'b', 'a', 'f', 'c', 'd', 'b', 'c', 'e', 'f', 'f', 'c', 'd', 'b', 'c', 'e', 'f', 'b', 'd', 'f', 'b', 'd', 'a', 'f', 'a', 'c', 'e', 'f', 'c', 'd', 'b' ];
     var expectedDws = [ 'a', 'c', 'e', 'f', 'c', 'd', 'b', 'a', 'f', 'c', 'd', 'b', 'c', 'e', 'f', 'f', 'c', 'd', 'b', 'c', 'e', 'f', 'b', 'd', 'f', 'b', 'd', 'a', 'f', 'a', 'c', 'e', 'f', 'c', 'd', 'b', 'c', 'd', 'b', 'c', 'e', 'f', 'b', 'd', 'f', 'b', 'd', 'a', 'f', 'a', 'c', 'e', 'f', 'c', 'd', 'b', 'b', 'd', 'a', 'f', 'a', 'c', 'e', 'f', 'c', 'd', 'b', 'a', 'c', 'e', 'f', 'c', 'd', 'b', 'c', 'd', 'b', 'b' ];
 
-    var expectedLups =
-    [
+    var expectedLups = _.setsFrom
+    ([
       [ 'b' ],
       [ 'c', 'd', 'b' ],
       [ 'a', 'c', 'e', 'f', 'c', 'd', 'b' ],
       [ 'b', 'd', 'a', 'f', 'a', 'c', 'e', 'f', 'c', 'd', 'b' ],
       [ 'c', 'd', 'b', 'c', 'e', 'f', 'b', 'd', 'f', 'b', 'd', 'a', 'f', 'a', 'c', 'e', 'f', 'c', 'd', 'b' ],
       [ 'a', 'c', 'e', 'f', 'c', 'd', 'b', 'a', 'f', 'c', 'd', 'b', 'c', 'e', 'f', 'f', 'c', 'd', 'b', 'c', 'e', 'f', 'b', 'd', 'f', 'b', 'd', 'a', 'f', 'a', 'c', 'e', 'f', 'c', 'd', 'b' ]
-    ]
-    var expectedLdws =
-    [
+    ])
+    var expectedLdws = _.setsFrom
+    ([
       [],
       [ 'c', 'd', 'b', 'c', 'e', 'f', 'b', 'd', 'f', 'b', 'd', 'a', 'f', 'a', 'c', 'e', 'f', 'c', 'd', 'b' ],
       [ 'b', 'd', 'a', 'f', 'a', 'c', 'e', 'f', 'c', 'd', 'b' ],
       [ 'a', 'c', 'e', 'f', 'c', 'd', 'b' ],
       [ 'c', 'd', 'b' ],
       [ 'b' ]
-    ]
+    ])
 
     test.identical( nds, expectedNds );
     test.identical( ups, expectedUps );
@@ -1995,16 +2199,16 @@ function lookBfsRevisiting( test )
     var expectedUps = [ 'e' ];
     var expectedDws = [ 'e' ];
 
-    var expectedLups =
-    [
+    var expectedLups = _.setsFrom
+    ([
       [ 'e' ],
       []
-    ]
-    var expectedLdws =
-    [
+    ])
+    var expectedLdws = _.setsFrom
+    ([
       [],
       [ 'e' ]
-    ]
+    ])
 
     test.identical( nds, expectedNds );
     test.identical( ups, expectedUps );
@@ -2033,25 +2237,24 @@ function lookBfsRevisiting( test )
     var expectedUps = [ 'f', 'f', 'f', 'f', 'f', 'f' ];
     var expectedDws = [ 'f', 'f', 'f', 'f', 'f', 'f' ];
 
-    var expectedLups =
-    [
+    var expectedLups = _.setsFrom
+    ([
       [ 'f' ],
       [ 'f' ],
       [ 'f' ],
       [ 'f' ],
       [ 'f' ],
       [ 'f' ]
-    ]
-    var expectedLdws =
-    [
+    ])
+    var expectedLdws = _.setsFrom
+    ([
       [],
       [ 'f' ],
       [ 'f' ],
       [ 'f' ],
       [ 'f' ],
       [ 'f' ]
-    ]
-
+    ])
 
     test.identical( nds, expectedNds );
     test.identical( ups, expectedUps );
@@ -2122,7 +2325,7 @@ function lookBfsExcluding( test )
 
   function onLayerUp( nodes, it )
   {
-    lups.push( group.nodesToNames( nodes ) );
+    lups.push( _.containerAdapter.toOriginal( group.nodesToNames( nodes ) ) );
   }
 
   function onLayerUp3( nodes, it )
@@ -2130,25 +2333,25 @@ function lookBfsExcluding( test )
     if( it.level > 1 )
     it.continueNode = 0;
     if( it.continueNode )
-    lups.push( group.nodesToNames( nodes ) );
+    lups.push( _.containerAdapter.toOriginal( group.nodesToNames( nodes ) ) );
   }
 
   function onLayerUp4( nodes, it )
   {
     if( it.level > 0 )
     it.continueUp = 0;
-    lups.push( group.nodesToNames( nodes ) );
+    lups.push( _.containerAdapter.toOriginal( group.nodesToNames( nodes ) ) );
   }
 
   function onLayerDown( nodes, it )
   {
-    ldws.push( group.nodesToNames( nodes ) );
+    ldws.push( _.containerAdapter.toOriginal( group.nodesToNames( nodes ) ) );
   }
 
   function onLayerDown3( nodes, it )
   {
     if( it.continueNode )
-    ldws.push( group.nodesToNames( nodes ) );
+    ldws.push( _.containerAdapter.toOriginal( group.nodesToNames( nodes ) ) );
   }
 
   test.case = 'setup';
@@ -2531,7 +2734,7 @@ function lookDfs( test )
   var g = context.cycled4StronglyConnectedLayers();
   var group = g.sys.nodesGroup();
 
-  group.nodesAdd([ a, b, c, d, e, f, g, h, i, j ]);
+  group.nodesAdd( g.nodes );
   test.identical( group.nodes.length, 10 );
   logger.log( group.infoExport() );
 
@@ -3864,7 +4067,7 @@ function eachBfs( test )
   var expUps = [ 'a', 'b', 'd', 'c', 'e', 'f' ];
   var expDws = [ 'c', 'e', 'f', 'b', 'd', 'a' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookBfs', roots : a });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -3878,7 +4081,7 @@ function eachBfs( test )
   var expUps = [ 'b', 'c', 'd', 'a', 'e', 'f' ];
   var expDws = [ 'a', 'e', 'f', 'c', 'd', 'b' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookBfs', roots : b });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -3892,7 +4095,7 @@ function eachBfs( test )
   var expUps = [ 'e' ];
   var expDws = [ 'e' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookBfs', roots : e });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -3906,7 +4109,7 @@ function eachBfs( test )
   var expUps = [ 'f' ];
   var expDws = [ 'f' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookBfs', roots : f });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -3920,7 +4123,7 @@ function eachBfs( test )
   var expUps = [ 'a', 'b', 'd', 'c', 'e', 'f' ];
   var expDws = [ 'c', 'e', 'f', 'b', 'd', 'a' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookBfs', roots : a, withStem/*maybe withTransient*/ : 0 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -3934,7 +4137,7 @@ function eachBfs( test )
   var expUps = [ 'b', 'c', 'd', 'a', 'e', 'f' ];
   var expDws = [ 'a', 'e', 'f', 'c', 'd', 'b' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookBfs', roots : b, withStem/*maybe withTransient*/ : 0 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -3948,7 +4151,7 @@ function eachBfs( test )
   var expUps = [ 'e' ];
   var expDws = [ 'e' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookBfs', roots : e, withStem/*maybe withTransient*/ : 0 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -3962,7 +4165,7 @@ function eachBfs( test )
   var expUps = [ 'f' ];
   var expDws = [ 'f' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookBfs', roots : f, withStem/*maybe withTransient*/ : 0 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -3976,7 +4179,7 @@ function eachBfs( test )
   var expUps = [ 'a', 'b', 'd', 'c', 'e', 'f' ];
   var expDws = [ 'c', 'e', 'f', 'b', 'd', 'a' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookBfs', roots : a, includingBranches : 0 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -3990,7 +4193,7 @@ function eachBfs( test )
   var expUps = [ 'b', 'c', 'd', 'a', 'e', 'f' ];
   var expDws = [ 'a', 'e', 'f', 'c', 'd', 'b' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookBfs', roots : b, includingBranches : 0 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -4004,7 +4207,7 @@ function eachBfs( test )
   var expUps = [ 'e' ];
   var expDws = [ 'e' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookBfs', roots : e, includingBranches : 0 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -4018,7 +4221,7 @@ function eachBfs( test )
   var expUps = [ 'f' ];
   var expDws = [ 'f' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookBfs', roots : f, includingBranches : 0 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -4032,7 +4235,7 @@ function eachBfs( test )
   var expUps = [ 'a', 'b', 'd', 'c', 'e', 'f' ];
   var expDws = [ 'c', 'e', 'f', 'b', 'd', 'a' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookBfs', roots : a, withTerminals : 0 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -4046,7 +4249,7 @@ function eachBfs( test )
   var expUps = [ 'b', 'c', 'd', 'a', 'e', 'f' ];
   var expDws = [ 'a', 'e', 'f', 'c', 'd', 'b' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookBfs', roots : b, withTerminals : 0 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -4060,7 +4263,7 @@ function eachBfs( test )
   var expUps = [ 'e' ];
   var expDws = [ 'e' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookBfs', roots : e, withTerminals : 0 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -4074,7 +4277,7 @@ function eachBfs( test )
   var expUps = [ 'f' ];
   var expDws = [ 'f' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookBfs', roots : f, withTerminals : 0 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -4088,7 +4291,7 @@ function eachBfs( test )
   var expUps = [ 'a', 'b', 'd', 'c', 'e', 'f' ];
   var expDws = [ 'c', 'e', 'f', 'b', 'd', 'a' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookBfs', roots : a, withTerminals : 0, withStem/*maybe withTransient*/ : 0 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -4102,7 +4305,7 @@ function eachBfs( test )
   var expUps = [ 'b', 'c', 'd', 'a', 'e', 'f' ];
   var expDws = [ 'a', 'e', 'f', 'c', 'd', 'b' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookBfs', roots : b, withTerminals : 0, withStem/*maybe withTransient*/ : 0 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -4116,7 +4319,7 @@ function eachBfs( test )
   var expUps = [ 'e' ];
   var expDws = [ 'e' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookBfs', roots : e, withTerminals : 0, withStem/*maybe withTransient*/ : 0 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -4130,7 +4333,7 @@ function eachBfs( test )
   var expUps = [ 'f' ];
   var expDws = [ 'f' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookBfs', roots : f, withTerminals : 0, withStem/*maybe withTransient*/ : 0 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -4144,7 +4347,7 @@ function eachBfs( test )
   var expUps = [ 'a', 'b', 'd', 'c', 'e', 'f' ];
   var expDws = [ 'c', 'e', 'f', 'b', 'd', 'a' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookBfs', roots : a, withTerminals : 0, withStem/*maybe withTransient*/ : 0, mandatory : 1 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -4158,7 +4361,7 @@ function eachBfs( test )
   var expUps = [ 'b', 'c', 'd', 'a', 'e', 'f' ];
   var expDws = [ 'a', 'e', 'f', 'c', 'd', 'b' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookBfs', roots : b, withTerminals : 0, withStem/*maybe withTransient*/ : 0, mandatory : 1 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -4174,7 +4377,7 @@ function eachBfs( test )
   test.shouldThrowErrorSync( () =>
   {
     var got = group.each({ onNode, onUp, onDown, method : 'lookBfs', roots : e, withTerminals : 0, withStem/*maybe withTransient*/ : 0, mandatory : 1 });
-    test.identical( group.nodesToNames( got ), exp );
+    test.identical( group.nodesToNames( got ).original, exp );
     test.identical( nds, expNds );
     test.identical( ups, expUps );
     test.identical( dws, expDws );
@@ -4191,7 +4394,7 @@ function eachBfs( test )
   test.shouldThrowErrorSync( () =>
   {
     var got = group.each({ onNode, onUp, onDown, method : 'lookBfs', roots : f, withTerminals : 0, withStem/*maybe withTransient*/ : 0, mandatory : 1 });
-    test.identical( group.nodesToNames( got ), exp );
+    test.identical( group.nodesToNames( got ).original, exp );
     test.identical( nds, expNds );
     test.identical( ups, expUps );
     test.identical( dws, expDws );
@@ -4206,7 +4409,7 @@ function eachBfs( test )
   var expUps = [ 'a', 'b', 'd' ];
   var expDws = [ 'b', 'd', 'a' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookBfs', roots : a, recursive : 1 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -4220,7 +4423,7 @@ function eachBfs( test )
   var expUps = [ 'b', 'c', 'd' ];
   var expDws = [ 'c', 'd', 'b' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookBfs', roots : b, recursive : 1 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -4234,7 +4437,7 @@ function eachBfs( test )
   var expUps = [ 'e' ];
   var expDws = [ 'e' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookBfs', roots : e, recursive : 1 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -4248,7 +4451,7 @@ function eachBfs( test )
   var expUps = [ 'f' ];
   var expDws = [ 'f' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookBfs', roots : f, recursive : 1 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -4262,7 +4465,7 @@ function eachBfs( test )
   var expUps = [ 'a' ];
   var expDws = [ 'a' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookBfs', roots : a, recursive : 0 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -4276,7 +4479,7 @@ function eachBfs( test )
   var expUps = [ 'b' ];
   var expDws = [ 'b' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookBfs', roots : b, recursive : 0 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -4290,7 +4493,7 @@ function eachBfs( test )
   var expUps = [ 'e' ];
   var expDws = [ 'e' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookBfs', roots : e, recursive : 0 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -4304,7 +4507,7 @@ function eachBfs( test )
   var expUps = [ 'f' ];
   var expDws = [ 'f' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookBfs', roots : f, recursive : 0 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -4347,7 +4550,7 @@ function eachDfs( test )
 
   /* - */
 
-  test.case = 'setup';
+  test.case = 'setup'; // xxx : move to the context
 
   var a = { name : 'a', nodes : [] } // 1
   var b = { name : 'b', nodes : [] } // 2
@@ -4374,11 +4577,15 @@ function eachDfs( test )
   var expNds = [ 'a', 'b', 'c', 'd', 'e', 'f' ];
   var expUps = [ 'a', 'b', 'c', 'd', 'e', 'f' ];
   var expDws = [ 'c', 'e', 'f', 'd', 'b', 'a' ];
+  debugger;
   var got = group.each({ onNode, onUp, onDown, method : 'lookDfs', roots : a });
-  test.identical( group.nodesToNames( got ), exp );
+  debugger;
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
+
+  debugger; return; xxx
 
   /* */
 
@@ -4389,7 +4596,7 @@ function eachDfs( test )
   var expUps = [ 'b', 'c', 'a', 'd', 'e', 'f' ];
   var expDws = [ 'e', 'f', 'd', 'a', 'c', 'b' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookDfs', roots : b });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -4403,7 +4610,7 @@ function eachDfs( test )
   var expUps = [ 'e' ];
   var expDws = [ 'e' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookDfs', roots : e });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -4417,7 +4624,7 @@ function eachDfs( test )
   var expUps = [ 'f' ];
   var expDws = [ 'f' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookDfs', roots : f });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -4431,7 +4638,7 @@ function eachDfs( test )
   var expUps = [ 'a', 'b', 'c', 'd', 'e', 'f' ];
   var expDws = [ 'c', 'e', 'f', 'd', 'b', 'a' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookDfs', roots : a, withStem/*maybe withTransient*/ : 0 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -4445,7 +4652,7 @@ function eachDfs( test )
   var expUps = [ 'b', 'c', 'a', 'd', 'e', 'f' ];
   var expDws = [ 'e', 'f', 'd', 'a', 'c', 'b' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookDfs', roots : b, withStem/*maybe withTransient*/ : 0 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -4459,7 +4666,7 @@ function eachDfs( test )
   var expUps = [ 'e' ];
   var expDws = [ 'e' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookDfs', roots : e, withStem/*maybe withTransient*/ : 0 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -4473,7 +4680,7 @@ function eachDfs( test )
   var expUps = [ 'f' ];
   var expDws = [ 'f' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookDfs', roots : f, withStem/*maybe withTransient*/ : 0 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -4487,7 +4694,7 @@ function eachDfs( test )
   var expUps = [ 'a', 'b', 'c', 'd', 'e', 'f' ];
   var expDws = [ 'c', 'e', 'f', 'd', 'b', 'a' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookDfs', roots : a, includingBranches : 0 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -4501,7 +4708,7 @@ function eachDfs( test )
   var expUps = [ 'b', 'c', 'a', 'd', 'e', 'f' ];
   var expDws = [ 'e', 'f', 'd', 'a', 'c', 'b' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookDfs', roots : b, includingBranches : 0 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -4515,7 +4722,7 @@ function eachDfs( test )
   var expUps = [ 'e' ];
   var expDws = [ 'e' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookDfs', roots : e, includingBranches : 0 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -4529,7 +4736,7 @@ function eachDfs( test )
   var expUps = [ 'f' ];
   var expDws = [ 'f' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookDfs', roots : f, includingBranches : 0 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -4543,7 +4750,7 @@ function eachDfs( test )
   var expUps = [ 'a', 'b', 'c', 'd', 'e', 'f' ];
   var expDws = [ 'c', 'e', 'f', 'd', 'b', 'a' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookDfs', roots : a, withTerminals : 0 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -4557,7 +4764,7 @@ function eachDfs( test )
   var expUps = [ 'b', 'c', 'a', 'd', 'e', 'f' ];
   var expDws = [ 'e', 'f', 'd', 'a', 'c', 'b' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookDfs', roots : b, withTerminals : 0 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -4571,7 +4778,7 @@ function eachDfs( test )
   var expUps = [ 'e' ];
   var expDws = [ 'e' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookDfs', roots : e, withTerminals : 0 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -4585,7 +4792,7 @@ function eachDfs( test )
   var expUps = [ 'f' ];
   var expDws = [ 'f' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookDfs', roots : f, withTerminals : 0 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -4599,7 +4806,7 @@ function eachDfs( test )
   var expUps = [ 'a', 'b', 'c', 'd', 'e', 'f' ];
   var expDws = [ 'c', 'e', 'f', 'd', 'b', 'a' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookDfs', roots : a, withTerminals : 0, withStem/*maybe withTransient*/ : 0 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -4613,7 +4820,7 @@ function eachDfs( test )
   var expUps = [ 'b', 'c', 'a', 'd', 'e', 'f' ];
   var expDws = [ 'e', 'f', 'd', 'a', 'c', 'b' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookDfs', roots : b, withTerminals : 0, withStem/*maybe withTransient*/ : 0 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -4627,7 +4834,7 @@ function eachDfs( test )
   var expUps = [ 'e' ];
   var expDws = [ 'e' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookDfs', roots : e, withTerminals : 0, withStem/*maybe withTransient*/ : 0 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -4641,7 +4848,7 @@ function eachDfs( test )
   var expUps = [ 'f' ];
   var expDws = [ 'f' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookDfs', roots : f, withTerminals : 0, withStem/*maybe withTransient*/ : 0 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -4655,7 +4862,7 @@ function eachDfs( test )
   var expUps = [ 'a', 'b', 'c', 'd', 'e', 'f' ];
   var expDws = [ 'c', 'e', 'f', 'd', 'b', 'a' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookDfs', roots : a, withTerminals : 0, withStem/*maybe withTransient*/ : 0, mandatory : 1 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -4669,7 +4876,7 @@ function eachDfs( test )
   var expUps = [ 'b', 'c', 'a', 'd', 'e', 'f' ];
   var expDws = [ 'e', 'f', 'd', 'a', 'c', 'b' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookDfs', roots : b, withTerminals : 0, withStem/*maybe withTransient*/ : 0, mandatory : 1 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -4685,7 +4892,7 @@ function eachDfs( test )
   test.shouldThrowErrorSync( () =>
   {
     var got = group.each({ onNode, onUp, onDown, method : 'lookDfs', roots : e, withTerminals : 0, withStem/*maybe withTransient*/ : 0, mandatory : 1 });
-    test.identical( group.nodesToNames( got ), exp );
+    test.identical( group.nodesToNames( got ).original, exp );
     test.identical( nds, expNds );
     test.identical( ups, expUps );
     test.identical( dws, expDws );
@@ -4702,7 +4909,7 @@ function eachDfs( test )
   test.shouldThrowErrorSync( () =>
   {
     var got = group.each({ onNode, onUp, onDown, method : 'lookDfs', roots : f, withTerminals : 0, withStem/*maybe withTransient*/ : 0, mandatory : 1 });
-    test.identical( group.nodesToNames( got ), exp );
+    test.identical( group.nodesToNames( got ).original, exp );
     test.identical( nds, expNds );
     test.identical( ups, expUps );
     test.identical( dws, expDws );
@@ -4717,7 +4924,7 @@ function eachDfs( test )
   var expUps = [ 'a', 'b', 'd' ];
   var expDws = [ 'b', 'd', 'a' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookDfs', roots : a, recursive : 1 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -4731,7 +4938,7 @@ function eachDfs( test )
   var expUps = [ 'b', 'c', 'd' ];
   var expDws = [ 'c', 'd', 'b' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookDfs', roots : b, recursive : 1 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -4745,7 +4952,7 @@ function eachDfs( test )
   var expUps = [ 'e' ];
   var expDws = [ 'e' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookDfs', roots : e, recursive : 1 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -4759,7 +4966,7 @@ function eachDfs( test )
   var expUps = [ 'f' ];
   var expDws = [ 'f' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookDfs', roots : f, recursive : 1 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -4773,7 +4980,7 @@ function eachDfs( test )
   var expUps = [ 'a' ];
   var expDws = [ 'a' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookDfs', roots : a, recursive : 0 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -4787,7 +4994,7 @@ function eachDfs( test )
   var expUps = [ 'b' ];
   var expDws = [ 'b' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookDfs', roots : b, recursive : 0 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -4801,7 +5008,7 @@ function eachDfs( test )
   var expUps = [ 'e' ];
   var expDws = [ 'e' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookDfs', roots : e, recursive : 0 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -4815,7 +5022,7 @@ function eachDfs( test )
   var expUps = [ 'f' ];
   var expDws = [ 'f' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookDfs', roots : f, recursive : 0 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -4886,7 +5093,7 @@ function eachDbfs( test )
   var expUps = [ 'a', 'b', 'd', 'c', 'e', 'f' ];
   var expDws = [ 'c', 'b', 'e', 'f', 'd', 'a' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookDbfs', roots : a });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -4900,7 +5107,7 @@ function eachDbfs( test )
   var expUps = [ 'b', 'c', 'd', 'a', 'e', 'f' ];
   var expDws = [ 'a', 'c', 'e', 'f', 'd', 'b' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookDbfs', roots : b });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -4914,7 +5121,7 @@ function eachDbfs( test )
   var expUps = [ 'e' ];
   var expDws = [ 'e' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookDbfs', roots : e });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -4928,7 +5135,7 @@ function eachDbfs( test )
   var expUps = [ 'f' ];
   var expDws = [ 'f' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookDbfs', roots : f });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -4942,7 +5149,7 @@ function eachDbfs( test )
   var expUps = [ 'a', 'b', 'd', 'c', 'e', 'f' ];
   var expDws = [ 'c', 'b', 'e', 'f', 'd', 'a' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookDbfs', roots : a, withStem/*maybe withTransient*/ : 0 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -4956,7 +5163,7 @@ function eachDbfs( test )
   var expUps = [ 'b', 'c', 'd', 'a', 'e', 'f' ];
   var expDws = [ 'a', 'c', 'e', 'f', 'd', 'b' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookDbfs', roots : b, withStem/*maybe withTransient*/ : 0 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -4970,7 +5177,7 @@ function eachDbfs( test )
   var expUps = [ 'e' ];
   var expDws = [ 'e' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookDbfs', roots : e, withStem/*maybe withTransient*/ : 0 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -4984,7 +5191,7 @@ function eachDbfs( test )
   var expUps = [ 'f' ];
   var expDws = [ 'f' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookDbfs', roots : f, withStem/*maybe withTransient*/ : 0 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -4998,7 +5205,7 @@ function eachDbfs( test )
   var expUps = [ 'a', 'b', 'd', 'c', 'e', 'f' ];
   var expDws = [ 'c', 'b', 'e', 'f', 'd', 'a' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookDbfs', roots : a, includingBranches : 0 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -5012,7 +5219,7 @@ function eachDbfs( test )
   var expUps = [ 'b', 'c', 'd', 'a', 'e', 'f' ];
   var expDws = [ 'a', 'c', 'e', 'f', 'd', 'b' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookDbfs', roots : b, includingBranches : 0 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -5026,7 +5233,7 @@ function eachDbfs( test )
   var expUps = [ 'e' ];
   var expDws = [ 'e' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookDbfs', roots : e, includingBranches : 0 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -5040,7 +5247,7 @@ function eachDbfs( test )
   var expUps = [ 'f' ];
   var expDws = [ 'f' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookDbfs', roots : f, includingBranches : 0 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -5054,7 +5261,7 @@ function eachDbfs( test )
   var expUps = [ 'a', 'b', 'd', 'c', 'e', 'f' ];
   var expDws = [ 'c', 'b', 'e', 'f', 'd', 'a' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookDbfs', roots : a, withTerminals : 0 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -5068,7 +5275,7 @@ function eachDbfs( test )
   var expUps = [ 'b', 'c', 'd', 'a', 'e', 'f' ];
   var expDws = [ 'a', 'c', 'e', 'f', 'd', 'b' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookDbfs', roots : b, withTerminals : 0 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -5082,7 +5289,7 @@ function eachDbfs( test )
   var expUps = [ 'e' ];
   var expDws = [ 'e' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookDbfs', roots : e, withTerminals : 0 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -5096,7 +5303,7 @@ function eachDbfs( test )
   var expUps = [ 'f' ];
   var expDws = [ 'f' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookDbfs', roots : f, withTerminals : 0 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -5110,7 +5317,7 @@ function eachDbfs( test )
   var expUps = [ 'a', 'b', 'd', 'c', 'e', 'f' ];
   var expDws = [ 'c', 'b', 'e', 'f', 'd', 'a' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookDbfs', roots : a, withTerminals : 0, withStem/*maybe withTransient*/ : 0 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -5124,7 +5331,7 @@ function eachDbfs( test )
   var expUps = [ 'b', 'c', 'd', 'a', 'e', 'f' ];
   var expDws = [ 'a', 'c', 'e', 'f', 'd', 'b' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookDbfs', roots : b, withTerminals : 0, withStem/*maybe withTransient*/ : 0 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -5138,7 +5345,7 @@ function eachDbfs( test )
   var expUps = [ 'e' ];
   var expDws = [ 'e' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookDbfs', roots : e, withTerminals : 0, withStem/*maybe withTransient*/ : 0 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -5152,7 +5359,7 @@ function eachDbfs( test )
   var expUps = [ 'f' ];
   var expDws = [ 'f' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookDbfs', roots : f, withTerminals : 0, withStem/*maybe withTransient*/ : 0 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -5166,7 +5373,7 @@ function eachDbfs( test )
   var expUps = [ 'a', 'b', 'd', 'c', 'e', 'f' ];
   var expDws = [ 'c', 'b', 'e', 'f', 'd', 'a' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookDbfs', roots : a, withTerminals : 0, withStem/*maybe withTransient*/ : 0, mandatory : 1 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -5180,7 +5387,7 @@ function eachDbfs( test )
   var expUps = [ 'b', 'c', 'd', 'a', 'e', 'f' ];
   var expDws = [ 'a', 'c', 'e', 'f', 'd', 'b' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookDbfs', roots : b, withTerminals : 0, withStem/*maybe withTransient*/ : 0, mandatory : 1 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -5196,7 +5403,7 @@ function eachDbfs( test )
   test.shouldThrowErrorSync( () =>
   {
     var got = group.each({ onNode, onUp, onDown, method : 'lookDbfs', roots : e, withTerminals : 0, withStem/*maybe withTransient*/ : 0, mandatory : 1 });
-    test.identical( group.nodesToNames( got ), exp );
+    test.identical( group.nodesToNames( got ).original, exp );
     test.identical( nds, expNds );
     test.identical( ups, expUps );
     test.identical( dws, expDws );
@@ -5213,7 +5420,7 @@ function eachDbfs( test )
   test.shouldThrowErrorSync( () =>
   {
     var got = group.each({ onNode, onUp, onDown, method : 'lookDbfs', roots : f, withTerminals : 0, withStem/*maybe withTransient*/ : 0, mandatory : 1 });
-    test.identical( group.nodesToNames( got ), exp );
+    test.identical( group.nodesToNames( got ).original, exp );
     test.identical( nds, expNds );
     test.identical( ups, expUps );
     test.identical( dws, expDws );
@@ -5228,7 +5435,7 @@ function eachDbfs( test )
   var expUps = [ 'a', 'b', 'd' ];
   var expDws = [ 'b', 'd', 'a' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookDbfs', roots : a, recursive : 1 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -5242,7 +5449,7 @@ function eachDbfs( test )
   var expUps = [ 'b', 'c', 'd' ];
   var expDws = [ 'c', 'd', 'b' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookDbfs', roots : b, recursive : 1 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -5256,7 +5463,7 @@ function eachDbfs( test )
   var expUps = [ 'e' ];
   var expDws = [ 'e' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookDbfs', roots : e, recursive : 1 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -5270,7 +5477,7 @@ function eachDbfs( test )
   var expUps = [ 'f' ];
   var expDws = [ 'f' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookDbfs', roots : f, recursive : 1 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -5284,7 +5491,7 @@ function eachDbfs( test )
   var expUps = [ 'a' ];
   var expDws = [ 'a' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookDbfs', roots : a, recursive : 0 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -5298,7 +5505,7 @@ function eachDbfs( test )
   var expUps = [ 'b' ];
   var expDws = [ 'b' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookDbfs', roots : b, recursive : 0 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -5312,7 +5519,7 @@ function eachDbfs( test )
   var expUps = [ 'e' ];
   var expDws = [ 'e' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookDbfs', roots : e, recursive : 0 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -5326,7 +5533,7 @@ function eachDbfs( test )
   var expUps = [ 'f' ];
   var expDws = [ 'f' ];
   var got = group.each({ onNode, onUp, onDown, method : 'lookDbfs', roots : f, recursive : 0 });
-  test.identical( group.nodesToNames( got ), exp );
+  test.identical( group.nodesToNames( got ).original, exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
   test.identical( dws, expDws );
@@ -5396,7 +5603,7 @@ function dagTopSortDfs( test )
   test.shouldThrowErrorSync( () =>
   {
     test.description = 'with help of all([ d ])'
-    var ordering = group.dagTopSortDfs( [ a, b, c, d, e, f, g, h, i, j ] );
+    var ordering = group.dagTopSortDfs( [ g.a, g.b, g.c, g.d, g.e, g.f, g.g, g.h, g.i, g.j ] );
   });
 
   g.sys.finit();
@@ -5413,7 +5620,7 @@ function topSortSourceBasedBfs( test )
   var g = context.cycled4StronglyConnectedLayers();
   var group = g.sys.nodesGroup();
 
-  // group.nodesAdd([ a, b, c, d, e, f, g, h, i, j ]);
+  // group.nodesAdd( g.nodes );
   logger.log( group.infoExport() );
 
   /* */
@@ -5437,7 +5644,7 @@ function topSortSourceBasedBfs( test )
 
   test.case = 'not j';
 
-  var layers = group.topSortSourceBasedBfs([ a, b, c, d, e, f, g, h, i ]);
+  var layers = group.topSortSourceBasedBfs([ g.a, g.b, g.c, g.d, g.e, g.f, g.g, g.h, g.i ]);
 
   var expected =
   [
@@ -5454,7 +5661,7 @@ function topSortSourceBasedBfs( test )
 
   test.case = 'not j, not d';
 
-  var layers = group.topSortSourceBasedBfs([ a, b, c, e, f, g, h, i ]);
+  var layers = group.topSortSourceBasedBfs([ g.a, g.b, g.c, g.e, g.f, g.g, g.h, g.i ]);
 
   var expected =
   [
@@ -5628,8 +5835,7 @@ function topSortCycledSourceBasedBfs( test )
 
   /* */
 
-  test.case = 'cycled asymetric bar';
-
+  test.case = 'cycled asymetric zeta';
   var g = context.cycledAsymetricZeta();
   var group = g.sys.nodesGroup();
 
@@ -5746,28 +5952,9 @@ function pairDirectedPathGetDfs( test )
 
   /* - */
 
-  test.case = 'cycled asymetric bar';
-
-  var a = { name : 'a', nodes : [] }
-  var b = { name : 'b', nodes : [] }
-  var c = { name : 'c', nodes : [] }
-  var d = { name : 'd', nodes : [] }
-  var e = { name : 'e', nodes : [] }
-  var f = { name : 'f', nodes : [] }
-  var g = { name : 'g', nodes : [] }
-  var h = { name : 'h', nodes : [] }
-
-  a.nodes.push( b );
-  b.nodes.push( c );
-  c.nodes.push( a, d );
-  d.nodes.push( e );
-  e.nodes.push( f );
-  f.nodes.push( g );
-  g.nodes.push( h );
-  h.nodes.push( f );
-
-  var sys = new _.graph.AbstractGraphSystem({ onNodeNameGet : ( node ) => node.name });
-  var group = sys.nodesGroup();
+  test.case = 'cycled asymetric zeta';
+  var g = context.cycledAsymetricZeta();
+  var group = g.sys.nodesGroup();
 
   /* */
 
@@ -5779,6 +5966,10 @@ function pairDirectedPathGetDfs( test )
   var exp = [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h' ];
   var connected = group.pairDirectedPathGetDfs([ h, a ]);
   test.identical( group.nodesToNames( connected ), exp );
+
+  /* */
+
+  g.sys.finit();
 
 }
 
@@ -5857,28 +6048,10 @@ function pairDirectedPathExistsDfs( test )
 
   /* - */
 
-  test.case = 'cycled asymetric bar';
+  test.case = 'cycled asymetric zeta';
 
-  var a = { name : 'a', nodes : [] }
-  var b = { name : 'b', nodes : [] }
-  var c = { name : 'c', nodes : [] }
-  var d = { name : 'd', nodes : [] }
-  var e = { name : 'e', nodes : [] }
-  var f = { name : 'f', nodes : [] }
-  var g = { name : 'g', nodes : [] }
-  var h = { name : 'h', nodes : [] }
-
-  a.nodes.push( b );
-  b.nodes.push( c );
-  c.nodes.push( a, d );
-  d.nodes.push( e );
-  e.nodes.push( f );
-  f.nodes.push( g );
-  g.nodes.push( h );
-  h.nodes.push( f );
-
-  var sys = new _.graph.AbstractGraphSystem({ onNodeNameGet : ( node ) => node.name });
-  var group = sys.nodesGroup();
+  var g = context.cycledAsymetricZeta();
+  var group = g.sys.nodesGroup();
 
   /* */
 
@@ -5890,6 +6063,9 @@ function pairDirectedPathExistsDfs( test )
   var connected = group.pairDirectedPathExistsDfs([ h, a ]);
   test.identical( connected, true );
 
+  /* */
+
+  g.sys.finit();
 }
 
 //
@@ -5967,28 +6143,10 @@ function pairIsConnectedDfs( test )
 
   /* - */
 
-  test.case = 'cycled asymetric bar';
+  test.case = 'cycled asymetric zeta';
 
-  var a = { name : 'a', nodes : [] }
-  var b = { name : 'b', nodes : [] }
-  var c = { name : 'c', nodes : [] }
-  var d = { name : 'd', nodes : [] }
-  var e = { name : 'e', nodes : [] }
-  var f = { name : 'f', nodes : [] }
-  var g = { name : 'g', nodes : [] }
-  var h = { name : 'h', nodes : [] }
-
-  a.nodes.push( b );
-  b.nodes.push( c );
-  c.nodes.push( a, d );
-  d.nodes.push( e );
-  e.nodes.push( f );
-  f.nodes.push( g );
-  g.nodes.push( h );
-  h.nodes.push( f );
-
-  var sys = new _.graph.AbstractGraphSystem({ onNodeNameGet : ( node ) => node.name });
-  var group = sys.nodesGroup();
+  var g = context.cycledAsymetricZeta();
+  var group = gsys.nodesGroup();
 
   /* */
 
@@ -6000,6 +6158,9 @@ function pairIsConnectedDfs( test )
   var connected = group.pairIsConnectedDfs([ h, a ]);
   test.identical( connected, true );
 
+  /* */
+
+  g.sys.finit();
 }
 
 //
@@ -6077,27 +6238,8 @@ function pairIsConnectedStronglyDfs( test )
 
   /* - */
 
-  test.case = 'cycled asymetric bar';
-
-  var a = { name : 'a', nodes : [] }
-  var b = { name : 'b', nodes : [] }
-  var c = { name : 'c', nodes : [] }
-  var d = { name : 'd', nodes : [] }
-  var e = { name : 'e', nodes : [] }
-  var f = { name : 'f', nodes : [] }
-  var g = { name : 'g', nodes : [] }
-  var h = { name : 'h', nodes : [] }
-
-  a.nodes.push( b );
-  b.nodes.push( c );
-  c.nodes.push( a, d );
-  d.nodes.push( e );
-  e.nodes.push( f );
-  f.nodes.push( g );
-  g.nodes.push( h );
-  h.nodes.push( f );
-
-  var sys = new _.graph.AbstractGraphSystem({ onNodeNameGet : ( node ) => node.name });
+  test.case = 'cycled asymetric zeta';
+  var g = context.cycledAsymetricZeta();
   var group = sys.nodesGroup();
 
   /* */
@@ -6110,6 +6252,9 @@ function pairIsConnectedStronglyDfs( test )
   var connected = group.pairIsConnectedStronglyDfs([ h, a ]);
   test.identical( connected, false );
 
+  /* */
+
+  g.sys.finit();
 }
 
 //
@@ -6158,38 +6303,23 @@ function nodesConnectedLayersDfs( test )
 
   /* - */
 
-  test.case = 'cycled asymetric bar';
-
-  var a = { name : 'a', nodes : [] }
-  var b = { name : 'b', nodes : [] }
-  var c = { name : 'c', nodes : [] }
-  var d = { name : 'd', nodes : [] }
-  var e = { name : 'e', nodes : [] }
-  var f = { name : 'f', nodes : [] }
-  var g = { name : 'g', nodes : [] }
-  var h = { name : 'h', nodes : [] }
-
-  a.nodes.push( b );
-  b.nodes.push( c );
-  c.nodes.push( a, d );
-  d.nodes.push( e );
-  e.nodes.push( f );
-  f.nodes.push( g );
-  g.nodes.push( h );
-  h.nodes.push( f );
-
-  var sys = new _.graph.AbstractGraphSystem({ onNodeNameGet : ( node ) => node.name });
+  test.case = 'cycled asymetric zeta';
+  var g = context.cycledAsymetricZeta();
 
   /* */
 
   test.description = 'all';
-  var group = sys.nodesGroup();
+  var group = g.sys.nodesGroup();
   group.nodesAdd([ a, b, c, d, e, f, g, h ]);
   var layers = group.nodesConnectedLayersDfs([ a, b, c, d, e, f, g, h ]);
   var names = layers.map( ( ids ) => group.idsToNames( ids ) );;
   var expected = [ [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h' ] ]
   test.identical( names, expected );
   group.finit();
+
+  /* */
+
+  g.sys.finit();
 
 }
 
@@ -6203,7 +6333,7 @@ function nodesStronglyConnectedLayersDfs( test )
 
   var g = context.cycled4StronglyConnectedLayers();
   var group = g.sys.nodesGroup();
-  group.nodesAdd([ a, b, c, d, e, f, g, h, i, j ]);
+  group.nodesAdd( g.nodes );
   test.identical( group.nodes.length, 10 );
   logger.log( group.infoExport() );
 
@@ -6234,126 +6364,111 @@ function nodesStronglyConnectedTreeDfs( test )
 
   /* - */
 
-  test.case = 'trivial';
-  var g = context.trivialCycledSigmaTriplet();
-
-  /* */
-
-  var group = g.sys.nodesGroup({});
-
-  group.nodesAdd( g.nodes );
-  logger.log( 'Original' );
-  logger.log( group.infoExport() );
-
-  var group2 = group.nodesStronglyConnectedTreeDfs();
-  group2.onNodeNameGet = function onNodeNameGet( dnode )
-  {
-    return group.nodesToNames( dnode.originalNodes ).join( '+' );
-  }
-  logger.log( 'Strongly connected tree :\n' + group2.infoExport() );
-  var originalNodesNames = group2.nodes.map( ( node ) => group.nodesToNames( node.originalNodes ) );
-  var expected = [ [ 'c' ], [ 'a', 'b' ] ];
-  test.identical( originalNodesNames, expected );
-
-  var outNodes = group2.nodes.map( ( node ) => group2.nodesToIds( node.outNodes ) );
-  var expected = [ [], [ 4 ] ];
-  test.identical( outNodes, expected );
-
-  var outNodes = group2.nodes.map( ( dnode ) => group2.nodeToName( dnode ) + ' : ' + group2.nodesToNames( dnode.outNodes ).join( '.' ) );
-  var expected = [ 'c : ', 'a+b : c' ];
-  test.identical( outNodes, expected );
-
-  /* */
-
-  g.sys.finit();
+  // test.case = 'trivial';
+  // var g = context.trivialCycledSigmaTriplet();
+  //
+  // /* */
+  //
+  // var group = g.sys.nodesGroup({});
+  //
+  // group.nodesAdd( g.nodes );
+  // logger.log( 'Original' );
+  // logger.log( group.infoExport() );
+  //
+  // var group2 = group.nodesStronglyConnectedTreeDfs();
+  // group2.onNodeNameGet = function onNodeNameGet( dnode )
+  // {
+  //   return group.nodesToNames( dnode.originalNodes ).join( '+' );
+  // }
+  // logger.log( 'Strongly connected tree :\n' + group2.infoExport() );
+  // var originalNodesNames = group2.nodes.map( ( node ) => group.nodesToNames( node.originalNodes ).toArray().original ).toArray().original;
+  // var expected = [ [ 'c' ], [ 'a', 'b' ] ];
+  // test.identical( originalNodesNames, expected );
+  //
+  // var outNodes = group2.nodes.map( ( node ) => group2.nodesToIds( node.outNodes ).toArray().original ).toArray().original;
+  // var expected = [ [], [ 4 ] ];
+  // test.identical( outNodes, expected );
+  //
+  // var outNodes = group2.nodes.map( ( dnode ) => group2.nodeToName( dnode ) + ' : ' + group2.nodesToNames( dnode.outNodes ).join( '.' ) ).toArray().original;
+  // var expected = [ 'c : ', 'a+b : c' ];
+  // test.identical( outNodes, expected );
+  //
+  // /* */
+  //
+  // g.sys.finit();
 
   /* - */
 
-  test.case = 'cycled asymetric bar';
-
-  var a = { name : 'a', nodes : [] }
-  var b = { name : 'b', nodes : [] }
-  var c = { name : 'c', nodes : [] }
-  var d = { name : 'd', nodes : [] }
-  var e = { name : 'e', nodes : [] }
-  var f = { name : 'f', nodes : [] }
-  var g = { name : 'g', nodes : [] }
-  var h = { name : 'h', nodes : [] }
-
-  a.nodes.push( b );
-  b.nodes.push( c );
-  c.nodes.push( a, d );
-  d.nodes.push( e );
-  e.nodes.push( f );
-  f.nodes.push( g );
-  g.nodes.push( h );
-  h.nodes.push( f );
-
-  var sys = new _.graph.AbstractGraphSystem({ onNodeNameGet : ( node ) => node.name });
+  test.case = 'cycled asymetric zeta';
+  var g = context.cycledAsymetricZeta();
 
   /* */
 
-  test.description = 'all';
-  var group = sys.nodesGroup();
-  var group2 = group.nodesStronglyConnectedTreeDfs([ a, b, c, d, e, f, g, h ]);
-  group2.onNodeNameGet = function onNodeNameGet( dnode )
-  {
-    return group.nodesToNames( dnode.originalNodes ).join( '+' );
-  }
-  var outNodes = group2.nodes.map( ( dnode ) => group2.nodeToName( dnode ) + ' : ' + group2.nodesToNames( dnode.outNodes ).join( '.' ) );
-  var expected = [ 'f+g+h : ', 'e : f+g+h', 'd : e', 'a+b+c : d' ];
-  test.identical( outNodes, expected );
-  group.finit();
+  // test.description = 'all';
+  // var group = g.sys.nodesGroup();
+  // var group2 = group.nodesStronglyConnectedTreeDfs( g.nodes );
+  // group2.onNodeNameGet = function onNodeNameGet( dnode )
+  // {
+  //   return group.nodesToNames( dnode.originalNodes ).join( '+' );
+  // }
+  // var outNodes = group2.nodes.map( ( dnode ) => group2.nodeToName( dnode ) + ' : ' + group2.nodesToNames( dnode.outNodes ).join( '.' ) ).toArray().original;
+  // var expected = [ 'h+f+g : ', 'e : h+f+g', 'd : e', 'a+b+c : d' ];
+  // test.identical( outNodes, expected );
+  // group.finit();
 
   /* */
 
   test.description = '[ a, h, g, f, e, d, c, b ]';
-  var group = sys.nodesGroup();
-  var group2 = group.nodesStronglyConnectedTreeDfs([ a, h, g, f, e, d, c, b ]);
+  var group = g.sys.nodesGroup();
+  debugger;
+  var group2 = group.nodesStronglyConnectedTreeDfs([ g.a, g.h, g.g, g.f, g.e, g.d, g.c, g.b ]);
+  debugger;
   group2.onNodeNameGet = function onNodeNameGet( dnode )
   {
     return group.nodesToNames( dnode.originalNodes ).join( '+' );
   }
-  var outNodes = group2.nodes.map( ( dnode ) => group2.nodeToName( dnode ) + ' : ' + group2.nodesToNames( dnode.outNodes ).join( '.' ) );
+  var outNodes = group2.nodes.map( ( dnode ) => group2.nodeToName( dnode ) + ' : ' + group2.nodesToNames( dnode.outNodes ).join( '.' ) ).toArray().original;
   var expected = [ 'h+f+g : ', 'e : h+f+g', 'd : e', 'a+b+c : d' ];
   test.identical( outNodes, expected );
+
+  debugger; return; xxx
 
   /* */
 
   test.description = 'all a';
-  var group = sys.nodesGroup();
+  var group = g.sys.nodesGroup();
   var group2 = group.nodesStronglyConnectedTreeDfs( group.rootsAllReachable( a ) );
   group2.onNodeNameGet = function onNodeNameGet( dnode )
   {
     return group.nodesToNames( dnode.originalNodes ).join( '+' );
   }
-  var outNodes = group2.nodes.map( ( dnode ) => group2.nodeToName( dnode ) + ' : ' + group2.nodesToNames( dnode.outNodes ).join( '.' ) );
+  var outNodes = group2.nodes.map( ( dnode ) => group2.nodeToName( dnode ) + ' : ' + group2.nodesToNames( dnode.outNodes ).join( '.' ) ).toArray().original;
   var expected = [ 'f+g+h : ', 'e : f+g+h', 'd : e', 'a+b+c : d' ];
   test.identical( outNodes, expected );
 
   /* */
 
   test.description = 'all c';
-  var group = sys.nodesGroup();
+  var group = g.sys.nodesGroup();
   var group2 = group.nodesStronglyConnectedTreeDfs( group.rootsAllReachable( c ) );
   group2.onNodeNameGet = function onNodeNameGet( dnode )
   {
     return group.nodesToNames( dnode.originalNodes ).join( '+' );
   }
-  var outNodes = group2.nodes.map( ( dnode ) => group2.nodeToName( dnode ) + ' : ' + group2.nodesToNames( dnode.outNodes ).join( '.' ) );
+  var outNodes = group2.nodes.map( ( dnode ) => group2.nodeToName( dnode ) + ' : ' + group2.nodesToNames( dnode.outNodes ).join( '.' ) ).toArray().original;
   var expected = [ 'f+g+h : ', 'e : f+g+h', 'd : e', 'c+a+b : d' ];
   test.identical( outNodes, expected );
 
   /* */
 
   test.description = 'all d';
-  var group = sys.nodesGroup();
+  var group = g.sys.nodesGroup();
   var group2 = group.nodesStronglyConnectedTreeDfs( group.rootsAllReachable( d ) );
   group2.onNodeNameGet = function onNodeNameGet( dnode )
   {
     return group.nodesToNames( dnode.originalNodes ).join( '+' );
   }
-  var outNodes = group2.nodes.map( ( dnode ) => group2.nodeToName( dnode ) + ' : ' + group2.nodesToNames( dnode.outNodes ).join( '.' ) );
+  var outNodes = group2.nodes.map( ( dnode ) => group2.nodeToName( dnode ) + ' : ' + group2.nodesToNames( dnode.outNodes ).join( '.' ) ).toArray().original;
   var expected = [ 'f+g+h : ', 'e : f+g+h', 'd : e' ];
   test.identical( outNodes, expected );
 
@@ -6376,7 +6491,7 @@ function nodesStronglyConnectedTreeDfs( test )
   {
     return group.nodesToNames( dnode.originalNodes ).join( '+' );
   }
-  var outNodes = group2.nodes.map( ( dnode ) => group2.nodeToName( dnode ) + ' : ' + group2.nodesToNames( dnode.outNodes ).join( '.' ) );
+  var outNodes = group2.nodes.map( ( dnode ) => group2.nodeToName( dnode ) + ' : ' + group2.nodesToNames( dnode.outNodes ).join( '.' ) ).toArray().original;
   var expected = [ 'j : ', 'f : ', 'i+h : f', 'g : i+h', 'a+b+e+c : f.i+h', 'd : a+b+e+c.g' ];
   test.identical( outNodes, expected );
   logger.log( 'Tree' );
@@ -6391,7 +6506,7 @@ function nodesStronglyConnectedTreeDfs( test )
   {
     return group.nodesToNames( dnode.originalNodes ).join( '+' );
   }
-  var outNodes = group2.nodes.map( ( dnode ) => group2.nodeToName( dnode ) + ' : ' + group2.nodesToNames( dnode.outNodes ).join( '.' ) );
+  var outNodes = group2.nodes.map( ( dnode ) => group2.nodeToName( dnode ) + ' : ' + group2.nodesToNames( dnode.outNodes ).join( '.' ) ).toArray().original;
   var expected = [ 'j : ', 'f : ', 'i+h : f', 'g : i+h', 'a+b+e+c : f.i+h', 'd : a+b+e+c.g' ];
   test.identical( outNodes, expected );
   logger.log( 'Tree' );
@@ -6406,7 +6521,7 @@ function nodesStronglyConnectedTreeDfs( test )
   {
     return group.nodesToNames( dnode.originalNodes ).join( '+' );
   }
-  var outNodes = group2.nodes.map( ( dnode ) => group2.nodeToName( dnode ) + ' : ' + group2.nodesToNames( dnode.outNodes ).join( '.' ) );
+  var outNodes = group2.nodes.map( ( dnode ) => group2.nodeToName( dnode ) + ' : ' + group2.nodesToNames( dnode.outNodes ).join( '.' ) ).toArray().original;
   var expected = [ 'f : ', 'i+h : f', 'g : i+h', 'a+b+e+c : f.i+h', 'd : a+b+e+c.g' ];
   test.identical( outNodes, expected );
   logger.log( 'Tree' );
@@ -6438,7 +6553,7 @@ function nodesExportInfoTree( test )
   test.case = '4 scl';
   var g = context.cycled4StronglyConnectedLayers();
   var group = g.sys.nodesGroup();
-  group.nodesAdd([ a, b, c, d, e, f, g, h, i, j ]);
+  group.nodesAdd( g.nodes );
 
   logger.log( 'DAG' )
   logger.log( group.nodesInfoExport() );
@@ -6783,6 +6898,7 @@ var Self =
     reverse,
 
     nodesAs,
+    sourcesFromRoots,
     rootsAllReachable,
     rootsAll,
 

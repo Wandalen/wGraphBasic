@@ -117,12 +117,12 @@ function idIs( id )
 /**
  * @summary Returns true system has node with descriptor `nodeHandle`.
  * @param {Object} nodeHandle Node descriptor.
- * @function nodeHas
+ * @function hasNode
  * @throws {Error} If system doesn't have a node `nodeHandle`.
  * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractGraphSystem
  */
 
-function nodeHas( nodeHandle )
+function hasNode( nodeHandle )
 {
   let sys = this;
   _.assert( !!nodeHandle );
@@ -337,11 +337,11 @@ let Extend =
 
   // node
 
-  nodeHas,
-  nodesHas : _.vectorize( nodeHas ),
-  nodesHasAll : _.vectorizeAll( nodeHas ),
-  nodesHasAny : _.vectorizeAny( nodeHas ),
-  nodesHasNone : _.vectorizeNone( nodeHas ),
+  hasNode,
+  hasNodes : _.vectorize( hasNode ),
+  hasAllNodes : _.vectorizeAll( hasNode ),
+  hasAnyNodes : _.vectorizeAny( hasNode ),
+  hasNoneNodes : _.vectorizeNone( hasNode ),
 
   nodeToIdTry,
   nodesToIdsTry : _.vectorize( nodeToIdTry ),
