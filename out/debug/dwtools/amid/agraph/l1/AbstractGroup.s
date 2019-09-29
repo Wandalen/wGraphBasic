@@ -170,23 +170,25 @@ function cacheInNodesFromOutNodesUpdate( nodes )
 
   if( !group._inNodesCacheHash )
   group._inNodesCacheHash = new HashMap();
-  nodes.each( ( nodeHandle1 ) =>
+  nodes.each( ( node1 ) =>
   {
-    group._inNodesCacheHash.set( nodeHandle1, new Array );
+    group._inNodesCacheHash.set( node1, new Array );
   });
 
-  nodes.each( ( nodeHandle1 ) =>
+  // debugger;
+  nodes.each( ( node1 ) =>
   {
-    let directNeighbours = group.nodeOutNodesFor( nodeHandle1 );
+    let directNeighbours = group.nodeOutNodesFor( node1 );
     directNeighbours = group.ContainerAdapterFrom( directNeighbours );
     directNeighbours.each( ( node2 ) =>
     {
       let reverseNeighbours = group._inNodesCacheHash.get( node2 );
       _.assert( !!reverseNeighbours, `Cant retrive in nodes of ${group.nodeToQualifiedName( node2 )} from cache` );
-      reverseNeighbours.push( nodeHandle1 );
+      reverseNeighbours.push( node1 );
     });
   });
 
+  // debugger;
   return group._inNodesCacheHash;
 }
 
@@ -639,6 +641,7 @@ function nodeInfoExport( node, opts )
   return group.onNodeInfoExport( node, o );
 
   let name = group.nodeToName( node );
+  // debugger;
   let outNames = group.nodesToNames( group.nodeOutNodesFor( node ) );
 
   let result = name + ' : ' + outNames.join( ' ' );
@@ -1600,7 +1603,6 @@ function _routineArguments( dstContainer, srcContainer )
  * layers = layers.map( ( nodes ) => group.nodesToNames( nodes ) ) // extract name of nodes from node handles to simplify the output
  * console.log( layers )
  *
- *
  * @function lookBfs
  * @return {Array} Returns array of layers that are reachable from provided nodes `o.roots`.
  * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesGroup#
@@ -1754,7 +1756,7 @@ function lookBfs( o )
 
     if( nodes2.length )
     {
-      it.layers.push( nodes2 );
+      it.layers.push( nodes2.original );
       visitUp( nodes2, it );
     }
 
@@ -2161,7 +2163,8 @@ function lookDbfs( o )
       let visited = it.visited;
 
       let outNodes = group.nodeOutNodesFor( it.node );
-      let status = [];
+      let nodesStatus = new HashMap;
+      // let status = [];
       /*
         0 - not visiting
         1 - not including
@@ -2174,7 +2177,8 @@ function lookDbfs( o )
       {
 
         // let node = outNodes[ n ];
-        status[ n ] = 3;
+        // status[ n ] = 3;
+        nodesStatus.set( node, 3 )
 
         // if( o.revisiting < 3 )
         // if( _.arrayHas( o.visitedContainer, node ) )
@@ -2182,17 +2186,21 @@ function lookDbfs( o )
         if( o.revisiting < 3 )
         // if( _.arrayHas( o.visitedContainer, node, group.onNodeEvaluate || undefined ) )
         if( o.visitedContainer.has( node ) )
-        status[ n ] = 0;
+        nodesStatus.set( node, 0 )
+        // status[ n ] = 0;
 
-        if( o.revisiting < 2 && !status[ n ] )
+        // if( o.revisiting < 2 && !status[ n ] )
+        if( o.revisiting < 2 && !nodesStatus.get( node ) )
         return true;
         // continue;
 
         it.level = level+1;
-        it.node = outNodes[ n ];
+        // it.node = outNodes[ n ];
+        it.node = node;
         it.index = n;
         it.visited = false;
-        if( o.revisiting === 2 && !status[ n ] )
+        // if( o.revisiting === 2 && !status[ n ] )
+        if( o.revisiting === 2 && !nodesStatus.get( node ) ) /* xxx : optmize */
         {
           it.visited = true;
           it.continueUp = false;
@@ -2200,10 +2208,15 @@ function lookDbfs( o )
 
         visitFirstFast( it );
 
-        if( status[ n ] > 1 && !it.continueNode )
-        status[ n ] = 1;
-        if( status[ n ] > 2 && !it.continueUp )
-        status[ n ] = 2;
+        if( nodesStatus.get( node ) > 1 && !it.continueNode )
+        nodesStatus.set( node, 1 );
+        if( nodesStatus.get( node ) > 2 && !it.continueUp )
+        nodesStatus.set( node, 2 );
+
+        // if( status[ n ] > 1 && !it.continueNode )
+        // status[ n ] = 1;
+        // if( status[ n ] > 2 && !it.continueUp )
+        // status[ n ] = 2;
 
         if( !it.iterator.continue )
         return false;
@@ -2217,16 +2230,22 @@ function lookDbfs( o )
       // for( let n = 0 ; n < outNodes.length ; n++ )
       outNodes.all( ( node, n ) =>
       {
-        if( o.revisiting < 2 && !status[ n ] )
+        // if( o.revisiting < 2 && !status[ n ] )
+        if( o.revisiting < 2 && !nodesStatus.get( node ) )
         return true;
         // continue;
 
         it.level = level+1;
         it.index = n;
-        it.node = outNodes[ n ];
-        it.visited = status[ n ] > 0;
-        it.continueNode = status[ n ] > 1;
-        it.continueUp = status[ n ] > 2;
+        // it.node = outNodes[ n ];
+        it.node = node;
+        // it.visited = status[ n ] > 0;
+        // it.continueNode = status[ n ] > 1;
+        // it.continueUp = status[ n ] > 2;
+
+        it.visited = nodesStatus.get( node ) > 0;
+        it.continueNode = nodesStatus.get( node ) > 1;
+        it.continueUp = nodesStatus.get( node ) > 2;
 
         visitSecondFast( it );
         if( !it.iterator.continue )
@@ -2246,8 +2265,9 @@ function lookDbfs( o )
 
     if( o.revisiting === 1 || o.revisiting === 2 )
     {
-      _.assert( o.visitedContainer[ o.visitedContainer.length-1 ] === it.node );
-      o.visitedContainer.pop( it.node );
+      // _.assert( o.visitedContainer[ o.visitedContainer.length-1 ] === it.node );
+      // o.visitedContainer.pop( it.node );
+      o.visitedContainer.popStrictly( it.node );
     }
 
     it.continueNode = true;
@@ -2341,7 +2361,8 @@ function dagTopSortDfs( nodes )
 {
   let group = this;
   let ordering = [];
-  let visitedContainer = group.ContainerMake(); // xxx : remove?
+  // let visitedContainer = group.ContainerMake(); // xxx : remove extra container?
+  let visitedContainer = group.ContainerAdapterFrom( new Set );
 
   if( nodes === undefined )
   nodes = group.nodes;
@@ -2472,7 +2493,7 @@ function each_body( o )
   {
     it.included = true;
 
-    console.log( 'handleUp', node.name ); debugger;
+    // console.log( 'handleUp', node.name ); debugger;
 
     if( o.recursive === 0 )
     {
@@ -2679,6 +2700,8 @@ function pairDirectedPathGetDfs( pair )
   _.assert( !!group.nodeIs( node1 ) );
   _.assert( !!group.nodeIs( node2 ) );
 
+  console.log( '-' );
+
   group.lookDfs
   ({
     roots : node2,
@@ -2695,6 +2718,8 @@ function pairDirectedPathGetDfs( pair )
 
   function onUp1( node, it )
   {
+
+    console.log( 'onUp1', node.name );
 
     if( found )
     {
@@ -3024,6 +3049,7 @@ function nodesConnectedLayersDfs( nodes )
 
   function handleUp( node, it )
   {
+    debugger;
     // let id = group.nodeToId( node ); // xxx : check
     visitedContainer.push( node );
     groups[ groups.length-1 ].push( node );
