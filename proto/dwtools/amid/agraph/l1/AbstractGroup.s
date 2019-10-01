@@ -1670,7 +1670,7 @@ function lookBfs( o )
     */
 
     if( o.onLayerUp )
-    o.onLayerUp( nodes, it );
+    o.onLayerUp( _.setFrom( nodes ), it );
 
     let itContinueUp = it.continueUp;
     let itContinueNode = it.continueNode;
@@ -2652,8 +2652,9 @@ function topSortCycledSourceBasedBfs( nodes )
   /* xxx : use method instead */
 
   debugger;
-  let sources = group.ContainerMake();
+  let sources = group.ContainerAdapterMake();
   let tree = group.nodesStronglyConnectedTree( nodes );
+  debugger;
   tree.nodes.each( ( node ) =>
   {
     if( tree.nodeIndegree( node ) === 0 )
@@ -2666,7 +2667,7 @@ function topSortCycledSourceBasedBfs( nodes )
 
   let result = group.lookBfs({ roots : sources });
 
-  debugger; xxx
+  debugger;
   return _.arrayFlatten( null, result ); // xxx
 }
 
