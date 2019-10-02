@@ -170,25 +170,60 @@ function cacheInNodesFromOutNodesUpdate( nodes )
 
   if( !group._inNodesCacheHash )
   group._inNodesCacheHash = new HashMap();
+
   nodes.each( ( node1 ) =>
   {
-    group._inNodesCacheHash.set( node1, new Array );
+    group._inNodesCacheHash.set( node1, group.ContainerAdapterFrom( new Set ) );
   });
 
-  // debugger;
+  // nodes.each( ( node1 ) =>
+  // {
+  //   let directNeighbours = group.nodeOutNodesFor( node1 );
+  //   directNeighbours = group.ContainerAdapterFrom( directNeighbours );
+  //   directNeighbours.each( ( node2 ) =>
+  //   {
+  //     let reverseNeighbours = group._inNodesCacheHash.get( node2 );
+  //     _.assert( !!reverseNeighbours, `Cant retrive in nodes of ${group.nodeToQualifiedName( node2 )} from cache` );
+  //     reverseNeighbours.push( node1 );
+  //   });
+  // });
+
   nodes.each( ( node1 ) =>
   {
-    let directNeighbours = group.nodeOutNodesFor( node1 );
-    directNeighbours = group.ContainerAdapterFrom( directNeighbours );
-    directNeighbours.each( ( node2 ) =>
+    group.cacheInNodesFromOutNodesUpdateNode( node1 );
+  });
+
+  return group._inNodesCacheHash;
+}
+
+//
+
+function cacheInNodesFromOutNodesUpdateNode( node )
+{
+  let group = this;
+
+  _.assert( arguments.length === 0 || arguments.length === 1 );
+  _.assert( !!group.nodeIs( node ) );
+  _.assert( !!group.onInNodesGet );
+  _.assert( !!group._inNodesCacheHash );
+
+  if( !group._inNodesCacheHash.has( node ) )
+  group._inNodesCacheHash.set( node, group.ContainerAdapterFrom( new Set ) );
+
+  let directNeighbours = group.nodeOutNodesFor( node );
+  directNeighbours = group.ContainerAdapterFrom( directNeighbours );
+  directNeighbours.each( ( node2 ) =>
+  {
+    let inNodes = group._inNodesCacheHash.get( node2 );
+    if( !inNodes )
     {
-      let reverseNeighbours = group._inNodesCacheHash.get( node2 );
-      _.assert( !!reverseNeighbours, `Cant retrive in nodes of ${group.nodeToQualifiedName( node2 )} from cache` );
-      reverseNeighbours.push( node1 );
-    });
+      inNodes = group.ContainerAdapterFrom( new Set );
+      group._inNodesCacheHash.set( node2, inNodes );
+    }
+    _.assert( !!inNodes, `Cant retrive in nodes of ${group.nodeToQualifiedName( node2 )} from cache` );
+    inNodes.push( node );
   });
 
-  // debugger;
   return group._inNodesCacheHash;
 }
 
@@ -524,9 +559,7 @@ function nodeAdd( node )
   let sys = group.sys;
 
   _.assert( !!group.nodeIs( node ), 'Expects node' );
-  // _.assert( !_.arrayHas( group.nodes, node, group.onNodeEvaluate || undefined ), 'The group does not have a node with such node' );
   _.assert( !group.nodes.has( node ), () => `The group already has ${group.nodeToQualifiedNameTry( node )}` );
-  // _.arrayAppendOnceStrictly( group.nodes, node, group.onNodeEvaluate || undefined );
   group.nodes.appendOnceStrictly( node );
 
   let wasDefined = true;
@@ -540,6 +573,11 @@ function nodeAdd( node )
   sys.nodeToIdHash.set( node, id );
   sys.idToNodeHash.set( id, node );
 
+  if( group._inNodesCacheHash )
+  debugger;
+  if( group._inNodesCacheHash )
+  group.cacheInNodesFromOutNodesUpdateNode( node );
+
   if( wasDefined )
   {
     let descriptor = sys.nodeDescriptorObtain( id );
@@ -547,6 +585,37 @@ function nodeAdd( node )
   }
 
   return id;
+}
+
+//
+
+/**
+ * @summary Adds provided node `node` to current group. Ignores dublicates.
+ * @param {Object} node Node.
+ * @function nodeAddOnce
+ * @returns {Number} Returns id of added node.
+ * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesGroup#
+ */
+
+ /**
+ * @summary Adds several nodes to the system. Ignores dublicates.
+ * @param {Array of Node} node Array of nodes.
+ * @function nodesAddOnce
+ * @returns {Array} Returns array of ids of added nodes.
+ * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesGroup#
+ */
+
+function nodeAddOnce( node )
+{
+  let group = this;
+  let sys = group.sys;
+
+  if( group.nodes.has( node ) )
+  {
+    return sys.nodeToIdHash.get( node );
+  }
+
+  return group.nodeAdd( node );
 }
 
 //
@@ -569,10 +638,8 @@ function nodeDelete( node )
 
   _.assert( !!group.nodeIs( node ), 'Expects node' );
   _.assert( descriptor === null || descriptor.count > 0, 'The system does not have information about number of the node' );
-  // _.assert( _.arrayHas( group.nodes, node, group.onNodeEvaluate || undefined ), 'The group does not have a node with such node' );
   _.assert( group.nodes.has( node ), () => `The group does not have ${group.nodeToQualifiedNameTry( node )}` );
   group.nodes.removedOnceStrictly( node );
-  // _.arrayRemoveOnceStrictly( group.nodes, node, group.onNodeEvaluate || undefined );
 
   if( descriptor && descriptor.count > 1 )
   {
@@ -1178,48 +1245,76 @@ function sinksOnlyAmong( nodes )
 // --
 
 /**
- * @summary Find all sources for graph specified with roots.
- * @param {Array of Node|Set of Node|Node} roots Array of roots.
+ * @summary Find all sources for graph specified with roots. Algorithm can handle cycled graph.
+ * @param {Container of Node | Node} dstNodes Container to write result.
+ * @param {Container of Node | Node} srcNodes Container of nodes to look into.
  *
- * @function sourcesFromRoots
- * @return {Array of Node|Set of Node} Returns array with nodes.
+ * @function sourcesFromNodes
+ * @return {Conainer of Node} Returns cotainer of nodes.
  * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesGroup#
  */
 
-function sourcesFromRoots( dstContainer, srcContainer )
+function sourcesFromNodes( dstNodes, srcNodes )
 {
   let group = this;
 
-  [ dstContainer, srcContainer ] = group._routineArguments( ... arguments );
+  [ dstNodes, srcNodes ] = group._routineArguments( ... arguments );
 
-  // if( srcContainer === dstContainer )
-  // {
-  //   debugger;
-  //   srcContainer = dstContainer.make();
-  //   dstContainer.empty();
-  // }
+  if( dstNodes.original === srcNodes.original )
+  {
+    if( !group.onInNodesGet && dstNodes.length )
+    group.cacheInNodesFromOutNodesOnce( srcNodes );
+    srcNodes = dstNodes.make();
+    dstNodes.filter( dstNodes, ( node ) => group.nodeIndegree( node ) === 0 ? node : undefined );
+  }
 
-  let tree = group.nodesStronglyConnectedTree( srcContainer );
-  // debugger;
+  let tree = group.nodesStronglyConnectedTree( srcNodes );
   tree.nodes.each( ( node ) =>
   {
-    // debugger;
     if( tree.nodeIndegree( node ) === 0 )
-    dstContainer.appendContainer( node.originalNodes );
+    dstNodes.appendContainerOnce( node.originalNodes );
   });
-  // debugger;
   tree.finit();
 
-  // let sources = group.ContainerMake();
-  // let tree = group.nodesStronglyConnectedTree( nodes );
-  // tree.nodes.forEach( ( node ) =>
+  return dstNodes.original;
+}
+
+//
+
+/**
+ * @summary Find all sources for graph specified with roots. Algorithm can handle cycled graph.
+ * @param {Container of Node | Node} dstNodes Container to write result.
+ * @param {Container of Node | Node} srcNodes Container of roots to look into.
+ *
+ * @function sourcesFromRoots
+ * @return {Conainer of Node} Returns cotainer of nodes.
+ * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesGroup#
+ */
+
+function sourcesFromRoots( dstNodes, srcRoots )
+{
+  let group = this;
+
+  [ dstNodes, srcRoots ] = group._routineArguments( ... arguments );
+
+  let same = dstNodes.original === srcRoots.original;
+  let srcNodes = group.rootsToAll( null, srcRoots );
+  if( same )
+  dstNodes.filter( dstNodes, ( node ) => group.nodeIndegree( node ) === 0 ? node : undefined );
+
+  group.sourcesFromNodes( dstNodes, srcNodes );
+
+  // dstNodes.filter( dstNodes, ( node ) => group.nodeIndegree( node ) === 0 ? node : undefined );
+  //
+  // let tree = group.nodesStronglyConnectedTree( srcNodes );
+  // tree.nodes.each( ( node ) =>
   // {
   //   if( tree.nodeIndegree( node ) === 0 )
-  //   _.arrayAppendArray( sources, node.originalNodes );
+  //   dstNodes.appendContainerOnce( node.originalNodes );
   // });
   // tree.finit();
 
-  return dstContainer.original;
+  return dstNodes.original;
 }
 
 //
@@ -1228,52 +1323,24 @@ function sourcesFromRoots( dstContainer, srcContainer )
  * @summary Find all nodes reachable from specified roots.
  * @param {Array of Node|Set of Node|Node} roots Array of roots.
  *
- * @function rootsAllReachable
- * @return {Array of Node|Set of Node} Returns array with nodes.
+ * @function rootsToAllReachable
+ * @return {Array of Node|Set of Node} Returns cotainer of nodes.
  * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesGroup#
  */
 
-function rootsAllReachable( dstRoots, srcRoots )
+function rootsToAllReachable( dstNodes, srcRoots )
 {
   let group = this;
 
-  // if( group.nodeIs( dstRoots ) )
-  // {
-  //   dstRoots = group.nodesAs( dstRoots );
-  // }
-  //
-  // if( srcRoots === undefined )
-  // {
-  //   if( dstRoots )
-  //   srcRoots = dstRoots;
-  //   else
-  //   srcRoots = group.nodes;
-  // }
-  // else
-  // {
-  //   srcRoots = group.nodesAs( srcRoots );
-  // }
-  //
-  // if( dstRoots === null )
-  // dstRoots = _.MakeEmpty( srcRoots );
-  // dstRoots = group.ContainerAdapterFrom( dstRoots );
-  //
-  // _.assert( arguments.length === 0 || arguments.length === 1 || arguments.length === 2 );
-  // _.assert( group.ContainerIs( dstRoots ) );
-  // _.assert( group.ContainerIs( srcRoots ) );
-
-  // if( srcRoots === dstRoots )
-  // srcRoots = _.make( dstRoots );
-
-  [ dstRoots, srcRoots ] = group._routineArguments( ... arguments );
+  [ dstNodes, srcRoots ] = group._routineArguments( ... arguments );
 
   group.lookDfs({ roots : srcRoots, onUp : onUp });
 
-  return dstRoots.original;
+  return dstNodes.original;
 
   function onUp( node )
   {
-    dstRoots.appendOnce( node );
+    dstNodes.appendOnce( node );
   }
 
 }
@@ -1284,52 +1351,31 @@ function rootsAllReachable( dstRoots, srcRoots )
  * @summary Find all nodes either reachable from specified roots or nodes which can reach specified.
  * @param {Array of Node|Set of Node|Node} roots Array of roots.
  *
- * @function rootsAll
+ * @function rootsToAll
  * @return {Array of Node|Set of Node} Returns array with sorted nodes.
  * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesGroup#
  */
 
-function rootsAll( dstRoots, srcRoots )
+function rootsToAll( dstNodes, srcRoots )
 {
   let group = this;
 
-  // if( group.nodeIs( dstRoots ) )
-  // {
-  //   dstRoots = group.nodesAs( dstRoots );
-  // }
-  //
-  // if( srcRoots === undefined )
-  // {
-  //   if( dstRoots )
-  //   srcRoots = dstRoots;
-  //   else
-  //   srcRoots = group.nodes;
-  // }
-  // else
-  // {
-  //   srcRoots = group.nodesAs( srcRoots );
-  // }
-  //
-  // if( dstRoots === null )
-  // dstRoots = _.MakeEmpty( srcRoots );
-  // dstRoots = group.ContainerAdapterFrom( dstRoots );
-  //
-  // _.assert( arguments.length === 0 || arguments.length === 1 || arguments.length === 2 );
-  // _.assert( group.ContainerIs( dstRoots ) );
-  // _.assert( group.ContainerIs( srcRoots ) );
+  [ dstNodes, srcRoots ] = group._routineArguments( ... arguments );
 
-  [ dstRoots, srcRoots ] = group._routineArguments( ... arguments );
-
-  // if( srcRoots === dstRoots )
-  // srcRoots = _.make( dstRoots );
+  if( srcRoots === dstNodes )
+  srcRoots = srcRoots.make();
 
   group.lookDfs({ roots : srcRoots, onUp : onUp });
+  group.reverse();
+  group.lookDfs({ roots : srcRoots, onUp : onUp });
+  group.reverse();
 
-  return dstRoots.original;
+  return dstNodes.original;
 
   function onUp( node )
   {
-    dstRoots.appendOnce( node );
+    dstNodes.appendOnce( node );
+    group.nodeAddOnce( node );
   }
 
 }
@@ -1534,38 +1580,38 @@ function ContainerAdapterFrom( container )
 
 //
 
-function _routineArguments( dstContainer, srcContainer )
+function _routineArguments( dstNodes, srcNodes )
 {
   let group = this;
 
-  if( group.nodeIs( dstContainer ) )
+  if( group.nodeIs( dstNodes ) )
   {
-    dstContainer = group.nodesAs( dstContainer );
+    dstNodes = group.nodesAs( dstNodes );
   }
 
-  if( srcContainer === undefined )
+  if( srcNodes === undefined )
   {
-    if( dstContainer )
-    srcContainer = dstContainer;
+    if( dstNodes )
+    srcNodes = dstNodes;
     else
-    srcContainer = group.nodes;
+    srcNodes = group.nodes;
   }
   else
   {
-    srcContainer = group.nodesAs( srcContainer );
+    srcNodes = group.nodesAs( srcNodes );
   }
 
-  srcContainer = group.ContainerAdapterFrom( srcContainer );
+  srcNodes = group.ContainerAdapterFrom( srcNodes );
 
-  if( dstContainer === null )
-  dstContainer = _.MakeEmpty( srcContainer.original );
-  dstContainer = group.ContainerAdapterFrom( dstContainer );
+  if( dstNodes === null )
+  dstNodes = _.makeEmpty( srcNodes.original );
+  dstNodes = group.ContainerAdapterFrom( dstNodes );
 
   _.assert( arguments.length === 0 || arguments.length === 1 || arguments.length === 2 );
-  _.assert( group.ContainerIs( dstContainer ) );
-  _.assert( group.ContainerIs( srcContainer ) );
+  _.assert( group.ContainerIs( dstNodes ) );
+  _.assert( group.ContainerIs( srcNodes ) );
 
-  return [ dstContainer, srcContainer ]
+  return [ dstNodes, srcNodes ]
 }
 
 // --
@@ -2600,7 +2646,7 @@ defaults.method = lookDbfs;
  *
  * // topological sort based on depth first search
  *
- * var ordering = group.topSortSourceBasedBfs();
+ * var ordering = group.topSortLeastDegreeBfs();
  * ordering = ordering.map( ( nodes ) => group.nodesToNames( nodes ) ); // get names of nodes to simplify output
  * console.log( ordering );
  *
@@ -2611,12 +2657,12 @@ defaults.method = lookDbfs;
  * //  [ 'd' ]
  * //]
  *
- * @function topSortSourceBasedBfs
+ * @function topSortLeastDegreeBfs
  * @return {Array} Returns array with sorted layers.
  * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesGroup#
  */
 
-function topSortSourceBasedBfs( nodes )
+function topSortLeastDegreeBfs( nodes )
 {
   let group = this;
 
@@ -2630,12 +2676,12 @@ function topSortSourceBasedBfs( nodes )
   let sources = group.leastIndegreeOnlyAmong( nodes );
   let result = group.lookBfs({ roots : sources });
 
-  return result;
+  return _.arrayFlatten( null, result );
 }
 
 //
 
-function topSortCycledSourceBasedBfs( nodes )
+function topSortCycledSourceBasedFastBfs( nodes )
 {
   let group = this;
 
@@ -2649,26 +2695,116 @@ function topSortCycledSourceBasedBfs( nodes )
   if( !nodes.length )
   return group.ContainerMake();
 
-  /* xxx : use method instead */
+  // let sources = group.ContainerAdapterFrom( group.sourcesFromNodes( null, nodes ) );
+  // _.assert( sources.length > 0 );
+  // let layers = group.lookBfs({ roots : sources });
+
+  /* */
+
+  let tree = group.nodesStronglyConnectedTree( nodes );
+  let sources1 = tree.nodes.filter( ( node ) => tree.nodeIndegree( node ) === 0 ? node : undefined );
+  let sources2 = sources1.flatFilter( ( node ) => node.originalNodes );
+  tree.finit();
 
   debugger;
-  let sources = group.ContainerAdapterMake();
-  let tree = group.nodesStronglyConnectedTree( nodes );
+  let layers = group.lookBfs({ roots : sources2 });
   debugger;
-  tree.nodes.each( ( node ) =>
+
+  return _.arrayFlatten( null, layers );
+}
+
+//
+
+function topSortCycledSourceBasedPreciseBfs( nodes )
+{
+  let group = this;
+
+  if( nodes === undefined )
+  nodes = group.nodes;
+  else
+  nodes = group.nodesAsAdapter( nodes )
+
+  _.assert( arguments.length === 0 || arguments.length === 1 );
+
+  if( !nodes.length )
+  return group.ContainerMake();
+
+  // let sources = group.ContainerAdapterFrom( group.sourcesFromNodes( null, nodes ) );
+  // _.assert( sources.length > 0 );
+  // let layers = group.lookBfs({ roots : sources });
+
+  /* */
+
+  let tree = group.nodesStronglyConnectedTree( nodes );
+  let sources = tree.nodes.filter( ( node ) => tree.nodeIndegree( node ) === 0 ? node : undefined );
+  let layers1 = group.ContainerAdapterFrom( tree.lookBfs({ roots : sources }) );
+  let layers2 = layers1.map( ( layer ) =>
   {
-    if( tree.nodeIndegree( node ) === 0 )
-    sources.appendContainer( node.originalNodes );
-    // _.arrayAppendArray( sources, node.originalNodes );
+    return group.ContainerAdapterFrom( layer ).flatFilter( ( node ) => node.originalNodes );
   });
   tree.finit();
 
-  _.assert( sources.length > 0 );
+  /* */
 
-  let result = group.lookBfs({ roots : sources });
+  let result = [];
+  // group.ContainerAdapterFrom( layers ).each( ( layer ) =>
+  layers2.each( ( layer ) =>
+  {
+    let prev;
+    let added = group.ContainerAdapterFrom( new Set() );
+    let nodeToInNodes = new HashMap();
+    let nodeToOutNodes = new HashMap();
+    layer.each( ( node ) => nodeToInNodes.set( node, group.nodeInNodesFor( node ).only( null, layer ).but( _.self, result ) ) );
+    layer.each( ( node ) => nodeToOutNodes.set( node, group.nodeOutNodesFor( node ).only( null, layer ).but( _.self, result ) ) );
+    debugger;
+    if( !layer.any( ( node ) => addFastMaybe( node ) ) )
+    {
+      debugger;
+      // layer.first( ( node ) => add( node ) );
+      // add( layer.max( ( node ) => nodeToOutNodes.get( node ).length ) );
+      layer.most( ( node ) => nodeToOutNodes.get( node ).length ).first( ( node ) => add( node ) );
+    }
+
+    while( layer.length )
+    {
+      debugger;
+      if( !nodeToOutNodes.get( prev ).first( ( node2 ) => addFastMaybe( node2 ) ) )
+      {
+        debugger;
+        _.assert( added.length > 0 );
+        added.empty();
+        // layer.first( ( node ) => add( node ) );
+        // add( layer.max( ( node ) => nodeToOutNodes.get( node ).length ) );
+        layer.most( ( node ) => nodeToOutNodes.get( node ).length ).first( ( node ) => add( node ) );
+      }
+    }
+
+    function addFastMaybe( node )
+    {
+      let inNodes = nodeToInNodes.get( node );
+      if( !inNodes.length )
+      return add( node );
+      else
+      return false;
+    }
+
+    function add( node )
+    {
+      _.assert( !!node );
+      nodeToOutNodes.get( node ).each( ( node2 ) => nodeToInNodes.get( node2 ).removeOnce( node ) );
+      nodeToInNodes.get( node ).each( ( node2 ) => nodeToOutNodes.get( node2 ).removeOnce( node ) );
+      added.append( node );
+      result.push( node );
+      layer.removedOnce( node );
+      prev = node;
+      return true;
+    }
+
+  });
 
   debugger;
-  return _.arrayFlatten( null, result ); // xxx
+  return result;
+  // return _.arrayFlatten( null, result );
 }
 
 // --
@@ -3024,7 +3160,7 @@ function nodesConnectedLayersDfs( nodes )
 {
   let group = this;
   let groups = [];
-  let visitedContainer = group.ContainerMake(); /* xxx : remove extra container, refactor */
+  let visitedContainer = group.ContainerAdapterFrom( new Set ); /* xxx : remove extra container, refactor */
 
   if( nodes === undefined )
   nodes = group.nodes;
@@ -3038,7 +3174,7 @@ function nodesConnectedLayersDfs( nodes )
   {
     // let id = group.nodeToId( node );
     // if( _.arrayHas( visitedContainer, id ) )
-    if( o.visitedContainer.has( node ) )
+    if( visitedContainer.has( node ) )
     return;
     groups.push( [] );
     group.lookDfs({ roots : node, onUp : handleUp });
@@ -3064,8 +3200,8 @@ function nodesStronglyConnectedLayersDfs( nodes )
 {
   let group = this;
   let sys = group.sys;
-  let visited1 = [];
-  let visited2 = group.ContainerMake();
+  let visited1 = group.ContainerAdapterFrom( [] );
+  let visited2 = group.ContainerAdapterMake();
   let layers = [];
 
   if( nodes === undefined )
@@ -3085,7 +3221,6 @@ function nodesStronglyConnectedLayersDfs( nodes )
 
   nodes.each( ( node ) =>
   {
-    // if( _.arrayHas( visited1, node, group.onNodeEvaluate || undefined ) )
     if( visited1.has( node ) )
     return;
     /*
@@ -3108,14 +3243,10 @@ function nodesStronglyConnectedLayersDfs( nodes )
 
   group.reverse();
 
-  // for( let i = visited1.length-1 ; i >= 0 ; i-- )
-  visited.each( ( node, i ) =>
+  visited1.eachRight( ( node, i ) =>
   {
-    // let node = visited1[ i ];
-    // if( _.arrayHas( visited2, node, group.onNodeEvaluate || undefined ) )
     if( visited2.has( node ) )
     return;
-    // continue;
     let layer = [];
     layers.push( layer );
     group.lookDfs
@@ -3135,7 +3266,6 @@ function nodesStronglyConnectedLayersDfs( nodes )
 
   function handleUp1( node, it )
   {
-    // if( _.arrayHas( visited1, node, group.onNodeEvaluate || undefined ) )
     if( visited1.has( node ) )
     {
       it.continueUp = false;
@@ -3159,7 +3289,6 @@ function nodesStronglyConnectedLayersDfs( nodes )
     return function handleUp2( node, it )
     {
       _.assert( visited1.has( node ), () => `Input set of nodes does not have ${group.nodeToQualifiedNameTry( node )}` );
-      // _.assert( _.arrayHas( visited1, node, group.onNodeEvaluate || undefined ), () => 'Input set of nodes does not have a node ' + group.nodeToName( node ) );
       layer.push( node );
     }
   }
@@ -3356,7 +3485,8 @@ function inNodesFromGroupCache( node )
 {
   let group = this;
   let outNodes = group._inNodesCacheHash.get( node );
-  _.assert( _.arrayIs( outNodes ), 'No cache for the node' );
+  // _.assert( _.setIs( outNodes ), 'No cache for the node' );
+  _.assert( _.containerAdapter.is( outNodes ), `No cache for the ${group.nodeToQualifiedName( node )}` );
   return outNodes;
 }
 
@@ -3537,6 +3667,7 @@ let Extend =
   reverse,
   cacheInNodesFromOutNodesOnce,
   cacheInNodesFromOutNodesUpdate,
+  cacheInNodesFromOutNodesUpdateNode,
   cachesInvalidate,
 
   // export
@@ -3585,6 +3716,8 @@ let Extend =
 
   nodeAdd,
   nodesAdd : vectorize( nodeAdd ),
+  nodeAddOnce,
+  nodesAddOnce : vectorize( nodeAddOnce ),
   nodeDelete,
   nodesDelete,
 
@@ -3630,10 +3763,11 @@ let Extend =
 
   // helper
 
+  sourcesFromNodes,
   sourcesFromRoots,
 
-  rootsAllReachable,
-  rootsAll,
+  rootsToAllReachable,
+  rootsToAll,
   nodesAs,
   nodesAsSet,
   nodesAsArray,
@@ -3663,10 +3797,10 @@ let Extend =
 
   dagTopSortDfs,
   dagTopSort : dagTopSortDfs,
-  topSortSourceBasedBfs,
-  topSortSourceBased : topSortSourceBasedBfs,
-  topSortCycledSourceBasedBfs,
-  topSortCycledSourceBased : topSortCycledSourceBasedBfs,
+  topSortLeastDegreeBfs,
+  topSortCycledSourceBasedFastBfs,
+  topSortCycledSourceBasedPreciseBfs,
+  topSort : topSortCycledSourceBasedPreciseBfs,
 
   // connectivity
 

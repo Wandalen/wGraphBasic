@@ -80,7 +80,6 @@ function cycled1Scc()
   gr.sys = new _.graph.AbstractGraphSystem({ onNodeNameGet : ( node ) => node.name });
   gr.nodes = [ a, b, c ];
   gr.nodes.forEach( ( e ) => gr[ e.name ] = e );
-
   return gr;
 }
 
@@ -299,7 +298,7 @@ function cycledAsymetricZeta()
   let gr = { length }
   gr.sys = new _.graph.AbstractGraphSystem({ onNodeNameGet : ( node ) => node.name });
   gr.nodes = [ a, b, c, d, e, f, g, h ];
-  gr.nodes.forEach( ( e ) => g[ e.name ] = e );
+  gr.nodes.forEach( ( e ) => gr[ e.name ] = e );
 
   return gr;
 }
@@ -326,7 +325,7 @@ function cycledAsymetricChi()
 
 /*
 
-    a ↔ b        e ↔ d
+  ↪ a ↔ b        e ↔ d
         ↓        ↓
         c        f
         ↓        ↓
@@ -334,11 +333,11 @@ function cycledAsymetricChi()
           🡗    🡖
         h        k
         ↓        ↓
-  ↪ j ↔ i        l ↔ m ↩
+  ↪ j ↔ i        l ↔ m
 
 */
 
-  a.nodes.push( b );
+  a.nodes.push( a, b );
   b.nodes.push( a, c );
   c.nodes.push( g );
   d.nodes.push( e );
@@ -352,7 +351,7 @@ function cycledAsymetricChi()
   j.nodes.push( i, j );
   k.nodes.push( l );
   l.nodes.push( m );
-  m.nodes.push( m, l );
+  m.nodes.push( l );
 
   let gr = { length }
   gr.sys = new _.graph.AbstractGraphSystem({ onNodeNameGet : ( node ) => node.name });
@@ -989,6 +988,117 @@ function nodesAs( test )
 
 //
 
+function sourcesFromNodes( test )
+{
+  let context = this;
+
+  /* - */
+
+  test.open( 'array, cycled4Scc' );
+
+  var gr = context.cycled4Scc();
+
+  test.case = 'all';
+  var group = gr.sys.nodesGroup();
+  var exp = [ 'j', 'd' ];
+  var got = group.sourcesFromNodes( null, gr.nodes );
+  test.identical( _.containerAdapter.toOriginal( group.nodesToNames( got ) ), exp );
+  group.finit();
+
+  test.case = 'but set( d, g, j )';
+  var group = gr.sys.nodesGroup();
+  var exp = [ 'a', 'b', 'e', 'c' ];
+  var dst = [ gr.a, gr.b, gr.c, gr.e, gr.f, gr.h, gr.i ]; /* d, g, j */
+  var got = group.sourcesFromNodes( dst );
+  test.identical( _.containerAdapter.toOriginal( group.nodesToNames( got ) ), exp );
+  group.finit();
+
+  gr.sys.finit();
+
+  test.close( 'array, cycled4Scc' );
+
+  /* - */
+
+  test.open( 'set, cycled4Scc' );
+
+  var gr = context.cycled4Scc();
+
+  test.case = 'all';
+  var group = gr.sys.nodesGroup();
+  var exp = _.setFrom([ 'j', 'd' ]);
+  var got = group.sourcesFromNodes( null, _.setFrom( gr.nodes ) );
+  test.identical( _.containerAdapter.toOriginal( group.nodesToNames( got ) ), exp );
+  group.finit();
+
+  test.case = 'but set( d, g, j )';
+  var group = gr.sys.nodesGroup();
+  var exp = _.setFrom([ 'a', 'b', 'e', 'c' ]);
+  var dst = _.setFrom([ gr.a, gr.b, gr.c, gr.e, gr.f, gr.h, gr.i ]); /* d, g, j */
+  var got = group.sourcesFromNodes( dst );
+  test.identical( _.containerAdapter.toOriginal( group.nodesToNames( got ) ), exp );
+  group.finit();
+
+  gr.sys.finit();
+
+  test.close( 'set, cycled4Scc' );
+
+  /* - */
+
+  test.open( 'array, cycledGamma' );
+
+  var gr = context.cycledGamma();
+
+  test.case = 'all';
+  var group = gr.sys.nodesGroup();
+  var exp = [ 'a', 'b', 'c', 'd' ];
+  var got = group.sourcesFromNodes( null, gr.nodes );
+  test.identical( _.containerAdapter.toOriginal( group.nodesToNames( got ) ), exp );
+  group.finit();
+
+  test.case = 'f';
+  var group = gr.sys.nodesGroup();
+  var exp = [ 'f' ];
+  var dst = [ gr.f ];
+  var got = group.sourcesFromNodes( dst );
+  test.identical( _.containerAdapter.toOriginal( group.nodesToNames( got ) ), exp );
+  group.finit();
+
+  gr.sys.finit();
+
+  test.close( 'array, cycledGamma' );
+
+  /* - */
+
+  test.open( 'array, cycled1Scc' );
+
+  var gr = context.cycled1Scc();
+
+  test.case = 'all';
+  var group = gr.sys.nodesGroup();
+  var exp = [ 'a', 'b' ];
+  var got = group.sourcesFromNodes( null, gr.nodes );
+  test.identical( _.containerAdapter.toOriginal( group.nodesToNames( got ) ), exp );
+  group.finit();
+
+  test.case = 'c';
+  var group = gr.sys.nodesGroup();
+  var exp = [ 'c' ];
+  var dst = [ gr.c ];
+  var got = group.sourcesFromNodes( dst );
+  test.identical( _.containerAdapter.toOriginal( group.nodesToNames( got ) ), exp );
+  group.finit();
+
+  gr.sys.finit();
+
+  test.close( 'array, cycled1Scc' );
+
+  /* - */
+
+
+} /* end of function sourcesFromNodes */
+
+//
+
 function sourcesFromRoots( test )
 {
   let context = this;
@@ -998,48 +1108,57 @@ function sourcesFromRoots( test )
   test.open( 'array' );
 
   var gr = context.cycled4Scc();
-  var group = gr.sys.nodesGroup();
 
   test.case = 'all';
-  var exp = [ 'a', 'b', 'e', 'c', 'h', 'i', 'f' ];
+  var group = gr.sys.nodesGroup();
+  var exp = [ 'j', 'd' ];
   var got = group.sourcesFromRoots( null, gr.nodes );
-  debugger;
   test.identical( _.containerAdapter.toOriginal( group.nodesToNames( got ) ), exp );
-  debugger;
+  group.finit();
 
   test.case = 'a';
-  var exp = [ 'a', 'b', 'e', 'c', 'h', 'i', 'f' ];
+  var group = gr.sys.nodesGroup();
+  var exp = [ 'a', 'b', 'e', 'c' ];
   var dst = gr.a;
   var got = group.sourcesFromRoots( dst );
   test.identical( _.containerAdapter.toOriginal( group.nodesToNames( got ) ), exp );
+  group.finit();
 
   test.case = '[ a ]';
-  var exp = [ 'a', 'b', 'e', 'c', 'h', 'i', 'f' ];
+  var group = gr.sys.nodesGroup();
+  var exp = [ 'a', 'b', 'e', 'c' ];
   var dst = [ gr.a ];
   var got = group.sourcesFromRoots( dst );
   test.identical( _.containerAdapter.toOriginal( group.nodesToNames( got ) ), exp );
-  test.is( got === dst )
+  test.is( got === dst );
+  group.finit();
 
   test.case = '[ a, c ]';
-  var exp = [ 'a', 'c', 'b', 'e', 'h', 'i', 'f' ];
+  var group = gr.sys.nodesGroup();
+  var exp = [ 'a', 'b', 'e', 'c' ];
   var dst = [ gr.a, gr.c ];
   var got = group.sourcesFromRoots( dst );
   test.identical( _.containerAdapter.toOriginal( group.nodesToNames( got ) ), exp );
-  test.is( got === dst )
+  test.is( got === dst );
+  group.finit();
 
   test.case = '[ a, b ]';
-  var exp = [ 'a', 'b', 'e', 'c', 'h', 'i', 'f' ];
+  var group = gr.sys.nodesGroup();
+  var exp = [ 'a', 'b', 'e', 'c' ];
   var dst = [ gr.a, gr.b ];
   var got = group.sourcesFromRoots( dst );
   test.identical( _.containerAdapter.toOriginal( group.nodesToNames( got ) ), exp );
-  test.is( got === dst )
+  test.is( got === dst );
+  group.finit();
 
   test.case = '[ j, a, b ]';
-  var exp = [ 'j', 'a', 'b', 'e', 'c', 'h', 'i', 'f' ];
+  var group = gr.sys.nodesGroup();
+  var exp = [ 'j', 'a', 'b', 'e', 'c' ];
   var dst = [ gr.j, gr.a, gr.b ];
   var got = group.sourcesFromRoots( dst );
   test.identical( _.containerAdapter.toOriginal( group.nodesToNames( got ) ), exp );
   test.is( got === dst )
+  group.finit();
 
   gr.sys.finit();
 
@@ -1047,44 +1166,84 @@ function sourcesFromRoots( test )
 
   /* - */
 
-  test.open( 'set' );
+  test.open( 'array, single group' );
 
   var gr = context.cycled4Scc();
   var group = gr.sys.nodesGroup();
 
-  test.case = 'a';
-  var exp = [ 'a', 'b', 'e', 'c', 'h', 'i', 'f' ];
-  var dst = gr.a;
+  test.case = '[ a, c ]';
+  var exp = [ 'a', 'b', 'e', 'c' ];
+  var dst = [ gr.a, gr.c ];
   var got = group.sourcesFromRoots( dst );
   test.identical( _.containerAdapter.toOriginal( group.nodesToNames( got ) ), exp );
+  test.is( got === dst );
 
   test.case = '[ a ]';
-  var exp = new Set([ 'a', 'b', 'e', 'c', 'h', 'i', 'f' ]);
+  var exp = [ 'a', 'b', 'e', 'c' ];
+  var dst = [ gr.a ];
+  var got = group.sourcesFromRoots( dst );
+  test.identical( _.containerAdapter.toOriginal( group.nodesToNames( got ) ), exp );
+  test.is( got === dst );
+
+  test.case = '[ a, b ]';
+  var exp = [ 'a', 'b', 'e', 'c' ];
+  var dst = [ gr.a, gr.b ];
+  var got = group.sourcesFromRoots( dst );
+  test.identical( _.containerAdapter.toOriginal( group.nodesToNames( got ) ), exp );
+  test.is( got === dst );
+
+  test.case = '[ j, a, b ]';
+  var exp = [ 'j', 'a', 'b', 'e', 'c' ];
+  var dst = [ gr.j, gr.a, gr.b ];
+  var got = group.sourcesFromRoots( dst );
+  test.identical( _.containerAdapter.toOriginal( group.nodesToNames( got ) ), exp );
+  test.is( got === dst )
+
+  gr.sys.finit();
+
+  test.close( 'array, single group' );
+
+  /* - */
+
+  test.open( 'set' );
+
+  var gr = context.cycled4Scc();
+
+  test.case = '[ a ]';
+  var group = gr.sys.nodesGroup();
+  var exp = new Set([ 'a', 'b', 'e', 'c' ]);
   var dst = new Set([ gr.a ]);
   var got = group.sourcesFromRoots( dst );
   test.identical( _.containerAdapter.toOriginal( group.nodesToNames( got ) ), exp );
-  test.is( got === dst )
+  test.is( got === dst );
+  group.finit();
 
   test.case = '[ a, c ]';
-  var exp = new Set([ 'a', 'c', 'b', 'e', 'h', 'i', 'f' ]);
+  var group = gr.sys.nodesGroup();
+  var exp = new Set([ 'a', 'c', 'b', 'e' ]);
   var dst = new Set([ gr.a, gr.c ]);
   var got = group.sourcesFromRoots( dst );
   test.identical( _.containerAdapter.toOriginal( group.nodesToNames( got ) ), exp );
-  test.is( got === dst )
+  test.is( got === dst );
+  group.finit();
 
   test.case = '[ a, b ]';
-  var exp = new Set([ 'a', 'b', 'e', 'c', 'h', 'i', 'f' ]);
+  var group = gr.sys.nodesGroup();
+  var exp = new Set([ 'a', 'b', 'e', 'c' ]);
   var dst = new Set([ gr.a, gr.b ]);
   var got = group.sourcesFromRoots( dst );
   test.identical( _.containerAdapter.toOriginal( group.nodesToNames( got ) ), exp );
-  test.is( got === dst )
+  test.is( got === dst );
+  group.finit();
 
   test.case = '[ j, a, b ]';
-  var exp = new Set([ 'j', 'a', 'b', 'e', 'c', 'h', 'i', 'f' ]);
+  var group = gr.sys.nodesGroup();
+  var exp = new Set([ 'j', 'a', 'b', 'e', 'c' ]);
   var dst = new Set([ gr.j, gr.a, gr.b ]);
   var got = group.sourcesFromRoots( dst );
   test.identical( _.containerAdapter.toOriginal( group.nodesToNames( got ) ), exp );
   test.is( got === dst )
+  group.finit();
 
   gr.sys.finit();
 
@@ -1092,11 +1251,11 @@ function sourcesFromRoots( test )
 
   /* - */
 
-}
+} /* end of function sourcesFromRoots */
 
 //
 
-function rootsAllReachable( test )
+function rootsToAllReachable( test )
 {
   let context = this;
 
@@ -1110,34 +1269,34 @@ function rootsAllReachable( test )
   test.case = 'a';
   var exp = [ 'a', 'b', 'e', 'c', 'h', 'i', 'f' ];
   var dst = gr.a;
-  var got = group.rootsAllReachable( dst );
+  var got = group.rootsToAllReachable( dst );
   test.identical( group.nodesToNames( got ), exp );
 
   test.case = '[ a ]';
   var exp = [ 'a', 'b', 'e', 'c', 'h', 'i', 'f' ];
   var dst = [ gr.a ];
-  var got = group.rootsAllReachable( dst );
+  var got = group.rootsToAllReachable( dst );
   test.identical( group.nodesToNames( got ), exp );
   test.is( got === dst )
 
   test.case = '[ a, c ]';
   var exp = [ 'a', 'c', 'b', 'e', 'h', 'i', 'f' ];
   var dst = [ gr.a, gr.c ];
-  var got = group.rootsAllReachable( dst );
+  var got = group.rootsToAllReachable( dst );
   test.identical( group.nodesToNames( got ), exp );
   test.is( got === dst )
 
   test.case = '[ a, b ]';
   var exp = [ 'a', 'b', 'e', 'c', 'h', 'i', 'f' ];
   var dst = [ gr.a, gr.b ];
-  var got = group.rootsAllReachable( dst );
+  var got = group.rootsToAllReachable( dst );
   test.identical( group.nodesToNames( got ), exp );
   test.is( got === dst )
 
   test.case = '[ j, a, b ]';
   var exp = [ 'j', 'a', 'b', 'e', 'c', 'h', 'i', 'f' ];
   var dst = [ gr.j, gr.a, gr.b ];
-  var got = group.rootsAllReachable( dst );
+  var got = group.rootsToAllReachable( dst );
   test.identical( group.nodesToNames( got ), exp );
   test.is( got === dst )
 
@@ -1155,34 +1314,34 @@ function rootsAllReachable( test )
   test.case = 'a';
   var exp = [ 'a', 'b', 'e', 'c', 'h', 'i', 'f' ];
   var dst = gr.a;
-  var got = group.rootsAllReachable( dst );
+  var got = group.rootsToAllReachable( dst );
   test.identical( group.nodesToNames( got ), exp );
 
   test.case = '[ a ]';
   var exp = new Set([ 'a', 'b', 'e', 'c', 'h', 'i', 'f' ]);
   var dst = new Set([ gr.a ]);
-  var got = group.rootsAllReachable( dst );
+  var got = group.rootsToAllReachable( dst );
   test.identical( group.nodesToNames( got ), exp );
   test.is( got === dst )
 
   test.case = '[ a, c ]';
   var exp = new Set([ 'a', 'c', 'b', 'e', 'h', 'i', 'f' ]);
   var dst = new Set([ gr.a, gr.c ]);
-  var got = group.rootsAllReachable( dst );
+  var got = group.rootsToAllReachable( dst );
   test.identical( group.nodesToNames( got ), exp );
   test.is( got === dst )
 
   test.case = '[ a, b ]';
   var exp = new Set([ 'a', 'b', 'e', 'c', 'h', 'i', 'f' ]);
   var dst = new Set([ gr.a, gr.b ]);
-  var got = group.rootsAllReachable( dst );
+  var got = group.rootsToAllReachable( dst );
   test.identical( group.nodesToNames( got ), exp );
   test.is( got === dst )
 
   test.case = '[ j, a, b ]';
   var exp = new Set([ 'j', 'a', 'b', 'e', 'c', 'h', 'i', 'f' ]);
   var dst = new Set([ gr.j, gr.a, gr.b ]);
-  var got = group.rootsAllReachable( dst );
+  var got = group.rootsToAllReachable( dst );
   test.identical( group.nodesToNames( got ), exp );
   test.is( got === dst )
 
@@ -1196,7 +1355,7 @@ function rootsAllReachable( test )
 
 //
 
-function rootsAll( test )
+function rootsToAll( test )
 {
   let context = this;
 
@@ -1208,37 +1367,42 @@ function rootsAll( test )
   var group = gr.sys.nodesGroup();
 
   test.case = 'a';
-  var exp = [ 'a', 'b', 'e', 'c', 'h', 'i', 'f' ];
+  var exp = [ 'a', 'b', 'e', 'c', 'h', 'i', 'f' ]; /* d, g, j */
   var dst = gr.a;
-  var got = group.rootsAll( dst );
+  var got = group.rootsToAll( dst );
   test.identical( group.nodesToNames( got ), exp );
+  test.identical( got.length, gr.nodes.length-3 );
 
   test.case = '[ a ]';
-  var exp = [ 'a', 'b', 'e', 'c', 'h', 'i', 'f' ];
+  var exp = [ 'a', 'b', 'e', 'c', 'h', 'i', 'f' ]; /* d, g, j */
   var dst = [ gr.a ];
-  var got = group.rootsAll( dst );
+  var got = group.rootsToAll( dst );
   test.identical( group.nodesToNames( got ), exp );
+  test.identical( got.length, gr.nodes.length-3 );
   test.is( got === dst )
 
   test.case = '[ a, c ]';
-  var exp = [ 'a', 'c', 'b', 'e', 'h', 'i', 'f' ];
+  var exp = [ 'a', 'c', 'b', 'e', 'h', 'i', 'f' ];  /* d, g, j */
   var dst = [ gr.a, gr.c ];
-  var got = group.rootsAll( dst );
+  var got = group.rootsToAll( dst );
   test.identical( group.nodesToNames( got ), exp );
+  test.identical( got.length, gr.nodes.length-3 );
   test.is( got === dst )
 
   test.case = '[ a, b ]';
-  var exp = [ 'a', 'b', 'e', 'c', 'h', 'i', 'f' ];
+  var exp = [ 'a', 'b', 'e', 'c', 'h', 'i', 'f' ];  /* d, g, j */
   var dst = [ gr.a, gr.b ];
-  var got = group.rootsAll( dst );
+  var got = group.rootsToAll( dst );
   test.identical( group.nodesToNames( got ), exp );
+  test.identical( got.length, gr.nodes.length-3 );
   test.is( got === dst )
 
   test.case = '[ j, a, b ]';
-  var exp = [ 'j', 'a', 'b', 'e', 'c', 'h', 'i', 'f' ];
+  var exp = [ 'j', 'a', 'b', 'e', 'c', 'h', 'i', 'f' ];  /* d, g */
   var dst = [ gr.j, gr.a, gr.b ];
-  var got = group.rootsAll( dst );
+  var got = group.rootsToAll( dst );
   test.identical( group.nodesToNames( got ), exp );
+  test.identical( got.length, gr.nodes.length-2 );
   test.is( got === dst )
 
   gr.sys.finit();
@@ -1253,38 +1417,55 @@ function rootsAll( test )
   var group = gr.sys.nodesGroup();
 
   test.case = 'a';
-  var exp = [ 'a', 'b', 'e', 'c', 'h', 'i', 'f' ];
+  var exp = [ 'a', 'b', 'e', 'c', 'h', 'i', 'f' ]; /* d, g, j */
+  exp = _.containerAdapter.from( exp );
   var dst = gr.a;
-  var got = group.rootsAll( dst );
+  var got = group.rootsToAll( dst );
+  got = _.containerAdapter.from( got );
+  test.is( got instanceof _.containerAdapter.Array );
   test.identical( group.nodesToNames( got ), exp );
+  test.identical( got.length, gr.nodes.length-3 );
 
   test.case = '[ a ]';
-  var exp = new Set([ 'a', 'b', 'e', 'c', 'h', 'i', 'f' ]);
+  var exp = new Set([ 'a', 'b', 'e', 'c', 'h', 'i', 'f' ]); /* d, g, j */
+  exp = _.containerAdapter.from( exp );
   var dst = new Set([ gr.a ]);
-  var got = group.rootsAll( dst );
+  var got = group.rootsToAll( dst );
+  got = _.containerAdapter.from( got );
+  test.is( got instanceof _.containerAdapter.Set );
   test.identical( group.nodesToNames( got ), exp );
-  test.is( got === dst )
+  test.identical( got.length, gr.nodes.length-3 );
+  test.is( got.original === dst );
 
   test.case = '[ a, c ]';
-  var exp = new Set([ 'a', 'c', 'b', 'e', 'h', 'i', 'f' ]);
+  var exp = new Set([ 'a', 'c', 'b', 'e', 'h', 'i', 'f' ]); /* d, g, j */
+  exp = _.containerAdapter.from( exp );
   var dst = new Set([ gr.a, gr.c ]);
-  var got = group.rootsAll( dst );
+  var got = group.rootsToAll( dst );
+  got = _.containerAdapter.from( got );
   test.identical( group.nodesToNames( got ), exp );
-  test.is( got === dst )
+  test.identical( got.length, gr.nodes.length-3 );
+  test.is( got.original === dst );
 
   test.case = '[ a, b ]';
-  var exp = new Set([ 'a', 'b', 'e', 'c', 'h', 'i', 'f' ]);
+  var exp = new Set([ 'a', 'b', 'e', 'c', 'h', 'i', 'f' ]); /* d, g, j */
+  exp = _.containerAdapter.from( exp );
   var dst = new Set([ gr.a, gr.b ]);
-  var got = group.rootsAll( dst );
+  var got = group.rootsToAll( dst );
+  got = _.containerAdapter.from( got );
   test.identical( group.nodesToNames( got ), exp );
-  test.is( got === dst )
+  test.identical( got.length, gr.nodes.length-3 );
+  test.is( got.original === dst );
 
   test.case = '[ j, a, b ]';
-  var exp = new Set([ 'j', 'a', 'b', 'e', 'c', 'h', 'i', 'f' ]);
+  var exp = new Set([ 'j', 'a', 'b', 'e', 'c', 'h', 'i', 'f' ]); /* d, g */
+  exp = _.containerAdapter.from( exp );
   var dst = new Set([ gr.j, gr.a, gr.b ]);
-  var got = group.rootsAll( dst );
+  var got = group.rootsToAll( dst );
+  got = _.containerAdapter.from( got );
   test.identical( group.nodesToNames( got ), exp );
-  test.is( got === dst )
+  test.identical( got.length, gr.nodes.length-2 );
+  test.is( got.original === dst );
 
   gr.sys.finit();
 
@@ -1293,7 +1474,6 @@ function rootsAll( test )
   /* - */
 
 }
-
 
 //
 
@@ -1795,24 +1975,6 @@ function lookBfsRevisiting( test )
   }
 
   test.description = 'setup';
-
-  // var a = { name : 'a', nodes : [] } // 1
-  // var b = { name : 'b', nodes : [] } // 2
-  // var c = { name : 'c', nodes : [] } // 3
-  // var d = { name : 'd', nodes : [] } // 4
-  // var e = { name : 'e', nodes : [] } // 5
-  // var f = { name : 'f', nodes : [] } // 6
-  //
-  // a.nodes.push( gr.b, gr.d ); // 1
-  // b.nodes.push( gr.c, gr.d, gr.d ); // 2
-  // c.nodes.push( gr.a ); // 3
-  // d.nodes.push( gr.c, gr.e, gr.e ); // 4
-  // e.nodes.push(); // 5
-  // f.nodes.push( gr.f ); // 6
-  //
-  // var gr.sys = new _.graph.AbstractGraphSystem({ onNodeNameGet : ( node ) => node.name });
-
-  // var gr = context.cycled3Scc();
   var gr = context.cycledGamma();
   var group = gr.sys.nodesGroup();
 
@@ -2798,24 +2960,6 @@ function lookBfsExcluding( test )
   }
 
   test.description = 'setup';
-
-  // var a = { name : 'a', nodes : [] } // 1
-  // var b = { name : 'b', nodes : [] } // 2
-  // var c = { name : 'c', nodes : [] } // 3
-  // var d = { name : 'd', nodes : [] } // 4
-  // var e = { name : 'e', nodes : [] } // 5
-  // var f = { name : 'f', nodes : [] } // 6
-  //
-  // a.nodes.push( gr.b, gr.d ); // 1
-  // b.nodes.push( gr.c, gr.d, gr.d ); // 2
-  // c.nodes.push( gr.a ); // 3
-  // d.nodes.push( gr.c, gr.e, gr.e ); // 4
-  // e.nodes.push(); // 5
-  // f.nodes.push( gr.f ); // 6
-  //
-  // var gr.sys = new _.graph.AbstractGraphSystem({ onNodeNameGet : ( node ) => node.name });
-
-  // var gr = context.cycled3Scc();
   var gr = context.cycledGamma();
   var group = gr.sys.nodesGroup();
 
@@ -3718,24 +3862,6 @@ function lookDfsExcluding( test )
   }
 
   test.description = 'setup';
-
-  // var a = { name : 'a', nodes : [] } // 1
-  // var b = { name : 'b', nodes : [] } // 2
-  // var c = { name : 'c', nodes : [] } // 3
-  // var d = { name : 'd', nodes : [] } // 4
-  // var e = { name : 'e', nodes : [] } // 5
-  // var f = { name : 'f', nodes : [] } // 6
-  //
-  // a.nodes.push( gr.b, gr.d ); // 1
-  // b.nodes.push( gr.c, gr.d, gr.d ); // 2
-  // c.nodes.push( gr.a ); // 3
-  // d.nodes.push( gr.c, gr.e, gr.e ); // 4
-  // e.nodes.push(); // 5
-  // f.nodes.push( gr.f ); // 6
-  //
-  // var gr.sys = new _.graph.AbstractGraphSystem({ onNodeNameGet : ( node ) => node.name });
-
-  // var gr = context.cycled3Scc();
   var gr = context.cycledGamma();
   var group = gr.sys.nodesGroup();
 
@@ -3881,24 +4007,6 @@ function lookDbfsRevisiting( test )
   }
 
   test.description = 'setup';
-
-  // var a = { name : 'a', nodes : [] } // 1
-  // var b = { name : 'b', nodes : [] } // 2
-  // var c = { name : 'c', nodes : [] } // 3
-  // var d = { name : 'd', nodes : [] } // 4
-  // var e = { name : 'e', nodes : [] } // 5
-  // var f = { name : 'f', nodes : [] } // 6
-  //
-  // a.nodes.push( gr.b, gr.d ); // 1
-  // b.nodes.push( gr.c, gr.d, gr.d ); // 2
-  // c.nodes.push( gr.a ); // 3
-  // d.nodes.push( gr.c, gr.e, gr.e ); // 4
-  // e.nodes.push(); // 5
-  // f.nodes.push( gr.f ); // 6
-  //
-  // var gr.sys = new _.graph.AbstractGraphSystem({ onNodeNameGet : ( node ) => node.name });
-
-  // var gr = context.cycled3Scc();
   var gr = context.cycledGamma();
   var group = gr.sys.nodesGroup();
 
@@ -4335,24 +4443,6 @@ function lookDbfsExcluding( test )
   }
 
   test.description = 'setup';
-
-  // var a = { name : 'a', nodes : [] } // 1
-  // var b = { name : 'b', nodes : [] } // 2
-  // var c = { name : 'c', nodes : [] } // 3
-  // var d = { name : 'd', nodes : [] } // 4
-  // var e = { name : 'e', nodes : [] } // 5
-  // var f = { name : 'f', nodes : [] } // 6
-  //
-  // a.nodes.push( gr.b, gr.d ); // 1
-  // b.nodes.push( gr.c, gr.d, gr.d ); // 2
-  // c.nodes.push( gr.a ); // 3
-  // d.nodes.push( gr.c, gr.e, gr.e ); // 4
-  // e.nodes.push(); // 5
-  // f.nodes.push( gr.f ); // 6
-  //
-  // var gr.sys = new _.graph.AbstractGraphSystem({ onNodeNameGet : ( node ) => node.name });
-
-  // var gr = context.cycled3Scc();
   var gr = context.cycledGamma();
   var group = gr.sys.nodesGroup();
 
@@ -4498,24 +4588,6 @@ function eachBfs( test )
   /* - */
 
   test.description = 'setup';
-
-  // var a = { name : 'a', nodes : [] } // 1
-  // var b = { name : 'b', nodes : [] } // 2
-  // var c = { name : 'c', nodes : [] } // 3
-  // var d = { name : 'd', nodes : [] } // 4
-  // var e = { name : 'e', nodes : [] } // 5
-  // var f = { name : 'f', nodes : [] } // 6
-  //
-  // a.nodes.push( gr.b, gr.d ); // 1
-  // b.nodes.push( gr.c, gr.d, gr.d ); // 2
-  // c.nodes.push( gr.a ); // 3
-  // d.nodes.push( gr.c, gr.e, gr.e ); // 4
-  // e.nodes.push(); // 5
-  // f.nodes.push( gr.f ); // 6
-  //
-  // var gr.sys = new _.graph.AbstractGraphSystem({ onNodeNameGet : ( node ) => node.name });
-
-  // var gr = context.cycled3Scc();
   var gr = context.cycledGamma();
   var group = gr.sys.nodesGroup();
 
@@ -5994,7 +6066,7 @@ function dagTopSortDfs( test )
   test.identical( group.nodesToNames( ordering ), expected );
 
   test.description = 'with help of all([ gr.d ])'
-  var ordering = group.dagTopSortDfs( group.rootsAllReachable([ gr.d ]) );
+  var ordering = group.dagTopSortDfs( group.rootsToAllReachable([ gr.d ]) );
   var expected = [ 'c', 'd' ];
   test.identical( group.nodesToNames( ordering ), expected );
 
@@ -6024,14 +6096,13 @@ function dagTopSortDfs( test )
 
 //
 
-function topSortSourceBasedBfs( test )
+function topSortLeastDegreeBfs( test )
 {
   let context = this;
 
   test.case = 'cycled4Scc';
 
   var gr = context.cycled4Scc();
-
   var group = gr.sys.nodesGroup();
   group.nodesAdd( gr.nodes );
   logger.log( group.infoExport() );
@@ -6040,73 +6111,49 @@ function topSortSourceBasedBfs( test )
   /* */
 
   test.description = 'all explicit';
-
-  debugger;
-
   var group = gr.sys.nodesGroup();
-  var layers = group.topSortSourceBasedBfs( gr.nodes );
-  debugger;
-
-  var expected = _.setsFrom
-  ([
-    [ 'd', 'j' ],
-    [ 'a', 'g' ],
-    [ 'b', 'h' ],
-    [ 'e', 'f', 'i' ],
-    [ 'c' ]
-  ]);
-
+  var layers = group.topSortLeastDegreeBfs( gr.nodes );
+  var expected = [ 'd', 'j', 'a', 'g', 'b', 'h', 'e', 'f', 'i', 'c' ]
   test.identical( layers.map( ( nodes ) => group.nodesToNames( nodes ) ), expected );
-
   group.finit();
 
   /* */
 
   test.description = 'not j';
-
   var group = gr.sys.nodesGroup();
-  var layers = group.topSortSourceBasedBfs([ gr.a, gr.b, gr.c, gr.d, gr.e, gr.f, gr.g, gr.h, gr.i ]);
-  var expected = _.setsFrom
-  ([
-    [ 'd' ],
-    [ 'a', 'g' ],
-    [ 'b', 'h' ],
-    [ 'e', 'f', 'i' ],
-    [ 'c' ]
-  ]);
-
+  var layers = group.topSortLeastDegreeBfs([ gr.a, gr.b, gr.c, gr.d, gr.e, gr.f, gr.g, gr.h, gr.i ]);
+  var expected = [ 'd', 'a', 'g', 'b', 'h', 'e', 'f', 'i', 'c' ]
   test.identical( layers.map( ( nodes ) => group.nodesToNames( nodes ) ), expected );
-
   group.finit();
 
   /* */
 
   test.description = 'not j, not d';
-
   var group = gr.sys.nodesGroup();
   group.cacheInNodesFromOutNodesOnce( gr.nodes );
-  var layers = group.topSortSourceBasedBfs([ gr.a, gr.b, gr.c, gr.e, gr.f, gr.g, gr.h, gr.i ]);
-
-  var expected = _.setsFrom
-  ([
-    [ 'c', 'e', 'g', 'i' ],
-    [ 'b', 'a', 'h', 'f' ]
-  ]);
-
+  var layers = group.topSortLeastDegreeBfs([ gr.a, gr.b, gr.c, gr.e, gr.f, gr.g, gr.h, gr.i ]);
+  var expected = [ 'c', 'e', 'g', 'i', 'b', 'a', 'h', 'f' ]
   test.identical( layers.map( ( nodes ) => group.nodesToNames( nodes ) ), expected );
-
   group.finit();
 
   /* */
 
   test.description = 'c, e - without adding nodes';
+  var group = gr.sys.nodesGroup();
+  var layers = group.topSortLeastDegreeBfs([ gr.c, gr.e ]);
+  var expected = [ 'e', 'a', 'c', 'h', 'b', 'i', 'f' ]
+  test.identical( layers.map( ( nodes ) => group.nodesToNames( nodes ) ), expected );
+  group.finit();
 
-  test.shouldThrowErrorSync( () =>
-  {
-    var group = gr.sys.nodesGroup();
-    group.nodesAdd( gr.nodes );
-    var layers = group.topSortSourceBasedBfs([ gr.c, gr.e ]);
-  });
+  /* */
+
+  test.description = 'c, e - with adding all nodes';
+  var group = gr.sys.nodesGroup();
+  group.nodesAdd( gr.nodes );
+  var layers = group.topSortLeastDegreeBfs([ gr.c, gr.e ]);
+  var expected = [ 'e', 'a', 'c', 'h', 'b', 'i', 'f' ]
+  test.identical( layers.map( ( nodes ) => group.nodesToNames( nodes ) ), expected );
+  group.finit();
 
   /* */
 
@@ -6114,17 +6161,9 @@ function topSortSourceBasedBfs( test )
 
   var group = gr.sys.nodesGroup();
   group.cacheInNodesFromOutNodesOnce( gr.nodes );
-  var layers = group.topSortSourceBasedBfs([ gr.c, gr.e ]);
-
-  var expected = _.setsFrom
-  ([
-    [ 'c', 'e' ],
-    [ 'b', 'a', 'h' ],
-    [ 'f', 'i' ],
-  ]);
-
+  var layers = group.topSortLeastDegreeBfs([ gr.c, gr.e ]);
+  var expected = [ 'c', 'e', 'b', 'a', 'h', 'f', 'i' ];
   test.identical( layers.map( ( nodes ) => group.nodesToNames( nodes ) ), expected );
-
   group.finit();
 
   gr.sys.finit();
@@ -6142,12 +6181,8 @@ function topSortSourceBasedBfs( test )
   /* */
 
   test.description = 'implicit';
-  var layers = group.topSortSourceBasedBfs();
-  var expected = _.setsFrom
-  ([
-    [ 'a', 'b', 'c' ],
-  ]);
-
+  var layers = group.topSortLeastDegreeBfs();
+  var expected = [ 'a', 'b', 'c' ];
   test.identical( layers.map( ( nodes ) => group.nodesToNames( nodes ) ), expected );
 
   /* */
@@ -6158,150 +6193,237 @@ function topSortSourceBasedBfs( test )
 
 //
 
-function topSortCycledSourceBasedBfs( test )
+function topSortCycledSourceBasedFastBfs( test )
 {
   let context = this;
 
   /* - */
 
-  test.case = 'trivial';
-
-  // var a = { name : 'a', nodes : [] }
-  // var b = { name : 'b', nodes : [] }
-  // var c = { name : 'c', nodes : [] }
-  //
-  // a.nodes.push( gr.b, gr.c );
-  // b.nodes.push( gr.a );
-  // c.nodes.push();
-  //
-  // var gr.sys = new _.graph.AbstractGraphSystem({ onNodeNameGet : ( node ) => node.name });
-
+  test.case = 'cycled1Scc';
   var gr = context.cycled1Scc();
+
+  /* */
+
+  test.description = 'explicit';
+  var group = gr.sys.nodesGroup();
+  var got = group.topSortCycledSourceBasedFastBfs( gr.nodes );
+  var expected = [ 'a', 'b', 'c' ];
+  test.identical( group.nodesToNames( got ), expected );
+  group.finit();
+
+  /* */
+
+  test.description = 'implicit';
   var group = gr.sys.nodesGroup();
   group.nodesAdd( gr.nodes );
   logger.log( group.infoExport() );
+  var got = group.topSortCycledSourceBasedFastBfs();
+  var expected = [ 'a', 'b', 'c' ];
+  test.identical( group.nodesToNames( got ), expected );
+  group.finit();
 
   /* */
-
-  debugger;
-  var layers = group.topSortCycledSourceBasedBfs();
-  debugger;
-
-  var expected =
-  [
-    [ 'a', 'b' ],
-    [ 'c' ],
-  ];
-
-  test.identical( layers.map( ( nodes ) => group.nodesToNames( nodes ) ), expected );
-
-  /* */
-
-  gr.sys.finit();
-
-  /* */
-
-  test.case = 'cycled asymetric zeta';
-  var gr = context.cycledAsymetricZeta();
-  var group = gr.sys.nodesGroup();
-
-  test.description = 'all';
-  var layers = group.topSortCycledSourceBasedBfs( gr.nodes );
-  var expected = [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h' ];
-  test.identical( layers.map( ( nodes ) => group.nodesToNames( nodes ) ), expected );
-
-  gr.sys.finit();
-
-  /* */
-
-  test.case = 'cycled asymetric chi';
-
-  var gr = context.cycledAsymetricChi();
-  var group = gr.sys.nodesGroup();
-
-  test.description = 'all';
-  var layers = group.topSortCycledSourceBasedBfs( gr.nodes );
-  var expected = [ 'd', 'e', 'a', 'b', 'f', 'c', 'g', 'h', 'k', 'i', 'l', 'j', 'm' ];
-  test.identical( layers.map( ( nodes ) => group.nodesToNames( nodes ) ), expected );
-
-  test.description = 'all a';
-  debugger;
-  var layers = group.topSortCycledSourceBasedBfs( group.rootsAllReachable( gr.a ) );
-  debugger;
-  var expected = [ 'e', 'd', 'a', 'b', 'f', 'c', 'g', 'h', 'k', 'i', 'l', 'j', 'm' ];
-  test.identical( layers.map( ( nodes ) => group.nodesToNames( nodes ) ), expected );
 
   gr.sys.finit();
 
   /* - */
 
-  test.case = 'complex';
+  test.case = 'cycled asymetric zeta';
+  var gr = context.cycledAsymetricZeta();
+
+  test.description = 'explicit';
+  var group = gr.sys.nodesGroup();
+  var got = group.topSortCycledSourceBasedFastBfs( gr.nodes );
+  var expected = [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h' ];
+  test.identical( group.nodesToNames( got ), expected );
+  group.finit();
+
+  gr.sys.finit();
+
+  /* - */
+
+  test.case = 'cycledAsymetricChi';
+
+  var gr = context.cycledAsymetricChi();
+
+  test.description = 'all';
+  var group = gr.sys.nodesGroup();
+  var got = group.topSortCycledSourceBasedFastBfs( gr.nodes );
+  var expected = [ 'd', 'e', 'a', 'b', 'f', 'c', 'g', 'h', 'k', 'i', 'l', 'j', 'm' ];
+  test.identical( group.nodesToNames( got ), expected );
+  group.finit();
+
+  test.description = 'rootsToAllReachable a';
+  var group = gr.sys.nodesGroup();
+  var got = group.topSortCycledSourceBasedFastBfs( group.rootsToAllReachable( gr.a ) );
+  var expected = [ 'a', 'b', 'c', 'g', 'h', 'k', 'i', 'l', 'j', 'm' ];
+  test.identical( group.nodesToNames( got ), expected );
+  group.finit();
+
+  gr.sys.finit();
+
+  /* - */
+
+  test.case = 'cycled4Scc';
 
   var gr = context.cycled4Scc();
-  var group = gr.sys.nodesGroup();
-  group.nodesAdd( gr.nodes ); // xxx
-  logger.log( group.infoExport() );
 
   /* */
 
-  test.description = 'all';
-
-  debugger;
-  var layers = group.topSortCycledSourceBasedBfs();
-  debugger;
-
-  var expected =
-  [
-    [ 'j', 'd' ],
-    [ 'a', 'g' ],
-    [ 'b', 'h' ],
-    [ 'e', 'f', 'i' ],
-    [ 'c' ]
-  ]
-
-  test.identical( layers.map( ( nodes ) => group.nodesToNames( nodes ) ), expected );
+  test.description = 'implicit';
+  var group = gr.sys.nodesGroup();
+  group.nodesAdd( gr.nodes );
+  logger.log( group.infoExport() );
+  var expected = [ 'j', 'd', 'a', 'g', 'b', 'h', 'e', 'f', 'i', 'c' ];
+  var got = group.topSortCycledSourceBasedFastBfs();
+  test.identical( group.nodesToNames( got ), expected );
+  group.finit();
 
   /* */
 
   test.description = 'not j';
-
-  var layers = group.topSortCycledSourceBasedBfs([ gr.a, gr.b, gr.c, gr.d, gr.e, gr.f, gr.g, gr.h, gr.i ]);
-
-  var expected =
-  [
-    [ 'd' ],
-    [ 'a', 'g' ],
-    [ 'b', 'h' ],
-    [ 'e', 'f', 'i' ],
-    [ 'c' ]
-  ]
-
-  test.identical( layers.map( ( nodes ) => group.nodesToNames( nodes ) ), expected );
+  var group = gr.sys.nodesGroup();
+  var got = group.topSortCycledSourceBasedFastBfs([ gr.a, gr.b, gr.c, gr.d, gr.e, gr.f, gr.g, gr.h, gr.i ]);
+  var expected = [ 'd', 'a', 'g', 'b', 'h', 'e', 'f', 'i', 'c' ];
+  test.identical( group.nodesToNames( got ), expected );
+  group.finit();
 
   /* */
 
   test.description = 'not j, not d';
-
-  var layers = group.topSortCycledSourceBasedBfs([ gr.a, gr.b, gr.c, gr.e, gr.f, gr.g, gr.h, gr.i ]);
-
-  var expected =
-  [
-    [ 'd' ],
-    [ 'a', 'g' ],
-    [ 'b', 'h' ],
-    [ 'e', 'f', 'i' ],
-    [ 'c' ]
-  ];
-
-  test.identical( layers.map( ( nodes ) => group.nodesToNames( nodes ) ), expected );
+  var group = gr.sys.nodesGroup();
+  var got = group.topSortCycledSourceBasedFastBfs([ gr.a, gr.b, gr.c, gr.e, gr.f, gr.g, gr.h, gr.i ]);
+  var expected = [ 'g', 'a', 'b', 'e', 'c', 'h', 'f', 'i' ];
+  test.identical( group.nodesToNames( got ), expected );
 
   /* */
 
   test.description = 'c, e';
+  var group = gr.sys.nodesGroup();
+  test.shouldThrowErrorSync( () => group.topSortCycledSourceBasedFastBfs([ gr.c, gr.e ]) );
+  group.finit();
 
-  test.shouldThrowErrorSync( () => group.topSortCycledSourceBasedBfs([ gr.c, gr.e ]) );
+  gr.sys.finit();
 
-  var expected = [];
+  /* - */
+}
+
+//
+
+function topSortCycledSourceBasedPreciseBfs( test )
+{
+  let context = this;
+
+  /* - */
+
+  test.case = 'cycled1Scc';
+  var gr = context.cycled1Scc();
+
+  /* */
+
+  test.description = 'explicit';
+  var group = gr.sys.nodesGroup();
+  var got = group.topSortCycledSourceBasedPreciseBfs( gr.nodes );
+  var expected = [ 'a', 'b', 'c' ];
+  test.identical( group.nodesToNames( got ), expected );
+  group.finit();
+
+  /* */
+
+  test.description = 'implicit';
+  var group = gr.sys.nodesGroup();
+  group.nodesAdd( gr.nodes );
+  logger.log( group.infoExport() );
+  var got = group.topSortCycledSourceBasedPreciseBfs();
+  var expected = [ 'a', 'b', 'c' ];
+  test.identical( group.nodesToNames( got ), expected );
+  group.finit();
+
+  /* */
+
+  gr.sys.finit();
+
+  /* - */
+
+  test.case = 'cycled asymetric zeta';
+  var gr = context.cycledAsymetricZeta();
+
+  test.description = 'explicit';
+  var group = gr.sys.nodesGroup();
+  var got = group.topSortCycledSourceBasedPreciseBfs( gr.nodes );
+  var expected = [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h' ];
+  test.identical( group.nodesToNames( got ), expected );
+  group.finit();
+
+  gr.sys.finit();
+
+  /* - */
+
+  test.case = 'cycledAsymetricChi';
+
+  var gr = context.cycledAsymetricChi();
+
+  test.description = 'all';
+  var group = gr.sys.nodesGroup();
+  var got = group.topSortCycledSourceBasedPreciseBfs( gr.nodes );
+  // var expected = [ 'd', 'e', 'a', 'b', 'f', 'c', 'g', 'h', 'k', 'i', 'l', 'j', 'm' ];
+  var expected = [ 'a', 'd', 'e', 'b', 'f', 'c', 'g', 'h', 'k', 'j', 'i', 'l', 'm' ];
+  test.identical( group.nodesToNames( got ), expected );
+  group.finit();
+
+  test.description = 'rootsToAllReachable a';
+  var group = gr.sys.nodesGroup();
+  var got = group.topSortCycledSourceBasedPreciseBfs( group.rootsToAllReachable( gr.a ) );
+  // var expected = [ 'a', 'b', 'c', 'g', 'h', 'k', 'i', 'l', 'j', 'm' ];
+  var expected = [ 'a', 'b', 'c', 'g', 'h', 'k', 'j', 'i', 'l', 'm' ];
+  test.identical( group.nodesToNames( got ), expected );
+  group.finit();
+
+  gr.sys.finit();
+
+  /* - */
+
+  test.case = 'cycled4Scc';
+
+  var gr = context.cycled4Scc();
+
+  /* */
+
+  test.description = 'implicit';
+  var group = gr.sys.nodesGroup();
+  group.nodesAdd( gr.nodes );
+  logger.log( group.infoExport() );
+  // var expected = [ 'j', 'd', 'a', 'g', 'b', 'h', 'e', 'f', 'i', 'c' ];
+  var expected = [ 'j', 'd', 'g', 'e', 'a', 'c', 'b', 'i', 'f', 'h' ]
+  var got = group.topSortCycledSourceBasedPreciseBfs();
+  test.identical( group.nodesToNames( got ), expected );
+  group.finit();
+
+  /* */
+
+  test.description = 'not j';
+  var group = gr.sys.nodesGroup();
+  var got = group.topSortCycledSourceBasedPreciseBfs([ gr.a, gr.b, gr.c, gr.d, gr.e, gr.f, gr.g, gr.h, gr.i ]);
+// var expected = [ 'd', 'a', 'g', 'b', 'h', 'e', 'f', 'i', 'c' ];
+  var expected = [ 'd', 'g', 'e', 'a', 'c', 'b', 'i', 'f', 'h' ];
+  test.identical( group.nodesToNames( got ), expected );
+  group.finit();
+
+  /* */
+
+  test.description = 'not j, not d';
+  var group = gr.sys.nodesGroup();
+  var got = group.topSortCycledSourceBasedPreciseBfs([ gr.a, gr.b, gr.c, gr.e, gr.f, gr.g, gr.h, gr.i ]);
+  // var expected = [ 'g', 'a', 'b', 'e', 'c', 'h', 'f', 'i' ];
+  var expected = [ 'g', 'e', 'a', 'c', 'b', 'i', 'h', 'f' ];
+  test.identical( group.nodesToNames( got ), expected );
+
+  /* */
+
+  test.description = 'c, e';
+  var group = gr.sys.nodesGroup();
+  test.shouldThrowErrorSync( () => group.topSortCycledSourceBasedPreciseBfs([ gr.c, gr.e ]) );
+  group.finit();
 
   gr.sys.finit();
 
@@ -6318,7 +6440,7 @@ function pairDirectedPathGetDfs( test )
 
   /* - */
 
-  test.case = 'simple'; // xxx
+  test.case = 'simple';
 
   var gr = context.cycled3Scc();
   var group = gr.sys.nodesGroup();
@@ -6380,22 +6502,18 @@ function pairDirectedPathGetDfs( test )
   var gr = context.cycledAsymetricZeta();
   var group = gr.sys.nodesGroup();
 
-  /* */
-
   test.description = 'a h';
   var connected = group.pairDirectedPathGetDfs([ gr.a, gr.h ]);
   test.identical( connected, false );
 
   test.description = 'h a';
   var exp = [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h' ];
-  debugger;
   var connected = group.pairDirectedPathGetDfs([ gr.h, gr.a ]);
   test.identical( group.nodesToNames( connected ), exp );
-  debugger;
-
-  /* */
 
   gr.sys.finit();
+
+  /* - */
 
 }
 
@@ -6542,9 +6660,7 @@ function pairIsConnectedDfs( test )
   test.case = 'cycled asymetric zeta';
 
   var gr = context.cycledAsymetricZeta();
-  var group = gsys.nodesGroup();
-
-  /* */
+  var group = gr.sys.nodesGroup();
 
   test.description = 'a h';
   var connected = group.pairIsConnectedDfs([ gr.a, gr.h ]);
@@ -6554,9 +6670,10 @@ function pairIsConnectedDfs( test )
   var connected = group.pairIsConnectedDfs([ gr.h, gr.a ]);
   test.identical( connected, true );
 
-  /* */
-
   gr.sys.finit();
+
+  /* - */
+
 }
 
 //
@@ -6646,7 +6763,9 @@ function nodesConnectedLayersDfs( test )
 {
   let context = this;
 
-  test.description = 'setup';
+  /* - */
+
+  test.case = 'cycled3Scc';
 
   var gr = context.cycled3Scc();
   var group = gr.sys.nodesGroup();
@@ -6654,39 +6773,48 @@ function nodesConnectedLayersDfs( test )
   test.identical( group.nodes.length, 8 );
   logger.log( group.infoExport() );
 
-  test.case = 'explicit';
-  var expected = [ [ 1, 2, 3, 4 ], [ 5 ], [ 6, 7, 8 ] ];
+  test.description = 'explicit';
   var layers = group.nodesConnectedLayersDfs( group.nodes );
-  test.identical( layers.length, 3 );
-  test.identical( layers, expected );
-
-  test.case = 'implicit';
   var expected = [ [ 1, 2, 3, 4 ], [ 5 ], [ 6, 7, 8 ] ];
+  test.identical( layers.map( ( layer ) => group.nodesToIds( layer ) ), expected );
+  var expected =
+  [
+    [ 'a', 'b', 'c', 'd' ],
+    [ 'e' ],
+    [ 'f', 'g', 'h' ]
+  ]
+  test.identical( layers.map( ( layer ) => group.nodesToNames( layer ) ), expected );
+
+  test.description = 'implicit';
   var layers = group.nodesConnectedLayersDfs();
-  test.identical( layers.length, 3 );
-  test.identical( layers, expected );
+  var expected = [ [ 1, 2, 3, 4 ], [ 5 ], [ 6, 7, 8 ] ];
+  test.identical( layers.map( ( layer ) => group.nodesToIds( layer ) ), expected );
+  var expected =
+  [
+    [ 'a', 'b', 'c', 'd' ],
+    [ 'e' ],
+    [ 'f', 'g', 'h' ]
+  ]
+  test.identical( layers.map( ( layer ) => group.nodesToNames( layer ) ), expected );
 
   gr.sys.finit();
 
   /* - */
 
-  test.case = 'cycled asymetric zeta';
+  test.case = 'cycledAsymetricZeta';
   var gr = context.cycledAsymetricZeta();
 
-  /* */
-
-  test.description = 'all';
+  test.description = 'implicit';
   var group = gr.sys.nodesGroup();
   group.nodesAdd( gr.nodes );
   var layers = group.nodesConnectedLayersDfs([ gr.a, gr.b, gr.c, gr.d, gr.e, gr.f, gr.g, gr.h ]);
-  var names = layers.map( ( ids ) => group.idsToNames( ids ) );
   var expected = [ [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h' ] ]
-  test.identical( names, expected );
+  test.identical( layers.map( ( layer ) => group.nodesToNames( layer ) ), expected );
   group.finit();
 
-  /* */
-
   gr.sys.finit();
+
+  /* - */
 
 }
 
@@ -6696,7 +6824,7 @@ function nodesStronglyConnectedLayersDfs( test )
 {
   let context = this;
 
-  test.description = 'setup';
+  test.case = 'trivial';
 
   var gr = context.cycled4Scc();
   var group = gr.sys.nodesGroup();
@@ -6704,11 +6832,8 @@ function nodesStronglyConnectedLayersDfs( test )
   test.identical( group.nodes.length, 10 );
   logger.log( group.infoExport() );
 
-  var expected = [ [ j ], [ f ], [ i, h ], [ gr ], [ a, b, e, c ], [ d ] ];
-  var groups = group.nodesStronglyConnectedLayersDfs( group.nodes );
-  test.identical( groups, expected );
-
-  var expectedIds =
+  var layers = group.nodesStronglyConnectedLayersDfs( group.nodes );
+  var exp =
   [
     [ 'j' ],
     [ 'f' ],
@@ -6717,10 +6842,11 @@ function nodesStronglyConnectedLayersDfs( test )
     [ 'a', 'b', 'e', 'c' ],
     [ 'd' ]
   ]
-  var groupsIds = groups.map( ( nodes ) => group.nodesToNames( nodes ) );
-  test.identical( groupsIds, expectedIds );
+  var names = layers.map( ( nodes ) => group.nodesToNames( nodes ) );
+  test.identical( names, exp );
 
-  gr.finit();
+  gr.sys.finit();
+
 }
 
 //
@@ -6731,119 +6857,115 @@ function nodesStronglyConnectedTreeDfs( test )
 
   /* - */
 
-  // test.case = 'trivial';
-  // var gr = context.cycled1Scc();
-  //
-  // /* */
-  //
-  // var group = gr.sys.nodesGroup({});
-  //
-  // group.nodesAdd( gr.nodes );
-  // logger.log( 'Original' );
-  // logger.log( group.infoExport() );
-  //
-  // var group2 = group.nodesStronglyConnectedTreeDfs();
-  // group2.onNodeNameGet = function onNodeNameGet( dnode )
-  // {
-  //   return group.nodesToNames( dnode.originalNodes ).join( '+' );
-  // }
-  // logger.log( 'Strongly connected tree :\n' + group2.infoExport() );
-  // var originalNodesNames = group2.nodes.map( ( node ) => group.nodesToNames( node.originalNodes ).toArray().original ).toArray().original;
-  // var expected = [ [ 'c' ], [ 'a', 'b' ] ];
-  // test.identical( originalNodesNames, expected );
-  //
-  // var outNodes = group2.nodes.map( ( node ) => group2.nodesToIds( node.outNodes ).toArray().original ).toArray().original;
-  // var expected = [ [], [ 4 ] ];
-  // test.identical( outNodes, expected );
-  //
-  // var outNodes = group2.nodes.map( ( dnode ) => group2.nodeToName( dnode ) + ' : ' + group2.nodesToNames( dnode.outNodes ).join( '.' ) ).toArray().original;
-  // var expected = [ 'c : ', 'a+b : c' ];
-  // test.identical( outNodes, expected );
-  //
-  // /* */
-  //
-  // gr.sys.finit();
+  test.case = 'cycled1Scc';
+  var gr = context.cycled1Scc();
+
+  /* */
+
+  var group = gr.sys.nodesGroup({});
+
+  group.nodesAdd( gr.nodes );
+  logger.log( 'Original' );
+  logger.log( group.infoExport() );
+
+  var group2 = group.nodesStronglyConnectedTreeDfs();
+  group2.onNodeNameGet = function onNodeNameGet( dnode )
+  {
+    return group.nodesToNames( dnode.originalNodes ).join( '+' );
+  }
+  logger.log( 'Strongly connected tree :\n' + group2.infoExport() );
+  var originalNodesNames = group2.nodes.map( ( node ) => group.nodesToNames( node.originalNodes ).toArray().original ).toArray().original;
+  var expected = [ [ 'c' ], [ 'a', 'b' ] ];
+  test.identical( originalNodesNames, expected );
+
+  var outNodes = group2.nodes.map( ( node ) => group2.nodesToIds( node.outNodes ).toArray().original ).toArray().original;
+  var expected = [ [], [ 4 ] ];
+  test.identical( outNodes, expected );
+
+  var outNodes = group2.nodes.map( ( dnode ) => group2.nodeToName( dnode ) + ' : ' + group2.nodesToNames( dnode.outNodes ).join( '.' ) ).toArray().original;
+  var expected = [ 'c : ', 'a+b : c' ];
+  test.identical( outNodes, expected );
+
+  /* */
+
+  gr.sys.finit();
 
   /* - */
 
-  test.case = 'cycled asymetric zeta';
+  test.case = 'cycled cycledAsymetricZeta zeta';
   var gr = context.cycledAsymetricZeta();
 
   /* */
 
-  // test.description = 'all';
-  // var group = gr.sys.nodesGroup();
-  // var group2 = group.nodesStronglyConnectedTreeDfs( gr.nodes );
-  // group2.onNodeNameGet = function onNodeNameGet( dnode )
-  // {
-  //   return group.nodesToNames( dnode.originalNodes ).join( '+' );
-  // }
-  // var outNodes = group2.nodes.map( ( dnode ) => group2.nodeToName( dnode ) + ' : ' + group2.nodesToNames( dnode.outNodes ).join( '.' ) ).toArray().original;
-  // var expected = [ 'h+f+gr : ', 'e : h+f+gr', 'd : e', 'a+b+c : d' ];
-  // test.identical( outNodes, expected );
-  // group.finit();
-
-  /* */
-
-  test.description = '[ a, h, gr, f, e, d, c, b ]';
+  test.description = 'all, explicit';
   var group = gr.sys.nodesGroup();
-  debugger;
-  var group2 = group.nodesStronglyConnectedTreeDfs([ gr.a, gr.h, gr.g, gr.f, gr.e, gr.d, gr.c, gr.b ]);
-  debugger;
+  var group2 = group.nodesStronglyConnectedTreeDfs( gr.nodes );
   group2.onNodeNameGet = function onNodeNameGet( dnode )
   {
     return group.nodesToNames( dnode.originalNodes ).join( '+' );
   }
   var outNodes = group2.nodes.map( ( dnode ) => group2.nodeToName( dnode ) + ' : ' + group2.nodesToNames( dnode.outNodes ).join( '.' ) ).toArray().original;
-  var expected = [ 'h+f+gr : ', 'e : h+f+gr', 'd : e', 'a+b+c : d' ];
+  var expected = [ 'f+g+h : ', 'e : f+g+h', 'd : e', 'a+b+c : d' ];
   test.identical( outNodes, expected );
+  group.finit();
 
-  debugger; return; xxx
+  /* */
+
+  test.description = '[ a, h, g, f, e, d, c, b ]';
+  var group = gr.sys.nodesGroup();
+  var group2 = group.nodesStronglyConnectedTreeDfs([ gr.a, gr.h, gr.g, gr.f, gr.e, gr.d, gr.c, gr.b ]);
+  group2.onNodeNameGet = function onNodeNameGet( dnode )
+  {
+    return group.nodesToNames( dnode.originalNodes ).join( '+' );
+  }
+  var outNodes = group2.nodes.map( ( dnode ) => group2.nodeToName( dnode ) + ' : ' + group2.nodesToNames( dnode.outNodes ).join( '.' ) ).toArray().original;
+  var expected = [ 'h+f+g : ', 'e : h+f+g', 'd : e', 'a+b+c : d' ];
+  test.identical( outNodes, expected );
 
   /* */
 
   test.description = 'all a';
   var group = gr.sys.nodesGroup();
-  var group2 = group.nodesStronglyConnectedTreeDfs( group.rootsAllReachable( gr.a ) );
+  var group2 = group.nodesStronglyConnectedTreeDfs( group.rootsToAllReachable( gr.a ) );
   group2.onNodeNameGet = function onNodeNameGet( dnode )
   {
     return group.nodesToNames( dnode.originalNodes ).join( '+' );
   }
   var outNodes = group2.nodes.map( ( dnode ) => group2.nodeToName( dnode ) + ' : ' + group2.nodesToNames( dnode.outNodes ).join( '.' ) ).toArray().original;
-  var expected = [ 'f+gr+h : ', 'e : f+gr+h', 'd : e', 'a+b+c : d' ];
+  var expected = [ 'f+g+h : ', 'e : f+g+h', 'd : e', 'a+b+c : d' ];
   test.identical( outNodes, expected );
 
   /* */
 
   test.description = 'all c';
   var group = gr.sys.nodesGroup();
-  var group2 = group.nodesStronglyConnectedTreeDfs( group.rootsAllReachable( gr.c ) );
+  var group2 = group.nodesStronglyConnectedTreeDfs( group.rootsToAllReachable( gr.c ) );
   group2.onNodeNameGet = function onNodeNameGet( dnode )
   {
     return group.nodesToNames( dnode.originalNodes ).join( '+' );
   }
   var outNodes = group2.nodes.map( ( dnode ) => group2.nodeToName( dnode ) + ' : ' + group2.nodesToNames( dnode.outNodes ).join( '.' ) ).toArray().original;
-  var expected = [ 'f+gr+h : ', 'e : f+gr+h', 'd : e', 'c+a+b : d' ];
+  var expected = [ 'f+g+h : ', 'e : f+g+h', 'd : e', 'c+a+b : d' ];
   test.identical( outNodes, expected );
 
   /* */
 
   test.description = 'all d';
   var group = gr.sys.nodesGroup();
-  var group2 = group.nodesStronglyConnectedTreeDfs( group.rootsAllReachable( gr.d ) );
+  var group2 = group.nodesStronglyConnectedTreeDfs( group.rootsToAllReachable( gr.d ) );
   group2.onNodeNameGet = function onNodeNameGet( dnode )
   {
     return group.nodesToNames( dnode.originalNodes ).join( '+' );
   }
   var outNodes = group2.nodes.map( ( dnode ) => group2.nodeToName( dnode ) + ' : ' + group2.nodesToNames( dnode.outNodes ).join( '.' ) ).toArray().original;
-  var expected = [ 'f+gr+h : ', 'e : f+gr+h', 'd : e' ];
+  var expected = [ 'f+g+h : ', 'e : f+g+h', 'd : e' ];
   test.identical( outNodes, expected );
 
   gr.sys.finit();
 
   /* - */
 
-  test.case = 'complex'
+  test.case = 'cycled4Scc'
   var gr = context.cycled4Scc();
 
   /* */
@@ -6859,7 +6981,7 @@ function nodesStronglyConnectedTreeDfs( test )
     return group.nodesToNames( dnode.originalNodes ).join( '+' );
   }
   var outNodes = group2.nodes.map( ( dnode ) => group2.nodeToName( dnode ) + ' : ' + group2.nodesToNames( dnode.outNodes ).join( '.' ) ).toArray().original;
-  var expected = [ 'j : ', 'f : ', 'i+h : f', 'gr : i+h', 'a+b+e+c : f.i+h', 'd : a+b+e+c.g' ];
+  var expected = [ 'j : ', 'f : ', 'i+h : f', 'g : i+h', 'a+b+e+c : f.i+h', 'd : a+b+e+c.g' ];
   test.identical( outNodes, expected );
   logger.log( 'Tree' );
   logger.log( group2.infoExport() );
@@ -6874,7 +6996,7 @@ function nodesStronglyConnectedTreeDfs( test )
     return group.nodesToNames( dnode.originalNodes ).join( '+' );
   }
   var outNodes = group2.nodes.map( ( dnode ) => group2.nodeToName( dnode ) + ' : ' + group2.nodesToNames( dnode.outNodes ).join( '.' ) ).toArray().original;
-  var expected = [ 'j : ', 'f : ', 'i+h : f', 'gr : i+h', 'a+b+e+c : f.i+h', 'd : a+b+e+c.g' ];
+  var expected = [ 'j : ', 'f : ', 'i+h : f', 'g : i+h', 'a+b+e+c : f.i+h', 'd : a+b+e+c.g' ];
   test.identical( outNodes, expected );
   logger.log( 'Tree' );
   logger.log( group2.infoExport() );
@@ -6889,7 +7011,7 @@ function nodesStronglyConnectedTreeDfs( test )
     return group.nodesToNames( dnode.originalNodes ).join( '+' );
   }
   var outNodes = group2.nodes.map( ( dnode ) => group2.nodeToName( dnode ) + ' : ' + group2.nodesToNames( dnode.outNodes ).join( '.' ) ).toArray().original;
-  var expected = [ 'f : ', 'i+h : f', 'gr : i+h', 'a+b+e+c : f.i+h', 'd : a+b+e+c.g' ];
+  var expected = [ 'f : ', 'i+h : f', 'g : i+h', 'a+b+e+c : f.i+h', 'd : a+b+e+c.g' ];
   test.identical( outNodes, expected );
   logger.log( 'Tree' );
   logger.log( group2.infoExport() );
@@ -7018,7 +7140,7 @@ function nodesExportInfoTree( test )
        |     +-- f
        +-- f
   `
-  var infoAsTree = group.nodesExportInfoTree( [ a, b, c ], { rootsDelimiting : 0 } );
+  var infoAsTree = group.nodesExportInfoTree( [ gr.a, gr.b, gr.c ], { rootsDelimiting : 0 } );
   test.equivalent( infoAsTree, expected );
   logger.log( 'Tree' );
   logger.log( infoAsTree );
@@ -7036,15 +7158,15 @@ function nodesExportInfoTree( test )
   //  |   +-- f
   // `
   // debugger;
-  // var nodes0 = group.rootsAllReachable([ gr.a, gr.b, gr.c ]);
+  // var nodes0 = group.rootsToAllReachable([ gr.a, gr.b, gr.c ]);
   // debugger;
-  // var nodes1 = group.dagTopSort( group.rootsAllReachable([ gr.a, gr.b, gr.c ]) );
+  // var nodes1 = group.dagTopSort( group.rootsToAllReachable([ gr.a, gr.b, gr.c ]) );
   // debugger;
-  // var nodes2 = group.topSortCycledSourceBased( group.rootsAllReachable([ gr.a, gr.b, gr.c ]) );
+  // var nodes2 = group.topSortCycledSourceBased( group.rootsToAllReachable([ gr.a, gr.b, gr.c ]) );
   // debugger;
-  // var nodes3 = group.sourcesOnlyAmong( group.rootsAllReachable([ gr.a, gr.b, gr.c ]) );
+  // var nodes3 = group.sourcesOnlyAmong( group.rootsToAllReachable([ gr.a, gr.b, gr.c ]) );
   // debugger;
-  // var infoAsTree = group.nodesExportInfoTree( group.sourcesOnlyAmong( group.rootsAllReachable([ gr.a, gr.b, gr.c ]) ) );
+  // var infoAsTree = group.nodesExportInfoTree( group.sourcesOnlyAmong( group.rootsToAllReachable([ gr.a, gr.b, gr.c ]) ) );
   // debugger;
   // test.equivalent( infoAsTree, expected );
   // logger.log( 'Tree' );
@@ -7083,9 +7205,10 @@ var Self =
     reverse,
 
     nodesAs,
+    sourcesFromNodes,
     sourcesFromRoots,
-    rootsAllReachable,
-    rootsAll,
+    rootsToAllReachable,
+    rootsToAll,
 
     sinksOnlyAmong,
     sourcesOnlyAmong,
@@ -7107,8 +7230,9 @@ var Self =
     eachDbfs,
 
     dagTopSortDfs,
-    topSortSourceBasedBfs,
-    topSortCycledSourceBasedBfs,
+    topSortLeastDegreeBfs,
+    topSortCycledSourceBasedFastBfs,
+    topSortCycledSourceBasedPreciseBfs,
 
     // connectivity
 
