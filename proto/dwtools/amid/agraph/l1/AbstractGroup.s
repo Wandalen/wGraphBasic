@@ -14,6 +14,9 @@ let ContainerAdapter = _.containerAdapter.Abstract;
 let SetContainerAdapter = _.containerAdapter.Set;
 let ArrayContainerAdapter = _.containerAdapter.Array;
 let vectorize = _.routineDefaults( null, _.vectorize, { vectorizingContainerAdapter : 1, unwrapingContainerAdapter : 0 } );
+let vectorizeAll = _.routineDefaults( null, _.vectorizeAll, { vectorizingContainerAdapter : 1, unwrapingContainerAdapter : 0 } );
+let vectorizeAny = _.routineDefaults( null, _.vectorizeAny, { vectorizingContainerAdapter : 1, unwrapingContainerAdapter : 0 } );
+let vectorizeNone = _.routineDefaults( null, _.vectorizeNone, { vectorizingContainerAdapter : 1, unwrapingContainerAdapter : 0 } );
 let Self = function wAbstractNodesGroup( o )
 {
   return _.workpiece.construct( Self, this, arguments );
@@ -558,7 +561,13 @@ function nodeAdd( node )
   let group = this;
   let sys = group.sys;
 
-  _.assert( !!group.nodeIs( node ), 'Expects node' );
+  // if( group.onNodeFrom )
+  // node = group.onNodeFrom( node );
+  //
+  // _.assert( !!group.nodeIs( node ), 'Expects node' );
+
+  node = group.nodeFrom( node );
+
   _.assert( !group.nodes.has( node ), () => `The group already has ${group.nodeToQualifiedNameTry( node )}` );
   group.nodes.appendOnceStrictly( node );
 
@@ -609,6 +618,11 @@ function nodeAddOnce( node )
 {
   let group = this;
   let sys = group.sys;
+
+  // if( group.onNodeFrom )
+  // node = group.onNodeFrom( node );
+
+  node = group.nodeFrom( node );
 
   if( group.nodes.has( node ) )
   {
@@ -746,8 +760,11 @@ function nodesExportInfoTree( roots, opts )
   roots = group._routineArguments1( roots );
   opts = _.routineOptions( nodesExportInfoTree, opts );
 
+  if( opts.onNodeName === null )
+  opts.onNodeName = defaultOnNodeName;
+
   _.assert( opts.dtab1.length === opts.dtab2.length );
-  _.assert( arguments.length === 0 || arguments.length === 1 );
+  _.assert( arguments.length === 0 || arguments.length === 1 || arguments.length === 2 );
 
   roots.each( ( node, i ) =>
   {
@@ -786,6 +803,13 @@ function nodesExportInfoTree( roots, opts )
 
   /* */
 
+  function defaultOnNodeName( node )
+  {
+    return group.nodeToName( node );
+  }
+
+  /* */
+
   function handleBegin( it )
   {
     it.path = [];
@@ -818,7 +842,8 @@ function nodesExportInfoTree( roots, opts )
 
     let isLast = !!lastNodes[ prevIt.path.join( '/' ) ];
     let dLevel = it.level - prevIt.level;
-    let name = group.nodeToName( node );
+    // let name = group.nodeToName( node );
+    let name = opts.onNodeName( node );
 
     if( dLevel < 0 )
     tab = tab.substring( 0, tab.length + dLevel*opts.dtab1.length );
@@ -854,6 +879,7 @@ nodesExportInfoTree.defaults =
   dtab1 : '| ',
   dtab2 : '  ',
   rootsDelimiting : 1,
+  onNodeName : null,
 }
 
 //
@@ -1457,6 +1483,27 @@ function nodesAsAdapter( nodes )
 {
   let group = this;
   return group.ContainerAdapterFrom( group.nodesAs( nodes ) );
+}
+
+//
+
+function nodeFrom( node )
+{
+  let group = this;
+  let result = node;
+  if( group.onNodeFrom )
+  result = group.onNodeFrom( node );
+  _.assert( !!group.nodeIs( result ), () => `Cant get node from ${_.strShort( result )}` );
+  return result;
+}
+
+//
+
+function nodesFrom( nodes )
+{
+  let group = this;
+  let result = _.map( nodes, ( node ) => group.nodeFrom( node ) );
+  return result;
 }
 
 //
@@ -2226,7 +2273,7 @@ function lookDbfs( o )
 
       let outNodes = group.nodeOutNodesFor( it.node );
       let nodesStatus = new HashMap;
-      // let status = [];
+
       /*
         0 - not visiting
         1 - not including
@@ -2234,35 +2281,24 @@ function lookDbfs( o )
         3 - visit, include, go up
       */
 
-      // for( let n = 0 ; n < outNodes.length ; n++ )
       outNodes.all( ( node, n ) =>
       {
-
-        // let node = outNodes[ n ];
-        // status[ n ] = 3;
-        nodesStatus.set( node, 3 )
-
-        // if( o.revisiting < 3 )
-        // if( _.arrayHas( o.visitedContainer, node ) )
-        // status[ n ] = _.arrayHas( o.visitedContainer, node ) ? 0 : 3;
+        let status = 3;
+        // nodesStatus.set( node, 3 )
         if( o.revisiting < 3 )
-        // if( _.arrayHas( o.visitedContainer, node, group.onNodeEvaluate || undefined ) )
         if( o.visitedContainer.has( node ) )
-        nodesStatus.set( node, 0 )
-        // status[ n ] = 0;
+        status = 0
+        nodesStatus.set( node, status )
 
-        // if( o.revisiting < 2 && !status[ n ] )
         if( o.revisiting < 2 && !nodesStatus.get( node ) )
+        // return end( true );
         return true;
-        // continue;
 
         it.level = level+1;
-        // it.node = outNodes[ n ];
         it.node = node;
         it.index = n;
         it.visited = false;
-        // if( o.revisiting === 2 && !status[ n ] )
-        if( o.revisiting === 2 && !nodesStatus.get( node ) ) /* xxx : optmize */
+        if( o.revisiting === 2 && !nodesStatus.get( node ) )
         {
           it.visited = true;
           it.continueUp = false;
@@ -2270,49 +2306,56 @@ function lookDbfs( o )
 
         visitFirstFast( it );
 
-        if( nodesStatus.get( node ) > 1 && !it.continueNode )
-        nodesStatus.set( node, 1 );
-        if( nodesStatus.get( node ) > 2 && !it.continueUp )
-        nodesStatus.set( node, 2 );
+        // if( nodesStatus.get( node ) > 1 && !it.continueNode )
+        // nodesStatus.set( node, 1 );
+        // if( nodesStatus.get( node ) > 2 && !it.continueUp )
+        // nodesStatus.set( node, 2 );
 
-        // if( status[ n ] > 1 && !it.continueNode )
-        // status[ n ] = 1;
-        // if( status[ n ] > 2 && !it.continueUp )
-        // status[ n ] = 2;
+        if( status > 1 && !it.continueNode )
+        {
+          status = 1;
+          nodesStatus.set( node, status );
+        }
+        if( status > 2 && !it.continueUp )
+        {
+          status = 2;
+          nodesStatus.set( node, status );
+        }
 
         if( !it.iterator.continue )
+        // return end( false );
         return false;
 
         it.continueNode = true;
         it.continueUp = true;
 
+        // return end( true );
         return true;
+
+        function end( r )
+        {
+          nodesStatus.set( node, status );
+          return r;
+        }
       });
 
-      // for( let n = 0 ; n < outNodes.length ; n++ )
       outNodes.all( ( node, n ) =>
       {
-        // if( o.revisiting < 2 && !status[ n ] )
-        if( o.revisiting < 2 && !nodesStatus.get( node ) )
+        let status = nodesStatus.get( node );
+        if( o.revisiting < 2 && !status )
         return true;
-        // continue;
 
         it.level = level+1;
         it.index = n;
-        // it.node = outNodes[ n ];
         it.node = node;
-        // it.visited = status[ n ] > 0;
-        // it.continueNode = status[ n ] > 1;
-        // it.continueUp = status[ n ] > 2;
 
-        it.visited = nodesStatus.get( node ) > 0;
-        it.continueNode = nodesStatus.get( node ) > 1;
-        it.continueUp = nodesStatus.get( node ) > 2;
+        it.visited = status > 0;
+        it.continueNode = status > 1;
+        it.continueUp = status > 2;
 
         visitSecondFast( it );
         if( !it.iterator.continue )
         return false;
-        // break;
         return true;
       });
 
@@ -2327,8 +2370,6 @@ function lookDbfs( o )
 
     if( o.revisiting === 1 || o.revisiting === 2 )
     {
-      // _.assert( o.visitedContainer[ o.visitedContainer.length-1 ] === it.node );
-      // o.visitedContainer.pop( it.node );
       o.visitedContainer.popStrictly( it.node );
     }
 
@@ -2423,7 +2464,6 @@ function dagTopSortDfs( nodes )
 {
   let group = this;
   let ordering = [];
-  // let visitedContainer = group.ContainerMake(); // xxx : remove extra container?
   let visitedContainer = group.ContainerAdapterFrom( new Set );
 
   if( nodes === undefined )
@@ -2436,10 +2476,15 @@ function dagTopSortDfs( nodes )
 
   nodes.each( ( node ) =>
   {
-    // if( _.arrayHas( visitedContainer, node, group.onNodeEvaluate || undefined ) )
     if( visitedContainer.has( node ) )
     return;
-    group.lookDfs({ roots : node, onDown : handleDown, revisiting : 0 });
+    group.lookDfs
+    ({
+      roots : node,
+      onDown : handleDown,
+      revisiting : 0,
+      visitedContainer : visitedContainer,
+    });
   });
 
   _.assert( ordering.length === nodes.length, 'Seems input graph is not a DAG' );
@@ -2451,11 +2496,10 @@ function dagTopSortDfs( nodes )
   function handleDown( node, it )
   {
     let outNodes = group.nodeOutNodesFor( node );
-    // outNodes = outNodes.filter( ( node2 ) => !_.arrayHas( visitedContainer, node2, group.onNodeEvaluate || undefined ) );
     outNodes = outNodes.filter( ( node2 ) => !visitedContainer.has( node2 ) ? node2 : undefined );
     if( outNodes.length === 0 )
     ordering.push( node );
-    visitedContainer.push( node );
+    // visitedContainer.push( node );
   }
 
 }
@@ -2772,7 +2816,7 @@ function topSortCycledSourceBasedPreciseBfs( nodes )
     let nodeToOutNodes = new HashMap();
     layer.each( ( node ) => nodeToInNodes.set( node, group.nodeInNodesFor( node ).only( null, layer ).but( _.self, result ) ) );
     layer.each( ( node ) => nodeToOutNodes.set( node, group.nodeOutNodesFor( node ).only( null, layer ).but( _.self, result ) ) );
-    debugger;
+    // debugger;
     if( !layer.any( ( node ) => addFastMaybe( node ) ) )
     {
       debugger;
@@ -2818,7 +2862,7 @@ function topSortCycledSourceBasedPreciseBfs( nodes )
 
   });
 
-  debugger;
+  // debugger;
   return result;
   // return _.arrayFlatten( null, result );
 }
@@ -3176,7 +3220,7 @@ function nodesConnectedLayersDfs( nodes )
 {
   let group = this;
   let groups = [];
-  let visitedContainer = group.ContainerAdapterFrom( new Set ); /* xxx : remove extra container, refactor */
+  let visitedContainer = group.ContainerAdapterFrom( new Set );
 
   if( nodes === undefined )
   nodes = group.nodes;
@@ -3188,12 +3232,15 @@ function nodesConnectedLayersDfs( nodes )
 
   nodes.each( ( node ) =>
   {
-    // let id = group.nodeToId( node );
-    // if( _.arrayHas( visitedContainer, id ) )
     if( visitedContainer.has( node ) )
     return;
     groups.push( [] );
-    group.lookDfs({ roots : node, onUp : handleUp });
+    group.lookDfs
+    ({
+      roots : node,
+      onUp : handleUp,
+      visitedContainer : visitedContainer,
+    });
   });
 
   return groups;
@@ -3203,8 +3250,7 @@ function nodesConnectedLayersDfs( nodes )
   function handleUp( node, it )
   {
     debugger;
-    // let id = group.nodeToId( node ); // xxx : check
-    visitedContainer.push( node );
+    // visitedContainer.push( node );
     groups[ groups.length-1 ].push( node );
   }
 
@@ -3338,7 +3384,6 @@ function nodesStronglyConnectedTreeDfs( nodes )
 
   nodes.each( ( node ) =>
   {
-    // if( _.arrayHas( visited1, node, group.onNodeEvaluate || undefined ) )
     if( visited1.has( node ) )
     return;
     /*
@@ -3359,7 +3404,7 @@ function nodesStronglyConnectedTreeDfs( nodes )
 
   /* make new graph */
 
-  let group2 = sys.nodesGroup
+  let group2 = sys.nodesGroupDifferent
   ({
     onNodeNameGet : group.nodeNameFromGetterId,
     onOutNodesGet : group.nodesFromFieldOutNodes,
@@ -3370,14 +3415,10 @@ function nodesStronglyConnectedTreeDfs( nodes )
 
   group.reverse();
 
-  // for( let i = visited1.length-1 ; i >= 0 ; i-- )
   visited1.eachRight( ( node, i ) =>
   {
-    // let node = visited1[ i ];
-    // if( _.arrayHas( visited2, node, group.onNodeEvaluate || undefined ) )
     if( visited2.has( node ) )
     return;
-    // continue;
     let dnode = dnodeMake();
     group.lookDfs
     ({
@@ -3390,23 +3431,15 @@ function nodesStronglyConnectedTreeDfs( nodes )
 
   /* add edges */
 
-  // for( let l = 0 ; l < group2.nodes.length ; l++ )
   group2.nodes.each( ( dnode, l ) =>
   {
-    // let dnode = group2.nodes[ l ];
-    // for( let t = 0 ; t < dnode.originalOutNodes.length ; t++ )
     dnode.originalOutNodes.each( ( node, t ) =>
     {
-      // let node = dnode.originalOutNodes[ t ];
-      // if( _.arrayHas( dnode.originalNodes, originalOutId ) )
       if( dnode.originalNodes.has( node ) )
       return;
-      // continue;
       let dnode2 = fromOriginal.get( node );
       dnode.outNodes.appendOnce( dnode2 );
       dnode2.inNodes.appendOnce( dnode );
-      // _.arrayAppendOnce( dnode.outNodes, dnode2 );
-      // _.arrayAppendOnce( dnode2.inNodes, dnode );
     });
   });
 
@@ -3419,8 +3452,7 @@ function nodesStronglyConnectedTreeDfs( nodes )
   function dnodeMake()
   {
     let dnode = Object.create( null );
-    // debugger;
-    dnode.inNodes = group2.ContainerAdapterFrom( new Set ); // xxx : use sets
+    dnode.inNodes = group2.ContainerAdapterFrom( new Set );
     dnode.outNodes = group2.ContainerAdapterFrom( new Set );
     dnode.originalNodes = group2.ContainerAdapterFrom( new Set );
     dnode.originalOutNodes = group2.ContainerAdapterFrom( new Set );
@@ -3432,7 +3464,6 @@ function nodesStronglyConnectedTreeDfs( nodes )
 
   function handleUp1( node, it )
   {
-    // if( _.arrayHas( visited1, node, group.onNodeEvaluate || undefined ) )
     if( visited1.has( node ) )
     {
       it.continueUp = false;
@@ -3447,7 +3478,6 @@ function nodesStronglyConnectedTreeDfs( nodes )
     if( !it.continueUp )
     return;
     visited1.push( node );
-    // _.assert( _.arrayHas( nodes, node ), `Expects container with all nodes, but ${group.nodeToQualifiedName( node )} is not in the container` );
     _.assert( nodes.has( node ), () => `Input set of nodes does not have ${group.nodeToQualifiedNameTry( node )}` );
   }
 
@@ -3458,11 +3488,9 @@ function nodesStronglyConnectedTreeDfs( nodes )
     return function handleUp2( node, it )
     {
       _.assert( visited1.has( node ), () => `Input set of nodes does not have ${group.nodeToQualifiedNameTry( node )}` );
-      // _.assert( _.arrayHas( visited1, node, group.onNodeEvaluate || undefined ), () => 'Input set of nodes does not have a node ' + group.nodeToName( node ) );
       fromOriginal.set( it.node, dnode );
       dnode.originalNodes.push( node );
       dnode.originalOutNodes.appendContainer( group.nodeOutNodesFor( node ) );
-      // _.arrayAppendArray( dnode.originalOutNodes, group.nodeOutNodesFor( node ) );
     }
   }
 
@@ -3618,12 +3646,13 @@ let Aggregates =
 {
   onNodeNameGet : nodeNameFromGetterId,
   onNodeQualifiedNameGet : null,
-  onNodeEvaluate : null, /* qqq : cover by tests with different routines */
+  onNodeEvaluate : null, /* qqq : cover by tests */
   onNodeIs : nodeIs_default,
   onOutNodesGet : nodesFromFieldNodes,
   onInNodesGet : null,
   onNodeInfoExport : null,
   onNodeIdGet : null,
+  onNodeFrom : null,
 }
 
 let Associates =
@@ -3703,15 +3732,15 @@ let Extend =
 
   hasNode,
   hasNodes : vectorize( hasNode ),
-  hasAllNodes : _.vectorizeAll( hasNode ),
-  hasAnyNodes : _.vectorizeAny( hasNode ),
-  hasNoneNodes : _.vectorizeNone( hasNode ),
+  hasAllNodes : vectorizeAll( hasNode ),
+  hasAnyNodes : vectorizeAny( hasNode ),
+  hasNoneNodes : vectorizeNone( hasNode ),
 
   nodeIs,
   nodesAre : vectorize( nodeIs ),
-  nodesAreAll : _.vectorizeAll( nodeIs ),
-  nodesAreAny : _.vectorizeAny( nodeIs ),
-  nodesAreNone : _.vectorizeNone( nodeIs ),
+  nodesAreAll : vectorizeAll( nodeIs ),
+  nodesAreAny : vectorizeAny( nodeIs ),
+  nodesAreNone : vectorizeNone( nodeIs ),
 
   nodeIndegree,
   nodesIndegree : vectorize( nodeIndegree ),
@@ -3788,6 +3817,9 @@ let Extend =
   nodesAsSet,
   nodesAsArray,
   nodesAsAdapter,
+
+  nodeFrom,
+  nodesFrom,
 
   ContainerIs,
   ContainerAdapterIs,

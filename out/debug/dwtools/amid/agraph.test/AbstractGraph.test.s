@@ -6078,20 +6078,30 @@ function dagTopSortDfs( test )
     test.identical( group.nodesToNames( ordering ), expected );
   });
 
-  /* */
+  /* - */
 
   test.case = 'cycled';
-
   var gr = context.cycled4Scc();
-  var group = gr.sys.nodesGroup();
 
+  test.description = 'explicit all';
+  var group = gr.sys.nodesGroup();
+  var ordering = group.dagTopSortDfs( [ gr.a, gr.b, gr.c, gr.d, gr.e, gr.f, gr.g, gr.h, gr.i, gr.j ] );
+  var expected = [ 'c', 'f', 'i', 'h', 'e', 'b', 'a', 'g', 'd', 'j' ];
+  test.identical( group.nodesToNames( ordering ), expected );
+  group.finit();
+
+  test.description = 'gr.a, gr.b';
+  var group = gr.sys.nodesGroup();
   test.shouldThrowErrorSync( () =>
   {
-    test.description = 'with help of all([ gr.d ])'
-    var ordering = group.dagTopSortDfs( [ gr.a, gr.b, gr.c, gr.d, gr.e, gr.f, gr.g, gr.h, gr.i, gr.j ] );
+    var ordering = group.dagTopSortDfs( [ gr.a, gr.b ] );
   });
+  group.finit();
 
   gr.sys.finit();
+
+  /* - */
+
 }
 
 //

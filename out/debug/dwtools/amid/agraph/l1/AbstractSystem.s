@@ -36,6 +36,10 @@ Distance layers :: array of arrays of nodes. First layer has origin or zero-dist
  */
 
 let _ = _global_.wTools;
+let vectorize = _.routineDefaults( null, _.vectorize, { vectorizingContainerAdapter : 1, unwrapingContainerAdapter : 0 } );
+let vectorizeAll = _.routineDefaults( null, _.vectorizeAll, { vectorizingContainerAdapter : 1, unwrapingContainerAdapter : 0 } );
+let vectorizeAny = _.routineDefaults( null, _.vectorizeAny, { vectorizingContainerAdapter : 1, unwrapingContainerAdapter : 0 } );
+let vectorizeNone = _.routineDefaults( null, _.vectorizeNone, { vectorizingContainerAdapter : 1, unwrapingContainerAdapter : 0 } );
 let Parent = null;
 let Self = function wAbstractGraphSystem( o )
 {
@@ -72,7 +76,7 @@ function finit()
 //
 
 /**
- * @summary Declares group of nodes. Returns instance of {@link module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesGroup wTools.graph.AbstractNodesGroup}
+ * @summary Makes group of nodes. Returns instance of {@link module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesGroup wTools.graph.AbstractNodesGroup}
  * @param {Object} o Options for instance.
  * @function nodesGroup
  * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractGraphSystem
@@ -88,6 +92,25 @@ function nodesGroup( o )
 
   _.mapSupplementNulls( o, _.mapButNulls( _.mapOnly( sys, sys.FieldsForGroup ) ) );
 
+  return sys.Group( o );
+}
+
+//
+
+/**
+ * @summary Makes group of nodes. New group does not inherit common fields. Returns instance of {@link module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesGroup wTools.graph.AbstractNodesGroup}
+ * @param {Object} o Options for instance.
+ * @function nodesGroupDifferent
+ * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractGraphSystem
+ */
+
+function nodesGroupDifferent( o )
+{
+  let sys = this;
+  _.assert( arguments.length === 0 || arguments.length === 1 );
+  o = o || Object.create( null );
+  if( !o.sys )
+  o.sys = sys;
   return sys.Group( o );
 }
 
@@ -275,6 +298,7 @@ let FieldsForGroup =
   onNodeIs : null,
   onOutNodesGet : null,
   onInNodesGet : null,
+  onNodeFrom : null,
 }
 
 let Composes =
@@ -288,6 +312,7 @@ let Aggregates =
   onNodeIs : null,
   onOutNodesGet : null,
   onInNodesGet : null,
+  onNodeFrom : null,
 }
 
 let Associates =
@@ -326,31 +351,32 @@ let Extend =
   finit,
 
   nodesGroup,
+  nodesGroupDifferent,
 
   // id
 
   idIs,
-  idsAre : _.vectorize( idIs ),
-  idsAreAll : _.vectorizeAll( idIs ),
-  idsAreAny : _.vectorizeAny( idIs ),
-  idsAreNone : _.vectorizeNone( idIs ),
+  idsAre : vectorize( idIs ),
+  idsAreAll : vectorizeAll( idIs ),
+  idsAreAny : vectorizeAny( idIs ),
+  idsAreNone : vectorizeNone( idIs ),
 
   // node
 
   hasNode,
-  hasNodes : _.vectorize( hasNode ),
-  hasAllNodes : _.vectorizeAll( hasNode ),
-  hasAnyNodes : _.vectorizeAny( hasNode ),
-  hasNoneNodes : _.vectorizeNone( hasNode ),
+  hasNodes : vectorize( hasNode ),
+  hasAllNodes : vectorizeAll( hasNode ),
+  hasAnyNodes : vectorizeAny( hasNode ),
+  hasNoneNodes : vectorizeNone( hasNode ),
 
   nodeToIdTry,
-  nodesToIdsTry : _.vectorize( nodeToIdTry ),
+  nodesToIdsTry : vectorize( nodeToIdTry ),
   nodeToId,
-  nodesToIds : _.vectorize( nodeToId ),
+  nodesToIds : vectorize( nodeToId ),
   idToNodeTry,
-  idsToNodesTry : _.vectorize( idToNodeTry ),
+  idsToNodesTry : vectorize( idToNodeTry ),
   idToNode,
-  idsToNodes : _.vectorize( idToNode ),
+  idsToNodes : vectorize( idToNode ),
 
   nodeDescriptorWithId,
   nodeDescriptorWith,
