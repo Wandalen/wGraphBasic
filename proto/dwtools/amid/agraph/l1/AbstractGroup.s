@@ -735,7 +735,7 @@ function nodesInfoExport( nodes, opts )
 
 //
 
-function nodesExportInfoTree( nodes, opts )
+function nodesExportInfoTree( roots, opts )
 {
   let group = this;
   let result = '';
@@ -743,20 +743,13 @@ function nodesExportInfoTree( nodes, opts )
   let lastNodes;
   let tab;
 
+  roots = group._routineArguments1( roots );
   opts = _.routineOptions( nodesExportInfoTree, opts );
 
   _.assert( opts.dtab1.length === opts.dtab2.length );
-  _.assert( _.arrayIs( nodes ) );
+  _.assert( arguments.length === 0 || arguments.length === 1 );
 
-  if( nodes === undefined )
-  nodes = group.nodes;
-  else
-  nodes = group.nodesAsAdapter( nodes );
-
-  _.assert( arguments.length === 0 || arguments.length === 1 || arguments.length === 2 );
-  _.assert( group.nodesAreAll( nodes ) );
-
-  nodes.each( ( node, i ) =>
+  roots.each( ( node, i ) =>
   {
     lastNodes = Object.create( null );
     tab = '';
@@ -774,7 +767,7 @@ function nodesExportInfoTree( nodes, opts )
       fast : 0,
       revisiting : 1,
     });
-    lastNodes[ '0' ] = nodes.length -1 === i;
+    lastNodes[ '0' ] = roots.length -1 === i;
 
     prevIt = { level : 0, path : [] };
     group.lookDfs
@@ -1258,7 +1251,7 @@ function sourcesFromNodes( dstNodes, srcNodes )
 {
   let group = this;
 
-  [ dstNodes, srcNodes ] = group._routineArguments( ... arguments );
+  [ dstNodes, srcNodes ] = group._routineArguments2( ... arguments );
 
   if( dstNodes.original === srcNodes.original )
   {
@@ -1295,7 +1288,7 @@ function sourcesFromRoots( dstNodes, srcRoots )
 {
   let group = this;
 
-  [ dstNodes, srcRoots ] = group._routineArguments( ... arguments );
+  [ dstNodes, srcRoots ] = group._routineArguments2( ... arguments );
 
   let same = dstNodes.original === srcRoots.original;
   let srcNodes = group.rootsToAll( null, srcRoots );
@@ -1332,7 +1325,7 @@ function rootsToAllReachable( dstNodes, srcRoots )
 {
   let group = this;
 
-  [ dstNodes, srcRoots ] = group._routineArguments( ... arguments );
+  [ dstNodes, srcRoots ] = group._routineArguments2( ... arguments );
 
   group.lookDfs({ roots : srcRoots, onUp : onUp });
 
@@ -1360,7 +1353,7 @@ function rootsToAll( dstNodes, srcRoots )
 {
   let group = this;
 
-  [ dstNodes, srcRoots ] = group._routineArguments( ... arguments );
+  [ dstNodes, srcRoots ] = group._routineArguments2( ... arguments );
 
   if( srcRoots === dstNodes )
   srcRoots = srcRoots.make();
@@ -1580,7 +1573,30 @@ function ContainerAdapterFrom( container )
 
 //
 
-function _routineArguments( dstNodes, srcNodes )
+function _routineArguments1( srcNodes )
+{
+  let group = this;
+
+  if( srcNodes === undefined )
+  {
+    srcNodes = group.nodes;
+  }
+  else
+  {
+    srcNodes = group.nodesAs( srcNodes );
+  }
+
+  srcNodes = group.ContainerAdapterFrom( srcNodes );
+
+  _.assert( arguments.length === 0 || arguments.length === 1 );
+  _.assert( group.ContainerIs( srcNodes ) );
+
+  return srcNodes;
+}
+
+//
+
+function _routineArguments2( dstNodes, srcNodes )
 {
   let group = this;
 
@@ -2021,7 +2037,7 @@ function lookDfs( o )
 
     if( it.iterator.continue && it.continueUp )
     {
-      debugger;
+      // debugger;
       let outNodes = group.nodeOutNodesFor( it.node );
       // for( let n = 0 ; n < outNodes.length ; n++ )
       outNodes.each( ( node, n ) =>
@@ -3779,7 +3795,9 @@ let Extend =
   ContainerMake,
   ContainerAdapterMake,
   ContainerAdapterFrom,
-  _routineArguments,
+
+  _routineArguments1,
+  _routineArguments2,
 
   // traverser
 

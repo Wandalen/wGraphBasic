@@ -7039,114 +7039,95 @@ function nodesExportInfoTree( test )
 {
   let context = this;
 
-  test.case = '4 scl';
+  test.case = 'cycled4Scc';
   var gr = context.cycled4Scc();
-  var group = gr.sys.nodesGroup();
-  group.nodesAdd( gr.nodes );
 
-  logger.log( 'DAG' )
-  logger.log( group.nodesInfoExport() );
-
-  test.description = 'single a';
-  var expected =
-  `+-- a
-     +-- b
-       +-- e
-       | +-- c
-       | +-- h
-       |   +-- i
-       |     +-- f
-       +-- f
-  `
-  var infoAsTree = group.nodesExportInfoTree([ gr.a ]);
-  test.equivalent( infoAsTree, expected );
-  logger.log( 'Tree' );
-  logger.log( infoAsTree );
-
-  test.description = 'single b';
-  var expected =
-  `+-- b
-     +-- e
-     | +-- a
-     | +-- c
-     | +-- h
-     |   +-- i
-     |     +-- f
-     +-- f
-  `
-  var infoAsTree = group.nodesExportInfoTree([ gr.b ]);
-  test.equivalent( infoAsTree, expected );
-  logger.log( 'Tree' );
-  logger.log( infoAsTree );
-
-  test.description = 'multiple: a, b, c';
-  var expected =
-  `+-- a
-     | +-- b
-     |   +-- e
-     |   | +-- c
-     |   | +-- h
-     |   |   +-- i
-     |   |     +-- f
-     |   +-- f
-     |
-     +-- b
-     | +-- e
-     | | +-- a
-     | | +-- c
-     | | +-- h
-     | |   +-- i
-     | |     +-- f
-     | +-- f
-     |
-     +-- c
-       +-- b
-         +-- e
-         | +-- a
-         | +-- h
-         |   +-- i
-         |     +-- f
-         +-- f
-  `
-  var infoAsTree = group.nodesExportInfoTree([ gr.a, gr.b, gr.c ]);
-  test.equivalent( infoAsTree, expected );
-  logger.log( 'Tree' );
-  logger.log( infoAsTree );
-
-  test.description = 'multiple, rootsDelimiting : 0';
-  var expected =
-  `+-- a
-   | +-- b
-   |   +-- e
-   |   | +-- c
-   |   | +-- h
-   |   |   +-- i
-   |   |     +-- f
-   |   +-- f
-   +-- b
-   | +-- e
-   | | +-- a
-   | | +-- c
-   | | +-- h
-   | |   +-- i
-   | |     +-- f
-   | +-- f
-   +-- c
-     +-- b
-       +-- e
-       | +-- a
-       | +-- h
-       |   +-- i
-       |     +-- f
-       +-- f
-  `
-  var infoAsTree = group.nodesExportInfoTree( [ gr.a, gr.b, gr.c ], { rootsDelimiting : 0 } );
-  test.equivalent( infoAsTree, expected );
-  logger.log( 'Tree' );
-  logger.log( infoAsTree );
-
-  // xxx
-  // test.case = 'multiple + sourcesOnlyAmong';
+  // var group = gr.sys.nodesGroup();
+  // group.nodesAdd( gr.nodes );
+  // logger.log( 'DAG' )
+  // logger.log( group.nodesInfoExport() );
+  // group.finit();
+  //
+  // test.description = 'single a';
+  // var group = gr.sys.nodesGroup();
+  // // group.nodesAdd( gr.nodes );
+  // var expected =
+  // `+-- a
+  //    +-- b
+  //      +-- e
+  //      | +-- c
+  //      | +-- h
+  //      |   +-- i
+  //      |     +-- f
+  //      +-- f
+  // `
+  // var infoAsTree = group.nodesExportInfoTree([ gr.a ]);
+  // test.equivalent( infoAsTree, expected );
+  // logger.log( 'Tree' );
+  // logger.log( infoAsTree );
+  // group.finit();
+  //
+  // test.description = 'single b';
+  // var group = gr.sys.nodesGroup();
+  // // group.nodesAdd( gr.nodes );
+  // var expected =
+  // `+-- b
+  //    +-- e
+  //    | +-- a
+  //    | +-- c
+  //    | +-- h
+  //    |   +-- i
+  //    |     +-- f
+  //    +-- f
+  // `
+  // var infoAsTree = group.nodesExportInfoTree([ gr.b ]);
+  // var group = gr.sys.nodesGroup();
+  // // group.nodesAdd( gr.nodes );
+  // test.equivalent( infoAsTree, expected );
+  // logger.log( 'Tree' );
+  // logger.log( infoAsTree );
+  // group.finit();
+  //
+  // test.description = 'multiple: a, b, c';
+  // var expected =
+  // `+-- a
+  //    | +-- b
+  //    |   +-- e
+  //    |   | +-- c
+  //    |   | +-- h
+  //    |   |   +-- i
+  //    |   |     +-- f
+  //    |   +-- f
+  //    |
+  //    +-- b
+  //    | +-- e
+  //    | | +-- a
+  //    | | +-- c
+  //    | | +-- h
+  //    | |   +-- i
+  //    | |     +-- f
+  //    | +-- f
+  //    |
+  //    +-- c
+  //      +-- b
+  //        +-- e
+  //        | +-- a
+  //        | +-- h
+  //        |   +-- i
+  //        |     +-- f
+  //        +-- f
+  // `
+  // var infoAsTree = group.nodesExportInfoTree([ gr.a, gr.b, gr.c ]);
+  // var group = gr.sys.nodesGroup();
+  // // group.nodesAdd( gr.nodes );
+  // test.equivalent( infoAsTree, expected );
+  // logger.log( 'Tree' );
+  // logger.log( infoAsTree );
+  // group.finit();
+  //
+  // test.description = 'multiple, rootsDelimiting : 0';
+  // var group = gr.sys.nodesGroup();
+  // group.nodesAdd( gr.nodes );
   // var expected =
   // `+-- a
   //  | +-- b
@@ -7156,21 +7137,126 @@ function nodesExportInfoTree( test )
   //  |   |   +-- i
   //  |   |     +-- f
   //  |   +-- f
+  //  +-- b
+  //  | +-- e
+  //  | | +-- a
+  //  | | +-- c
+  //  | | +-- h
+  //  | |   +-- i
+  //  | |     +-- f
+  //  | +-- f
+  //  +-- c
+  //    +-- b
+  //      +-- e
+  //      | +-- a
+  //      | +-- h
+  //      |   +-- i
+  //      |     +-- f
+  //      +-- f
   // `
-  // debugger;
-  // var nodes0 = group.rootsToAllReachable([ gr.a, gr.b, gr.c ]);
-  // debugger;
-  // var nodes1 = group.dagTopSort( group.rootsToAllReachable([ gr.a, gr.b, gr.c ]) );
-  // debugger;
-  // var nodes2 = group.topSortCycledSourceBased( group.rootsToAllReachable([ gr.a, gr.b, gr.c ]) );
-  // debugger;
-  // var nodes3 = group.sourcesOnlyAmong( group.rootsToAllReachable([ gr.a, gr.b, gr.c ]) );
-  // debugger;
-  // var infoAsTree = group.nodesExportInfoTree( group.sourcesOnlyAmong( group.rootsToAllReachable([ gr.a, gr.b, gr.c ]) ) );
-  // debugger;
+  // var infoAsTree = group.nodesExportInfoTree( [ gr.a, gr.b, gr.c ], { rootsDelimiting : 0 } );
   // test.equivalent( infoAsTree, expected );
   // logger.log( 'Tree' );
   // logger.log( infoAsTree );
+  // group.finit();
+
+  test.description = 'multiple + sourcesOnlyAmong a, g';
+  var group = gr.sys.nodesGroup();
+  var exp = [ 'g' ];
+  var sources = group.sourcesOnlyAmong( group.rootsToAllReachable([ gr.a, gr.g ]) );
+  test.identical( group.nodesToNames( sources.original ), exp );
+  var exp =
+`
++-- g
+  +-- h
+    +-- i
+      +-- f
+`
+  var infoAsTree = group.nodesExportInfoTree( sources );
+  test.equivalent( infoAsTree, exp );
+  logger.log( 'Tree' );
+  logger.log( infoAsTree );
+
+  test.description = 'multiple + leastIndegreeOnlyAmong a';
+  var group = gr.sys.nodesGroup();
+  var exp = [ 'a', 'e', 'c', 'i' ];
+  var sources = group.leastIndegreeOnlyAmong( group.rootsToAllReachable([ gr.a ]) );
+  test.identical( group.nodesToNames( sources.original ), exp );
+  var exp =
+`
+ +-- a
+ | +-- b
+ |   +-- e
+ |   | +-- c
+ |   | +-- h
+ |   |   +-- i
+ |   |     +-- f
+ |   +-- f
+ |
+ +-- e
+ | +-- a
+ | | +-- b
+ | |   +-- f
+ | +-- c
+ | | +-- b
+ | |   +-- f
+ | +-- h
+ |   +-- i
+ |     +-- f
+ |
+ +-- c
+ | +-- b
+ |   +-- e
+ |   | +-- a
+ |   | +-- h
+ |   |   +-- i
+ |   |     +-- f
+ |   +-- f
+ |
+ +-- i
+   +-- f
+   +-- h
+`
+  var infoAsTree = group.nodesExportInfoTree( sources );
+  test.equivalent( infoAsTree, exp );
+  logger.log( 'Tree' );
+  logger.log( infoAsTree );
+
+  test.description = 'multiple + leastOutdegreeOnlyAmong a';
+  var group = gr.sys.nodesGroup();
+  var exp = [ 'f' ];
+  var sources = group.leastOutdegreeOnlyAmong( group.rootsToAllReachable([ gr.a ]) );
+  test.identical( group.nodesToNames( sources.original ), exp );
+  var exp = `+-- f`;
+  var infoAsTree = group.nodesExportInfoTree( sources );
+  test.equivalent( infoAsTree, exp );
+  logger.log( 'Tree' );
+  logger.log( infoAsTree );
+
+  test.description = 'multiple + sourcesOnlyAmong a';
+  var group = gr.sys.nodesGroup();
+  var exp = [];
+  var sources = group.sourcesOnlyAmong( group.rootsToAllReachable([ gr.a ]) );
+  test.identical( group.nodesToNames( sources.original ), exp );
+  var exp = '';
+  var infoAsTree = group.nodesExportInfoTree( sources );
+  test.equivalent( infoAsTree, exp );
+  logger.log( 'Tree' );
+  logger.log( infoAsTree );
+
+/*
+
+   ---- e → c
+  |     ↓ ↖ ↓
+  | d → a → b
+  | ↓       ↓
+  | g       f
+  |  ↘      ↑
+   - → h ⇄  i
+
+    j
+
+*/
 
 } /* end of function nodesExportInfoTree */
 
