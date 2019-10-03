@@ -2855,10 +2855,10 @@ function topSortCycledSourceBasedPreciseBfs( nodes )
 
     while( layer.length )
     {
-      debugger;
+      // debugger;
       if( !nodeToOutNodes.get( prev ).first( ( node2 ) => addFastMaybe( node2 ) ) )
       {
-        debugger;
+        // debugger;
         _.assert( added.length > 0 );
         added.empty();
         // layer.first( ( node ) => add( node ) );
