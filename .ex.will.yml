@@ -1,7 +1,7 @@
 
 about :
 
-  name : 'wAbstractGraph'
+  name : 'wGraphBasic'
   description : 'Collection of abstract data structures and algorithms to process graphs. The module does not bound to any specific format of a graph, so providing adapters toy may use it with anyone. It implements depth-first search, breadth-first search, extracting strongly connected components, topological sort, shortest path search, and others.'
   version : '0.4.0'
   enabled : 1
@@ -16,16 +16,16 @@ about :
   author : 'Kostiantyn Wandalen <wanalen@willbe.so>'
   contributors :
   - 'Kostiantyn Wandalen <wanalen@willbe.so>'
-  npm.name : 'wabstractgraph'
+  npm.name : 'wgraphbasic'
   npm.scripts :
     test : 'wtest .run proto/**'
     docgen : 'wdocgen .build proto'
 
 path :
 
-  repository : git+https:///github.com/Wandalen/wAbstractGraph.git
-  bugtracker : https:///github.com/Wandalen/wAbstractGraph/issues
-  
+  repository : git+https:///github.com/Wandalen/wGraphBasic.git
+  bugtracker : https:///github.com/Wandalen/wGraphBasic/issues
+
 step :
 
   proto.export :

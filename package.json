@@ -1,10 +1,10 @@
 {
-  "name": "wabstractgraph",
+  "name": "wgraphbasic",
   "version": "0.3.33",
   "description": "Collection of abstract data structures and algorithms to process graphs. The module does not bound to any specific format of a graph, so providing adapters toy may use it with anyone. It implements depth-first search, breadth-first search, extracting strongly connected components, topological sort, shortest path search, and others.",
   "author": "Kostiantyn Wandalen <wanalen@willbe.so>",
   "license": "MIT",
-  "main": "proto/dwtools/amid/agraph/UseAbstractMid.s",
+  "main": "proto/dwtools/amid/l1/graphBasic/IncludeTop.s",
   "files": [
     "proto/dwtools/amid/agraph",
     "proto/dwtools/Tools.s",
@@ -16,10 +16,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Wandalen/wAbstractGraph.git"
+    "url": "https://github.com/Wandalen/wGraphBasic.git"
   },
   "bugs": {
-    "url": "https://github.com/Wandalen/wAbstractGraph/issues"
+    "url": "https://github.com/Wandalen/wGraphBasic/issues"
   },
   "dependencies": {
     "wTools": ""
