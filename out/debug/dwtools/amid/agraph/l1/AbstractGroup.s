@@ -749,7 +749,7 @@ function nodesInfoExport( nodes, opts )
 
 //
 
-function nodesExportInfoTree( roots, opts )
+function rootsExportInfoTree( roots, opts )
 {
   let group = this;
   let result = '';
@@ -758,7 +758,7 @@ function nodesExportInfoTree( roots, opts )
   let tab;
 
   roots = group._routineArguments1( roots );
-  opts = _.routineOptions( nodesExportInfoTree, opts );
+  opts = _.routineOptions( rootsExportInfoTree, opts );
 
   if( opts.onNodeName === null )
   opts.onNodeName = defaultOnNodeName;
@@ -819,6 +819,13 @@ function nodesExportInfoTree( roots, opts )
 
   function handleUp1( node, it )
   {
+    if( opts.onUp )
+    opts.onUp( node, it );
+    if( !it.iterator.continue || !it.continue || !it.continueUp || !it.continueNode )
+    {
+      debugger;
+      return;
+    }
     it.path = it.prev.path.slice();
     it.path.push( it.index );
   }
@@ -827,6 +834,11 @@ function nodesExportInfoTree( roots, opts )
 
   function handleDown1( node, it )
   {
+    if( !it.iterator.continue || !it.continue || !it.continueUp || !it.continueNode )
+    {
+      debugger;
+      return;
+    }
     let dLevel = it.level - prevIt.level;
     if( dLevel < 0 )
     lastNodes[ prevIt.path.join( '/' ) ] = true;
@@ -837,6 +849,15 @@ function nodesExportInfoTree( roots, opts )
 
   function handleUp2( node, it )
   {
+
+    if( opts.onUp )
+    opts.onUp( node, it );
+    if( !it.iterator.continue || !it.continue || !it.continueUp || !it.continueNode )
+    {
+      debugger;
+      return;
+    }
+
     it.path = it.prev.path.slice();
     it.path.push( it.index );
 
@@ -870,7 +891,7 @@ function nodesExportInfoTree( roots, opts )
 
 }
 
-nodesExportInfoTree.defaults =
+rootsExportInfoTree.defaults =
 {
   linePrefix : ' ',
   linePostfix : '\n',
@@ -880,6 +901,7 @@ nodesExportInfoTree.defaults =
   dtab2 : '  ',
   rootsDelimiting : 1,
   onNodeName : null,
+  onUp : null,
 }
 
 //
@@ -2075,7 +2097,7 @@ function lookDfs( o )
       it.continueUp = false;
 
       if( o.visitedContainer )
-      if( o.revisiting !== 1 || o.revisiting !== 2 )
+      if( o.revisiting !== 1 && o.revisiting !== 2 )
       o.visitedContainer.pop( it.node );
 
     }
@@ -2142,7 +2164,7 @@ function lookDfs( o )
       it.continueUp = false;
 
       if( o.visitedContainer )
-      if( o.revisiting !== 1 || o.revisiting !== 2 )
+      if( o.revisiting !== 1 && o.revisiting !== 2 )
       o.visitedContainer.pop( it.node );
 
     }
@@ -2209,11 +2231,11 @@ lookDfs.defaults =
 
 //
 
-function lookDbfs( o )
+function lookCfs( o )
 {
   let group = this;
 
-  _.routineOptions( lookDbfs, o );
+  _.routineOptions( lookCfs, o );
 
   o.roots = group.nodesAsAdapter( o.roots );
   if( o.revisiting < 3 && o.visitedContainer === null )
@@ -2241,14 +2263,18 @@ function lookDbfs( o )
   if( o.onBegin )
   o.onBegin( iterator );
 
-  o.roots.all( ( node, index ) =>
-  {
-    iterator.node = node;
-    iterator.index = index;
-    visitFirstFast( iterator );
-    visitSecondFast( iterator );
-    return iterator.continue;
-  });
+  iterator.node = null;
+  iterator.index = null;
+  visitSecondFast( iterator, o.roots );
+
+  // o.roots.all( ( node, index ) =>
+  // {
+  //   iterator.node = node;
+  //   iterator.index = index;
+  //   // visitFirstFast( iterator );
+  //   // visitSecondFast( iterator, group.nodeOutNodesFor( iterator.node ) );
+  //   return iterator.continue;
+  // });
 
   if( o.onEnd )
   o.onEnd( iterator );
@@ -2257,12 +2283,15 @@ function lookDbfs( o )
 
   /* */
 
-  function visitSecondFast( it )
+  function visitSecondFast( it, outNodes )
   {
 
     if( o.visitedContainer )
     if( o.revisiting === 1 || o.revisiting === 2 )
     o.visitedContainer.push( it.node );
+
+    // if( o.onUp && it.node !== null )
+    // o.onUp( it.node, it );
 
     if( it.iterator.continue && it.continueUp )
     {
@@ -2270,8 +2299,7 @@ function lookDbfs( o )
       let node = it.node;
       let index = it.index;
       let visited = it.visited;
-
-      let outNodes = group.nodeOutNodesFor( it.node );
+      // let outNodes = group.nodeOutNodesFor( it.node );
       let nodesStatus = new HashMap;
 
       /*
@@ -2290,15 +2318,15 @@ function lookDbfs( o )
         status = 0
         nodesStatus.set( node, status )
 
-        if( o.revisiting < 2 && !nodesStatus.get( node ) )
+        if( o.revisiting < 2 && !status )
         // return end( true );
         return true;
 
-        it.level = level+1;
+        it.level = level;
         it.node = node;
         it.index = n;
         it.visited = false;
-        if( o.revisiting === 2 && !nodesStatus.get( node ) )
+        if( o.revisiting === 2 && !status )
         {
           it.visited = true;
           it.continueUp = false;
@@ -2353,7 +2381,7 @@ function lookDbfs( o )
         it.continueNode = status > 1;
         it.continueUp = status > 2;
 
-        visitSecondFast( it );
+        visitSecondFast( it, group.nodeOutNodesFor( it.node ) );
         if( !it.iterator.continue )
         return false;
         return true;
@@ -2365,7 +2393,7 @@ function lookDbfs( o )
       it.visited = visited;
     }
 
-    if( o.onDown )
+    if( o.onDown && it.node !== null )
     o.onDown( it.node, it );
 
     if( o.revisiting === 1 || o.revisiting === 2 )
@@ -2397,7 +2425,7 @@ function lookDbfs( o )
     {
       it.continueUp = false;
       if( o.visitedContainer )
-      if( o.revisiting !== 1 || o.revisiting !== 2 )
+      if( o.revisiting !== 1 && o.revisiting !== 2 )
       o.visitedContainer.pop();
     }
 
@@ -2405,7 +2433,7 @@ function lookDbfs( o )
 
 }
 
-lookDbfs.defaults =
+lookCfs.defaults =
 {
 
   roots : null,
@@ -2541,7 +2569,7 @@ function each_pre( routine, args )
   }
 
   if( o.method === null )
-  o.method = this.lookDbfs;
+  o.method = this.lookCfs;
   if( _.strIs( o.method ) )
   {
     _.assert( _.routineIs( this[ o.method ] ), () => 'Unknown method ' + _.strQuote( o.method ) );
@@ -2550,12 +2578,12 @@ function each_pre( routine, args )
   _.assert
   (
     _.routineIs( o.method ),
-    () => 'Expects routine {- o.method -} either lookBfs, lookDfs, lookDbfs, but got' + _.strType( o.method )
+    () => 'Expects routine {- o.method -} either lookBfs, lookDfs, lookCfs, but got' + _.strType( o.method )
   );
   _.assert
   (
-    o.method === group.lookBfs || o.method === group.lookDfs || o.method === group.lookDbfs ,
-    () => 'Expects routine {- o.method -} either lookBfs, lookDfs, lookDbfs, but got' + _.strType( o.method )
+    o.method === group.lookBfs || o.method === group.lookDfs || o.method === group.lookCfs ,
+    () => 'Expects routine {- o.method -} either lookBfs, lookDfs, lookCfs, but got' + _.strType( o.method )
   );
 
   return o;
@@ -2674,9 +2702,9 @@ let eachDfs = _.routineFromPreAndBody( each_pre, each_body );
 var defaults = eachDfs.defaults;
 defaults.method = lookDfs;
 
-let eachDbfs = _.routineFromPreAndBody( each_pre, each_body );
-var defaults = eachDbfs.defaults;
-defaults.method = lookDbfs;
+let eachCfs = _.routineFromPreAndBody( each_pre, each_body );
+var defaults = eachCfs.defaults;
+defaults.method = lookCfs;
 
 //
 
@@ -3770,7 +3798,7 @@ let Extend =
   nodesDataExport : vectorize( nodeDataExport ),
   nodeInfoExport,
   nodesInfoExport,
-  nodesExportInfoTree,
+  rootsExportInfoTree,
 
   nodeToQualifiedName,
   nodesToQualifiedNames : vectorize( nodeToQualifiedName ),
@@ -3835,13 +3863,13 @@ let Extend =
 
   lookBfs,
   lookDfs,
-  lookDbfs,
+  lookCfs,
   look : lookDfs,
 
   each,
   eachBfs,
   eachDfs,
-  eachDbfs,
+  eachCfs,
 
   // orderer
 
