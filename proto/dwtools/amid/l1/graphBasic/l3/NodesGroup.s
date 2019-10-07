@@ -541,32 +541,17 @@ function nodesSet( nodes )
 //
 
 /**
- * @summary Adds provided node `node` to current group.
- * @param {Object} node Node descriptor.
- * @function nodeAdd
+ * @summary Adds provided node `node` to current group. Make no conversion of the node
+ * @param {Object} node Node.
+ * @function _nodeAdd
  * @returns {Number} Returns id of added node.
  * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesGroup#
  */
 
- /**
- * @summary Adds several nodes to the system.
- * @param {Array} node Array with node descriptors.
- * @function nodesAdd
- * @returns {Array} Returns array with ids of added nodes.
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesGroup#
- */
-
-function nodeAdd( node )
+function _nodeAdd( node )
 {
   let group = this;
   let sys = group.sys;
-
-  // if( group.onNodeFrom )
-  // node = group.onNodeFrom( node );
-  //
-  // _.assert( !!group.nodeIs( node ), 'Expects node' );
-
-  node = group.nodeFrom( node );
 
   _.assert( !group.nodes.has( node ), () => `The group already has ${group.nodeToQualifiedNameTry( node )}` );
   group.nodes.appendOnceStrictly( node );
@@ -593,13 +578,52 @@ function nodeAdd( node )
     descriptor.count += 1;
   }
 
-  return id;
+  // return id;
+  return node;
 }
 
 //
 
 /**
- * @summary Adds provided node `node` to current group. Ignores dublicates.
+ * @summary Adds provided node `node` to current group. Make conversion of the node if required.
+ * @param {Object} node Node to add .
+ * @function nodeAdd
+ * @returns {Number} Returns id of added node.
+ * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesGroup#
+ */
+
+ /**
+ * @summary Adds several nodes to the system. Make conversion of nodes if required.
+ * @param {Array} node Array of nodes.
+ * @function nodesAdd
+ * @returns {Node} Returns added node.
+ * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesGroup#
+ */
+
+function nodeAdd( node )
+{
+  let group = this;
+  let sys = group.sys;
+
+  _.assert( arguments.length === 1 );
+
+  node = group.nodeFrom( node );
+
+  return group._nodeAdd( node );
+}
+
+//
+
+/**
+ * @summary Adds a node to the group. Ignores dublicates. Does not make conversion of node.
+ * @param {Object} node Node.
+ * @function _nodeAddOnce
+ * @returns {Number} Returns id of added node.
+ * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesGroup#
+ */
+
+/**
+ * @summary Adds a node to the group. Ignores dublicates. Makes conversion of the node if required.
  * @param {Object} node Node.
  * @function nodeAddOnce
  * @returns {Number} Returns id of added node.
@@ -607,29 +631,37 @@ function nodeAdd( node )
  */
 
  /**
- * @summary Adds several nodes to the system. Ignores dublicates.
+ * @summary Adds sevelal nodes to the group. Ignores dublicates. Makes conversion of nodes if required.
  * @param {Array of Node} node Array of nodes.
  * @function nodesAddOnce
  * @returns {Array} Returns array of ids of added nodes.
  * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesGroup#
  */
 
+function _nodeAddOnce( node )
+{
+  let group = this;
+  let sys = group.sys;
+
+  if( group.nodes.has( node ) )
+  {
+    return node;
+    // return sys.nodeToIdHash.get( node );
+  }
+
+  return group._nodeAdd( node );
+}
+
+//
+
 function nodeAddOnce( node )
 {
   let group = this;
   let sys = group.sys;
 
-  // if( group.onNodeFrom )
-  // node = group.onNodeFrom( node );
-
   node = group.nodeFrom( node );
 
-  if( group.nodes.has( node ) )
-  {
-    return sys.nodeToIdHash.get( node );
-  }
-
-  return group.nodeAdd( node );
+  return group._nodeAddOnce( node );
 }
 
 //
@@ -673,7 +705,7 @@ function nodeDelete( node )
 
 /**
  * @summary Removes several nodes from system.
- * @param {Array} node Array with node descriptors.
+ * @param {Array} node Array of nodes.
  * @function nodesDelete
  * @returns {Array} Returns array with ids of removed nodes.
  * @throws {Error} If system doesn't have node with such `node`.
@@ -1513,6 +1545,8 @@ function nodeFrom( node )
 {
   let group = this;
   let result = node;
+  // if( node && node.id === 1569 )
+  // debugger;
   if( group.onNodeFrom )
   result = group.onNodeFrom( node );
   _.assert( !!group.nodeIs( result ), () => `Cant get node from ${_.strShort( result )}` );
@@ -2643,10 +2677,10 @@ function each_body( o )
     if( !o.withStem && it.level === 0 )
     it.included = false;
     if( it.included )
-    if( !o.includingBranches || !o.withTerminals )
+    if( !o.withBranches || !o.withTerminals )
     {
       let degree = group.nodeOutdegree( node );
-      if( !o.includingBranches && degree > 0 )
+      if( !o.withBranches && degree > 0 )
       it.included = false;
       if( !o.withTerminals && degree === 0 )
       it.included = false;
@@ -2690,7 +2724,7 @@ defaults.mandatory = 0;
 defaults.recursive = 2;
 defaults.withStem = 1;
 defaults.withTerminals = 1;
-defaults.includingBranches = 1;
+defaults.withBranches = 1;
 
 let each = _.routineFromPreAndBody( each_pre, each_body );
 
@@ -3199,7 +3233,7 @@ function pairIsConnectedStronglyDfs( pair )
 /**
  * @summary Group connected nodes.
  * @description Performs look using DFS algorithm.
- * @param {Array} nodes Array with node descriptors.]
+ * @param {Array} nodes Array of nodes.]
  *
  * @example
  *
@@ -3787,8 +3821,10 @@ let Extend =
   nodeRefNumber,
   nodesSet,
 
+  _nodeAdd,
   nodeAdd,
   nodesAdd : vectorize( nodeAdd ),
+  _nodeAddOnce,
   nodeAddOnce,
   nodesAddOnce : vectorize( nodeAddOnce ),
   nodeDelete,

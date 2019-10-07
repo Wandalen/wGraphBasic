@@ -5484,13 +5484,13 @@ function eachBfs( test )
 
   /* */
 
-  test.case = 'includingBranches : 0, a';
+  test.case = 'withBranches : 0, a';
   clean();
   var exp = [ 'e' ];
   var expNds = [ 'a', 'b', 'd', 'c', 'e', 'f' ];
   var expUps = [ 'a', 'b', 'd', 'c', 'e', 'f' ];
   var expDws = [ 'c', 'e', 'f', 'b', 'd', 'a' ];
-  var got = group.each({ onNode, onUp, onDown, method : 'lookBfs', roots : gr.a, includingBranches : 0 });
+  var got = group.each({ onNode, onUp, onDown, method : 'lookBfs', roots : gr.a, withBranches : 0 });
   test.identical( _.containerAdapter.toOriginal( group.nodesToNames( got ) ), exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
@@ -5498,13 +5498,13 @@ function eachBfs( test )
 
   /* */
 
-  test.case = 'includingBranches : 0, b';
+  test.case = 'withBranches : 0, b';
   clean();
   var exp = [ 'e' ];
   var expNds = [ 'b', 'c', 'd', 'a', 'e', 'f' ];
   var expUps = [ 'b', 'c', 'd', 'a', 'e', 'f' ];
   var expDws = [ 'a', 'e', 'f', 'c', 'd', 'b' ];
-  var got = group.each({ onNode, onUp, onDown, method : 'lookBfs', roots : gr.b, includingBranches : 0 });
+  var got = group.each({ onNode, onUp, onDown, method : 'lookBfs', roots : gr.b, withBranches : 0 });
   test.identical( _.containerAdapter.toOriginal( group.nodesToNames( got ) ), exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
@@ -5512,13 +5512,13 @@ function eachBfs( test )
 
   /* */
 
-  test.case = 'includingBranches : 0, e';
+  test.case = 'withBranches : 0, e';
   clean();
   var exp = [ 'e' ];
   var expNds = [ 'e' ];
   var expUps = [ 'e' ];
   var expDws = [ 'e' ];
-  var got = group.each({ onNode, onUp, onDown, method : 'lookBfs', roots : gr.e, includingBranches : 0 });
+  var got = group.each({ onNode, onUp, onDown, method : 'lookBfs', roots : gr.e, withBranches : 0 });
   test.identical( _.containerAdapter.toOriginal( group.nodesToNames( got ) ), exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
@@ -5526,13 +5526,13 @@ function eachBfs( test )
 
   /* */
 
-  test.case = 'includingBranches : 0, f';
+  test.case = 'withBranches : 0, f';
   clean();
   var exp = [];
   var expNds = [ 'f' ];
   var expUps = [ 'f' ];
   var expDws = [ 'f' ];
-  var got = group.each({ onNode, onUp, onDown, method : 'lookBfs', roots : gr.f, includingBranches : 0 });
+  var got = group.each({ onNode, onUp, onDown, method : 'lookBfs', roots : gr.f, withBranches : 0 });
   test.identical( _.containerAdapter.toOriginal( group.nodesToNames( got ) ), exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
@@ -5980,13 +5980,13 @@ function eachDfs( test )
 
   /* */
 
-  test.case = 'includingBranches : 0, a';
+  test.case = 'withBranches : 0, a';
   clean();
   var exp = [ 'e' ];
   var expNds = [ 'a', 'b', 'c', 'd', 'e', 'f' ];
   var expUps = [ 'a', 'b', 'c', 'd', 'e', 'f' ];
   var expDws = [ 'c', 'e', 'f', 'd', 'b', 'a' ];
-  var got = group.each({ onNode, onUp, onDown, method : 'lookDfs', roots : gr.a, includingBranches : 0 });
+  var got = group.each({ onNode, onUp, onDown, method : 'lookDfs', roots : gr.a, withBranches : 0 });
   test.identical( _.containerAdapter.toOriginal( group.nodesToNames( got ) ), exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
@@ -5994,13 +5994,13 @@ function eachDfs( test )
 
   /* */
 
-  test.case = 'includingBranches : 0, b';
+  test.case = 'withBranches : 0, b';
   clean();
   var exp = [ 'e' ];
   var expNds = [ 'b', 'c', 'a', 'd', 'e', 'f' ];
   var expUps = [ 'b', 'c', 'a', 'd', 'e', 'f' ];
   var expDws = [ 'e', 'f', 'd', 'a', 'c', 'b' ];
-  var got = group.each({ onNode, onUp, onDown, method : 'lookDfs', roots : gr.b, includingBranches : 0 });
+  var got = group.each({ onNode, onUp, onDown, method : 'lookDfs', roots : gr.b, withBranches : 0 });
   test.identical( _.containerAdapter.toOriginal( group.nodesToNames( got ) ), exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
@@ -6008,13 +6008,13 @@ function eachDfs( test )
 
   /* */
 
-  test.case = 'includingBranches : 0, e';
+  test.case = 'withBranches : 0, e';
   clean();
   var exp = [ 'e' ];
   var expNds = [ 'e' ];
   var expUps = [ 'e' ];
   var expDws = [ 'e' ];
-  var got = group.each({ onNode, onUp, onDown, method : 'lookDfs', roots : gr.e, includingBranches : 0 });
+  var got = group.each({ onNode, onUp, onDown, method : 'lookDfs', roots : gr.e, withBranches : 0 });
   test.identical( _.containerAdapter.toOriginal( group.nodesToNames( got ) ), exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
@@ -6022,13 +6022,13 @@ function eachDfs( test )
 
   /* */
 
-  test.case = 'includingBranches : 0, f';
+  test.case = 'withBranches : 0, f';
   clean();
   var exp = [];
   var expNds = [ 'f' ];
   var expUps = [ 'f' ];
   var expDws = [ 'f' ];
-  var got = group.each({ onNode, onUp, onDown, method : 'lookDfs', roots : gr.f, includingBranches : 0 });
+  var got = group.each({ onNode, onUp, onDown, method : 'lookDfs', roots : gr.f, withBranches : 0 });
   test.identical( _.containerAdapter.toOriginal( group.nodesToNames( got ) ), exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
@@ -6476,13 +6476,13 @@ function eachCfs( test )
 
   /* */
 
-  test.case = 'includingBranches : 0, a';
+  test.case = 'withBranches : 0, a';
   clean();
   var exp = [ 'e' ];
   var expNds = [ 'a', 'b', 'd', 'c', 'e', 'f' ];
   var expUps = [ 'a', 'b', 'd', 'c', 'e', 'f' ];
   var expDws = [ 'c', 'b', 'e', 'f', 'd', 'a' ];
-  var got = group.each({ onNode, onUp, onDown, method : 'lookCfs', roots : gr.a, includingBranches : 0 });
+  var got = group.each({ onNode, onUp, onDown, method : 'lookCfs', roots : gr.a, withBranches : 0 });
   test.identical( _.containerAdapter.toOriginal( group.nodesToNames( got ) ), exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
@@ -6490,13 +6490,13 @@ function eachCfs( test )
 
   /* */
 
-  test.case = 'includingBranches : 0, b';
+  test.case = 'withBranches : 0, b';
   clean();
   var exp = [ 'e' ];
   var expNds = [ 'b', 'c', 'd', 'a', 'e', 'f' ];
   var expUps = [ 'b', 'c', 'd', 'a', 'e', 'f' ];
   var expDws = [ 'a', 'c', 'e', 'f', 'd', 'b' ];
-  var got = group.each({ onNode, onUp, onDown, method : 'lookCfs', roots : gr.b, includingBranches : 0 });
+  var got = group.each({ onNode, onUp, onDown, method : 'lookCfs', roots : gr.b, withBranches : 0 });
   test.identical( _.containerAdapter.toOriginal( group.nodesToNames( got ) ), exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
@@ -6504,13 +6504,13 @@ function eachCfs( test )
 
   /* */
 
-  test.case = 'includingBranches : 0, e';
+  test.case = 'withBranches : 0, e';
   clean();
   var exp = [ 'e' ];
   var expNds = [ 'e' ];
   var expUps = [ 'e' ];
   var expDws = [ 'e' ];
-  var got = group.each({ onNode, onUp, onDown, method : 'lookCfs', roots : gr.e, includingBranches : 0 });
+  var got = group.each({ onNode, onUp, onDown, method : 'lookCfs', roots : gr.e, withBranches : 0 });
   test.identical( _.containerAdapter.toOriginal( group.nodesToNames( got ) ), exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
@@ -6518,13 +6518,13 @@ function eachCfs( test )
 
   /* */
 
-  test.case = 'includingBranches : 0, f';
+  test.case = 'withBranches : 0, f';
   clean();
   var exp = [];
   var expNds = [ 'f' ];
   var expUps = [ 'f' ];
   var expDws = [ 'f' ];
-  var got = group.each({ onNode, onUp, onDown, method : 'lookCfs', roots : gr.f, includingBranches : 0 });
+  var got = group.each({ onNode, onUp, onDown, method : 'lookCfs', roots : gr.f, withBranches : 0 });
   test.identical( _.containerAdapter.toOriginal( group.nodesToNames( got ) ), exp );
   test.identical( nds, expNds );
   test.identical( ups, expUps );
