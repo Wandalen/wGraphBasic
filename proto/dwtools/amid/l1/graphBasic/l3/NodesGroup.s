@@ -1610,7 +1610,7 @@ function ContainerAdapterIs( src )
 
 function OriginalOfAdapter( src )
 {
-  return ContainerAdapter.OriginalOf( src );
+  return ContainerAdapter.ToOriginal( src );
 }
 
 //
@@ -1781,13 +1781,14 @@ function lookBfs( o )
 
   o.roots = group.nodesAsSet( o.roots );
   o.roots = group.nodesAsAdapter( o.roots );
+  o.roots.once( o.roots );
+
+  let allMethod = o.left ? 'allLeft' : 'allRight';
 
   if( o.revisiting < 3 && o.visitedContainer === null )
   o.visitedContainer = o.revisiting === 2 ? new Array() : new Set();
   if( o.visitedContainer )
   o.visitedContainer = group.ContainerAdapterFrom( o.visitedContainer );
-
-  o.roots.once( o.roots );
 
   if( Config.debug )
   {
@@ -1823,8 +1824,6 @@ function lookBfs( o )
   function visit( nodes, it )
   {
     let nodes2 = group.ContainerAdapterFrom( new Set );
-    // let nodes2 = group.ContainerAdapterFrom( [] );
-    // let nodesStatus = [];
     let nodesStatus = new HashMap;
 
     /*
@@ -1841,18 +1840,15 @@ function lookBfs( o )
     let itContinueNode = it.continueNode;
 
     if( it.iterator.continue )
-    // nodes.every( ( node, k ) =>
-    nodes.all( ( node, k ) =>
+    nodes[ allMethod ]( ( node, k ) =>
     {
 
       let visited;
       if( o.revisiting === 2 )
       {
-        // visited = _.arrayCountElement( o.visitedContainer, node, group.onNodeEvaluate || undefined );
         visited = o.visitedContainer.count( node );
         if( visited > 1 )
         {
-          // nodesStatus[ k ] = 0;
           nodesStatus.set( node, 0 );
           return true;
         }
@@ -1860,9 +1856,7 @@ function lookBfs( o )
       else if( o.revisiting < 2 )
       {
         if( o.visitedContainer.has( node ) )
-        // if( _.arrayHas( o.visitedContainer, node, group.onNodeEvaluate || undefined ) )
         {
-          // nodesStatus[ k ] = 0;
           nodesStatus.set( node, 0 );
           return true;
         }
@@ -1898,13 +1892,10 @@ function lookBfs( o )
       }
 
       if( it.continueUp )
-      // nodesStatus[ k ] = 3;
       nodesStatus.set( node, 3 );
       else if( it.continueNode )
-      // nodesStatus[ k ] = 2;
       nodesStatus.set( node, 2 );
       else
-      // nodesStatus[ k ] = 1;
       nodesStatus.set( node, 1 );
 
       it.continueNode = itContinueNode;
@@ -1931,17 +1922,14 @@ function lookBfs( o )
     nodes.all( ( node, k ) =>
     {
 
-      // if( !nodesStatus[ k ] )
       if( !nodesStatus.get( node ) )
       return true;
 
       it.continueUp = true;
       it.continueNode = true;
 
-      // if( nodesStatus[ k ] < 3 )
       if( nodesStatus.get( node ) < 3 )
       it.continueUp = false;
-      // if( nodesStatus[ k ] < 2 )
       if( nodesStatus.get( node ) < 2 )
       it.continueNode = false;
 
@@ -1969,10 +1957,7 @@ function lookBfs( o )
     nodes2.each( ( node ) =>
     {
       let outNodes = group.nodeOutNodesFor( node );
-      // _.arrayAppendArray( nodes3, outNodes );
-      // nodes3.appendContainer( outNodes );
       nodes3.appendContainerOnce( outNodes );
-      // return true;
     });
 
     let level = it.level;
@@ -1992,6 +1977,7 @@ lookBfs.defaults =
   roots : null,
   visitedContainer : null,
 
+  left : 1, /* qqq xxx : cover option left */
   revisiting : 0,
   fast : 1,
 
@@ -2058,6 +2044,8 @@ function lookDfs( o )
   _.assert( arguments.length === 1 );
   _.assert( 0 <= o.revisiting && o.revisiting <= 3 );
 
+  let allMethod = o.left ? 'allLeft' : 'allRight';
+
   let iterator = Object.create( null );
   iterator.iterator = iterator;
   iterator.continue = true;
@@ -2073,7 +2061,7 @@ function lookDfs( o )
 
   if( o.fast )
   {
-    o.roots.all( ( node, index ) =>
+    o.roots[ allMethod ]( ( node, index ) =>
     {
       iterator.node = node;
       iterator.index = index;
@@ -2083,7 +2071,7 @@ function lookDfs( o )
   }
   else
   {
-    o.roots.all( ( node, index ) =>
+    o.roots[ allMethod ]( ( node, index ) =>
     {
       let it = Object.create( iterator );
       it.prev = iterator;
@@ -2140,13 +2128,10 @@ function lookDfs( o )
 
     if( it.iterator.continue && it.continueUp )
     {
-      // debugger;
       let outNodes = group.nodeOutNodesFor( it.node );
-      // for( let n = 0 ; n < outNodes.length ; n++ )
-      outNodes.each( ( node, n ) =>
+      outNodes[ allMethod ]( ( node, n ) =>
       {
 
-        // let node = outNodes[ n ];
         let it2 = Object.create( iterator );
         it2.node = node;
         it2.index = n;
@@ -2157,6 +2142,8 @@ function lookDfs( o )
 
         visitSlow( it2 );
         _.assert( !_.mapOwnKey( it2, 'continue' ) );
+
+        return iterator.continue;
       });
     }
 
@@ -2211,18 +2198,13 @@ function lookDfs( o )
       let visited = it.visited;
       let outNodes = group.nodeOutNodesFor( it.node );
 
-      // for( let n = 0 ; n < outNodes.length ; n++ )
-      outNodes.all( ( node, n ) =>
+      outNodes[ allMethod ]( ( node, n ) =>
       {
-        // it.node = outNodes[ n ];
         it.node = node;
         it.index = n;
         it.level = level + 1;
         it.visited = false;
         visitFast( it );
-        // if( !it.iterator.continue )
-        // return false;
-        // break;
         return it.iterator.continue;
       });
 
@@ -2252,6 +2234,7 @@ lookDfs.defaults =
   roots : null,
   visitedContainer : null,
 
+  left : 1, /* qqq xxx : cover option left */
   revisiting : 0,
   fast : 1,
 
@@ -2283,6 +2266,8 @@ function lookCfs( o )
     _.assert( 0 <= o.revisiting && o.revisiting <= 3 );
     _.assert( group.nodesAreAll( o.roots ) );
   }
+
+  let allMethod = o.left ? 'allLeft' : 'allRight';
 
   let iterator = Object.create( null );
   iterator.iterator = iterator;
@@ -2324,16 +2309,12 @@ function lookCfs( o )
     if( o.revisiting === 1 || o.revisiting === 2 )
     o.visitedContainer.push( it.node );
 
-    // if( o.onUp && it.node !== null )
-    // o.onUp( it.node, it );
-
     if( it.iterator.continue && it.continueUp )
     {
       let level = it.level;
       let node = it.node;
       let index = it.index;
       let visited = it.visited;
-      // let outNodes = group.nodeOutNodesFor( it.node );
       let nodesStatus = new HashMap;
 
       /*
@@ -2343,17 +2324,15 @@ function lookCfs( o )
         3 - visit, include, go up
       */
 
-      outNodes.all( ( node, n ) =>
+      outNodes[ allMethod ]( ( node, n ) =>
       {
         let status = 3;
-        // nodesStatus.set( node, 3 )
         if( o.revisiting < 3 )
         if( o.visitedContainer.has( node ) )
         status = 0
         nodesStatus.set( node, status )
 
         if( o.revisiting < 2 && !status )
-        // return end( true );
         return true;
 
         it.level = level;
@@ -2368,11 +2347,6 @@ function lookCfs( o )
 
         visitFirstFast( it );
 
-        // if( nodesStatus.get( node ) > 1 && !it.continueNode )
-        // nodesStatus.set( node, 1 );
-        // if( nodesStatus.get( node ) > 2 && !it.continueUp )
-        // nodesStatus.set( node, 2 );
-
         if( status > 1 && !it.continueNode )
         {
           status = 1;
@@ -2385,13 +2359,11 @@ function lookCfs( o )
         }
 
         if( !it.iterator.continue )
-        // return end( false );
         return false;
 
         it.continueNode = true;
         it.continueUp = true;
 
-        // return end( true );
         return true;
 
         function end( r )
@@ -2473,6 +2445,7 @@ lookCfs.defaults =
   roots : null,
   visitedContainer : null,
 
+  left : 1, /* qqq xxx : cover option left */
   revisiting : 0,
   fast : 1,
 
@@ -2636,8 +2609,14 @@ function each_body( o )
   o2.onDown = handleDown;
   o2.onBegin = handleBegin;
   o2.onEnd = handleEnd;
+  _.assert( _.boolLike( o2.left ) );
 
   let r = o.method.call( group, o2 );
+
+  // if( !o.left )
+  // debugger;
+  if( !o.left )
+  o.result.reverse( o.result );
 
   return o.result.original;
 
@@ -2652,16 +2631,11 @@ function each_body( o )
     if( it.included )
     o.result.append( node );
 
-    // if( it.included )
-    // _.arrayAppend( o.result, node );
-
   }
 
   function handleUp( node, it )
   {
     it.included = true;
-
-    // console.log( 'handleUp', node.name ); debugger;
 
     if( o.recursive === 0 )
     {
@@ -2711,6 +2685,7 @@ function each_body( o )
 
     if( o.onEnd )
     o.onEnd.apply( this, arguments );
+
   }
 
 }
