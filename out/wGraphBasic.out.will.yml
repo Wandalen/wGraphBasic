@@ -56,10 +56,13 @@ module:
         path:
           - ../.ex.will.yml
           - ../.im.will.yml
-      local:
+      module.peer.in:
         criterion:
           predefined: 1
-        path: .
+        path: ..
+      download:
+        criterion:
+          predefined: 1
       remote:
         criterion:
           predefined: 1
@@ -139,14 +142,14 @@ module:
           raw: compiled
           content: prime
         path: '{path::out.*=}/source/Index.s'
-      exported.dir.export:
+      exported.dir.proto.export:
         criterion:
-          default: 1
+          content: proto
           export: 1
         path: ../proto
-      exported.files.export:
+      exported.files.proto.export:
         criterion:
-          default: 1
+          content: proto
           export: 1
         path:
           - ../proto
@@ -324,26 +327,26 @@ module:
           content: prime
         inherit:
           - predefined.*
-      exported.export:
+      exported.proto.export:
         src:
           filePath:
             '**': ''
           prefixPath: ../proto
         mandatory: 1
         criterion:
-          default: 1
+          content: proto
           export: 1
-      exported.files.export:
+      exported.files.proto.export:
         src:
           filePath:
-            'path::exported.files.export': ''
+            'path::exported.files.proto.export': ''
           basePath: .
-          prefixPath: 'path::exported.dir.export'
+          prefixPath: 'path::exported.dir.proto.export'
           recursive: 0
         recursive: 0
         mandatory: 1
         criterion:
-          default: 1
+          content: proto
           export: 1
     step:
       proto.export:
@@ -771,17 +774,17 @@ module:
           - 'build::release'
           - 'build::npm'
     exported:
-      export:
+      proto.export:
         version: 0.4.0
         recursive: 0
         withIntegrated: 2
         tar: 0
-        exportedReflector: 'reflector::exported.export'
-        exportedFilesReflector: 'reflector::exported.files.export'
-        exportedDirPath: 'path::exported.dir.export'
-        exportedFilesPath: 'path::exported.files.export'
+        exportedReflector: 'reflector::exported.proto.export'
+        exportedFilesReflector: 'reflector::exported.files.proto.export'
+        exportedDirPath: 'path::exported.dir.proto.export'
+        exportedFilesPath: 'path::exported.files.proto.export'
         criterion:
-          default: 1
+          content: proto
           export: 1
     consistency:
       ../.ex.will.yml: *ref_0
@@ -821,14 +824,17 @@ module:
         criterion:
           predefined: 1
         path: out/wGraphBasic.out.will.yml
+      module.peer.in:
+        criterion:
+          predefined: 1
+        path: out
       module.common:
         criterion:
           predefined: 1
         path: ./
-      local:
+      download:
         criterion:
           predefined: 1
-        path: .
       remote:
         criterion:
           predefined: 1
@@ -908,33 +914,6 @@ module:
           raw: compiled
           content: prime
         path: '{path::out.*=}/source/Index.s'
-      exported.dir.export:
-        criterion:
-          default: 1
-          export: 1
-        path: ./proto
-      exported.files.export:
-        criterion:
-          default: 1
-          export: 1
-        path:
-          - proto
-          - proto/dwtools
-          - proto/dwtools/Tools.s
-          - proto/dwtools/abase
-          - proto/dwtools/amid
-          - proto/dwtools/amid/l1
-          - proto/dwtools/amid/l1/graph.test
-          - proto/dwtools/amid/l1/graph.test/AbstractGraph.test.s
-          - proto/dwtools/amid/l1/graphBasic
-          - proto/dwtools/amid/l1/graphBasic/IncludeBasic.s
-          - proto/dwtools/amid/l1/graphBasic/IncludeTop.s
-          - proto/dwtools/amid/l1/graphBasic/l1
-          - proto/dwtools/amid/l1/graphBasic/l1/Abstract.s
-          - proto/dwtools/amid/l1/graphBasic/l3
-          - proto/dwtools/amid/l1/graphBasic/l3/NodesGroup.s
-          - proto/dwtools/amid/l1/graphBasic/l3/System.s
-          - proto/dwtools/atop
     submodule:
       wTools:
         path: 'npm:///wTools'
@@ -1066,27 +1045,6 @@ module:
           content: prime
         inherit:
           - predefined.*
-      exported.export:
-        src:
-          filePath:
-            '**': ''
-          prefixPath: proto
-        mandatory: 1
-        criterion:
-          default: 1
-          export: 1
-      exported.files.export:
-        src:
-          filePath:
-            'path::exported.files.export': ''
-          basePath: .
-          prefixPath: 'path::exported.dir.export'
-          recursive: 0
-        recursive: 0
-        mandatory: 1
-        criterion:
-          default: 1
-          export: 1
     step:
       proto.export:
         opts:
@@ -1512,19 +1470,6 @@ module:
           - 'build::raw.release'
           - 'build::release'
           - 'build::npm'
-    exported:
-      export:
-        version: 0.4.0
-        recursive: 0
-        withIntegrated: 2
-        tar: 0
-        exportedReflector: 'reflector::exported.export'
-        exportedFilesReflector: 'reflector::exported.files.export'
-        exportedDirPath: 'path::exported.dir.export'
-        exportedFilesPath: 'path::exported.files.export'
-        criterion:
-          default: 1
-          export: 1
     consistency:
       ../.ex.will.yml:
         hash: c254796bc30520861e0ecc8036af8237

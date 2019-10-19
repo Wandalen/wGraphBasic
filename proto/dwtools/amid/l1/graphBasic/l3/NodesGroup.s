@@ -855,7 +855,7 @@ function rootsExportInfoTree( roots, opts )
     opts.onUp( node, it );
     if( !it.iterator.continue || !it.continue || !it.continueUp || !it.continueNode )
     {
-      debugger;
+      // debugger;
       return;
     }
     it.path = it.prev.path.slice();
@@ -868,7 +868,7 @@ function rootsExportInfoTree( roots, opts )
   {
     if( !it.iterator.continue || !it.continue || !it.continueUp || !it.continueNode )
     {
-      debugger;
+      // debugger;
       return;
     }
     let dLevel = it.level - prevIt.level;
@@ -1783,7 +1783,8 @@ function lookBfs( o )
   o.roots = group.nodesAsAdapter( o.roots );
   o.roots.once( o.roots );
 
-  let allMethod = o.left ? 'allLeft' : 'allRight';
+  let allDirect = o.left ? 'allLeft' : 'allRight';
+  let allRevert = o.left ? 'allRight' : 'allLeft';
 
   if( o.revisiting < 3 && o.visitedContainer === null )
   o.visitedContainer = o.revisiting === 2 ? new Array() : new Set();
@@ -1806,6 +1807,7 @@ function lookBfs( o )
   iterator.continue = true;
   iterator.continueUp = true;
   iterator.continueNode = true;
+  iterator.visited = false;
   iterator.result = iterator.layers;
   iterator.options = o;
 
@@ -1839,17 +1841,21 @@ function lookBfs( o )
     let itContinueUp = it.continueUp;
     let itContinueNode = it.continueNode;
 
+    // console.log( it.level );
+
     if( it.iterator.continue )
-    nodes[ allMethod ]( ( node, k ) =>
+    nodes[ allDirect ]( ( node, k ) =>
     {
 
-      let visited;
+      // let visited;
+      it.visited = false;
       if( o.revisiting === 2 )
       {
-        visited = o.visitedContainer.count( node );
-        if( visited > 1 )
+        it.visited = o.visitedContainer.count( node );
+        if( it.visited > 1 )
         {
-          nodesStatus.set( node, 0 );
+          // nodesStatus.set( node, [ 0, true ] );
+          nodesStatus.set( node, [ false, false, true ] );
           return true;
         }
       }
@@ -1857,11 +1863,14 @@ function lookBfs( o )
       {
         if( o.visitedContainer.has( node ) )
         {
-          nodesStatus.set( node, 0 );
+          it.visited = true;
+          // nodesStatus.set( node, [ 0, true ] );
+          nodesStatus.set( node, [ false, false, true ] );
           return true;
         }
       }
 
+      // it.visited = visited;
       if( o.onUp )
       o.onUp( node, it );
 
@@ -1876,7 +1885,7 @@ function lookBfs( o )
       {
         if( o.revisiting === 2 )
         {
-          if( !visited )
+          if( !it.visited )
           {
             nodes2.push( node );
           }
@@ -1891,12 +1900,13 @@ function lookBfs( o )
         }
       }
 
-      if( it.continueUp )
-      nodesStatus.set( node, 3 );
-      else if( it.continueNode )
-      nodesStatus.set( node, 2 );
-      else
-      nodesStatus.set( node, 1 );
+      nodesStatus.set( node, [ it.continueUp, it.continueNode, it.visited ] );
+      // if( it.continueUp )
+      // nodesStatus.set( node, [ 3, visited ] );
+      // else if( it.continueNode )
+      // nodesStatus.set( node, [ 2, visited ] );
+      // else
+      // nodesStatus.set( node, [ 1, visited ] );
 
       it.continueNode = itContinueNode;
       it.continueUp = itContinueUp;
@@ -1919,19 +1929,25 @@ function lookBfs( o )
     /* */
 
     if( it.iterator.continue )
-    nodes.all( ( node, k ) =>
+    nodes[ allRevert ]( ( node, k ) =>
     {
+      // let status;
+      // [ status, it.visited ] = nodesStatus.get( node );
+      [ it.continueUp, it.continueNode, it.visited ] = nodesStatus.get( node );
 
-      if( !nodesStatus.get( node ) )
+      if( !it.continueNode )
       return true;
 
-      it.continueUp = true;
-      it.continueNode = true;
+      // if( !status )
+      // return true;
 
-      if( nodesStatus.get( node ) < 3 )
-      it.continueUp = false;
-      if( nodesStatus.get( node ) < 2 )
-      it.continueNode = false;
+      // it.continueUp = true;
+      // it.continueNode = true;
+
+      // if( status < 3 )
+      // it.continueUp = false;
+      // if( status < 2 )
+      // it.continueNode = false;
 
       if( o.onDown )
       o.onDown( node, it );
@@ -2284,16 +2300,7 @@ function lookCfs( o )
 
   iterator.node = null;
   iterator.index = null;
-  visitSecondFast( iterator, o.roots );
-
-  // o.roots.all( ( node, index ) =>
-  // {
-  //   iterator.node = node;
-  //   iterator.index = index;
-  //   // visitFirstFast( iterator );
-  //   // visitSecondFast( iterator, group.nodeOutNodesFor( iterator.node ) );
-  //   return iterator.continue;
-  // });
+  visit( iterator, o.roots );
 
   if( o.onEnd )
   o.onEnd( iterator );
@@ -2302,13 +2309,18 @@ function lookCfs( o )
 
   /* */
 
-  function visitSecondFast( it, outNodes )
+  function visit( it, outNodes )
   {
 
     if( o.visitedContainer )
     if( o.revisiting === 1 || o.revisiting === 2 )
     o.visitedContainer.push( it.node );
 
+    let outNodes2 = outNodes;
+    if( o.revisiting === 0 )
+    outNodes2 = group.ContainerAdapterFrom( [] );
+
+    // debugger;
     if( it.iterator.continue && it.continueUp )
     {
       let level = it.level;
@@ -2316,6 +2328,7 @@ function lookCfs( o )
       let index = it.index;
       let visited = it.visited;
       let nodesStatus = new HashMap;
+      // let nodesVisited = new HashMap;
 
       /*
         0 - not visiting
@@ -2327,36 +2340,67 @@ function lookCfs( o )
       outNodes[ allMethod ]( ( node, n ) =>
       {
         let status = 3;
-        if( o.revisiting < 3 )
-        if( o.visitedContainer.has( node ) )
-        status = 0
-        nodesStatus.set( node, status )
 
-        if( o.revisiting < 2 && !status )
+        let has = outNodes2.has( node );
+        if( o.revisiting === 0 && !has )
+        outNodes2.append( node );
+
+        if( o.revisiting === 0 && has )
         return true;
 
         it.level = level;
         it.node = node;
         it.index = n;
         it.visited = false;
-        if( o.revisiting === 2 && !status )
+
+        if( o.revisiting < 3 )
+        if( o.visitedContainer.has( node ) )
         {
-          it.visited = true;
-          it.continueUp = false;
+          if( o.revisiting === 2 )
+          {
+            status = 2;
+            it.visited = true;
+            it.continueUp = false;
+          }
+          else
+          {
+            status = 0;
+          }
         }
 
-        visitFirstFast( it );
+        // nodesStatus.set( node, status );
+
+        if( o.revisiting < 2 && !status )
+        {
+          nodesStatus.set( node, [ status, it.visited ] );
+          return true;
+        }
+
+        if( o.visitedContainer )
+        if( o.revisiting !== 1 && o.revisiting !== 2 )
+        o.visitedContainer.push( it.node );
+
+        handleUp( it );
+
+        if( !it.continueNode )
+        {
+          it.continueUp = false;
+          if( o.visitedContainer )
+          if( o.revisiting !== 1 && o.revisiting !== 2 )
+          o.visitedContainer.pop();
+        }
 
         if( status > 1 && !it.continueNode )
         {
           status = 1;
-          nodesStatus.set( node, status );
+          // nodesStatus.set( node, status );
         }
         if( status > 2 && !it.continueUp )
         {
           status = 2;
-          nodesStatus.set( node, status );
+          // nodesStatus.set( node, status );
         }
+        nodesStatus.set( node, [ status, it.visited ] );
 
         if( !it.iterator.continue )
         return false;
@@ -2373,9 +2417,10 @@ function lookCfs( o )
         }
       });
 
-      outNodes.all( ( node, n ) =>
+      outNodes2.all( ( node, n ) =>
       {
-        let status = nodesStatus.get( node );
+        let status;
+        [ status, it.visited ] = nodesStatus.get( node );
         if( o.revisiting < 2 && !status )
         return true;
 
@@ -2383,11 +2428,12 @@ function lookCfs( o )
         it.index = n;
         it.node = node;
 
-        it.visited = status > 0;
         it.continueNode = status > 1;
         it.continueUp = status > 2;
+        // it.visited = status < 3;
 
-        visitSecondFast( it, group.nodeOutNodesFor( it.node ) );
+        visit( it, group.nodeOutNodesFor( it.node ) );
+
         if( !it.iterator.continue )
         return false;
         return true;
@@ -2397,8 +2443,10 @@ function lookCfs( o )
       it.node = node;
       it.index = index;
       it.visited = visited;
+      // debugger;
     }
 
+    // _.assert( it.node !== null ); /* xxx */
     if( o.onDown && it.node !== null )
     o.onDown( it.node, it );
 
@@ -2413,12 +2461,12 @@ function lookCfs( o )
 
   /* */
 
-  function visitFirstFast( it )
+  function handleUp( it )
   {
 
-    if( o.visitedContainer )
-    if( o.revisiting !== 1 && o.revisiting !== 2 )
-    o.visitedContainer.push( it.node );
+    // if( o.visitedContainer )
+    // if( o.revisiting !== 1 && o.revisiting !== 2 )
+    // o.visitedContainer.push( it.node );
 
     if( o.onUp )
     o.onUp( it.node, it );
@@ -2427,13 +2475,13 @@ function lookCfs( o )
     if( o.onNode )
     o.onNode( it.node, it );
 
-    if( !it.continueNode )
-    {
-      it.continueUp = false;
-      if( o.visitedContainer )
-      if( o.revisiting !== 1 && o.revisiting !== 2 )
-      o.visitedContainer.pop();
-    }
+    // if( !it.continueNode )
+    // {
+    //   it.continueUp = false;
+    //   if( o.visitedContainer )
+    //   if( o.revisiting !== 1 && o.revisiting !== 2 )
+    //   o.visitedContainer.pop();
+    // }
 
   }
 
@@ -2934,7 +2982,7 @@ function pairDirectedPathGetDfs( pair )
   _.assert( !!group.nodeIs( node1 ) );
   _.assert( !!group.nodeIs( node2 ) );
 
-  console.log( '-' );
+  // console.log( '-' );
 
   group.lookDfs
   ({
@@ -2953,7 +3001,7 @@ function pairDirectedPathGetDfs( pair )
   function onUp1( node, it )
   {
 
-    console.log( 'onUp1', node.name );
+    // console.log( 'onUp1', node.name );
 
     if( found )
     {
@@ -3696,6 +3744,7 @@ let Associates =
 {
   sys : null,
   nodes : _.define.own([]),
+  context : null,
 }
 
 let Restricts =
