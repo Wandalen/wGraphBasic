@@ -24,7 +24,7 @@ about :
 path :
 
   repository : git+https:///github.com/Wandalen/wGraphBasic.git
-  remotes :
+  origins :
    - git+https:///github.com/Wandalen/wGraphBasic.git
    - npm:///wgraphbasic
   bugtracker : https:///github.com/Wandalen/wGraphBasic/issues
