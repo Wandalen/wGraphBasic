@@ -2,16 +2,20 @@ format: outwillfile-2.0
 root:
   - wGraphBasic.out
 consistency:
-  ../.ex.will.yml: &ref_0
+  wGraphBasic.out.will.yml: &ref_0
+    hash: 562df1d09df5bb7276df9147da6fe5d4
+    size: 39058
+  ../.ex.will.yml: &ref_1
     hash: 3ad31457175874d0c2ec7122331605fc
     size: 2006
-  ../.im.will.yml: &ref_1
+  ../.im.will.yml: &ref_2
     hash: 80ecb25a3371353293b0477df1c5fea4
     size: 4882
 module:
   wGraphBasic.out:
     about:
       name: wGraphBasic
+      org: noorg
       description: >-
         Collection of abstract data structures and algorithms to process graphs.
         The module does not bound to any specific format of a graph, so
@@ -20,19 +24,19 @@ module:
         topological sort, shortest path search, and others.
       enabled: 1
       version: 0.4.0
-      interpreters: &ref_2
+      interpreters:
         - njs >= 8.0.0
         - chrome >= 60.0.0
         - firefox >= 60.0.0
-      keywords: &ref_3
+      keywords:
         - wTools
         - graph
       license: MIT
       author: Kostiantyn Wandalen <wanalen@willbe.so>
-      contributors: &ref_4
+      contributors:
         - Kostiantyn Wandalen <wanalen@willbe.so>
       npm.name: wgraphbasic
-      npm.scripts: &ref_5
+      npm.scripts:
         test: wtest .run proto/**
         docgen: wdocgen .build proto
     path:
@@ -703,6 +707,22 @@ module:
           content: prime
         inherit:
           - files.transpile
+      exported.proto.export:
+        opts:
+          reflector: 'reflector::exported.proto.export*'
+        criterion:
+          content: proto
+          export: 1
+        inherit:
+          - files.reflect
+      exported.files.proto.export:
+        opts:
+          reflector: 'reflector::exported.files.proto.export*'
+        criterion:
+          content: proto
+          export: 1
+        inherit:
+          - files.reflect
     build:
       proto.export:
         steps:
@@ -791,11 +811,13 @@ module:
           content: proto
           export: 1
     consistency:
-      ../.ex.will.yml: *ref_0
-      ../.im.will.yml: *ref_1
+      wGraphBasic.out.will.yml: *ref_0
+      ../.ex.will.yml: *ref_1
+      ../.im.will.yml: *ref_2
   ../:
     about:
       name: wGraphBasic
+      org: noorg
       description: >-
         Collection of abstract data structures and algorithms to process graphs.
         The module does not bound to any specific format of a graph, so
@@ -804,13 +826,21 @@ module:
         topological sort, shortest path search, and others.
       enabled: 1
       version: 0.4.0
-      interpreters: *ref_2
-      keywords: *ref_3
+      interpreters:
+        - njs >= 8.0.0
+        - chrome >= 60.0.0
+        - firefox >= 60.0.0
+      keywords:
+        - wTools
+        - graph
       license: MIT
       author: Kostiantyn Wandalen <wanalen@willbe.so>
-      contributors: *ref_4
+      contributors:
+        - Kostiantyn Wandalen <wanalen@willbe.so>
       npm.name: wgraphbasic
-      npm.scripts: *ref_5
+      npm.scripts:
+        test: wtest .run proto/**
+        docgen: wdocgen .build proto
     path:
       module.willfiles:
         criterion:
@@ -851,12 +881,8 @@ module:
       bugtracker:
         path: 'https:///github.com/Wandalen/wGraphBasic/issues'
       in:
-        criterion:
-          predefined: 0
         path: .
       out:
-        criterion:
-          predefined: 0
         path: out
       temp:
         path: 'path::out'
@@ -1485,3 +1511,6 @@ module:
       ../.im.will.yml:
         hash: 80ecb25a3371353293b0477df1c5fea4
         size: 4882
+      wGraphBasic.out.will.yml:
+        hash: 562df1d09df5bb7276df9147da6fe5d4
+        size: 39058
