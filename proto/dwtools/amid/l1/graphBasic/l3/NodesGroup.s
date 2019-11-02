@@ -1822,7 +1822,6 @@ function lookBfs( o )
   function visit( nodes, it )
   {
     let nodes2 = sys.ContainerAdapterFrom( new Set );
-    // let nodes2 = sys.ContainerAdapterFrom( new Array );
     let nodesStatus = new HashMap;
 
     /*
@@ -1910,7 +1909,6 @@ function lookBfs( o )
 
     /* */
 
-    // if( it.iterator.continue )
     nodes[ allRevert ]( ( node, k ) =>
     {
       [ it.continueUp, it.continueNode, it.visited ] = nodesStatus.get( node );
@@ -2293,7 +2291,6 @@ function lookCfs( o )
     if( o.revisiting === 0 )
     outNodes2 = sys.ContainerAdapterFrom( [] );
 
-    // debugger;
     if( it.iterator.continue && it.continueUp )
     {
       let level = it.level;
@@ -2301,7 +2298,6 @@ function lookCfs( o )
       let index = it.index;
       let visited = it.visited;
       let nodesStatus = new HashMap;
-      // let nodesVisited = new HashMap;
 
       /*
         0 - not visiting
@@ -2341,8 +2337,6 @@ function lookCfs( o )
           }
         }
 
-        // nodesStatus.set( node, status );
-
         if( o.revisiting < 2 && !status )
         {
           nodesStatus.set( node, [ status, it.visited ] );
@@ -2366,12 +2360,10 @@ function lookCfs( o )
         if( status > 1 && !it.continueNode )
         {
           status = 1;
-          // nodesStatus.set( node, status );
         }
         if( status > 2 && !it.continueUp )
         {
           status = 2;
-          // nodesStatus.set( node, status );
         }
         nodesStatus.set( node, [ status, it.visited ] );
 
@@ -2403,7 +2395,6 @@ function lookCfs( o )
 
         it.continueNode = status > 1;
         it.continueUp = status > 2;
-        // it.visited = status < 3;
 
         visit( it, group.nodeOutNodesFor( it.node ) );
 
@@ -2416,7 +2407,6 @@ function lookCfs( o )
       it.node = node;
       it.index = index;
       it.visited = visited;
-      // debugger;
     }
 
     // _.assert( it.node !== null ); /* xxx */
@@ -2437,24 +2427,12 @@ function lookCfs( o )
   function handleUp( it )
   {
 
-    // if( o.visitedContainer )
-    // if( o.revisiting !== 1 && o.revisiting !== 2 )
-    // o.visitedContainer.push( it.node );
-
     if( o.onUp )
     o.onUp( it.node, it );
 
     if( it.continueNode )
     if( o.onNode )
     o.onNode( it.node, it );
-
-    // if( !it.continueNode )
-    // {
-    //   it.continueUp = false;
-    //   if( o.visitedContainer )
-    //   if( o.revisiting !== 1 && o.revisiting !== 2 )
-    //   o.visitedContainer.pop();
-    // }
 
   }
 
@@ -2657,7 +2635,6 @@ function each_body( o )
     o.onNode.apply( this, arguments );
 
     if( it.included )
-    // if( it.continueNode )
     o.result.append( node );
 
   }
@@ -2677,21 +2654,16 @@ function each_body( o )
     }
 
     if( it.included )
-    // if( it.continueNode )
     if( !o.withStem && it.level === 0 )
-    // it.continueNode = false;
     it.included = false;
 
     if( it.included )
-    // if( it.continueNode )
     if( !o.withBranches || !o.withTerminals )
     {
       let degree = group.nodeOutdegree( node );
       if( !o.withBranches && degree > 0 )
-      // it.continueNode = false;
       it.included = false;
       if( !o.withTerminals && degree === 0 )
-      // it.continueNode = false;
       it.included = false;
     }
 
@@ -2991,8 +2963,6 @@ function pairDirectedPathGetDfs( pair )
 
   function onUp1( node, it )
   {
-
-    // console.log( 'onUp1', node.name );
 
     if( found )
     {
