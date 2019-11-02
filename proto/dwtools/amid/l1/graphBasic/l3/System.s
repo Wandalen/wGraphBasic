@@ -36,10 +36,13 @@ Distance layers :: array of arrays of nodes. First layer has origin or zero-dist
  */
 
 let _ = _global_.wTools;
-let vectorize = _.routineDefaults( null, _.vectorize, { vectorizingContainerAdapter : 1, unwrapingContainerAdapter : 0 } );
-let vectorizeAll = _.routineDefaults( null, _.vectorizeAll, { vectorizingContainerAdapter : 1, unwrapingContainerAdapter : 0 } );
-let vectorizeAny = _.routineDefaults( null, _.vectorizeAny, { vectorizingContainerAdapter : 1, unwrapingContainerAdapter : 0 } );
-let vectorizeNone = _.routineDefaults( null, _.vectorizeNone, { vectorizingContainerAdapter : 1, unwrapingContainerAdapter : 0 } );
+let ContainerAdapter = _.containerAdapter.Abstract;
+let SetContainerAdapter = _.containerAdapter.Set;
+let ArrayContainerAdapter = _.containerAdapter.Array;
+let Vectorize = _.routineDefaults( null, _.vectorize, { vectorizingContainerAdapter : 1, unwrapingContainerAdapter : 0 } );
+let VectorizeAll = _.routineDefaults( null, _.vectorizeAll, { vectorizingContainerAdapter : 1, unwrapingContainerAdapter : 0 } );
+let VectorizeAny = _.routineDefaults( null, _.vectorizeAny, { vectorizingContainerAdapter : 1, unwrapingContainerAdapter : 0 } );
+let VectorizeNone = _.routineDefaults( null, _.vectorizeNone, { vectorizingContainerAdapter : 1, unwrapingContainerAdapter : 0 } );
 let Parent = null;
 let Self = function wAbstractGraphSystem( o )
 {
@@ -116,24 +119,45 @@ function nodesGroupDifferent( o )
 
 //
 
-/**
- * @summary Returns true if entity `id` is a node id.
- * @param {} id Source entity
- * @function idIs
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractGraphSystem
- */
-
-function idIs( id )
+function nodesCollection( o )
 {
   let sys = this;
-  if( !_.numberIs( id ) )
-  return false;
-  if( !( id >= 0 ) )
-  return false;
-  if( id > sys.nodeCounter )
-  return false;
-  return true;
+  o = _.routineOptions( nodesCollection, arguments );
+  _.assert( arguments.length === 0 || arguments.length === 1 );
+  if( !o.sys )
+  o.sys = sys;
+  if( o.group === null )
+  o.group = sys.nodesGroup();
+  // debugger;
+  _.assert( o.group instanceof sys.Group );
+  return sys.Collection( o );
 }
+
+nodesCollection.defaults =
+{
+  group : null,
+}
+
+// //
+//
+// /**
+//  * @summary Returns true if entity `id` is a node id.
+//  * @param {} id Source entity
+//  * @function idIs
+//  * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractGraphSystem
+//  */
+//
+// function idIs( id )
+// {
+//   let sys = this;
+//   if( !_.numberIs( id ) )
+//   return false;
+//   if( !( id >= 0 ) )
+//   return false;
+//   if( id > sys.nodeCounter )
+//   return false;
+//   return true;
+// }
 
 //
 
@@ -149,80 +173,80 @@ function hasNode( nodeHandle )
 {
   let sys = this;
   _.assert( !!nodeHandle );
-  return sys.nodeToIdHash.has( nodeHandle );
+  return sys.nodeDescriptorsHash.has( nodeHandle );
 }
 
+// //
 //
-
-/**
- * @summary Returns id of node with descriptor `nodeHandle`.
- * @description Doesn't throw error if can't get id of node.
- * @param {Object} nodeHandle Node descriptor.
- * @function nodeToIdTry
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractGraphSystem
- */
-
-function nodeToIdTry( nodeHandle )
-{
-  let sys = this;
-  let id = sys.nodeToIdHash.get( nodeHandle );
-  return id;
-}
-
+// /**
+//  * @summary Returns id of node with descriptor `nodeHandle`.
+//  * @description Doesn't throw error if can't get id of node.
+//  * @param {Object} nodeHandle Node descriptor.
+//  * @function nodeToIdTry
+//  * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractGraphSystem
+//  */
 //
-
-/**
- * @summary Returns id of node with descriptor `nodeHandle`.
- * @param {Object} nodeHandle Node descriptor.
- * @function nodeToId
- * @throws {Error} If node with descriptor `nodeHandle` doesn't exist in system.
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractGraphSystem
- */
-
-function nodeToId( nodeHandle )
-{
-  let sys = this;
-  let id = sys.nodeToIdHash.get( nodeHandle );
-  _.assert( sys.idIs( id ), 'Id for nodeHandle was not found' );
-  return id;
-}
-
+// function nodeToIdTry( nodeHandle )
+// {
+//   let sys = this;
+//   let id = sys.nodeToIdHash.get( nodeHandle );
+//   return id;
+// }
 //
-
-function idToNodeTry( nodeId )
-{
-  let sys = this;
-  let nodeHandle = sys.idToNodeHash.get( nodeId );
-  return nodeHandle;
-}
-
+// // //
 //
-
-function idToNode( nodeId )
-{
-  let sys = this;
-  let nodeHandle = sys.idToNodeHash.get( nodeId );
-  _.assert( !!nodeHandle, 'Id for the node was not found' );
-  return nodeHandle;
-}
+// /**
+//  * @summary Returns id of node with descriptor `nodeHandle`.
+//  * @param {Object} nodeHandle Node descriptor.
+//  * @function nodeToId
+//  * @throws {Error} If node with descriptor `nodeHandle` doesn't exist in system.
+//  * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractGraphSystem
+//  */
+//
+// function nodeToId( nodeHandle )
+// {
+//   let sys = this;
+//   let id = sys.nodeToIdHash.get( nodeHandle );
+//   _.assert( sys.idIs( id ), 'Id for nodeHandle was not found' );
+//   return id;
+// }
+//
+// //
+//
+// function idToNodeTry( nodeId )
+// {
+//   let sys = this;
+//   let nodeHandle = sys.idToNodeHash.get( nodeId );
+//   return nodeHandle;
+// }
+//
+// //
+//
+// function idToNode( nodeId )
+// {
+//   let sys = this;
+//   let nodeHandle = sys.idToNodeHash.get( nodeId );
+//   _.assert( !!nodeHandle, 'Id for the node was not found' );
+//   return nodeHandle;
+// }
 
 //
 
 /**
  * @summary Returns descriptor of node with id `nodeId`
  * @param {Number} nodeId Id of target node.
- * @function nodeDescriptorWithId
+ * @function nodeDescriptorWithNode
  * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractGraphSystem
  */
 
-function nodeDescriptorWithId( nodeId )
+function nodeDescriptorWithNode( node )
 {
   let sys = this;
 
   _.assert( arguments.length === 1 );
-  _.assert( sys.idIs( nodeId ) );
+  // _.assert( sys.nodeIs( node ) );
 
-  let descriptor = sys.nodeDescriptorsHash.get( nodeId );
+  let descriptor = sys.nodeDescriptorsHash.get( node );
   if( descriptor === undefined )
   descriptor = null;
 
@@ -231,43 +255,45 @@ function nodeDescriptorWithId( nodeId )
 
 //
 
-function nodeDescriptorWith( nodeId )
+function nodeDescriptorWith( node )
 {
   let sys = this;
 
   _.assert( arguments.length === 1 );
 
-  if( !sys.idIs( nodeId ) )
-  nodeId = sys.nodeToId( nodeId );
+  // if( !sys.idIs( nodeId ) )
+  // nodeId = sys.nodeToId( nodeId );
 
-  return sys.nodeDescriptorWithId( nodeId );
+  return sys.nodeDescriptorWithNode( node );
 }
 
 //
 
 /**
  * @summary Returns descriptor of node with id `nodeId`. Creates new descriptor if needed.
- * @param {Number} nodeId Id of target node.
+ * @param {Number} node Node.
  * @function nodeDescriptorObtain
  * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractGraphSystem
  */
 
-function nodeDescriptorObtain( nodeId )
+function nodeDescriptorObtain( node )
 {
   let sys = this;
 
   _.assert( arguments.length === 1 );
 
-  if( !sys.idIs( nodeId ) )
-  nodeId = sys.nodeToId( nodeId );
+  // if( !sys.idIs( nodeId ) )
+  // nodeId = sys.nodeToId( nodeId );
 
-  let descriptor = sys.nodeDescriptorsHash.get( nodeId );
+  // _.assert( sys.nodeIs( node ) );
+
+  let descriptor = sys.nodeDescriptorsHash.get( node );
 
   if( descriptor === undefined )
   {
     descriptor = Object.create( null );
     descriptor.count = 1;
-    sys.nodeDescriptorsHash.set( nodeId, descriptor );
+    sys.nodeDescriptorsHash.set( node, descriptor );
   }
 
   return descriptor;
@@ -275,16 +301,191 @@ function nodeDescriptorObtain( nodeId )
 
 //
 
-function nodeDescriptorDelete( nodeId )
+function nodeDescriptorDelete( node )
 {
   let sys = this;
 
   _.assert( arguments.length === 1 );
-  _.assert( sys.idIs( nodeId ) );
+  // _.assert( sys.nodeIs( node ) );
 
-  let r = sys.nodeDescriptorsHash.delete( nodeId );
+  let r = sys.nodeDescriptorsHash.delete( node );
 
   return r;
+}
+
+//
+
+function nodeDescriptorInc( node )
+{
+  let sys = this;
+
+  _.assert( arguments.length === 1 );
+
+  let descriptor = sys.nodeDescriptorsHash.get( node );
+  if( descriptor )
+  descriptor.count += 1;
+  else
+  return sys.nodeDescriptorObtain( node );
+
+  return descriptor;
+}
+
+//
+
+function nodeDescriptorDec( node )
+{
+  let sys = this;
+
+  _.assert( arguments.length === 1 );
+
+  let descriptor = sys.nodeDescriptorsHash.get( node );
+  if( descriptor )
+  descriptor.count -= 1;
+
+  _.assert( !!descriptor, `No node descriptor` );
+  _.assert( descriptor.count >= 0, `Expects non-negative counter` );
+
+  if( descriptor.count === 0 )
+  return !sys.nodeDescriptorDelete( node )
+
+  return true;
+}
+
+//
+
+/**
+ * @summary Check is argument allowed container either adapter of container.
+ *
+ * @function ContainerIs
+ * @return {boolean} True if it is such thing.
+ * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractGraphSystem#
+ */
+
+function ContainerIs( src )
+{
+  if( _.arrayLike( src ) || _.setLike( src ) )
+  return true;
+  if( src instanceof ContainerAdapter )
+  return true;
+  return false;
+}
+
+//
+
+/**
+ * @summary Check is argument allowed container either adapter of container.
+ *
+ * @function ContainerIsSet
+ * @return {boolean} True if it is such thing.
+ * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractGraphSystem#
+ */
+
+function ContainerIsSet( src )
+{
+  if( _.setLike( src ) )
+  return true;
+  if( src instanceof SetContainerAdapter )
+  return true;
+  return false;
+}
+
+//
+
+/**
+ * @summary Check is argument allowed container either adapter of container.
+ *
+ * @function ContainerIsArray
+ * @return {boolean} True if it is such thing.
+ * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractGraphSystem#
+ */
+
+function ContainerIsArray( src )
+{
+  if( _.arrayLike( src ) )
+  return true;
+  if( src instanceof ArrayContainerAdapter )
+  return true;
+  return false;
+}
+
+//
+
+/**
+ * @summary Check is argument container adapter.
+ *
+ * @function ContainerIs
+ * @return {boolean} True if it is such thing.
+ * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractGraphSystem#
+ */
+
+function ContainerAdapterIs( src )
+{
+  if( src instanceof ContainerAdapter )
+  return true;
+  return false;
+}
+
+//
+
+/**
+ * @summary Return container of the adapter.
+ *
+ * @function OriginalOfAdapter
+ * @return {container} Container of the adaptor.
+ * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractGraphSystem#
+ */
+
+function OriginalOfAdapter( src )
+{
+  return ContainerAdapter.ToOriginal( src );
+}
+
+//
+
+/**
+ * @summary Make a new empty container for nodes.
+ *
+ * @function ContainerMake
+ * @return {Container} Return new empty container for node. Empty Array by default.
+ * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractGraphSystem#
+ */
+
+function ContainerMake()
+{
+  _.assert( arguments.length === 0 );
+  return new Array;
+}
+
+//
+
+/**
+ * @summary Make a new empty container for nodes and adapter for the container.
+ *
+ * @function ContainerAdapterMake
+ * @return {ContainerAdapter} Return new empty container for node. Empty Array by default.
+ * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractGraphSystem#
+ */
+
+function ContainerAdapterMake()
+{
+  _.assert( arguments.length === 0 );
+  return this.ContainerAdapterFrom( new Array );
+}
+
+//
+
+/**
+ * @summary Make adapter of a container for similar fast access to elements.
+ *
+ * @function ContainerAdapterFrom
+ * @return {ContainerAdapter} Return ContainerAdapter not making a new one if passed in is such.
+ * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractGraphSystem#
+ */
+
+function ContainerAdapterFrom( container )
+{
+  _.assert( arguments.length === 1 );
+  return _.containerAdapter.from( container );
 }
 
 // --
@@ -318,26 +519,45 @@ let Aggregates =
 let Associates =
 {
   groups : _.define.instanceOf( Array ),
+  collections : _.define.instanceOf( Array ),
 }
 
 let Restricts =
 {
-  nodeCounter : 0,
-  nodeToIdHash : _.define.instanceOf( HashMap ),
-  idToNodeHash : _.define.instanceOf( HashMap ),
+  nodeCounter : 0, /* xxx : deprecate? */
+  // nodeToIdHash : _.define.instanceOf( HashMap ),
+  // idToNodeHash : _.define.instanceOf( HashMap ),
   nodeDescriptorsHash : _.define.instanceOf( HashMap ),
 }
 
 let Statics =
 {
-  Group : _.graph.AbstractNodesGroup,
+
+  [ _.graph.AbstractNodesGroup.shortName2 ] : _.graph.AbstractNodesGroup,
+  [ _.graph.AbstractNodesCollection.shortName2 ] : _.graph.AbstractNodesCollection,
   FieldsForGroup,
+
+  // container adapter
+
+  ContainerIs,
+  ContainerAdapterIs,
+  OriginalOfAdapter,
+  ContainerMake,
+  ContainerAdapterMake,
+  ContainerAdapterFrom,
+
+  ContainerAdapter,
+  SetContainerAdapter,
+  ArrayContainerAdapter,
+
 }
 
 let Forbids =
 {
   onOutNodesIdsFor : 'onOutNodesIdsFor',
   onInNodesIdsFor : 'onInNodesIdsFor',
+  nodeToIdHash : 'nodeToIdHash',
+  idToNodeHash : 'idToNodeHash',
 }
 
 // --
@@ -352,36 +572,50 @@ let Extend =
 
   nodesGroup,
   nodesGroupDifferent,
+  nodesCollection,
 
   // id
 
-  idIs,
-  idsAre : vectorize( idIs ),
-  idsAreAll : vectorizeAll( idIs ),
-  idsAreAny : vectorizeAny( idIs ),
-  idsAreNone : vectorizeNone( idIs ),
+  // idIs,
+  // idsAre : Vectorize( idIs ),
+  // idsAreAll : VectorizeAll( idIs ),
+  // idsAreAny : VectorizeAny( idIs ),
+  // idsAreNone : VectorizeNone( idIs ),
 
   // node
 
   hasNode,
-  hasNodes : vectorize( hasNode ),
-  hasAllNodes : vectorizeAll( hasNode ),
-  hasAnyNodes : vectorizeAny( hasNode ),
-  hasNoneNodes : vectorizeNone( hasNode ),
+  hasNodes : Vectorize( hasNode ),
+  hasAllNodes : VectorizeAll( hasNode ),
+  hasAnyNodes : VectorizeAny( hasNode ),
+  hasNoneNodes : VectorizeNone( hasNode ),
 
-  nodeToIdTry,
-  nodesToIdsTry : vectorize( nodeToIdTry ),
-  nodeToId,
-  nodesToIds : vectorize( nodeToId ),
-  idToNodeTry,
-  idsToNodesTry : vectorize( idToNodeTry ),
-  idToNode,
-  idsToNodes : vectorize( idToNode ),
+  // nodeToIdTry,
+  // nodesToIdsTry : Vectorize( nodeToIdTry ),
+  // nodeToId,
+  // nodesToIds : Vectorize( nodeToId ),
+  // idToNodeTry,
+  // idsToNodesTry : Vectorize( idToNodeTry ),
+  // idToNode,
+  // idsToNodes : Vectorize( idToNode ),
 
-  nodeDescriptorWithId,
+  nodeDescriptorWithNode,
   nodeDescriptorWith,
   nodeDescriptorObtain,
   nodeDescriptorDelete,
+  nodeDescriptorInc,
+  nodeDescriptorDec,
+
+  // container adapter
+
+  ContainerIs,
+  ContainerIsSet,
+  ContainerIsArray,
+  ContainerAdapterIs,
+  OriginalOfAdapter,
+  ContainerMake,
+  ContainerAdapterMake,
+  ContainerAdapterFrom,
 
   // relations
 
@@ -408,6 +642,13 @@ _.Copyable.mixin( Self );
 _.staticDeclare
 ({
   prototype : _.graph.AbstractNodesGroup.prototype,
+  name : 'System',
+  value : Self,
+});
+
+_.staticDeclare
+({
+  prototype : _.graph.AbstractNodesCollection.prototype,
   name : 'System',
   value : Self,
 });

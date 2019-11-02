@@ -16,7 +16,8 @@ if( typeof module !== 'undefined' )
 
   require( './l1/Abstract.s' );
   require( './l3/NodesGroup.s' );
-  require( './l3/System.s' );
+  require( './l5/NodesCollection.s' );
+  require( './l7/System.s' );
 
 }
 

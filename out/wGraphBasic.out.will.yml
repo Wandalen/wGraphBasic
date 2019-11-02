@@ -1511,6 +1511,4 @@ module:
       ../.im.will.yml:
         hash: 80ecb25a3371353293b0477df1c5fea4
         size: 4882
-      wGraphBasic.out.will.yml:
-        hash: 562df1d09df5bb7276df9147da6fe5d4
-        size: 39058
+      wGraphBasic.out.will.yml: *ref_0
