@@ -2271,7 +2271,7 @@ function lookCfs( o )
 
   iterator.node = null;
   iterator.index = null;
-  visit( iterator, o.roots );
+  elemetsIterate( iterator, o.roots );
 
   if( o.onEnd )
   o.onEnd( iterator );
@@ -2280,16 +2280,19 @@ function lookCfs( o )
 
   /* */
 
-  function visit( it, outNodes )
+  /*
+    0 - not visiting
+    1 - not including
+    2 - not going up
+    3 - visit, include, go up
+  */
+
+  function elemetsIterate( it, outNodes )
   {
 
     if( o.visitedContainer )
     if( o.revisiting === 1 || o.revisiting === 2 )
     o.visitedContainer.push( it.node );
-
-    let outNodes2 = outNodes;
-    if( o.revisiting === 0 )
-    outNodes2 = sys.ContainerAdapterFrom( [] );
 
     if( it.iterator.continue && it.continueUp )
     {
@@ -2298,110 +2301,13 @@ function lookCfs( o )
       let index = it.index;
       let visited = it.visited;
       let nodesStatus = new HashMap;
+      let outNodes2 = outNodes;
 
-      /*
-        0 - not visiting
-        1 - not including
-        2 - not going up
-        3 - visit, include, go up
-      */
+      if( o.revisiting === 0 )
+      outNodes2 = sys.ContainerAdapterFrom( [] );
 
-      outNodes[ allMethod ]( ( node, n ) =>
-      {
-        let status = 3;
-
-        let has = outNodes2.has( node );
-        if( o.revisiting === 0 && !has )
-        outNodes2.append( node );
-
-        if( o.revisiting === 0 && has )
-        return true;
-
-        it.level = level;
-        it.node = node;
-        it.index = n;
-        it.visited = false;
-
-        if( o.revisiting < 3 )
-        if( o.visitedContainer.has( node ) )
-        {
-          if( o.revisiting === 2 )
-          {
-            status = 2;
-            it.visited = true;
-            it.continueUp = false;
-          }
-          else
-          {
-            status = 0;
-          }
-        }
-
-        if( o.revisiting < 2 && !status )
-        {
-          nodesStatus.set( node, [ status, it.visited ] );
-          return true;
-        }
-
-        if( o.visitedContainer )
-        if( o.revisiting !== 1 && o.revisiting !== 2 )
-        o.visitedContainer.push( it.node );
-
-        handleUp( it );
-
-        if( !it.continueNode )
-        {
-          it.continueUp = false;
-          if( o.visitedContainer )
-          if( o.revisiting !== 1 && o.revisiting !== 2 )
-          o.visitedContainer.pop();
-        }
-
-        if( status > 1 && !it.continueNode )
-        {
-          status = 1;
-        }
-        if( status > 2 && !it.continueUp )
-        {
-          status = 2;
-        }
-        nodesStatus.set( node, [ status, it.visited ] );
-
-        if( !it.iterator.continue )
-        return false;
-
-        it.continueNode = true;
-        it.continueUp = true;
-
-        return true;
-
-        function end( r )
-        {
-          nodesStatus.set( node, status );
-          return r;
-        }
-      });
-
-      outNodes2.all( ( node, n ) =>
-      {
-        let status;
-        [ status, it.visited ] = nodesStatus.get( node );
-        if( o.revisiting < 2 && !status )
-        return true;
-
-        it.level = level+1;
-        it.index = n;
-        it.node = node;
-
-        it.continueNode = status > 1;
-        it.continueUp = status > 2;
-
-        visit( it, group.nodeOutNodesFor( it.node ) );
-
-        if( !it.iterator.continue )
-        return false;
-        return true;
-      });
+      outNodes[ allMethod ]( ( node, n ) => pre( node, n, it, level, nodesStatus, outNodes2 ) );
+      outNodes2.all( ( node, n ) => post( node, n, it, level, nodesStatus ) );
 
       it.level = level;
       it.node = node;
@@ -2409,7 +2315,6 @@ function lookCfs( o )
       it.visited = visited;
     }
 
-    // _.assert( it.node !== null ); /* xxx */
     if( o.onDown && it.node !== null )
     o.onDown( it.node, it );
 
@@ -2420,6 +2325,103 @@ function lookCfs( o )
 
     it.continueNode = true;
     it.continueUp = true;
+  }
+
+  /* */
+
+  function pre( node, n, it, level, nodesStatus, outNodes2 )
+  {
+    let status = 3;
+
+    if( o.revisiting === 0 )
+    {
+      let has = outNodes2.has( node );
+      if( has )
+      return true;
+      else
+      outNodes2.append( node );
+    }
+
+    it.level = level;
+    it.node = node;
+    it.index = n;
+    it.visited = false;
+
+    if( o.revisiting < 3 )
+    if( o.visitedContainer.has( node ) )
+    {
+      if( o.revisiting === 2 )
+      {
+        status = 2;
+        it.visited = true;
+        it.continueUp = false;
+      }
+      else
+      {
+        status = 0;
+      }
+    }
+
+    if( o.revisiting < 2 && !status )
+    {
+      nodesStatus.set( node, [ status, it.visited ] );
+      return true;
+    }
+
+    if( o.visitedContainer )
+    if( o.revisiting !== 1 && o.revisiting !== 2 )
+    o.visitedContainer.push( it.node );
+
+    handleUp( it );
+
+    if( !it.continueNode )
+    {
+      it.continueUp = false;
+      if( o.visitedContainer )
+      if( o.revisiting !== 1 && o.revisiting !== 2 )
+      o.visitedContainer.pop();
+    }
+
+    if( status > 1 && !it.continueNode )
+    {
+      status = 1;
+    }
+    if( status > 2 && !it.continueUp )
+    {
+      status = 2;
+    }
+    nodesStatus.set( node, [ status, it.visited ] );
+
+    if( !it.iterator.continue )
+    return false;
+
+    it.continueNode = true;
+    it.continueUp = true;
+
+    return true;
+  }
+
+  /* */
+
+  function post( node, n, it, level, nodesStatus )
+  {
+    let status;
+    [ status, it.visited ] = nodesStatus.get( node );
+    if( o.revisiting < 2 && !status )
+    return true;
+
+    it.level = level+1;
+    it.index = n;
+    it.node = node;
+
+    it.continueNode = status > 1;
+    it.continueUp = status > 2;
+
+    elemetsIterate( it, group.nodeOutNodesFor( it.node ) );
+
+    if( !it.iterator.continue )
+    return false;
+    return true;
   }
 
   /* */
