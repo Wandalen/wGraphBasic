@@ -217,6 +217,148 @@ function cycled4Scc()
 
 //
 
+function cycledVariants()
+{
+  let context = this;
+  var length = 3;
+  var a0 = { name : 'a0', nodes : [] }
+  var a1 = { name : 'a1', nodes : [] }
+  var a2 = { name : 'a2', nodes : [] }
+  var b1 = { name : 'b1', nodes : [] }
+  var b2 = { name : 'b2', nodes : [] }
+  var c = { name : 'c', nodes : [] }
+
+/*
+
+    a → b → a
+      ↘
+        c → b → a
+
+*/
+
+  a0.nodes.push( b1, c );
+  a1.nodes.push( b1, c );
+  a2.nodes.push( b1, c );
+  b1.nodes.push( a1 );
+  b2.nodes.push( a2 );
+  c.nodes.push( b2 );
+
+  let gr = { length }
+  gr.sys = new _.graph.AbstractGraphSystem
+  ({
+    // onNodeNameGet : ( node ) => node.original.map( ( node ) => node.name ).join( '+' ),
+    onNodeNameGet : ( node ) =>
+    {
+      _.assert( node.original === undefined );
+      _.assert( _.arrayIs( node.nodes ) );
+      return node.name;
+    },
+    onOutNodesGet : ( node ) =>
+    {
+      _.assert( node.original === undefined );
+      _.assert( _.arrayIs( node.nodes ) );
+      return node.nodes;
+    },
+    onNodeEvaluate : ( node ) =>
+    {
+      return gr.variantFrom( node );
+    },
+  });
+  gr.nodes = [ a0, a1, a2, b1, b2, c ];
+  gr.nodes.forEach( ( e ) => gr[ e.name ] = e );
+  gr.nodeToVariant = new HashMap;
+  gr.variantFrom = function variantFrom( node )
+  {
+    _.assert( node.original === undefined );
+    _.assert( _.arrayIs( node.nodes ) );
+    if( gr.nodeToVariant.has( node ) )
+    return gr.nodeToVariant.get( node );
+    let variant = Object.create( null );
+    gr.nodeToVariant.set( node, variant );
+    variant.original = [];
+    variant.out = [];
+    variant.in = [];
+    gr.nodes.forEach( ( node2 ) =>
+    {
+      if( node2.name[ 0 ] === node.name[ 0 ] )
+      {
+        variant.original.push( node2 );
+        gr.nodeToVariant.set( node2, variant );
+      }
+    });
+    gr.nodes.forEach( ( node2 ) =>
+    {
+      if( node2.name[ 0 ] === node.name[ 0 ] )
+      {
+        _.arrayAppendArrayOnce( variant.out, node2.nodes.map( ( node3 ) => gr.variantFrom( node3 ) ) );
+      }
+      node2.nodes.forEach( ( node3 ) =>
+      {
+        if( node3.name[ 0 ] === node.name[ 0 ] )
+        _.arrayAppendOnce( variant.in, gr.variantFrom( node2 ) );
+      })
+    });
+    variant.name = variant.original.map( ( original ) => original.name ).join( '+' );
+    return variant;
+  }
+
+  return gr;
+}
+
+//
+
+function cycledOmicron()
+{
+  let context = this;
+  var length = 3;
+  var a = { name : 'a', nodes : [] }
+  var b = { name : 'b', nodes : [] }
+  var c = { name : 'c', nodes : [] }
+  var d = { name : 'd', nodes : [] }
+  var e = { name : 'e', nodes : [] }
+  var f = { name : 'f', nodes : [] }
+
+/*
+
+        d
+      ↗ ⇅ ↖
+    a   b   c
+      ↘ ↓ 🡗 ↑
+        f → e
+
+*/
+
+  a.nodes.push( d, f );
+  b.nodes.push( d, f );
+  c.nodes.push( d, f );
+  d.nodes.push( b );
+  e.nodes.push( c );
+  f.nodes.push( e );
+
+  let gr = { length }
+  gr.sys = new _.graph.AbstractGraphSystem
+  ({
+    onNodeNameGet : ( node ) =>
+    {
+      _.assert( node.original === undefined );
+      _.assert( _.arrayIs( node.nodes ) );
+      return node.name;
+    },
+    onOutNodesGet : ( node ) =>
+    {
+      _.assert( node.original === undefined );
+      _.assert( _.arrayIs( node.nodes ) );
+      return node.nodes;
+    },
+  });
+  gr.nodes = [ a, b, c, d, e, f ];
+  gr.nodes.forEach( ( e ) => gr[ e.name ] = e );
+
+  return gr;
+}
+
+//
+
 function cycledGamma()
 {
   let context = this;
@@ -1750,7 +1892,6 @@ function lookBfs( test )
   var gr = context.cycled4Scc();
   var group = gr.sys.nodesGroup();
 
-  // group.nodesAdd( gr.nodes );
   test.identical( gr.nodes.length, 10 );
   logger.log( group.infoExport({ nodes : gr.nodes }) );
 
@@ -1934,7 +2075,6 @@ function lookBfs( test )
 
   function onDown( node, it )
   {
-    debugger;
     dws.push( group.nodesToNames( node ) );
   }
 
@@ -3549,7 +3689,7 @@ function lookBfsRevisitingTrivial( test )
   var group = gr.sys.nodesGroup();
 
   run({ fast : 1 });
-  run({ fast : 0 });
+  // run({ fast : 0 });
 
   /* - */
 
@@ -9607,14 +9747,6 @@ function rootsExportInfoTree( test )
 
   /* - */
 
-/*
-
-    a ↔ b
-    ↓
-    c
-
-*/
-
   test.case = 'cycled1Scc';
   var gr = context.cycled1Scc();
   var group = gr.sys.nodesGroup();
@@ -9746,6 +9878,84 @@ function rootsExportInfoTree( test )
 
   /* - */
 
+  test.case = 'cycledOmicron';
+  var gr = context.cycledOmicron();
+  var group = gr.sys.nodesGroup();
+  logger.log( group.nodesInfoExport( gr.nodes ) );
+  group.finit();
+
+  test.description = 'a';
+  var group = gr.sys.nodesGroup();
+  var expected =
+`
++-- a
+ +-- d
+ | +-- b
+ |   +-- f
+ |     +-- e
+ |       +-- c
+ +-- f
+   +-- e
+     +-- c
+       +-- d
+         +-- b
+`
+  var infoAsTree = group.rootsExportInfoTree( gr.a );
+  test.equivalent( infoAsTree, expected );
+  logger.log( 'Tree' );
+  logger.log( infoAsTree );
+  group.finit();
+
+  test.description = 'b';
+  var group = gr.sys.nodesGroup();
+  var expected =
+`
+ +-- b
+   +-- d
+   +-- f
+     +-- e
+       +-- c
+         +-- d
+`
+  var infoAsTree = group.rootsExportInfoTree( gr.b );
+  test.equivalent( infoAsTree, expected );
+  logger.log( 'Tree' );
+  logger.log( infoAsTree );
+  group.finit();
+
+  test.description = 'array of a, b';
+  var group = gr.sys.nodesGroup();
+  var expected =
+`
++-- a
+| +-- d
+| | +-- b
+| |   +-- f
+| |     +-- e
+| |       +-- c
+| +-- f
+|   +-- e
+|     +-- c
+|       +-- d
+|         +-- b
+|
++-- b
+ +-- d
+ +-- f
+   +-- e
+     +-- c
+       +-- d
+`
+  var infoAsTree = group.rootsExportInfoTree([ gr.a, gr.b ]);
+  test.equivalent( infoAsTree, expected );
+  logger.log( 'Tree' );
+  logger.log( infoAsTree );
+  group.finit();
+
+  gr.sys.finit();
+
+  /* - */
+
   test.case = 'cycled4Scc';
   var gr = context.cycled4Scc();
   var group = gr.sys.nodesGroup();
@@ -9774,7 +9984,6 @@ function rootsExportInfoTree( test )
 
   test.description = 'single b';
   var group = gr.sys.nodesGroup();
-  // // group.nodesAdd( gr.nodes );
   var expected =
   `+-- b
      +-- e
@@ -9787,7 +9996,6 @@ function rootsExportInfoTree( test )
   `
   var infoAsTree = group.rootsExportInfoTree([ gr.b ]);
   var group = gr.sys.nodesGroup();
-  // // group.nodesAdd( gr.nodes );
   test.equivalent( infoAsTree, expected );
   logger.log( 'Tree' );
   logger.log( infoAsTree );
@@ -9824,7 +10032,6 @@ function rootsExportInfoTree( test )
   `
   var infoAsTree = group.rootsExportInfoTree([ gr.a, gr.b, gr.c ]);
   var group = gr.sys.nodesGroup();
-  // // group.nodesAdd( gr.nodes );
   test.equivalent( infoAsTree, expected );
   logger.log( 'Tree' );
   logger.log( infoAsTree );
@@ -9832,7 +10039,6 @@ function rootsExportInfoTree( test )
 
   test.description = 'multiple, rootsDelimiting : 0';
   var group = gr.sys.nodesGroup();
-  // group.nodesAdd( gr.nodes );
   var expected =
   `+-- a
    | +-- b
@@ -9965,6 +10171,41 @@ function rootsExportInfoTree( test )
 
 } /* end of function rootsExportInfoTree */
 
+//
+
+function variants( test )
+{
+  let context = this;
+
+  /* - */
+
+  test.case = 'cycledVariants';
+  var gr = context.cycledVariants();
+  var group = gr.sys.nodesGroup();
+  logger.log( group.nodesInfoExport( gr.nodes ) );
+  group.finit();
+
+  test.description = 'a0';
+  var group = gr.sys.nodesGroup();
+  var expected =
+`
+ +-- a0
+   +-- b1
+   +-- c
+     +-- b2
+`
+  var infoAsTree = group.rootsExportInfoTree( gr.a0 );
+  test.equivalent( infoAsTree, expected );
+  logger.log( 'Tree' );
+  logger.log( infoAsTree );
+  group.finit();
+
+  gr.sys.finit();
+
+  /* - */
+
+}
+
 // --
 // declare
 // --
@@ -9982,6 +10223,8 @@ var Self =
     cycled2Scc,
     cycled3Scc,
     cycled4Scc,
+    cycledVariants,
+    cycledOmicron,
     cycledGamma,
     cycledAsymetricZeta,
     cycledAsymetricChi,
@@ -10051,6 +10294,7 @@ var Self =
     nodesStronglyConnectedCollectionDfs,
 
     rootsExportInfoTree,
+    variants,
 
   },
 

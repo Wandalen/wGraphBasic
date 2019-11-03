@@ -136,7 +136,6 @@ function unform()
 
   _.assert( !group.isUsed() );
 
-  // group.nodesDelete();
   _.arrayRemoveOnceStrictly( group.sys.groups, group );
 }
 
@@ -472,23 +471,6 @@ function nodeDescriptorDelete( nodeId )
 // node
 // --
 
-// /**
-//  * @summary Returns true if group has provided node. Takes node handle as argument.
-//  * @param {Object} node Node descriptor.
-//  * @function hasNode
-//  * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesGroup#
-//  */
-//
-// function hasNode( node )
-// {
-//   let group = this;
-//   let sys = group.sys;
-//   _.assert( !!group.nodeIs( node ) ); debugger;
-//   return group.nodes.has( node );
-// }
-
-//
-
 /**
  * @summary Returns true if provided entity `node` is a node.
  * @param {Object} node Node descriptor.
@@ -500,6 +482,10 @@ function nodeIs( node )
 {
   let group = this;
   let sys = group.sys;
+
+  // if( group.onNodeEvaluate )
+  // node = group.onNodeEvaluate( node );
+
   return group.onNodeIs( node );
 }
 
@@ -558,6 +544,10 @@ function nodeOutNodesFor( node )
   let sys = group.sys;
   _.assert( !!group.nodeIs( node ), 'Not a node' );
   _.assert( arguments.length === 1 );
+
+  // if( group.onNodeEvaluate )
+  // node = group.onNodeEvaluate( node );
+
   let result = sys.ContainerAdapterFrom( group.onOutNodesGet( node ) );
   _.assert( sys.ContainerIs( result ), () => `Cant retrive out nodes of ${group.nodeToQualifiedNameTry( node )}` );
   return result;
@@ -575,6 +565,10 @@ function nodeInNodesFor( node )
   let sys = group.sys;
   _.assert( !!group.nodeIs( node ), 'Not a node' );
   _.assert( arguments.length === 1 );
+
+  // if( group.onNodeEvaluate )
+  // node = group.onNodeEvaluate( node );
+
   let result = sys.ContainerAdapterFrom( group.onInNodesGet( node ) );
   _.assert( sys.ContainerIs( result ), () => `Cant retrive out nodes of ${group.nodeToQualifiedNameTry( node )}` );
   return result;
@@ -583,75 +577,6 @@ function nodeInNodesFor( node )
 var routine = nodeInNodesFor;
 var properties = routine.properties = Object.create( null );
 routine.input = 'Node';
-
-//
-
-function nodeOutNodesIdsFor( node )
-{
-  let group = this;
-  let sys = group.sys;
-
-  _.assert( !!group.nodeIs( node ) );
-  _.assert( arguments.length === 1 );
-
-  let result = group.nodesToIds( group.onOutNodesGet( node ) );
-
-  _.assert( sys.ContainerIs( result ) );
-  return result;
-}
-
-var routine = nodeOutNodesIdsFor;
-var properties = routine.properties = Object.create( null );
-routine.input = 'Node';
-
-//
-
-function nodeInNodesIdsFor( node )
-{
-  let group = this;
-  let sys = group.sys;
-
-  _.assert( !!group.nodeIs( node ) );
-  _.assert( arguments.length === 1 );
-
-  let result = group.nodesToIds( group.onInNodesGet( node ) );
-
-  _.assert( sys.ContainerIs( result ) );
-  return result;
-}
-
-var routine = nodeInNodesIdsFor;
-var properties = routine.properties = Object.create( null );
-routine.input = 'Node';
-
-//
-
-// function nodeRefNumber( nodeId )
-// {
-//   let group = this;
-//   let sys = group.sys;
-//
-//   _.assert( arguments.length === 1 );
-//   _.assert( !!nodeId, 'Expects node or node id' );
-//   _.assert( 'not tested' );
-//
-//   if( !sys.idIs( nodeId ) )
-//   {
-//     nodeId = group.nodeToId( nodeId );
-//   }
-//
-//   let descriptor = group.nodeDescriptorWithNode( nodeId );
-//
-//   if( !descriptor )
-//   if( sys.idToNodeHash.has( nodeId ) )
-//   return 1;
-//   else
-//   return 0;
-//
-//   _.assert( descriptor.count >= 0 );
-//
-//   return descriptor.count;
-// }
 
 //
 
@@ -678,8 +603,14 @@ function nodeInfoExport( node, opts )
 {
   let group = this;
   let sys = group.sys;
+
   if( group.onNodeInfoExport )
-  return group.onNodeInfoExport( node, o );
+  {
+    let node2 = node;
+    // if( group.onNodeEvaluate )
+    // node2 = group.onNodeEvaluate( node );
+    return group.onNodeInfoExport( node2, o );
+  }
 
   let name = group.nodeToName( node );
   let outNames = group.nodesToNames( group.nodeOutNodesFor( node ) );
@@ -753,13 +684,13 @@ function rootsExportInfoTree( roots, opts )
   roots.each( ( node, i ) =>
   {
     _.assert( _.intIs( i ) );
-    lastNodes = new Set;
+    lastNodes = new HashMap;
     tab = '';
 
     if( opts.rootsDelimiting && i > 0 )
     result += opts.linePrefix + opts.dtab1 + opts.linePostfix;
 
-    prevIt = { level : Infinity, path : [] };
+    prevIt = { level : Infinity };
     group.lookDfs
     ({
       roots : node,
@@ -771,11 +702,9 @@ function rootsExportInfoTree( roots, opts )
     });
 
     if( i === l )
-    lastNodes.add( node );
+    lastNodes.set( node, new Set([ undefined ]) );
 
-    prevIt = { level : 0, path : [] };
-    if( i === l )
-    prevIt.node = node;
+    prevIt = { level : 0, node : undefined };
     group.lookDfs
     ({
       roots : node,
@@ -819,8 +748,12 @@ function rootsExportInfoTree( roots, opts )
       return;
     }
     let dLevel = it.level - prevIt.level;
+    debugger;
     if( dLevel < 0 && prevIt.node !== undefined )
-    lastNodes.add( prevIt.node );
+    {
+      lastNodes.set( prevIt.node, lastNodes.get( prevIt.node ) || new Set() );
+      lastNodes.get( prevIt.node ).add( prevIt.down.node );
+    }
     prevIt = it;
   }
 
@@ -837,7 +770,7 @@ function rootsExportInfoTree( roots, opts )
       return;
     }
 
-    let isLast = lastNodes.has( prevIt.node );
+    let isLast = lastNodes.has( prevIt.node ) && lastNodes.get( prevIt.node ).has( prevIt.down.node );
     let dLevel = it.level - prevIt.level;
     let name = opts.onNodeName( node );
 
@@ -899,9 +832,15 @@ function nodeToQualifiedName( node )
   _.assert( arguments.length === 1 );
 
   if( group.onNodeQualifiedNameGet === null )
-  result = 'node::' + group.nodeToName( node );
+  {
+    result = 'node::' + group.nodeToName( node );
+  }
   else
-  result = group.onNodeQualifiedNameGet( node );
+  {
+    // if( group.onNodeEvaluate )
+    // node = group.onNodeEvaluate( node );
+    result = group.onNodeQualifiedNameGet( node );
+  }
 
   _.assert( _.primitiveIs( result ) && result !== undefined, 'Cant get qualified name for the node' );
 
@@ -952,9 +891,12 @@ function nodeToName( node )
   _.assert( !!group.nodeIs( node ), 'Expects node' );
   _.assert( arguments.length === 1 );
 
-  if( group.onNodeNameGet === null )
-  result = group.nodeNameFromGetterId( node );
-  else
+  // if( group.onNodeEvaluate )
+  // node = group.onNodeEvaluate( node );
+
+  // if( group.onNodeNameGet === null )
+  // result = group.nodeNameFromGetterId( node );
+  // else
   result = group.onNodeNameGet( node );
 
   _.assert( _.primitiveIs( result ) && result !== undefined, 'Cant get name for the node' );
@@ -1373,7 +1315,7 @@ function sourcesFromNodes( dstNodes, srcNodes )
   collection.nodes.each( ( node ) =>
   {
     if( collection.group.nodeIndegree( node ) === 0 )
-    dstNodes.appendContainerOnce( node.originalNodes );
+    dstNodes.appendContainerOnce( node.originalNodes, group.onNodeEvaluate );
   });
   collection.finit();
 
@@ -1438,7 +1380,7 @@ function rootsToAllReachable( dstNodes, srcRoots )
 
   function onUp( node )
   {
-    dstNodes.appendOnce( node );
+    dstNodes.appendOnce( node, group.onNodeEvaluate );
   }
 
 }
@@ -1491,7 +1433,7 @@ function rootsToAll( dstNodes, srcRoots )
 
   function onUp( node )
   {
-    dstNodes.appendOnce( node );
+    dstNodes.appendOnce( node, group.onNodeEvaluate );
     // group.nodeAddOnce( node );
   }
 
@@ -1777,7 +1719,7 @@ function lookBfs( o )
 
   o.roots = group.asNodesPreferSet( o.roots );
   o.roots = group.asNodesAdapter( o.roots );
-  o.roots.once( o.roots );
+  o.roots.once( o.roots, group.onNodeEvaluate );
 
   let allDirect = o.left ? 'allLeft' : 'allRight';
   let allRevert = o.left ? 'allRight' : 'allLeft';
@@ -1853,7 +1795,7 @@ function lookBfs( o )
       }
       else if( o.revisiting < 2 )
       {
-        if( o.visitedContainer.has( node ) )
+        if( o.visitedContainer.has( node, group.onNodeEvaluate ) )
         {
           it.visited = true;
           nodesStatus.set( node, [ false, false, true ] );
@@ -1942,7 +1884,7 @@ function lookBfs( o )
     nodes2.each( ( node ) =>
     {
       let outNodes = group.nodeOutNodesFor( node );
-      nodes3.appendContainerOnce( outNodes );
+      nodes3.appendContainerOnce( outNodes, group.onNodeEvaluate );
     });
 
     let level = it.level;
@@ -2060,7 +2002,7 @@ function lookDfs( o )
     o.roots[ allMethod ]( ( node, index ) =>
     {
       let it = Object.create( iterator );
-      it.prev = iterator;
+      it.down = iterator;
       it.node = node;
       it.index = index;
       it.visited = false;
@@ -2082,7 +2024,7 @@ function lookDfs( o )
   {
 
     if( o.revisiting < 3 )
-    if( o.visitedContainer.has( it.node ) )
+    if( o.visitedContainer.has( it.node, group.onNodeEvaluate ) )
     {
       if( o.revisiting < 2 )
       return;
@@ -2091,7 +2033,7 @@ function lookDfs( o )
     }
 
     if( o.visitedContainer )
-    o.visitedContainer.push( it.node );
+    o.visitedContainer.append( it.node );
 
     if( o.onUp )
     o.onUp( it.node, it );
@@ -2121,7 +2063,7 @@ function lookDfs( o )
         let it2 = Object.create( iterator );
         it2.node = node;
         it2.index = n;
-        it2.prev = it;
+        it2.down = it;
         it2.level = level;
         it2.visited = false;
         it2.continueNode = true;
@@ -2148,7 +2090,7 @@ function lookDfs( o )
   function visitFast( it )
   {
     if( o.revisiting < 3 )
-    if( o.visitedContainer.has( it.node ) )
+    if( o.visitedContainer.has( it.node, group.onNodeEvaluate ) )
     {
       if( o.revisiting < 2 )
       return;
@@ -2335,7 +2277,7 @@ function lookCfs( o )
 
     if( o.revisiting === 0 )
     {
-      let has = outNodes2.has( node );
+      let has = outNodes2.has( node, group.onNodeEvaluate );
       if( has )
       return true;
       else
@@ -2348,7 +2290,7 @@ function lookCfs( o )
     it.visited = false;
 
     if( o.revisiting < 3 )
-    if( o.visitedContainer.has( node ) )
+    if( o.visitedContainer.has( node, group.onNodeEvaluate ) )
     {
       if( o.revisiting === 2 )
       {
@@ -2513,7 +2455,7 @@ function dagTopSortDfs( nodes )
 
   nodes.each( ( node ) =>
   {
-    if( visitedContainer.has( node ) )
+    if( visitedContainer.has( node, group.onNodeEvaluate ) )
     return;
     group.lookDfs
     ({
@@ -2533,10 +2475,9 @@ function dagTopSortDfs( nodes )
   function handleDown( node, it )
   {
     let outNodes = group.nodeOutNodesFor( node );
-    outNodes = outNodes.filter( ( node2 ) => !visitedContainer.has( node2 ) ? node2 : undefined );
+    outNodes = outNodes.filter( ( node2 ) => !visitedContainer.has( node2, group.onNodeEvaluate ) ? node2 : undefined );
     if( outNodes.length === 0 )
     ordering.push( node );
-    // visitedContainer.push( node );
   }
 
 }
@@ -2896,6 +2837,7 @@ function topSortCycledSourceBasedPreciseBfs( nodes )
     function add( node )
     {
       _.assert( !!node );
+      /* qqq : is group.onNodeEvaluate required here? probably not? */
       nodeToOutNodes.get( node ).each( ( node2 ) => nodeToInNodes.get( node2 ).removeOnce( node ) );
       nodeToInNodes.get( node ).each( ( node2 ) => nodeToOutNodes.get( node2 ).removeOnce( node ) );
       added.append( node );
@@ -3124,7 +3066,7 @@ function pairIsConnectedDfs( pair )
   function onUp2( node, it )
   {
 
-    if( node === node1 || visitedAdapter.has( node ) )
+    if( node === node1 || visitedAdapter.has( node, group.onNodeEvaluate ) )
     {
       it.iterator.continue = false;
       it.result = true;
@@ -3206,8 +3148,7 @@ function pairIsConnectedStronglyDfs( pair )
   function onUp2( node, it )
   {
 
-    // if( node === node1 || _.arrayHas( visited, node ) )
-    if( node === node1 || visitedAdapter.has( node ) )
+    if( node === node1 || visitedAdapter.has( node, group.onNodeEvaluate ) )
     {
       it.iterator.continue = false;
       it.result = true;
@@ -3284,7 +3225,7 @@ function nodesConnectedLayersDfs( nodes )
 
   nodes.each( ( node ) =>
   {
-    if( visitedContainer.has( node ) )
+    if( visitedContainer.has( node, group.onNodeEvaluate ) )
     return;
     groups.push( [] );
     group.lookDfs
@@ -3341,7 +3282,7 @@ function nodesStronglyConnectedLayersDfs( nodes )
 
   nodes.each( ( node ) =>
   {
-    if( visited1.has( node ) )
+    if( visited1.has( node, group.onNodeEvaluate ) )
     return;
     /*
       both visited1 and visitedContainer made with revisiting : 0 are required
@@ -3365,7 +3306,7 @@ function nodesStronglyConnectedLayersDfs( nodes )
 
   visited1.eachRight( ( node, i ) =>
   {
-    if( visited2.has( node ) )
+    if( visited2.has( node, group.onNodeEvaluate ) )
     return;
     let layer = [];
     layers.push( layer );
@@ -3386,7 +3327,7 @@ function nodesStronglyConnectedLayersDfs( nodes )
 
   function handleUp1( node, it )
   {
-    if( visited1.has( node ) )
+    if( visited1.has( node, group.onNodeEvaluate ) )
     {
       it.continueUp = false;
       return;
@@ -3408,7 +3349,11 @@ function nodesStronglyConnectedLayersDfs( nodes )
   {
     return function handleUp2( node, it )
     {
-      _.assert( visited1.has( node ), () => `Input set of nodes does not have ${group.nodeToQualifiedNameTry( node )}` );
+      _.assert
+      (
+          visited1.has( node, group.onNodeEvaluate )
+        , () => `Input set of nodes does not have ${group.nodeToQualifiedNameTry( node )}`
+      );
       layer.push( node );
     }
   }
@@ -3448,7 +3393,7 @@ function nodesStronglyConnectedCollectionDfs( nodes )
 
   nodes.each( ( node ) =>
   {
-    if( visited1.has( node ) )
+    if( visited1.has( node, group.onNodeEvaluate ) )
     return;
     /*
       both visited1 and visitedContainer made with revisiting : 0 are required
@@ -3471,7 +3416,8 @@ function nodesStronglyConnectedCollectionDfs( nodes )
   // let nodes2 = sys.ContainerAdapterFrom( new Set );
   let group2 = sys.nodesGroupDifferent
   ({
-    onNodeNameGet : group.nodeNameFromGetterId,
+    // onNodeNameGet : group.nodeNameFromGetterId,
+    // onNodeNameGet : group.nodeNameFromGetterId,
     onOutNodesGet : group.nodesFromFieldOutNodes,
     onInNodesGet : group.nodesFromFieldInNodes,
   });
@@ -3483,7 +3429,7 @@ function nodesStronglyConnectedCollectionDfs( nodes )
 
   visited1.eachRight( ( node, i ) =>
   {
-    if( visited2.has( node ) )
+    if( visited2.has( node, group.onNodeEvaluate ) )
     return;
     let dnode = dnodeMake();
     group.lookDfs
@@ -3501,9 +3447,10 @@ function nodesStronglyConnectedCollectionDfs( nodes )
   {
     dnode.originalOutNodes.each( ( node, t ) =>
     {
-      if( dnode.originalNodes.has( node ) )
+      if( dnode.originalNodes.has( node, group.onNodeEvaluate ) )
       return;
       let dnode2 = fromOriginal.get( node );
+      /* probably group.onNodeEvaluate is not needed here */
       dnode.outNodes.appendOnce( dnode2 );
       dnode2.inNodes.appendOnce( dnode );
     });
@@ -3530,7 +3477,7 @@ function nodesStronglyConnectedCollectionDfs( nodes )
 
   function handleUp1( node, it )
   {
-    if( visited1.has( node ) )
+    if( visited1.has( node, group.onNodeEvaluate ) )
     {
       it.continueUp = false;
       return;
@@ -3544,7 +3491,11 @@ function nodesStronglyConnectedCollectionDfs( nodes )
     if( !it.continueUp )
     return;
     visited1.push( node );
-    _.assert( nodes.has( node ), () => `Input set of nodes does not have ${group.nodeToQualifiedNameTry( node )}` );
+    _.assert
+    (
+        nodes.has( node, group.onNodeEvaluate )
+      , () => `Input set of nodes does not have ${group.nodeToQualifiedNameTry( node )}`
+    );
   }
 
   /* */
@@ -3553,7 +3504,11 @@ function nodesStronglyConnectedCollectionDfs( nodes )
   {
     return function handleUp2( node, it )
     {
-      _.assert( visited1.has( node ), () => `Input set of nodes does not have ${group.nodeToQualifiedNameTry( node )}` );
+      _.assert
+      (
+        visited1.has( node, group.onNodeEvaluate ),
+        () => `Input set of nodes does not have ${group.nodeToQualifiedNameTry( node )}`
+      );
       fromOriginal.set( it.node, dnode );
       dnode.originalNodes.push( node );
       dnode.originalOutNodes.appendContainer( group.nodeOutNodesFor( node ) );
@@ -3571,11 +3526,11 @@ properties.forCollection = 1;
 // etc
 // --
 
-function nodeNameFromGetterId( node )
-{
-  let group = this;
-  return group.nodeToId( node );
-}
+// function nodeNameFromGetterId( node )
+// {
+//   let group = this;
+//   return group.nodeToId( node );
+// }
 
 //
 
@@ -3716,21 +3671,19 @@ let Composes =
 
 let Aggregates =
 {
-  onNodeNameGet : nodeNameFromGetterId,
+  onNodeNameGet : nodeNameFromFieldName,
   onNodeQualifiedNameGet : null,
   onNodeEvaluate : null, /* qqq : cover by tests */
   onNodeIs : nodeIs_default,
   onOutNodesGet : nodesFromFieldNodes,
   onInNodesGet : null,
   onNodeInfoExport : null,
-  onNodeIdGet : null,
   onNodeFrom : null,
 }
 
 let Associates =
 {
   sys : null,
-  // nodes : _.define.own([]),
   context : null,
 }
 
@@ -3741,17 +3694,6 @@ let Restricts =
 
 let Statics =
 {
-
-  // ContainerIs,
-  // ContainerAdapterIs,
-  // ContainerMake,
-  // ContainerAdapterMake,
-  // ContainerAdapterFrom,
-  //
-  // ContainerAdapter,
-  // SetContainerAdapter,
-  // ArrayContainerAdapter,
-
 }
 
 let Forbids =
@@ -3763,7 +3705,6 @@ let Forbids =
 
 let Accessors =
 {
-  // nodes : {},
   direct : {},
 }
 
@@ -3828,10 +3769,10 @@ let Extend =
   nodesOutNodesFor : Vectorize( nodeOutNodesFor ),
   nodeInNodesFor,
   nodesInNodesFor : Vectorize( nodeInNodesFor ),
-  nodeOutNodesIdsFor,
-  nodesOutNodesIdsFor : Vectorize( nodeOutNodesIdsFor ),
-  nodeInNodesIdsFor,
-  nodesInNodesIdsFor : Vectorize( nodeInNodesIdsFor ),
+  // nodeOutNodesIdsFor,
+  // nodesOutNodesIdsFor : Vectorize( nodeOutNodesIdsFor ),
+  // nodeInNodesIdsFor,
+  // nodesInNodesIdsFor : Vectorize( nodeInNodesIdsFor ),
   // nodeRefNumber,
   // nodesSet,
 
@@ -3944,7 +3885,7 @@ let Extend =
 
   // default
 
-  nodeNameFromGetterId,
+  // nodeNameFromGetterId,
   nodeNameFromFieldName,
   nodeIs_default,
   inNodesFromGroupCache,
