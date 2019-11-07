@@ -453,7 +453,8 @@ function OriginalOfAdapter( src )
 function ContainerMake()
 {
   _.assert( arguments.length === 0 );
-  return new Array;
+  return new Set;
+  // return new Array;
 }
 
 //
@@ -469,7 +470,7 @@ function ContainerMake()
 function ContainerAdapterMake()
 {
   _.assert( arguments.length === 0 );
-  return this.ContainerAdapterFrom( new Array );
+  return this.ContainerAdapterFrom( this.ContainerMake() );
 }
 
 //

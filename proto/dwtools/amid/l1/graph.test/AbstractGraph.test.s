@@ -217,54 +217,26 @@ function cycled4Scc()
 
 //
 
-function cycledVariants()
+function _cycledVariants( gr )
 {
   let context = this;
-  var length = 3;
-  var a0 = { name : 'a0', nodes : [] }
-  var a1 = { name : 'a1', nodes : [] }
-  var a2 = { name : 'a2', nodes : [] }
-  var b1 = { name : 'b1', nodes : [] }
-  var b2 = { name : 'b2', nodes : [] }
-  var c = { name : 'c', nodes : [] }
 
-/*
-
-    a → b → a
-      ↘
-        c → b → a
-
-*/
-
-  a0.nodes.push( b1, c );
-  a1.nodes.push( b1, c );
-  a2.nodes.push( b1, c );
-  b1.nodes.push( a1 );
-  b2.nodes.push( a2 );
-  c.nodes.push( b2 );
-
-  let gr = { length }
+  gr.length = gr.nodes.length;
   gr.sys = new _.graph.AbstractGraphSystem
   ({
-    // onNodeNameGet : ( node ) => node.original.map( ( node ) => node.name ).join( '+' ),
     onNodeNameGet : ( node ) =>
     {
       _.assert( node.original === undefined );
       _.assert( _.arrayIs( node.nodes ) );
       return node.name;
     },
-    onOutNodesGet : ( node ) =>
-    {
-      _.assert( node.original === undefined );
-      _.assert( _.arrayIs( node.nodes ) );
-      return node.nodes;
-    },
+    onOutNodesGet : onOutNodesGet,
     onNodeEvaluate : ( node ) =>
     {
       return gr.variantFrom( node );
     },
   });
-  gr.nodes = [ a0, a1, a2, b1, b2, c ];
+
   gr.nodes.forEach( ( e ) => gr[ e.name ] = e );
   gr.nodeToVariant = new HashMap;
   gr.variantFrom = function variantFrom( node )
@@ -302,7 +274,185 @@ function cycledVariants()
     return variant;
   }
 
+  gr.nodes.forEach( ( node ) => gr.variantFrom( node ) );
+
   return gr;
+
+  function onOutNodesGet( node )
+  {
+    let group = this;
+    _.assert( node.original === undefined );
+    _.assert( _.arrayIs( node.nodes ) );
+    let result = node.nodes.slice();
+    let variant = gr.variantFrom( node );
+    _.arrayAppendArraysOnce( result, variant.out.map( ( variant ) => variant.original ) );
+    // logger.log( `Out nodes of ${group.nodeToName( node )} are ${group.nodesToNames( result ).join( ' ' )}` )
+    return result;
+  }
+
+}
+
+//
+
+function cycledVariantsTriplet()
+{
+  let context = this;
+  var length = 6;
+  var a0 = { name : 'a0', nodes : [] }
+  var a1 = { name : 'a1', nodes : [] }
+  var a2 = { name : 'a2', nodes : [] }
+  var b1 = { name : 'b1', nodes : [] }
+  var b2 = { name : 'b2', nodes : [] }
+  var c = { name : 'c', nodes : [] }
+
+/*
+
+   a0 → b1 → a1
+      ↘
+        c → b2 → a2
+
+*/
+
+  a0.nodes.push();
+  a1.nodes.push( c );
+  a2.nodes.push( b1 );
+  b1.nodes.push( a1 );
+  b2.nodes.push( a2 );
+  c.nodes.push( b2 );
+
+  let gr = Object.create( null );
+  gr.nodes = [ a0, a1, a2, b1, b2, c ];
+  return context._cycledVariants( gr );
+}
+
+//
+
+function cycledVariants2()
+{
+  let context = this;
+  var length = 9;
+  var a0 = { name : 'a0', nodes : [] }
+  var a1 = { name : 'a1', nodes : [] }
+  var a2 = { name : 'a2', nodes : [] }
+  var b = { name : 'b', nodes : [] }
+  var c = { name : 'c', nodes : [] }
+  var d = { name : 'd', nodes : [] }
+  var e = { name : 'e', nodes : [] }
+  var f = { name : 'f', nodes : [] }
+  var g = { name : 'g', nodes : [] }
+
+/*
+
+   a2
+   ⇅
+   g ⇆ a1
+   ⇅
+   a0 → b → c
+   ↓
+   d → e
+     ↖ ↓
+       f
+
+*/
+
+  a0.nodes.push( b, d, g );
+  a1.nodes.push( b, d, g );
+  a2.nodes.push( b, d, g );
+  b.nodes.push( c );
+  c.nodes.push();
+  d.nodes.push( e );
+  e.nodes.push( f );
+  f.nodes.push( d );
+  g.nodes.push( a0, a1, a2 );
+
+  let gr = Object.create( null );
+  gr.nodes = [ a0, a1, a2, b, c, d, e, f, g ];
+  return context._cycledVariants( gr );
+}
+
+//
+
+function cycledVariants3()
+{
+  let context = this;
+  var length = 8;
+  var a = { name : 'a', nodes : [] }
+  var b = { name : 'b', nodes : [] }
+  var c1 = { name : 'c1', nodes : [] }
+  var c2 = { name : 'c2', nodes : [] }
+  var d = { name : 'd', nodes : [] }
+  var e = { name : 'e', nodes : [] }
+  var f = { name : 'f', nodes : [] }
+  var g = { name : 'g', nodes : [] }
+
+/*
+
+   g ← c2
+   ↓
+   a → b → c1
+   ↓
+   d → e
+     ↖ ↓
+       f
+
+*/
+
+  a.nodes.push( b, d );
+  b.nodes.push( c1 );
+  c1.nodes.push();
+  c2.nodes.push( g );
+  d.nodes.push( e );
+  e.nodes.push( f );
+  f.nodes.push( d );
+  g.nodes.push( a );
+
+  let gr = Object.create( null );
+  gr.nodes = [ a, b, c1, c2, d, e, f, g ];
+  return context._cycledVariants( gr );
+}
+
+//
+
+function cycledVariants4()
+{
+  let context = this;
+  var length = 9;
+  var a = { name : 'a', nodes : [] }
+  var b1 = { name : 'b1', nodes : [] }
+  var b2 = { name : 'b2', nodes : [] }
+  var c1 = { name : 'c1', nodes : [] }
+  var c2 = { name : 'c2', nodes : [] }
+  var d = { name : 'd', nodes : [] }
+  var e = { name : 'e', nodes : [] }
+  var f = { name : 'f', nodes : [] }
+  var g = { name : 'g', nodes : [] }
+
+/*
+
+     ↗ c2 → b2
+   g
+   ↑ ↘ b1 → c1
+   a
+   ↓
+   d → e
+     ↖ ↓
+       f
+
+*/
+
+  a.nodes.push( d, g );
+  b1.nodes.push( c1 );
+  b2.nodes.push();
+  c1.nodes.push();
+  c2.nodes.push( b2 );
+  d.nodes.push( e );
+  e.nodes.push( f );
+  f.nodes.push( d );
+  g.nodes.push( b1, c2 );
+
+  let gr = Object.create( null );
+  gr.nodes = [ a, b1, b2, c1, c2, d, e, f, g ];
+  return context._cycledVariants( gr );
 }
 
 //
@@ -642,26 +792,18 @@ function makeByNodesWithInts( test )
   test.identical( gr.sys.hasNode( gr.a ), true );
 
   test.identical( gr.sys.nodeDescriptorsHash.size, 5 );
-  // test.identical( gr.sys.idToNodeHash.size, 5 );
-  // test.identical( gr.sys.nodeToIdHash.size, 5 );
   test.identical( collection.nodes.length, 5 );
-  debugger;
   test.identical( collection.nodesToNames().toArray().original, [ '11', '12', '13', '14', '15' ] );
-  debugger;
   logger.log( collection.infoExport() );
 
   collection.nodeDelete( gr.d );
   test.identical( gr.sys.nodeDescriptorsHash.size, 4 );
-  // test.identical( gr.sys.idToNodeHash.size, 4 );
-  // test.identical( gr.sys.nodeToIdHash.size, 4 );
   test.identical( collection.nodes.length, 4 );
   test.identical( collection.nodesToNames().toArray().original, [ '11', '12', '13', '15' ] );
   logger.log( collection.infoExport() );
 
   collection.finit();
   test.identical( gr.sys.nodeDescriptorsHash.size, 0 );
-  // test.identical( gr.sys.idToNodeHash.size, 0 );
-  // test.identical( gr.sys.nodeToIdHash.size, 0 );
   test.identical( gr.sys.groups.length, 0 );
   test.identical( gr.sys.collections.length, 0 );
   gr.sys.finit();
@@ -717,32 +859,24 @@ function makeByNodesWithInts( test )
   collection.nodesAdd( gr.nodes );
 
   test.identical( gr.sys.nodeDescriptorsHash.size, 5 );
-  // test.identical( gr.sys.idToNodeHash.size, 5 );
-  // test.identical( gr.sys.nodeToIdHash.size, 5 );
   test.identical( collection.nodes.length, 5 );
   test.identical( collection.nodesToNames().toArray().original, [ '11', '12', '13', '14', '15' ] );
   logger.log( collection.infoExport() );
 
   collection.nodesDelete([ gr.a, gr.d ]);
   test.identical( gr.sys.nodeDescriptorsHash.size, 3 );
-  // test.identical( gr.sys.idToNodeHash.size, 2 );
-  // test.identical( gr.sys.nodeToIdHash.size, 2 );
   test.identical( collection.nodes.length, 3 );
   test.identical( collection.nodesToNames().toArray().original, [ '12', '13', '15' ] );
   logger.log( collection.infoExport() );
 
   collection.nodesDelete( gr.b, gr.c );
   test.identical( gr.sys.nodeDescriptorsHash.size, 1 );
-  // test.identical( gr.sys.idToNodeHash.size, 2 );
-  // test.identical( gr.sys.nodeToIdHash.size, 2 );
   test.identical( collection.nodes.length, 1 );
   test.identical( collection.nodesToNames().toArray().original, [ '15' ] );
   logger.log( collection.infoExport() );
 
   collection.nodesDelete();
   test.identical( gr.sys.nodeDescriptorsHash.size, 0 );
-  // test.identical( gr.sys.idToNodeHash.size, 0 );
-  // test.identical( gr.sys.nodeToIdHash.size, 0 );
   test.identical( collection.nodes.length, 0 );
   test.identical( collection.nodesToNames().toArray().original, [] );
   logger.log( collection.infoExport() );
@@ -751,8 +885,6 @@ function makeByNodesWithInts( test )
   test.identical( gr.sys.nodeDescriptorsHash.size, 0 );
   test.identical( gr.sys.collections.length, 0 );
   test.identical( gr.sys.groups.length, 0 );
-  // test.identical( gr.sys.idToNodeHash.size, 0 );
-  // test.identical( gr.sys.nodeToIdHash.size, 0 );
   gr.sys.finit();
 
 }
@@ -926,6 +1058,43 @@ function collectionClone( test )
   /* */
 
   gr.sys.finit();
+
+}
+
+//
+
+function cacheInNodesVariants( test )
+{
+  let context = this;
+
+  /* - */
+
+  test.case = 'cycledVariants3';
+  var gr = context.cycledVariants3();
+  var group = gr.sys.nodesGroup();
+  logger.log( group.nodesInfoExport( gr.nodes ) );
+  group.finit();
+
+  test.description = 'all nodes';
+  var group = gr.sys.nodesGroup();
+  group.cacheInNodesFromOutNodesOnce( gr.nodes );
+  var exp =
+`
+a : g
+b : a
+c1 : b
+c2 : b
+d : a+f
+e : d
+f : e
+g : c1+c2
+`;
+  var got = group.cacheInNodesExportInfo();
+  test.equivalent( got, exp );
+
+  gr.sys.finit();
+
+  /* - */
 
 }
 
@@ -1535,6 +1704,37 @@ function rootsToAllReachable( test )
 
 //
 
+function rootsToAllReachableVariants( test )
+{
+  let context = this;
+
+  /* - */
+
+  test.case = 'cycledVariants4';
+  var gr = context.cycledVariants4();
+
+  test.description = 'a';
+  var group = gr.sys.nodesGroup();
+  var exp = new Set([ 'a', 'd', 'e', 'f', 'g', 'b1', 'b2', 'c1', 'c2' ]);
+  var dst = gr.a;
+  var got = group.rootsToAllReachable( dst );
+  test.identical( group.nodesToNames( got ), exp );
+
+  test.description = 'g';
+  var group = gr.sys.nodesGroup();
+  var exp = new Set([ 'g', 'b1', 'c1', 'b2', 'c2' ]);
+  var dst = gr.g;
+  var got = group.rootsToAllReachable( dst );
+  test.identical( group.nodesToNames( got ), exp );
+
+  gr.sys.finit();
+
+  /* - */
+
+}
+
+//
+
 function rootsToAll( test )
 {
   let context = this;
@@ -1657,6 +1857,37 @@ function rootsToAll( test )
 
 //
 
+function rootsToAllVariants( test )
+{
+  let context = this;
+
+  /* - */
+
+  test.case = 'cycledVariants4';
+  var gr = context.cycledVariants4();
+
+  test.description = 'a';
+  var group = gr.sys.nodesGroup();
+  var exp = new Set([ 'a', 'd', 'e', 'f', 'g', 'b1', 'b2', 'c1', 'c2' ]);
+  var dst = gr.a;
+  var got = group.rootsToAll( dst );
+  test.identical( group.nodesToNames( got ), exp );
+
+  test.description = 'g';
+  var group = gr.sys.nodesGroup();
+  var exp = new Set([ 'g', 'b1', 'c1', 'b2', 'c2' ]);
+  var dst = gr.g;
+  var got = group.rootsToAll( dst );
+  test.identical( group.nodesToNames( got ), exp );
+
+  gr.sys.finit();
+
+  /* - */
+
+}
+
+//
+
 function sinksOnlyAmong( test )
 {
   let context = this;
@@ -1670,12 +1901,6 @@ function sinksOnlyAmong( test )
   var got = group.sinksOnlyAmong( gr.nodes );
   var expected = [ 'f', 'j' ];
   test.identical( _.containerAdapter.toOriginal( group.nodesToNames( got ) ), expected );
-
-  // test.case = 'implicit';
-  // // group.nodesAdd( gr.nodes );
-  // var got = group.sinksOnlyAmong();
-  // var expected = new Set([ 'f', 'j' ]);
-  // test.identical( _.containerAdapter.toOriginal( group.nodesToNames( got ) ), expected );
 
   gr.sys.finit();
 }
@@ -1691,9 +1916,7 @@ function sourcesOnlyAmong( test )
   var gr = context.cycled4Scc();
   var group = gr.sys.nodesGroup();
 
-  // group.nodesAdd( gr.nodes );
   var got = group.sourcesOnlyAmong( gr.nodes );
-  // var expected = new Set([ 'd', 'j' ]);
   var expected = [ 'd', 'j' ];
   test.identical( _.containerAdapter.toOriginal( group.nodesToNames( got ) ), expected );
 
@@ -1710,7 +1933,6 @@ function leastMostDegreeAmong( test )
 
   var gr = context.cycled4Scc();
   var group = gr.sys.nodesGroup();
-  // group.nodesAdd( gr.nodes );
 
   var got = group.leastIndegreeAmong( gr.nodes );
   var expected = 0;
@@ -2151,21 +2373,21 @@ function lookBfsVisitedContainter( test )
     nds = [];
   }
 
-  function onUp( nodeHandle, it )
+  function onUp( node, it )
   {
     if( it.continueNode )
-    ups.push( nodeHandle );
+    ups.push( node );
   }
 
-  function onDown( nodeHandle, it )
+  function onDown( node, it )
   {
     if( it.continueNode )
-    dws.push( nodeHandle );
+    dws.push( node );
   }
 
-  function onNode( nodeHandle, it )
+  function onNode( node, it )
   {
-    nds.push( nodeHandle );
+    nds.push( node );
   }
 
 } /* end of lookBfsVisitedContainter */
@@ -2300,23 +2522,23 @@ function lookBfsSuspending( test )
     nds = [];
   }
 
-  function onUp( nodeHandle, it )
+  function onUp( node, it )
   {
     if( it.level === 2 )
     it.continueNode = false;
     if( it.continueNode )
-    ups.push( nodeHandle );
+    ups.push( node );
   }
 
-  function onDown( nodeHandle, it )
+  function onDown( node, it )
   {
     if( it.continueNode )
-    dws.push( nodeHandle );
+    dws.push( node );
   }
 
-  function onNode( nodeHandle, it )
+  function onNode( node, it )
   {
-    nds.push( nodeHandle );
+    nds.push( node );
   }
 
 } /* end of lookBfsSuspending */
@@ -3903,74 +4125,74 @@ function lookBfsRevisitingTrivial( test )
     downVisited = [];
   }
 
-  function onNode( nodeHandle, it )
+  function onNode( node, it )
   {
-    nds.push( nodeHandle );
+    nds.push( node );
   }
 
-  function onUp( nodeHandle, it )
+  function onUp( node, it )
   {
-    console.log( 'up', nodeHandle.name );
+    console.log( 'up', node.name );
     upContinueNode.push( it.continueNode );
     upContinueUp.push( it.continueUp );
     upVisited.push( it.visited );
-    ups.push( nodeHandle );
+    ups.push( node );
   }
 
-  function onDown( nodeHandle, it )
+  function onDown( node, it )
   {
     debugger;
-    console.log( 'down', nodeHandle.name );
+    console.log( 'down', node.name );
     downContinueNode.push( it.continueNode );
     downContinueUp.push( it.continueUp );
     downVisited.push( it.visited );
-    dws.push( nodeHandle );
+    dws.push( node );
   }
 
-  function onNode2( nodeHandle, it )
+  function onNode2( node, it )
   {
-    nds.push( nodeHandle );
+    nds.push( node );
   }
 
-  function onUp2( nodeHandle, it )
+  function onUp2( node, it )
   {
     if( it.level >= 2 )
     it.continueUp = false;
     upContinueNode.push( it.continueNode );
     upContinueUp.push( it.continueUp );
     upVisited.push( it.visited );
-    ups.push( nodeHandle );
+    ups.push( node );
   }
 
-  function onDown2( nodeHandle, it )
+  function onDown2( node, it )
   {
     downContinueNode.push( it.continueNode );
     downContinueUp.push( it.continueUp );
     downVisited.push( it.visited );
-    dws.push( nodeHandle );
+    dws.push( node );
   }
 
-  function onNode3( nodeHandle, it )
+  function onNode3( node, it )
   {
-    nds.push( nodeHandle );
+    nds.push( node );
   }
 
-  function onUp3( nodeHandle, it )
+  function onUp3( node, it )
   {
     if( it.level >= 3 )
     it.continueUp = false;
     upContinueNode.push( it.continueNode );
     upContinueUp.push( it.continueUp );
     upVisited.push( it.visited );
-    ups.push( nodeHandle );
+    ups.push( node );
   }
 
-  function onDown3( nodeHandle, it )
+  function onDown3( node, it )
   {
     downContinueNode.push( it.continueNode );
     downContinueUp.push( it.continueUp );
     downVisited.push( it.visited );
-    dws.push( nodeHandle );
+    dws.push( node );
   }
 
 } /* end of lookBfsRevisitingTrivial */
@@ -4199,76 +4421,266 @@ function lookBfsRepeatsRoots( test )
     downVisited = [];
   }
 
-  function onNode( nodeHandle, it )
+  function onNode( node, it )
   {
-    nds.push( nodeHandle );
+    nds.push( node );
   }
 
-  function onUp( nodeHandle, it )
+  function onUp( node, it )
   {
-    console.log( 'up', nodeHandle.name );
+    console.log( 'up', node.name );
     upContinueNode.push( it.continueNode );
     upContinueUp.push( it.continueUp );
     upVisited.push( it.visited );
-    ups.push( nodeHandle );
+    ups.push( node );
   }
 
-  function onDown( nodeHandle, it )
+  function onDown( node, it )
   {
-    console.log( 'down', nodeHandle.name );
+    console.log( 'down', node.name );
     downContinueNode.push( it.continueNode );
     downContinueUp.push( it.continueUp );
     downVisited.push( it.visited );
-    dws.push( nodeHandle );
+    dws.push( node );
   }
 
-  function onNode2( nodeHandle, it )
+  function onNode2( node, it )
   {
-    nds.push( nodeHandle );
+    nds.push( node );
   }
 
-  function onUp2( nodeHandle, it )
+  function onUp2( node, it )
   {
     if( it.level >= 2 )
     it.continueUp = false;
     upContinueNode.push( it.continueNode );
     upContinueUp.push( it.continueUp );
     upVisited.push( it.visited );
-    ups.push( nodeHandle );
+    ups.push( node );
   }
 
-  function onDown2( nodeHandle, it )
+  function onDown2( node, it )
   {
     downContinueNode.push( it.continueNode );
     downContinueUp.push( it.continueUp );
     downVisited.push( it.visited );
-    dws.push( nodeHandle );
+    dws.push( node );
   }
 
-  function onNode3( nodeHandle, it )
+  function onNode3( node, it )
   {
-    nds.push( nodeHandle );
+    nds.push( node );
   }
 
-  function onUp3( nodeHandle, it )
+  function onUp3( node, it )
   {
     if( it.level >= 3 )
     it.continueUp = false;
     upContinueNode.push( it.continueNode );
     upContinueUp.push( it.continueUp );
     upVisited.push( it.visited );
-    ups.push( nodeHandle );
+    ups.push( node );
   }
 
-  function onDown3( nodeHandle, it )
+  function onDown3( node, it )
   {
     downContinueNode.push( it.continueNode );
     downContinueUp.push( it.continueUp );
     downVisited.push( it.visited );
-    dws.push( nodeHandle );
+    dws.push( node );
   }
 
 } /* end of lookBfsRepeatsRoots */
+
+//
+
+function lookBfsVariants( test )
+{
+  let context = this;
+  var ups = [];
+  var dws = [];
+  var nds = [];
+  var upContinueNode = [];
+  var downContinueNode = [];
+  var upContinueUp = [];
+  var downContinueUp = [];
+  var upVisited = [];
+  var downVisited = [];
+
+  test.description = 'setup cycledVariants4';
+  var gr = context.cycledVariants4();
+  var group = gr.sys.nodesGroup();
+
+  run({ fast : 1 });
+  run({ fast : 0 });
+
+  /* - */
+
+  gr.sys.finit();
+
+  function run( o )
+  {
+
+    test.open( 'fast : ' + o.fast );
+
+    /* - */
+
+    test.case = 'revisiting : 0';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 0,
+    }
+    group.lookBfs( o2 );
+
+    var expectedNds = [ 'a', 'd', 'g', 'e', 'b1', 'c2', 'f' ];
+    var expectedUps = [ 'a', 'd', 'g', 'e', 'b1', 'c2', 'f' ];
+    var expectedDws = [ 'f', 'c2', 'b1', 'e', 'g', 'd', 'a' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, true, true ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ true, true, true, true, true, true, true ];
+    var expectedDownVisited = [ false, false, false, false, false, false, false ];
+    var expectedVisited = new Set([ 'a', 'd', 'e', 'f', 'g', 'b1', 'c1', 'b2', 'c2' ])
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer.map( ( node ) => group.nodeToName( node ) ).original, expectedVisited );
+
+    /* - */
+
+    test.case = 'revisiting : 1';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 1,
+    }
+    group.lookBfs( o2 );
+
+    var expectedNds = [ 'a', 'd', 'g', 'e', 'b1', 'c2', 'f' ];
+    var expectedUps = [ 'a', 'd', 'g', 'e', 'b1', 'c2', 'f' ];
+    var expectedDws = [ 'f', 'c2', 'b1', 'e', 'g', 'd', 'a' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, true, true ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ true, true, true, true, true, true, true ];
+    var expectedDownVisited = [ false, false, false, false, false, false, false ];
+    var expectedVisited = new Set([ 'a', 'd', 'e', 'f', 'g', 'b1', 'c1', 'b2', 'c2' ])
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer.map( ( node ) => group.nodeToName( node ) ).original, expectedVisited );
+
+    /* - */
+
+    test.case = 'revisiting : 2';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 2,
+    }
+    group.lookBfs( o2 );
+
+    var expectedNds = [ 'a', 'd', 'g', 'e', 'b1', 'c2', 'f', 'c1', 'b2', 'd' ];
+    var expectedUps = [ 'a', 'd', 'g', 'e', 'b1', 'c2', 'f', 'c1', 'b2', 'd' ];
+    var expectedDws = [ 'd', 'b2', 'c1', 'f', 'c2', 'b1', 'e', 'g', 'd', 'a' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, true, true, true, true, true ]
+    var expectedUpVisited = [ 0, 0, 0, 0, 0, 0, 0, 1, 1, 1 ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownVisited = [ 1, 1, 1, 0, 0, 0, 0, 0, 0, 0 ];
+    var expectedVisited = [ 'a', 'd', 'g', 'e', 'b1', 'c2', 'f', 'c1', 'b2', 'd' ];
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer.map( ( node ) => group.nodeToName( node ) ).original, expectedVisited );
+
+    /* - */
+
+    test.close( 'fast : ' + o.fast );
+  }
+
+  /* - */
+
+  function clean()
+  {
+    ups = [];
+    dws = [];
+    nds = [];
+    upContinueNode = [];
+    downContinueNode = [];
+    upContinueUp = [];
+    downContinueUp = [];
+    upVisited = [];
+    downVisited = [];
+  }
+
+  function onNode( node, it )
+  {
+    nds.push( node );
+  }
+
+  function onUp( node, it )
+  {
+    logger.log( _.strDup( '  ', it.level ), 'up', node.name );
+    upContinueNode.push( it.continueNode );
+    upContinueUp.push( it.continueUp );
+    upVisited.push( it.visited );
+    ups.push( node );
+  }
+
+  function onDown( node, it )
+  {
+    logger.log( _.strDup( '  ', it.level ), 'down', node.name );
+    downContinueNode.push( it.continueNode );
+    downContinueUp.push( it.continueUp );
+    downVisited.push( it.visited );
+    dws.push( node );
+  }
+
+} /* end of function lookBfsVariants */
 
 //
 
@@ -4287,19 +4699,19 @@ function lookDfs( test )
     nds = [];
   }
 
-  function onUp( nodeHandle, it )
+  function onUp( node, it )
   {
-    ups.push( nodeHandle );
+    ups.push( node );
   }
 
-  function onDown( nodeHandle, it )
+  function onDown( node, it )
   {
-    dws.push( nodeHandle );
+    dws.push( node );
   }
 
-  function onNode( nodeHandle, it )
+  function onNode( node, it )
   {
-    nds.push( nodeHandle );
+    nds.push( node );
   }
 
 /*
@@ -4422,21 +4834,21 @@ function lookDfsVisitedContainter( test )
     nds = [];
   }
 
-  function onUp( nodeHandle, it )
+  function onUp( node, it )
   {
     if( it.continueNode )
-    ups.push( nodeHandle );
+    ups.push( node );
   }
 
-  function onDown( nodeHandle, it )
+  function onDown( node, it )
   {
     if( it.continueNode )
-    dws.push( nodeHandle );
+    dws.push( node );
   }
 
-  function onNode( nodeHandle, it )
+  function onNode( node, it )
   {
-    nds.push( nodeHandle );
+    nds.push( node );
   }
 
 } /* end of lookDfsVisitedContainter */
@@ -4536,6 +4948,19 @@ function lookDfsSuspending( test )
     test.identical( group.nodesToNames( ups ), expectedUps );
     test.identical( group.nodesToNames( dws ), expectedDws );
 
+/*
+
+        ↷
+        f
+        ↑
+    a → d → e
+    ↓ ↖ ↓
+  ↪ b → c
+    ↓
+    d
+
+*/
+
     /* - */
 
     test.case = 'only a, revisiting:3';
@@ -4571,23 +4996,23 @@ function lookDfsSuspending( test )
     nds = [];
   }
 
-  function onUp( nodeHandle, it )
+  function onUp( node, it )
   {
     if( it.level === 2 )
     it.continueNode = false;
     if( it.continueNode )
-    ups.push( nodeHandle );
+    ups.push( node );
   }
 
-  function onDown( nodeHandle, it )
+  function onDown( node, it )
   {
     if( it.continueNode )
-    dws.push( nodeHandle );
+    dws.push( node );
   }
 
-  function onNode( nodeHandle, it )
+  function onNode( node, it )
   {
-    nds.push( nodeHandle );
+    nds.push( node );
   }
 
 } /* end of lookDfsSuspending */
@@ -4609,21 +5034,21 @@ function lookDfsRevisiting( test )
     nds = [];
   }
 
-  function onUp( nodeHandle, it )
+  function onUp( node, it )
   {
     if( it.level > 7 )
     it.continueUp = false;
-    ups.push( nodeHandle );
+    ups.push( node );
   }
 
-  function onDown( nodeHandle, it )
+  function onDown( node, it )
   {
-    dws.push( nodeHandle );
+    dws.push( node );
   }
 
-  function onNode( nodeHandle, it )
+  function onNode( node, it )
   {
-    nds.push( nodeHandle );
+    nds.push( node );
   }
 
   test.description = 'setup';
@@ -5028,35 +5453,35 @@ function lookDfsExcluding( test )
     nds = [];
   }
 
-  function onUp( nodeHandle, it )
+  function onUp( node, it )
   {
     if( it.level > 1 )
     it.continueNode = 0;
     if( it.continueNode )
-    ups.push( nodeHandle );
+    ups.push( node );
   }
 
-  function onDown( nodeHandle, it )
+  function onDown( node, it )
   {
     if( it.continueNode )
-    dws.push( nodeHandle );
+    dws.push( node );
   }
 
-  function handleUp2( nodeHandle, it )
+  function handleUp2( node, it )
   {
     if( it.level > 0 )
     it.continueUp = false;
-    ups.push( nodeHandle );
+    ups.push( node );
   }
 
-  function handleDown2( nodeHandle, it )
+  function handleDown2( node, it )
   {
-    dws.push( nodeHandle );
+    dws.push( node );
   }
 
-  function onNode( nodeHandle, it )
+  function onNode( node, it )
   {
-    nds.push( nodeHandle );
+    nds.push( node );
   }
 
   test.description = 'setup';
@@ -5286,6 +5711,14 @@ function lookDfsRevisitingTrivial( test )
       revisiting : 2,
     });
 
+ /*
+
+     a ↔ b
+     ↓
+     c
+
+ */
+
     var expectedNds = [ 'a', 'b', 'a', 'c', 'c' ];
     var expectedUps = [ 'a', 'b', 'a', 'c', 'c' ];
     var expectedDws = [ 'a', 'b', 'c', 'a', 'c' ];
@@ -5394,73 +5827,73 @@ function lookDfsRevisitingTrivial( test )
     downVisited = [];
   }
 
-  function onNode( nodeHandle, it )
+  function onNode( node, it )
   {
-    nds.push( nodeHandle );
+    nds.push( node );
   }
 
-  function onUp( nodeHandle, it )
+  function onUp( node, it )
   {
-    console.log( 'up', nodeHandle.name );
+    console.log( 'up', node.name );
     upContinueNode.push( it.continueNode );
     upContinueUp.push( it.continueUp );
     upVisited.push( it.visited );
-    ups.push( nodeHandle );
+    ups.push( node );
   }
 
-  function onDown( nodeHandle, it )
+  function onDown( node, it )
   {
-    console.log( 'down', nodeHandle.name );
+    console.log( 'down', node.name );
     downContinueNode.push( it.continueNode );
     downContinueUp.push( it.continueUp );
     downVisited.push( it.visited );
-    dws.push( nodeHandle );
+    dws.push( node );
   }
 
-  function onNode2( nodeHandle, it )
+  function onNode2( node, it )
   {
-    nds.push( nodeHandle );
+    nds.push( node );
   }
 
-  function onUp2( nodeHandle, it )
+  function onUp2( node, it )
   {
     if( it.level >= 2 )
     it.continueUp = false;
     upContinueNode.push( it.continueNode );
     upContinueUp.push( it.continueUp );
     upVisited.push( it.visited );
-    ups.push( nodeHandle );
+    ups.push( node );
   }
 
-  function onDown2( nodeHandle, it )
+  function onDown2( node, it )
   {
     downContinueNode.push( it.continueNode );
     downContinueUp.push( it.continueUp );
     downVisited.push( it.visited );
-    dws.push( nodeHandle );
+    dws.push( node );
   }
 
-  function onNode3( nodeHandle, it )
+  function onNode3( node, it )
   {
-    nds.push( nodeHandle );
+    nds.push( node );
   }
 
-  function onUp3( nodeHandle, it )
+  function onUp3( node, it )
   {
     if( it.level >= 3 )
     it.continueUp = false;
     upContinueNode.push( it.continueNode );
     upContinueUp.push( it.continueUp );
     upVisited.push( it.visited );
-    ups.push( nodeHandle );
+    ups.push( node );
   }
 
-  function onDown3( nodeHandle, it )
+  function onDown3( node, it )
   {
     downContinueNode.push( it.continueNode );
     downContinueUp.push( it.continueUp );
     downVisited.push( it.visited );
-    dws.push( nodeHandle );
+    dws.push( node );
   }
 
 } /* end of lookDfsRevisitingTrivial */
@@ -5689,76 +6122,264 @@ function lookDfsRepeatsRoots( test )
     downVisited = [];
   }
 
-  function onNode( nodeHandle, it )
+  function onNode( node, it )
   {
-    nds.push( nodeHandle );
+    nds.push( node );
   }
 
-  function onUp( nodeHandle, it )
+  function onUp( node, it )
   {
-    // console.log( 'up', nodeHandle.name );
     upContinueNode.push( it.continueNode );
     upContinueUp.push( it.continueUp );
     upVisited.push( it.visited );
-    ups.push( nodeHandle );
+    ups.push( node );
   }
 
-  function onDown( nodeHandle, it )
+  function onDown( node, it )
   {
-    // console.log( 'down', nodeHandle.name );
     downContinueNode.push( it.continueNode );
     downContinueUp.push( it.continueUp );
     downVisited.push( it.visited );
-    dws.push( nodeHandle );
+    dws.push( node );
   }
 
-  function onNode2( nodeHandle, it )
+  function onNode2( node, it )
   {
-    nds.push( nodeHandle );
+    nds.push( node );
   }
 
-  function onUp2( nodeHandle, it )
+  function onUp2( node, it )
   {
     if( it.level >= 2 )
     it.continueUp = false;
     upContinueNode.push( it.continueNode );
     upContinueUp.push( it.continueUp );
     upVisited.push( it.visited );
-    ups.push( nodeHandle );
+    ups.push( node );
   }
 
-  function onDown2( nodeHandle, it )
+  function onDown2( node, it )
   {
     downContinueNode.push( it.continueNode );
     downContinueUp.push( it.continueUp );
     downVisited.push( it.visited );
-    dws.push( nodeHandle );
+    dws.push( node );
   }
 
-  function onNode3( nodeHandle, it )
+  function onNode3( node, it )
   {
-    nds.push( nodeHandle );
+    nds.push( node );
   }
 
-  function onUp3( nodeHandle, it )
+  function onUp3( node, it )
   {
     if( it.level >= 3 )
     it.continueUp = false;
     upContinueNode.push( it.continueNode );
     upContinueUp.push( it.continueUp );
     upVisited.push( it.visited );
-    ups.push( nodeHandle );
+    ups.push( node );
   }
 
-  function onDown3( nodeHandle, it )
+  function onDown3( node, it )
   {
     downContinueNode.push( it.continueNode );
     downContinueUp.push( it.continueUp );
     downVisited.push( it.visited );
-    dws.push( nodeHandle );
+    dws.push( node );
   }
 
 } /* end of lookDfsRepeatsRoots */
+
+//
+
+function lookDfsVariants( test )
+{
+  let context = this;
+  var ups = [];
+  var dws = [];
+  var nds = [];
+  var upContinueNode = [];
+  var downContinueNode = [];
+  var upContinueUp = [];
+  var downContinueUp = [];
+  var upVisited = [];
+  var downVisited = [];
+
+  test.description = 'setup cycledVariants4';
+  var gr = context.cycledVariants4();
+  var group = gr.sys.nodesGroup();
+
+  run({ fast : 1 });
+  // run({ fast : 0 });
+
+  /* - */
+
+  gr.sys.finit();
+
+  function run( o )
+  {
+
+    test.open( 'fast : ' + o.fast );
+
+    /* - */
+
+    test.case = 'revisiting : 0';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 0,
+    }
+    group.lookDfs( o2 );
+
+    var expectedNds = [ 'a', 'd', 'e', 'f', 'g', 'b1', 'c1' ];
+    var expectedUps = [ 'a', 'd', 'e', 'f', 'g', 'b1', 'c1' ];
+    var expectedDws = [ 'f', 'e', 'd', 'c1', 'b1', 'g', 'a' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, true, true ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ true, true, true, true, true, true, true ];
+    var expectedDownVisited = [ false, false, false, false, false, false, false ];
+    var expectedVisited = new Set([ 'a', 'd', 'e', 'f', 'g', 'b1', 'c1', 'b2', 'c2' ])
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer.map( ( node ) => group.nodeToName( node ) ).original, expectedVisited );
+
+    /* - */
+
+    test.case = 'revisiting : 1';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 1,
+    }
+    group.lookDfs( o2 );
+
+    var expectedNds = [ 'a', 'd', 'e', 'f', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'b1', 'b2', 'c1', 'c2', 'c1', 'b1', 'b2' ];
+    var expectedUps = [ 'a', 'd', 'e', 'f', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'b1', 'b2', 'c1', 'c2', 'c1', 'b1', 'b2' ];
+    var expectedDws = [ 'f', 'e', 'd', 'c1', 'c2', 'b1', 'b2', 'b1', 'c2', 'c1', 'c2', 'b2', 'b1', 'b2', 'c1', 'g', 'a' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownVisited = [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedVisited = new Set([])
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer.map( ( node ) => group.nodeToName( node ) ).original, expectedVisited );
+
+    /* - */
+
+    test.case = 'revisiting : 2';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 2,
+    }
+    group.lookDfs( o2 );
+
+    var expectedNds = [ 'a', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'b2', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c1', 'b1', 'c1', 'c2', 'b2', 'c1', 'c2' ];
+    var expectedUps = [ 'a', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'b2', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c1', 'b1', 'c1', 'c2', 'b2', 'c1', 'c2' ];
+    var expectedDws = [ 'd', 'f', 'e', 'd', 'b1', 'b2', 'c1', 'b2', 'b1', 'c2', 'b1', 'c1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c2', 'b1', 'b2', 'c1', 'b2', 'b1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'b2', 'c1', 'g', 'a' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, false, true, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, false, false, true, false, false ];
+    var expectedUpVisited = [ false, false, false, false, true, false, false, false, true, true, false, true, true, false, false, true, true, false, true, true, false, false, true, true, false, true, true, false, false, true, true, false, true, true ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ false, true, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, true, true ];
+    var expectedDownVisited = [ true, false, false, false, true, true, false, true, true, false, false, true, true, false, true, true, false, false, true, true, false, true, true, false, false, true, true, false, true, true, false, false, false, false ];
+    var expectedVisited = [];
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer.map( ( node ) => group.nodeToName( node ) ).original, expectedVisited );
+
+    /* - */
+
+    test.close( 'fast : ' + o.fast );
+  }
+
+  /* - */
+
+  function clean()
+  {
+    ups = [];
+    dws = [];
+    nds = [];
+    upContinueNode = [];
+    downContinueNode = [];
+    upContinueUp = [];
+    downContinueUp = [];
+    upVisited = [];
+    downVisited = [];
+  }
+
+  function onNode( node, it )
+  {
+    nds.push( node );
+  }
+
+  function onUp( node, it )
+  {
+    logger.log( _.strDup( '  ', it.level ), 'up', node.name );
+    upContinueNode.push( it.continueNode );
+    upContinueUp.push( it.continueUp );
+    upVisited.push( it.visited );
+    ups.push( node );
+  }
+
+  function onDown( node, it )
+  {
+    logger.log( _.strDup( '  ', it.level ), 'down', node.name );
+    downContinueNode.push( it.continueNode );
+    downContinueUp.push( it.continueUp );
+    downVisited.push( it.visited );
+    dws.push( node );
+  }
+
+} /* end of function lookDfsVariants */
 
 //
 
@@ -5820,21 +6441,21 @@ function lookCfs( test )
     nds = [];
   }
 
-  function onUp( nodeHandle, it )
+  function onUp( node, it )
   {
     if( it.continueNode )
-    ups.push( nodeHandle );
+    ups.push( node );
   }
 
-  function onDown( nodeHandle, it )
+  function onDown( node, it )
   {
     if( it.continueNode )
-    dws.push( nodeHandle );
+    dws.push( node );
   }
 
-  function onNode( nodeHandle, it )
+  function onNode( node, it )
   {
-    nds.push( nodeHandle );
+    nds.push( node );
   }
 
 } /* end of lookCfs */
@@ -5900,21 +6521,21 @@ function lookCfsVisitedContainter( test )
     nds = [];
   }
 
-  function onUp( nodeHandle, it )
+  function onUp( node, it )
   {
     if( it.continueNode )
-    ups.push( nodeHandle );
+    ups.push( node );
   }
 
-  function onDown( nodeHandle, it )
+  function onDown( node, it )
   {
     if( it.continueNode )
-    dws.push( nodeHandle );
+    dws.push( node );
   }
 
-  function onNode( nodeHandle, it )
+  function onNode( node, it )
   {
-    nds.push( nodeHandle );
+    nds.push( node );
   }
 
 } /* end of lookCfsVisitedContainter */
@@ -6049,23 +6670,23 @@ function lookCfsSuspending( test )
     nds = [];
   }
 
-  function onUp( nodeHandle, it )
+  function onUp( node, it )
   {
     if( it.level === 2 )
     it.continueNode = false;
     if( it.continueNode )
-    ups.push( nodeHandle );
+    ups.push( node );
   }
 
-  function onDown( nodeHandle, it )
+  function onDown( node, it )
   {
     if( it.continueNode )
-    dws.push( nodeHandle );
+    dws.push( node );
   }
 
-  function onNode( nodeHandle, it )
+  function onNode( node, it )
   {
-    nds.push( nodeHandle );
+    nds.push( node );
   }
 
 } /* end of lookCfsSuspending */
@@ -6087,21 +6708,21 @@ function lookCfsRevisiting( test )
     nds = [];
   }
 
-  function onUp( nodeHandle, it )
+  function onUp( node, it )
   {
     if( it.level > 7 )
     it.continueUp = false;
-    ups.push( nodeHandle );
+    ups.push( node );
   }
 
-  function onDown( nodeHandle, it )
+  function onDown( node, it )
   {
-    dws.push( nodeHandle );
+    dws.push( node );
   }
 
-  function onNode( nodeHandle, it )
+  function onNode( node, it )
   {
-    nds.push( nodeHandle );
+    nds.push( node );
   }
 
   test.description = 'setup';
@@ -6504,45 +7125,6 @@ function lookCfsExcluding( test )
   var dws = [];
   var nds = [];
 
-  function clean()
-  {
-    ups = [];
-    dws = [];
-    nds = [];
-  }
-
-  function onUp( nodeHandle, it )
-  {
-    debugger;
-    if( it.level > 1 )
-    it.continueNode = 0;
-    if( it.continueNode )
-    ups.push( nodeHandle );
-  }
-
-  function onDown( nodeHandle, it )
-  {
-    if( it.continueNode )
-    dws.push( nodeHandle );
-  }
-
-  function handleUp2( nodeHandle, it )
-  {
-    if( it.level > 0 )
-    it.continueUp = false;
-    ups.push( nodeHandle );
-  }
-
-  function handleDown2( nodeHandle, it )
-  {
-    dws.push( nodeHandle );
-  }
-
-  function onNode( nodeHandle, it )
-  {
-    nds.push( nodeHandle );
-  }
-
   test.description = 'setup';
   var gr = context.cycledGamma();
   var group = gr.sys.nodesGroup();
@@ -6652,6 +7234,43 @@ function lookCfsExcluding( test )
     test.close( 'fast : ' + o.fast );
   }
 
+  function clean()
+  {
+    ups = [];
+    dws = [];
+    nds = [];
+  }
+
+  function onUp( node, it )
+  {
+    if( it.level > 1 )
+    it.continueNode = 0;
+    if( it.continueNode )
+    ups.push( node );
+  }
+
+  function onDown( node, it )
+  {
+    dws.push( node );
+  }
+
+  function handleUp2( node, it )
+  {
+    if( it.level > 0 )
+    it.continueUp = false;
+    ups.push( node );
+  }
+
+  function handleDown2( node, it )
+  {
+    dws.push( node );
+  }
+
+  function onNode( node, it )
+  {
+    nds.push( node );
+  }
+
 } /* end of lookCfsExcluding */
 
 //
@@ -6668,6 +7287,15 @@ function lookCfsRevisitingTrivial( test )
   var downContinueUp = [];
   var upVisited = [];
   var downVisited = [];
+  let upIndex = [];
+  let downIndex = [];
+  let upLevel = [];
+  let downLevel = [];
+
+  /* qqq :
+    add all this checks into lookBfsRevisitingTrivial
+    add all this checks into lookDfsRevisitingTrivial
+  */
 
   test.description = 'setup';
   var gr = context.cycled1Scc();
@@ -6704,22 +7332,29 @@ function lookCfsRevisitingTrivial( test )
     var expectedUps = [ 'a', 'c', 'b' ];
     var expectedDws = [ 'b', 'a', 'c' ];
     var expectedUpContinueNode = [ true, true, true ];
-    var expectedUpContinueUp = [ true, true, true ];
-    var expectedUpVisited = [ false, false, false ];
     var expectedDownContinueNode = [ true, true, true ];
+    var expectedUpContinueUp = [ true, true, true ];
     var expectedDownContinueUp = [ true, true, true ];
+    var expectedUpVisited = [ false, false, false ];
     var expectedDownVisited = [ false, false, false ];
+    var expectedUpLevel = [ 0, 0, 1 ];
+    var expectedDownLevel = [ 1, 0, 0 ];
+    var expectedUpIndex = [ 0, 1, 0 ];
+    var expectedDownIndex = [ 0, 0, 1 ];
 
     test.identical( group.nodesToNames( nds ), expectedNds );
     test.identical( group.nodesToNames( ups ), expectedUps );
     test.identical( group.nodesToNames( dws ), expectedDws );
-
     test.identical( upContinueNode, expectedUpContinueNode );
-    test.identical( upContinueUp, expectedUpContinueUp );
-    test.identical( upVisited, expectedUpVisited );
     test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
     test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( upVisited, expectedUpVisited );
     test.identical( downVisited, expectedDownVisited );
+    test.identical( upLevel, expectedUpLevel );
+    test.identical( downLevel, expectedDownLevel );
+    test.identical( upIndex, expectedUpIndex );
+    test.identical( downIndex, expectedDownIndex );
 
     /* - */
 
@@ -6740,22 +7375,30 @@ function lookCfsRevisitingTrivial( test )
     var expectedUps = [ 'a', 'c', 'b', 'c' ];
     var expectedDws = [ 'b', 'c', 'a', 'c' ];
     var expectedUpContinueNode = [ true, true, true, true ];
-    var expectedUpContinueUp = [ true, true, true, true ];
-    var expectedUpVisited = [ false, false, false, false ];
     var expectedDownContinueNode = [ true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true ];
     var expectedDownContinueUp = [ true, true, true, true ];
+    var expectedUpVisited = [ false, false, false, false ];
     var expectedDownVisited = [ false, false, false, false ];
+    var expectedUpLevel = [ 0, 0, 1, 1 ];
+    var expectedDownLevel = [ 1, 1, 0, 0 ];
+    var expectedUpIndex = [ 0, 1, 0, 1 ];
+    var expectedDownIndex = [ 0, 1, 0, 1 ];
 
     test.identical( group.nodesToNames( nds ), expectedNds );
     test.identical( group.nodesToNames( ups ), expectedUps );
     test.identical( group.nodesToNames( dws ), expectedDws );
 
     test.identical( upContinueNode, expectedUpContinueNode );
-    test.identical( upContinueUp, expectedUpContinueUp );
-    test.identical( upVisited, expectedUpVisited );
     test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
     test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( upVisited, expectedUpVisited );
     test.identical( downVisited, expectedDownVisited );
+    test.identical( upLevel, expectedUpLevel );
+    test.identical( downLevel, expectedDownLevel );
+    test.identical( upIndex, expectedUpIndex );
+    test.identical( downIndex, expectedDownIndex );
 
     /* - */
 
@@ -6776,21 +7419,29 @@ function lookCfsRevisitingTrivial( test )
     var expectedUps = [ 'a', 'c', 'b', 'c', 'a' ];
     var expectedDws = [ 'a', 'b', 'c', 'a', 'c' ];
     var expectedUpContinueNode = [ true, true, true, true, true ];
-    var expectedUpContinueUp = [ true, true, true, true, false ];
-    var expectedUpVisited = [ false, false, false, false, true ];
     var expectedDownContinueNode = [ true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, false ];
     var expectedDownContinueUp = [ false, true, true, true, true ];
+    var expectedUpVisited = [ false, false, false, false, true ];
     var expectedDownVisited = [ true, false, false, false, false ];
+    var expectedUpLevel = [ 0, 0, 1, 1, 2 ];
+    var expectedDownLevel = [ 2, 1, 1, 0, 0 ];
+    var expectedUpIndex = [ 0, 1, 0, 1, 0 ];
+    var expectedDownIndex = [ 0, 0, 1, 0, 1 ];
 
     test.identical( group.nodesToNames( nds ), expectedNds );
     test.identical( group.nodesToNames( ups ), expectedUps );
     test.identical( group.nodesToNames( dws ), expectedDws );
     test.identical( upContinueNode, expectedUpContinueNode );
-    test.identical( upContinueUp, expectedUpContinueUp );
-    test.identical( upVisited, expectedUpVisited );
     test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
     test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( upVisited, expectedUpVisited );
     test.identical( downVisited, expectedDownVisited );
+    test.identical( upLevel, expectedUpLevel );
+    test.identical( downLevel, expectedDownLevel );
+    test.identical( upIndex, expectedUpIndex );
+    test.identical( downIndex, expectedDownIndex );
 
     /* - */
 
@@ -6811,21 +7462,29 @@ function lookCfsRevisitingTrivial( test )
     var expectedUps = [ 'a', 'c', 'b', 'c', 'a' ];
     var expectedDws = [ 'a', 'b', 'c', 'a', 'c' ];
     var expectedUpContinueNode = [ true, true, true, true, true ];
-    var expectedUpContinueUp = [ true, true, true, true, false ];
-    var expectedUpVisited = [ false, false, false, false, false ];
     var expectedDownContinueNode = [ true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, false ];
     var expectedDownContinueUp = [ false, true, true, true, true ];
+    var expectedUpVisited = [ false, false, false, false, false ];
     var expectedDownVisited = [ false, false, false, false, false ];
+    var expectedUpLevel = [ 0, 0, 1, 1, 2 ];
+    var expectedDownLevel = [ 2, 1, 1, 0, 0 ];
+    var expectedUpIndex = [ 0, 1, 0, 1, 0 ];
+    var expectedDownIndex = [ 0, 0, 1, 0, 1 ];
 
     test.identical( group.nodesToNames( nds ), expectedNds );
     test.identical( group.nodesToNames( ups ), expectedUps );
     test.identical( group.nodesToNames( dws ), expectedDws );
     test.identical( upContinueNode, expectedUpContinueNode );
-    test.identical( upContinueUp, expectedUpContinueUp );
-    test.identical( upVisited, expectedUpVisited );
     test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
     test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( upVisited, expectedUpVisited );
     test.identical( downVisited, expectedDownVisited );
+    test.identical( upLevel, expectedUpLevel );
+    test.identical( downLevel, expectedDownLevel );
+    test.identical( upIndex, expectedUpIndex );
+    test.identical( downIndex, expectedDownIndex );
 
     /* - */
 
@@ -6846,21 +7505,29 @@ function lookCfsRevisitingTrivial( test )
     var expectedUps = [ 'a', 'c', 'b', 'c', 'a', 'b', 'c' ];
     var expectedDws = [ 'b', 'c', 'a', 'b', 'c', 'a', 'c' ];
     var expectedUpContinueNode = [ true, true, true, true, true, true, true ];
-    var expectedUpContinueUp = [ true, true, true, true, true, false, false ];
-    var expectedUpVisited = [ false, false, false, false, false, false, false ];
     var expectedDownContinueNode = [ true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, false, false ];
     var expectedDownContinueUp = [ false, false, true, true, true, true, true ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false ];
     var expectedDownVisited = [ false, false, false, false, false, false, false ];
+    var expectedUpLevel = [ 0, 0, 1, 1, 2, 3, 3 ];
+    var expectedDownLevel = [ 3, 3, 2, 1, 1, 0, 0 ];
+    var expectedUpIndex = [ 0, 1, 0, 1, 0, 0, 1 ];
+    var expectedDownIndex = [ 0, 1, 0, 0, 1, 0, 1 ];
 
     test.identical( group.nodesToNames( nds ), expectedNds );
     test.identical( group.nodesToNames( ups ), expectedUps );
     test.identical( group.nodesToNames( dws ), expectedDws );
     test.identical( upContinueNode, expectedUpContinueNode );
-    test.identical( upContinueUp, expectedUpContinueUp );
-    test.identical( upVisited, expectedUpVisited );
     test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
     test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( upVisited, expectedUpVisited );
     test.identical( downVisited, expectedDownVisited );
+    test.identical( upLevel, expectedUpLevel );
+    test.identical( downLevel, expectedDownLevel );
+    test.identical( upIndex, expectedUpIndex );
+    test.identical( downIndex, expectedDownIndex );
 
     /* - */
 
@@ -6878,73 +7545,73 @@ function lookCfsRevisitingTrivial( test )
     downContinueUp = [];
     upVisited = [];
     downVisited = [];
+    upIndex = [];
+    downIndex = [];
+    upLevel = [];
+    downLevel = [];
   }
 
-  function onNode( nodeHandle, it )
+  function onNode( node, it )
   {
-    nds.push( nodeHandle );
+    nds.push( node );
   }
 
-  function onUp( nodeHandle, it )
+  function onUp( node, it )
   {
+    logger.log( _.strDup( '  ', it.level ), 'up', node.name );
     upContinueNode.push( it.continueNode );
     upContinueUp.push( it.continueUp );
     upVisited.push( it.visited );
-    ups.push( nodeHandle );
+    upIndex.push( it.index );
+    upLevel.push( it.level );
+    ups.push( node );
   }
 
-  function onDown( nodeHandle, it )
+  function onDown( node, it )
   {
+    logger.log( _.strDup( '  ', it.level ), 'down', node.name );
     downContinueNode.push( it.continueNode );
     downContinueUp.push( it.continueUp );
     downVisited.push( it.visited );
-    dws.push( nodeHandle );
+    downIndex.push( it.index );
+    downLevel.push( it.level );
+    dws.push( node );
   }
 
-  function onNode2( nodeHandle, it )
+  function onNode2( node, it )
   {
-    nds.push( nodeHandle );
+    nds.push( node );
   }
 
-  function onUp2( nodeHandle, it )
+  function onUp2( node, it )
   {
     if( it.level >= 2 )
     it.continueUp = false;
-    upContinueNode.push( it.continueNode );
-    upContinueUp.push( it.continueUp );
-    upVisited.push( it.visited );
-    ups.push( nodeHandle );
+    onUp( node, it );
   }
 
-  function onDown2( nodeHandle, it )
+  function onDown2( node, it )
   {
-    downContinueNode.push( it.continueNode );
-    downContinueUp.push( it.continueUp );
-    downVisited.push( it.visited );
-    dws.push( nodeHandle );
+    onDown( node, it );
   }
 
-  function onNode3( nodeHandle, it )
+  function onNode3( node, it )
   {
-    nds.push( nodeHandle );
+    nds.push( node );
   }
 
-  function onUp3( nodeHandle, it )
+  function onUp3( node, it )
   {
+    logger.log( _.strDup( '  ', it.level ), 'up', node.name );
     if( it.level >= 3 )
     it.continueUp = false;
-    upContinueNode.push( it.continueNode );
-    upContinueUp.push( it.continueUp );
-    upVisited.push( it.visited );
-    ups.push( nodeHandle );
+    onUp( node, it );
   }
 
-  function onDown3( nodeHandle, it )
+  function onDown3( node, it )
   {
-    downContinueNode.push( it.continueNode );
-    downContinueUp.push( it.continueUp );
-    downVisited.push( it.visited );
-    dws.push( nodeHandle );
+    logger.log( _.strDup( '  ', it.level ), 'down', node.name );
+    onDown( node, it );
   }
 
 } /* end of lookCfsRevisitingTrivial */
@@ -7174,74 +7841,281 @@ function lookCfsRepeatsRoots( test )
     downVisited = [];
   }
 
-  function onNode( nodeHandle, it )
+  function onNode( node, it )
   {
-    nds.push( nodeHandle );
+    nds.push( node );
   }
 
-  function onUp( nodeHandle, it )
+  function onUp( node, it )
   {
     upContinueNode.push( it.continueNode );
     upContinueUp.push( it.continueUp );
     upVisited.push( it.visited );
-    ups.push( nodeHandle );
+    ups.push( node );
   }
 
-  function onDown( nodeHandle, it )
+  function onDown( node, it )
   {
     downContinueNode.push( it.continueNode );
     downContinueUp.push( it.continueUp );
     downVisited.push( it.visited );
-    dws.push( nodeHandle );
+    dws.push( node );
   }
 
-  function onNode2( nodeHandle, it )
+  function onNode2( node, it )
   {
-    nds.push( nodeHandle );
+    nds.push( node );
   }
 
-  function onUp2( nodeHandle, it )
+  function onUp2( node, it )
   {
     if( it.level >= 2 )
     it.continueUp = false;
     upContinueNode.push( it.continueNode );
     upContinueUp.push( it.continueUp );
     upVisited.push( it.visited );
-    ups.push( nodeHandle );
+    ups.push( node );
   }
 
-  function onDown2( nodeHandle, it )
+  function onDown2( node, it )
   {
     downContinueNode.push( it.continueNode );
     downContinueUp.push( it.continueUp );
     downVisited.push( it.visited );
-    dws.push( nodeHandle );
+    dws.push( node );
   }
 
-  function onNode3( nodeHandle, it )
+  function onNode3( node, it )
   {
-    nds.push( nodeHandle );
+    nds.push( node );
   }
 
-  function onUp3( nodeHandle, it )
+  function onUp3( node, it )
   {
     if( it.level >= 3 )
     it.continueUp = false;
     upContinueNode.push( it.continueNode );
     upContinueUp.push( it.continueUp );
     upVisited.push( it.visited );
-    ups.push( nodeHandle );
+    ups.push( node );
   }
 
-  function onDown3( nodeHandle, it )
+  function onDown3( node, it )
   {
     downContinueNode.push( it.continueNode );
     downContinueUp.push( it.continueUp );
     downVisited.push( it.visited );
-    dws.push( nodeHandle );
+    dws.push( node );
   }
 
 } /* end of lookCfsRepeatsRoots */
+
+//
+
+function lookCfsVariants( test )
+{
+  let context = this;
+  var ups = [];
+  var dws = [];
+  var nds = [];
+  var upContinueNode = [];
+  var downContinueNode = [];
+  var upContinueUp = [];
+  var downContinueUp = [];
+  var upVisited = [];
+  var downVisited = [];
+  var upLevel = [];
+  var downLevel = [];
+
+/*
+
+     ↗ c2 → b2
+   g
+   ↑ ↘ b1 → c1
+   a
+   ↓
+   d → e
+     ↖ ↓
+       f
+
+*/
+
+  test.description = 'setup cycledVariants4';
+  var gr = context.cycledVariants4();
+  var group = gr.sys.nodesGroup();
+
+  run({ fast : 1 });
+  run({ fast : 0 });
+
+  /* - */
+
+  gr.sys.finit();
+
+  function run( o )
+  {
+
+    test.open( 'fast : ' + o.fast );
+
+    /* - */
+
+    test.case = 'revisiting : 0';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 0,
+    }
+    group.lookCfs( o2 );
+
+    var expectedNds = [ 'a', 'd', 'g', 'e', 'f', 'b1', 'c2' ];
+    var expectedUps = [ 'a', 'd', 'g', 'e', 'f', 'b1', 'c2' ];
+    var expectedDws = [ 'f', 'e', 'd', 'b1', 'c2', 'g', 'a' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, true, true ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ true, true, true, true, true, true, true ];
+    var expectedDownVisited = [ false, false, false, false, false, false, false ];
+    var expectedVisited = new Set([ 'a', 'd', 'e', 'f', 'g', 'b1', 'c1', 'b2', 'c2' ]);
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer.map( ( node ) => group.nodeToName( node ) ).original, expectedVisited );
+
+    /* - */
+
+    test.case = 'revisiting : 1';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 1,
+    }
+    group.lookCfs( o2 );
+
+    var expectedNds = [ 'a', 'd', 'g', 'e', 'f', 'b1', 'c2', 'b2', 'c1', 'c1', 'c2', 'b2', 'b1', 'c1', 'c2', 'b1', 'b2' ];
+    var expectedUps = [ 'a', 'd', 'g', 'e', 'f', 'b1', 'c2', 'b2', 'c1', 'c1', 'c2', 'b2', 'b1', 'c1', 'c2', 'b1', 'b2' ];
+    var expectedDws = [ 'f', 'e', 'd', 'c1', 'c2', 'b1', 'b2', 'b1', 'c2', 'c1', 'c2', 'b2', 'b1', 'b2', 'c1', 'g', 'a' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownVisited = [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedVisited = new Set([]);
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer.map( ( node ) => group.nodeToName( node ) ).original, expectedVisited );
+
+    /* - */
+
+    test.case = 'revisiting : 2';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 2,
+    }
+    group.lookCfs( o2 );
+
+    var expectedNds = [ 'a', 'd', 'g', 'e', 'f', 'd', 'b1', 'c2', 'b2', 'c1', 'c1', 'c2', 'b1', 'b2', 'b2', 'b1', 'b2', 'b1', 'c1', 'c2', 'c1', 'c2', 'c1', 'c2', 'b1', 'b2', 'b2', 'b1', 'b1', 'b2', 'c1', 'c2', 'c1', 'c2' ];
+    var expectedUps = [ 'a', 'd', 'g', 'e', 'f', 'd', 'b1', 'c2', 'b2', 'c1', 'c1', 'c2', 'b1', 'b2', 'b2', 'b1', 'b2', 'b1', 'c1', 'c2', 'c1', 'c2', 'c1', 'c2', 'b1', 'b2', 'b2', 'b1', 'b1', 'b2', 'c1', 'c2', 'c1', 'c2' ];
+    var expectedDws = [ 'd', 'f', 'e', 'd', 'b1', 'b2', 'c1', 'b2', 'b1', 'c2', 'b1', 'c1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c2', 'b1', 'b2', 'c1', 'b2', 'b1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'b2', 'c1', 'g', 'a' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, false, true, true, true, true, true, true, false, false, false, false, true, true, false, false, false, false, true, true, false, false, false, false, true, true, false, false, false, false ];
+    var expectedUpVisited = [ false, false, false, false, false, true, false, false, false, false, false, false, true, true, true, true, false, false, true, true, true, true, false, false, true, true, true, true, false, false, true, true, true, true ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ false, true, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, true, true ];
+    var expectedDownVisited = [ true, false, false, false, true, true, false, true, true, false, false, true, true, false, true, true, false, false, true, true, false, true, true, false, false, true, true, false, true, true, false, false, false, false ];
+    var expectedVisited = [];
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer.map( ( node ) => group.nodeToName( node ) ).original, expectedVisited );
+
+    /* - */
+
+    test.close( 'fast : ' + o.fast );
+  }
+
+  /* - */
+
+  function clean()
+  {
+    ups = [];
+    dws = [];
+    nds = [];
+    upContinueNode = [];
+    downContinueNode = [];
+    upContinueUp = [];
+    downContinueUp = [];
+    upVisited = [];
+    downVisited = [];
+  }
+
+  function onNode( node, it )
+  {
+    nds.push( node );
+  }
+
+  function onUp( node, it )
+  {
+    logger.log( _.strDup( '  ', it.level ), 'up', node.name );
+    upContinueNode.push( it.continueNode );
+    upContinueUp.push( it.continueUp );
+    upVisited.push( it.visited );
+    ups.push( node );
+    upLevel.push( it.level );
+  }
+
+  function onDown( node, it )
+  {
+    logger.log( _.strDup( '  ', it.level ), 'down', node.name );
+    downContinueNode.push( it.continueNode );
+    downContinueUp.push( it.continueUp );
+    downVisited.push( it.visited );
+    dws.push( node );
+    downLevel.push( it.level );
+  }
+
+} /* end of function lookCfsVariants */
 
 //
 
@@ -8741,7 +9615,6 @@ function dagTopSortDfs( test )
 
   var gr = context.dag6();
   var group = gr.sys.nodesGroup();
-  // group.nodesAdd( gr.nodes );
   logger.log( 'DAG' )
   logger.log( group.nodesInfoExport( gr.nodes ) );
 
@@ -8802,7 +9675,6 @@ function topSortLeastDegreeBfs( test )
 
   var gr = context.cycled4Scc();
   var group = gr.sys.nodesGroup();
-  // group.nodesAdd( gr.nodes );
   logger.log( group.infoExport({ nodes : gr.nodes }) );
   group.finit();
 
@@ -8847,7 +9719,6 @@ function topSortLeastDegreeBfs( test )
 
   test.description = 'c, e - with adding all nodes';
   var group = gr.sys.nodesGroup();
-  // group.nodesAdd( gr.nodes );
   var layers = group.topSortLeastDegreeBfs([ gr.c, gr.e ]);
   var expected = [ 'e', 'a', 'c', 'h', 'b', 'i', 'f' ]
   test.identical( layers.map( ( nodes ) => group.nodesToNames( nodes ) ), expected );
@@ -8872,16 +9743,14 @@ function topSortLeastDegreeBfs( test )
 
   var gr = context.cycled1Scc();
   var group = gr.sys.nodesGroup();
-
-  // group.nodesAdd( gr.nodes );
   logger.log( group.infoExport({ nodes : gr.nodes }) );
 
   /* */
 
-  // test.description = 'implicit';
-  // var layers = group.topSortLeastDegreeBfs( gr.nodes );
-  // var expected = [ 'a', 'b', 'c' ];
-  // test.identical( layers.map( ( nodes ) => group.nodesToNames( nodes ) ), expected );
+  test.description = 'all';
+  var layers = group.topSortLeastDegreeBfs( gr.nodes );
+  var expected = [ 'a', 'b', 'c' ];
+  test.identical( layers.map( ( nodes ) => group.nodesToNames( nodes ) ), expected );
 
   /* */
 
@@ -8908,17 +9777,6 @@ function topSortCycledSourceBasedFastBfs( test )
   var expected = [ 'a', 'b', 'c' ];
   test.identical( group.nodesToNames( got ), expected );
   group.finit();
-
-  /* */
-
-  // test.description = 'implicit';
-  // var group = gr.sys.nodesGroup();
-  // // group.nodesAdd( gr.nodes );
-  // logger.log( group.infoExport({ nodes : gr.nodes }) );
-  // var got = group.topSortCycledSourceBasedFastBfs();
-  // var expected = [ 'a', 'b', 'c' ];
-  // test.identical( group.nodesToNames( got ), expected );
-  // group.finit();
 
   /* */
 
@@ -8970,7 +9828,6 @@ function topSortCycledSourceBasedFastBfs( test )
 
   test.description = 'explicit all';
   var group = gr.sys.nodesGroup();
-  // group.nodesAdd( gr.nodes );
   logger.log( group.infoExport({ nodes : gr.nodes }) );
   var expected = [ 'j', 'd', 'a', 'g', 'b', 'h', 'e', 'f', 'i', 'c' ];
   var got = group.topSortCycledSourceBasedFastBfs( gr.nodes );
@@ -9028,17 +9885,6 @@ function topSortCycledSourceBasedPreciseBfs( test )
 
   /* */
 
-  // test.description = 'implicit';
-  // var group = gr.sys.nodesGroup();
-  // // group.nodesAdd( gr.nodes );
-  // logger.log( group.infoExport({ nodes : gr.nodes }) );
-  // var got = group.topSortCycledSourceBasedPreciseBfs();
-  // var expected = [ 'a', 'b', 'c' ];
-  // test.identical( group.nodesToNames( got ), expected );
-  // group.finit();
-
-  /* */
-
   gr.sys.finit();
 
   /* - */
@@ -9089,9 +9935,7 @@ function topSortCycledSourceBasedPreciseBfs( test )
 
   test.description = 'explicit all';
   var group = gr.sys.nodesGroup();
-  // group.nodesAdd( gr.nodes );
   logger.log( group.infoExport({ nodes : gr.nodes }) );
-  // var expected = [ 'j', 'd', 'a', 'g', 'b', 'h', 'e', 'f', 'i', 'c' ];
   var expected = [ 'j', 'd', 'g', 'e', 'a', 'c', 'b', 'i', 'f', 'h' ]
   var got = group.topSortCycledSourceBasedPreciseBfs( gr.nodes );
   test.identical( group.nodesToNames( got ), expected );
@@ -9102,7 +9946,6 @@ function topSortCycledSourceBasedPreciseBfs( test )
   test.description = 'not j';
   var group = gr.sys.nodesGroup();
   var got = group.topSortCycledSourceBasedPreciseBfs([ gr.a, gr.b, gr.c, gr.d, gr.e, gr.f, gr.g, gr.h, gr.i ]);
-// var expected = [ 'd', 'a', 'g', 'b', 'h', 'e', 'f', 'i', 'c' ];
   var expected = [ 'd', 'g', 'e', 'a', 'c', 'b', 'i', 'f', 'h' ];
   test.identical( group.nodesToNames( got ), expected );
   group.finit();
@@ -9112,7 +9955,6 @@ function topSortCycledSourceBasedPreciseBfs( test )
   test.description = 'not j, not d';
   var group = gr.sys.nodesGroup();
   var got = group.topSortCycledSourceBasedPreciseBfs([ gr.a, gr.b, gr.c, gr.e, gr.f, gr.g, gr.h, gr.i ]);
-  // var expected = [ 'g', 'a', 'b', 'e', 'c', 'h', 'f', 'i' ];
   var expected = [ 'g', 'e', 'a', 'c', 'b', 'i', 'h', 'f' ];
   test.identical( group.nodesToNames( got ), expected );
 
@@ -9142,7 +9984,6 @@ function pairDirectedPathGetDfs( test )
 
   var gr = context.cycled3Scc();
   var group = gr.sys.nodesGroup();
-  // group.nodesAdd( gr.nodes );
   test.identical( gr.nodes.length, 8 );
   logger.log( group.infoExport({ nodes : gr.nodes }) );
 
@@ -9227,7 +10068,6 @@ function pairDirectedPathExistsDfs( test )
 
   var gr = context.cycled3Scc();
   var group = gr.sys.nodesGroup();
-  // group.nodesAdd( gr.nodes );
   test.identical( gr.nodes.length, 8 );
   logger.log( group.infoExport({ nodes : gr.nodes }) );
 
@@ -9307,7 +10147,6 @@ function pairIsConnectedDfs( test )
 
   var gr = context.cycled3Scc();
   var group = gr.sys.nodesGroup();
-  // group.nodesAdd( gr.nodes );
   test.identical( gr.nodes.length, 8 );
   logger.log( group.infoExport({ nodes : gr.nodes }) );
 
@@ -9386,7 +10225,6 @@ function pairIsConnectedStronglyDfs( test )
 
   var gr = context.cycled3Scc();
   var group = gr.sys.nodesGroup();
-  // group.nodesAdd( gr.nodes );
   test.identical( gr.nodes.length, 8 );
   logger.log( group.infoExport({ nodes : gr.nodes }) );
 
@@ -9467,40 +10305,18 @@ function nodesConnectedLayersDfs( test )
 
   var gr = context.cycled3Scc();
   var group = gr.sys.nodesGroup();
-  // group.nodesAdd( gr.nodes );
   test.identical( gr.nodes.length, 8 );
   logger.log( group.infoExport({ nodes : gr.nodes }) );
 
   test.description = 'explicit';
   var layers = group.nodesConnectedLayersDfs( gr.nodes );
-  // var expected = [ [ 1, 2, 3, 4 ], [ 5 ], [ 6, 7, 8 ] ];
-  // var expected = [];
-  // test.identical( layers.map( ( layer ) => group.nodesToNames( layer ) ), expected );
   var expected =
   [
     [ 'a', 'b', 'c', 'd' ],
     [ 'e' ],
     [ 'f', 'g', 'h' ]
   ]
-  // var expected =
-  // [
-  //   [ 'a', 'b', 'c', 'd' ],
-  //   [ 'e' ],
-  //   [ 'f', 'g', 'h' ]
-  // ]
   test.identical( layers.map( ( layer ) => group.nodesToNames( layer ) ), expected );
-
-  // test.description = 'implicit';
-  // var layers = group.nodesConnectedLayersDfs();
-  // var expected = [ [ 1, 2, 3, 4 ], [ 5 ], [ 6, 7, 8 ] ];
-  // test.identical( layers.map( ( layer ) => group.nodesToNames( layer ) ), expected );
-  // var expected =
-  // [
-  //   [ 'a', 'b', 'c', 'd' ],
-  //   [ 'e' ],
-  //   [ 'f', 'g', 'h' ]
-  // ]
-  // test.identical( layers.map( ( layer ) => group.nodesToNames( layer ) ), expected );
 
   gr.sys.finit();
 
@@ -9511,7 +10327,6 @@ function nodesConnectedLayersDfs( test )
 
   test.description = 'explicit all';
   var group = gr.sys.nodesGroup();
-  // group.nodesAdd( gr.nodes );
   var layers = group.nodesConnectedLayersDfs([ gr.a, gr.b, gr.c, gr.d, gr.e, gr.f, gr.g, gr.h ]);
   var expected = [ [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h' ] ]
   test.identical( layers.map( ( layer ) => group.nodesToNames( layer ) ), expected );
@@ -9533,7 +10348,6 @@ function nodesStronglyConnectedLayersDfs( test )
 
   var gr = context.cycled4Scc();
   var group = gr.sys.nodesGroup();
-  // group.nodesAdd( gr.nodes );
   test.identical( gr.nodes.length, 10 );
   logger.log( group.infoExport({ nodes : gr.nodes }) );
 
@@ -9569,7 +10383,6 @@ function nodesStronglyConnectedCollectionDfs( test )
 
   var group = gr.sys.nodesGroup({});
 
-  // group.nodesAdd( gr.nodes );
   logger.log( 'Original' );
   logger.log( group.infoExport({ nodes : gr.nodes }) );
 
@@ -9676,24 +10489,6 @@ function nodesStronglyConnectedCollectionDfs( test )
 
   /* */
 
-  // test.description = 'all';
-  // var group = gr.sys.nodesGroup();
-  // // group.nodesAdd( gr.nodes );
-  // logger.log( 'Original' );
-  // logger.log( group.infoExport({ nodes : gr.nodes }) );
-  // var collection2 = group.nodesStronglyConnectedCollectionDfs( gr.nodes );
-  // collection2.group.onNodeNameGet = function onNodeNameGet( dnode )
-  // {
-  //   return group.nodesToNames( dnode.originalNodes ).join( '+' );
-  // }
-  // var outNodes = collection2.nodes.map( ( dnode ) => collection2.group.nodeToName( dnode ) + ' : ' + collection2.group.nodesToNames( dnode.outNodes ).join( '.' ) ).toArray().original;
-  // var expected = [ 'j : ', 'f : ', 'i+h : f', 'g : i+h', 'a+b+e+c : f.i+h', 'd : a+b+e+c.g' ];
-  // test.identical( outNodes, expected );
-  // logger.log( 'Tree' );
-  // logger.log( collection2.infoExport() );
-
-  /* */
-
   test.description = 'all, explicit';
   var group = gr.sys.nodesGroup();
   var collection2 = group.nodesStronglyConnectedCollectionDfs( gr.nodes );
@@ -9732,6 +10527,134 @@ function nodesStronglyConnectedCollectionDfs( test )
   });
 
   /* */
+
+  gr.sys.finit();
+
+  /* - */
+
+}
+
+//
+
+function nodesStronglyConnectedCollectionVariantsDfs( test )
+{
+  let context = this;
+
+  /* - */
+
+  test.case = 'cycledVariantsTriplet';
+  var gr = context.cycledVariantsTriplet();
+  var group = gr.sys.nodesGroup();
+  logger.log( group.nodesInfoExport( gr.nodes ) );
+  group.finit();
+
+  test.description = 'all nodes';
+  var group = gr.sys.nodesGroup();
+  var collection2 = group.nodesStronglyConnectedCollectionDfs( gr.nodes );
+  collection2.group.onNodeNameGet = function onNodeNameGet( dnode )
+  {
+    return group.nodesToNames( dnode.originalNodes ).join( '+' );
+  }
+
+  var outNodes = collection2.nodes.map( ( dnode ) =>
+  {
+    return collection2.group.nodeToName( dnode ) + ' : ' + collection2.group.nodesToNames( dnode.outNodes ).join( '.' );
+  }).toArray().original;
+  var expected = [ 'b2+a2+c+a1+a0+b1 : ' ];
+  test.identical( outNodes, expected );
+
+  var inNodes = collection2.nodes.map( ( dnode ) =>
+  {
+    return collection2.group.nodeToName( dnode ) + ' : ' + collection2.group.nodesToNames( dnode.inNodes ).join( '.' );
+  }).toArray().original;
+  var expected = [ 'b2+a2+c+a1+a0+b1 : ' ];
+  test.identical( inNodes, expected );
+
+  var originalOutNodes = collection2.nodes.map( ( dnode ) =>
+  {
+    return collection2.group.nodeToName( dnode ) + ' : ' + group.nodesToNames( dnode.originalOutNodes ).join( '.' );
+  }).toArray().original;
+  var expected = [ 'b2+a2+c+a1+a0+b1 : a2.a0.a1.b1.c.b2' ];
+  test.identical( originalOutNodes, expected );
+
+  gr.sys.finit();
+
+  /* - */
+
+  test.case = 'cycledVariants3';
+  var gr = context.cycledVariants3();
+  var group = gr.sys.nodesGroup();
+  logger.log( group.nodesInfoExport( gr.nodes ) );
+  group.finit();
+
+  test.description = 'all nodes';
+  var group = gr.sys.nodesGroup();
+  var collection2 = group.nodesStronglyConnectedCollectionDfs( gr.nodes );
+
+  collection2.group.onNodeNameGet = function onNodeNameGet( dnode )
+  {
+    return group.nodesToNames( dnode.originalNodes ).join( '+' );
+  }
+
+  var outNodes = collection2.nodes.map( ( dnode ) =>
+  {
+    return collection2.group.nodeToName( dnode ) + ' : ' + collection2.group.nodesToNames( dnode.outNodes ).join( '.' );
+  }).toArray().original;
+  var expected = [ 'd+e+f : ', 'c2+g+a+b+c1 : d+e+f' ];
+  test.identical( outNodes, expected );
+
+  var inNodes = collection2.nodes.map( ( dnode ) =>
+  {
+    return collection2.group.nodeToName( dnode ) + ' : ' + collection2.group.nodesToNames( dnode.inNodes ).join( '.' );
+  }).toArray().original;
+  var expected = [ 'd+e+f : c2+g+a+b+c1', 'c2+g+a+b+c1 : ' ];
+  test.identical( inNodes, expected );
+
+  var originalOutNodes = collection2.nodes.map( ( dnode ) =>
+  {
+    return collection2.group.nodeToName( dnode ) + ' : ' + group.nodesToNames( dnode.originalOutNodes ).join( '.' );
+  }).toArray().original;
+  var expected = [ 'd+e+f : e.f.d', 'c2+g+a+b+c1 : g.a.b.d.c1.c2' ];
+  test.identical( originalOutNodes, expected );
+
+  gr.sys.finit();
+
+  /* - */
+
+  test.case = 'cycledVariants4';
+  var gr = context.cycledVariants4();
+  var group = gr.sys.nodesGroup();
+  logger.log( group.nodesInfoExport( gr.nodes ) );
+  group.finit();
+
+  test.description = 'all nodes';
+  var group = gr.sys.nodesGroup();
+  var collection2 = group.nodesStronglyConnectedCollectionDfs( gr.nodes );
+  collection2.group.onNodeNameGet = function onNodeNameGet( dnode )
+  {
+    return group.nodesToNames( dnode.originalNodes ).join( '+' );
+  }
+
+  var outNodes = collection2.nodes.map( ( dnode ) =>
+  {
+    return collection2.group.nodeToName( dnode ) + ' : ' + collection2.group.nodesToNames( dnode.outNodes ).join( '.' );
+  }).toArray().original;
+  var expected = [ 'd+e+f : ', 'c2+b2+b1+c1 : ', 'g : c2+b2+b1+c1', 'a : d+e+f.g' ];
+  test.identical( outNodes, expected );
+
+  var inNodes = collection2.nodes.map( ( dnode ) =>
+  {
+    return collection2.group.nodeToName( dnode ) + ' : ' + collection2.group.nodesToNames( dnode.inNodes ).join( '.' );
+  }).toArray().original;
+  var expected = [ 'd+e+f : a', 'c2+b2+b1+c1 : g', 'g : a', 'a : ' ];
+  test.identical( inNodes, expected );
+
+  var originalOutNodes = collection2.nodes.map( ( dnode ) =>
+  {
+    return collection2.group.nodeToName( dnode ) + ' : ' + group.nodesToNames( dnode.originalOutNodes ).join( '.' );
+  }).toArray().original;
+  var expected = [ 'd+e+f : e.f.d', 'c2+b2+b1+c1 : b2.b1.c1.c2', 'g : b1.c2.b2.c1', 'a : d.g' ];
+  test.identical( originalOutNodes, expected );
 
   gr.sys.finit();
 
@@ -10173,14 +11096,14 @@ function rootsExportInfoTree( test )
 
 //
 
-function variants( test )
+function rootsExportInfoTreeVariants( test )
 {
   let context = this;
 
   /* - */
 
-  test.case = 'cycledVariants';
-  var gr = context.cycledVariants();
+  test.case = 'cycledVariantsTriplet';
+  var gr = context.cycledVariantsTriplet();
   var group = gr.sys.nodesGroup();
   logger.log( group.nodesInfoExport( gr.nodes ) );
   group.finit();
@@ -10190,9 +11113,11 @@ function variants( test )
   var expected =
 `
  +-- a0
-   +-- b1
    +-- c
-     +-- b2
+   | +-- b2
+   | +-- b1
+   +-- b1
+   +-- b2
 `
   var infoAsTree = group.rootsExportInfoTree( gr.a0 );
   test.equivalent( infoAsTree, expected );
@@ -10218,16 +11143,22 @@ var Self =
 
   context :
   {
+
     dag6,
     cycled1Scc,
     cycled2Scc,
     cycled3Scc,
     cycled4Scc,
-    cycledVariants,
+    _cycledVariants,
+    cycledVariantsTriplet,
+    cycledVariants2,
+    cycledVariants3,
+    cycledVariants4,
     cycledOmicron,
     cycledGamma,
     cycledAsymetricZeta,
     cycledAsymetricChi,
+
   },
 
   tests :
@@ -10237,13 +11168,16 @@ var Self =
     makeByNodesWithInts,
     groupClone,
     collectionClone,
+    cacheInNodesVariants,
     reverse,
 
     asNodes,
     sourcesFromNodes,
     sourcesFromRoots,
     rootsToAllReachable,
+    rootsToAllReachableVariants,
     rootsToAll,
+    rootsToAllVariants,
 
     sinksOnlyAmong,
     sourcesOnlyAmong,
@@ -10256,6 +11190,7 @@ var Self =
     lookBfsExcluding,
     lookBfsRevisitingTrivial,
     lookBfsRepeatsRoots,
+    lookBfsVariants,
 
     lookDfs,
     lookDfsVisitedContainter,
@@ -10264,6 +11199,7 @@ var Self =
     lookDfsExcluding,
     lookDfsRevisitingTrivial,
     lookDfsRepeatsRoots,
+    lookDfsVariants,
 
     lookCfs,
     lookCfsVisitedContainter,
@@ -10272,6 +11208,7 @@ var Self =
     lookCfsExcluding,
     lookCfsRevisitingTrivial,
     lookCfsRepeatsRoots,
+    lookCfsVariants,
 
     eachBfs,
     eachDfs,
@@ -10292,9 +11229,10 @@ var Self =
     nodesConnectedLayersDfs,
     nodesStronglyConnectedLayersDfs,
     nodesStronglyConnectedCollectionDfs,
+    nodesStronglyConnectedCollectionVariantsDfs,
 
     rootsExportInfoTree,
-    variants,
+    rootsExportInfoTreeVariants,
 
   },
 
