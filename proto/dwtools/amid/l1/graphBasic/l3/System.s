@@ -495,11 +495,11 @@ function ContainerAdapterFrom( container )
 
 let FieldsForGroup =
 {
-  onNodeNameGet : null,
-  onNodeEvaluate : null,
+  onNodeName : null,
+  onNodeVariant : null,
   onNodeIs : null,
-  onOutNodesGet : null,
-  onInNodesGet : null,
+  onNodeOutNodes : null,
+  onNodeInNodes : null,
   onNodeFrom : null,
 }
 
@@ -509,11 +509,11 @@ let Composes =
 
 let Aggregates =
 {
-  onNodeNameGet : null,
-  onNodeEvaluate : null,
+  onNodeName : null,
+  onNodeVariant : null,
   onNodeIs : null,
-  onOutNodesGet : null,
-  onInNodesGet : null,
+  onNodeOutNodes : null,
+  onNodeInNodes : null,
   onNodeFrom : null,
 }
 
