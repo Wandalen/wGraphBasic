@@ -496,7 +496,7 @@ function ContainerAdapterFrom( container )
 let FieldsForGroup =
 {
   onNodeName : null,
-  onNodeVariant : null,
+  onNodeJunction : null,
   onNodeIs : null,
   onNodeOutNodes : null,
   onNodeInNodes : null,
@@ -510,7 +510,7 @@ let Composes =
 let Aggregates =
 {
   onNodeName : null,
-  onNodeVariant : null,
+  onNodeJunction : null,
   onNodeIs : null,
   onNodeOutNodes : null,
   onNodeInNodes : null,

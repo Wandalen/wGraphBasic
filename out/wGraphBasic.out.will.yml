@@ -3,14 +3,14 @@ root:
   - wGraphBasic.out
 consistency:
   wGraphBasic.out.will.yml: &ref_0
-    hash: 562df1d09df5bb7276df9147da6fe5d4
-    size: 39058
+    hash: a4948bd194922722292d20022f7cf4d8
+    size: 39087
   ../.ex.will.yml: &ref_1
     hash: 3ad31457175874d0c2ec7122331605fc
     size: 2006
   ../.im.will.yml: &ref_2
-    hash: 80ecb25a3371353293b0477df1c5fea4
-    size: 4882
+    hash: c614e4aaa5864510026d36a79c14b9f2
+    size: 4956
 module:
   wGraphBasic.out:
     about:
@@ -67,9 +67,6 @@ module:
       download:
         criterion:
           predefined: 1
-      remote:
-        criterion:
-          predefined: 1
       repository:
         path: 'git+https:///github.com/Wandalen/wGraphBasic.git'
       origins:
@@ -79,15 +76,15 @@ module:
       bugtracker:
         path: 'https:///github.com/Wandalen/wGraphBasic/issues'
       in:
-        criterion:
-          predefined: 0
         path: .
       out:
-        criterion:
-          predefined: 0
         path: .
       temp:
-        path: 'path::out'
+        path:
+          - 'path::out'
+          - ../package-lock.json
+          - ../package.json
+          - ../node_modules
       proto:
         path: ../proto
       export:
@@ -152,11 +149,13 @@ module:
         path: '{path::out.*=}/source/Index.s'
       exported.dir.proto.export:
         criterion:
+          generated: 1
           content: proto
           export: 1
         path: ../proto
       exported.files.proto.export:
         criterion:
+          generated: 1
           content: proto
           export: 1
         path:
@@ -342,6 +341,7 @@ module:
           prefixPath: ../proto
         mandatory: 1
         criterion:
+          generated: 1
           content: proto
           export: 1
       exported.files.proto.export:
@@ -354,6 +354,7 @@ module:
         recursive: 0
         mandatory: 1
         criterion:
+          generated: 1
           content: proto
           export: 1
     step:
@@ -711,6 +712,7 @@ module:
         opts:
           reflector: 'reflector::exported.proto.export*'
         criterion:
+          generated: 1
           content: proto
           export: 1
         inherit:
@@ -719,6 +721,7 @@ module:
         opts:
           reflector: 'reflector::exported.files.proto.export*'
         criterion:
+          generated: 1
           content: proto
           export: 1
         inherit:
@@ -869,9 +872,6 @@ module:
       download:
         criterion:
           predefined: 1
-      remote:
-        criterion:
-          predefined: 1
       repository:
         path: 'git+https:///github.com/Wandalen/wGraphBasic.git'
       origins:
@@ -885,13 +885,17 @@ module:
       out:
         path: out
       temp:
-        path: 'path::out'
+        path:
+          - 'path::out'
+          - package-lock.json
+          - package.json
+          - node_modules
       proto:
-        path: ./proto
+        path: proto
       export:
         path: '{path::proto}/**'
       doc:
-        path: ./doc
+        path: doc
       out.raw.debug:
         criterion:
           debug: debug
@@ -1509,6 +1513,8 @@ module:
         hash: 3ad31457175874d0c2ec7122331605fc
         size: 2006
       ../.im.will.yml:
-        hash: 80ecb25a3371353293b0477df1c5fea4
-        size: 4882
-      wGraphBasic.out.will.yml: *ref_0
+        hash: c614e4aaa5864510026d36a79c14b9f2
+        size: 4956
+      wGraphBasic.out.will.yml:
+        hash: a4948bd194922722292d20022f7cf4d8
+        size: 39087

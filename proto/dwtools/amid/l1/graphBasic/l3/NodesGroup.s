@@ -347,7 +347,7 @@ function optionsExport()
   let sys = group.sys;
   let result = Object.create( null );
   result.onNodeName = group.onNodeName;
-  result.onNodeVariant = group.onNodeVariant;
+  result.onNodeJunction = group.onNodeJunction;
   result.onNodeIs = group.onNodeIs;
   result.onNodeOutNodes = group.onNodeOutNodes;
   result.onNodeInNodes = group.onNodeInNodes;
@@ -387,16 +387,16 @@ exportStructure.defaults =
  *  1 : 2
  *  2 : 3
  *  3 :
- * @function infoExport
+ * @function exportInfo
  * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesGroup#
  */
 
-function infoExport( o )
+function exportInfo( o )
 {
   let group = this;
   let sys = group.sys;
 
-  o = _.routineOptions( infoExport, arguments );
+  o = _.routineOptions( exportInfo, arguments );
 
   o.nodes = group.asNodesAdapter( o.nodes );
 
@@ -405,7 +405,7 @@ function infoExport( o )
   return result;
 }
 
-var routine = infoExport;
+var routine = exportInfo;
 
 routine.defaults =
 {
@@ -569,19 +569,19 @@ routine.input = 'Node';
 
 //
 
-function nodeVariant( node )
+function nodeJunction( node )
 {
   let group = this;
   let sys = group.sys;
   _.assert( !!group.nodeIs( node ), 'Not a node' );
   _.assert( arguments.length === 1 );
-  _.assert( _.routineIs( group.onNodeVariant ), 'Group does not have defined callback {- onNodeVariant -}' );
-  let result = group.onNodeVariant( node );
-  _.assert( result !== undefined, `No variant for a node` );
+  _.assert( _.routineIs( group.onNodeJunction ), 'Group does not have defined callback {- onNodeJunction -}' );
+  let result = group.onNodeJunction( node );
+  _.assert( result !== undefined, `No junction for a node` );
   return result;
 }
 
-var routine = nodeVariant;
+var routine = nodeJunction;
 var properties = routine.properties = Object.create( null );
 routine.input = 'Node';
 
@@ -922,42 +922,42 @@ var properties = routine.properties = Object.create( null );
 routine.input = 'Node';
 
 // --
-// variant
+// junction
 // --
 
 /**
- * @summary Returns true if provided entity is a variant.
- * @param {*} variant Variant descriptor.
- * @function variantIs
+ * @summary Returns true if provided entity is a junction.
+ * @param {*} junction Junction descriptor.
+ * @function junctionIs
  * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesGroup#
  */
 
-function variantIs( variant )
+function junctionIs( junction )
 {
   let group = this;
   let sys = group.sys;
-  return group.onVariantIs( variant );
+  return group.onJunctionIs( junction );
 }
 
-var routine = variantIs;
+var routine = junctionIs;
 var properties = routine.properties = Object.create( null );
 routine.input = 'Node';
 
 //
 
-function variantNodes( variant )
+function junctionNodes( junction )
 {
   let group = this;
   let sys = group.sys;
-  _.assert( !!group.variantIs( node ), 'Not a node' );
+  _.assert( !!group.junctionIs( node ), 'Not a node' );
   _.assert( arguments.length === 1 );
-  _.assert( _.routineIs( group.onVariantNodes ), 'Group does not have defined callback {- onVariantNodes -}' );
-  let result = group.onVariantNodes( node );
-  _.assert( result !== undefined, `No variant for a node` );
+  _.assert( _.routineIs( group.onJunctionNodes ), 'Group does not have defined callback {- onJunctionNodes -}' );
+  let result = group.onJunctionNodes( node );
+  _.assert( result !== undefined, `No junction for a node` );
   return result;
 }
 
-var routine = variantNodes;
+var routine = junctionNodes;
 var properties = routine.properties = Object.create( null );
 routine.input = 'Node';
 
@@ -1347,7 +1347,7 @@ function rootsToAllReachable( dstNodes, srcRoots )
 
   [ dstNodes, srcRoots ] = group._routineArguments2( ... arguments );
 
-  let o2 = { roots : srcRoots, onUp : onUp, onNodeVariant : 0 }
+  let o2 = { roots : srcRoots, onUp : onUp, onNodeJunction : 0 }
   // let o2 = { roots : srcRoots, onUp : onUp }
   group.lookDfs( o2 );
 
@@ -1381,7 +1381,7 @@ function rootsToAll( dstNodes, srcRoots )
   if( srcRoots === dstNodes )
   srcRoots = srcRoots.make();
 
-  group.lookDfs({ roots : srcRoots, onUp : onUp, onNodeVariant : 0 });
+  group.lookDfs({ roots : srcRoots, onUp : onUp, onNodeJunction : 0 });
   // group.lookDfs({ roots : srcRoots, onUp : onUp });
   if( !group.direct || group.onNodeInNodes )
   {
@@ -1390,7 +1390,7 @@ function rootsToAll( dstNodes, srcRoots )
     group.cacheInNodesFromOutNodesUpdate( srcRoots );
 
     group.reverse();
-    group.lookDfs({ roots : srcRoots, onUp : onUp, onNodeVariant : 0 });
+    group.lookDfs({ roots : srcRoots, onUp : onUp, onNodeJunction : 0 });
     // group.lookDfs({ roots : srcRoots, onUp : onUp });
     group.reverse();
 
@@ -1693,12 +1693,12 @@ function lookBfs( o )
   o.visitedContainer = o.revisiting === 2 ? new Array() : new Set();
   if( o.visitedContainer )
   o.visitedContainer = sys.ContainerAdapterFrom( o.visitedContainer );
-  if( o.onNodeVariant === null )
-  o.onNodeVariant = group.onNodeVariant;
+  if( o.onNodeJunction === null )
+  o.onNodeJunction = group.onNodeJunction;
 
   o.roots = group.asNodesPreferSet( o.roots );
   o.roots = group.asNodesAdapter( o.roots );
-  o.roots.once( o.roots, o.onNodeVariant );
+  o.roots.once( o.roots, o.onNodeJunction );
 
   if( Config.debug )
   {
@@ -1752,7 +1752,7 @@ function lookBfs( o )
       it.visited = false;
       if( o.revisiting === 2 )
       {
-        it.visited = o.visitedContainer.count( node, o.onNodeVariant );
+        it.visited = o.visitedContainer.count( node, o.onNodeJunction );
         if( it.visited > 1 )
         {
           nodesStatus.set( node, [ false, false, true ] );
@@ -1761,9 +1761,9 @@ function lookBfs( o )
       }
       else if( o.revisiting < 2 )
       {
-        if( o.visitedContainer.has( node, o.onNodeVariant ) )
+        if( o.visitedContainer.has( node, o.onNodeJunction ) )
         {
-          if( o.onNodeVariant )
+          if( o.onNodeJunction )
           o.visitedContainer.appendOnce( node );
           it.visited = true;
           nodesStatus.set( node, [ false, false, true ] );
@@ -1852,7 +1852,7 @@ function lookBfs( o )
     nodes2.each( ( node ) =>
     {
       let outNodes = group.nodeOutNodesFor( node );
-      nodes3.appendContainerOnce( outNodes, o.onNodeVariant );
+      nodes3.appendContainerOnce( outNodes, o.onNodeJunction );
     });
 
     let level = it.level;
@@ -1876,7 +1876,7 @@ lookBfs.defaults =
   revisiting : 0,
   fast : 1,
 
-  onNodeVariant : null,
+  onNodeJunction : null,
   onBegin : null,
   onEnd : null,
   onNode : null,
@@ -1937,8 +1937,8 @@ function lookDfs( o )
   o.visitedContainer = o.revisiting === 2 ? new Array() : new Set();
   if( o.visitedContainer )
   o.visitedContainer = sys.ContainerAdapterFrom( o.visitedContainer );
-  if( o.onNodeVariant === null )
-  o.onNodeVariant = group.onNodeVariant;
+  if( o.onNodeJunction === null )
+  o.onNodeJunction = group.onNodeJunction;
 
   _.assert( arguments.length === 1 );
   _.assert( 0 <= o.revisiting && o.revisiting <= 3 );
@@ -1997,11 +1997,11 @@ function lookDfs( o )
   {
 
     if( o.revisiting < 3 )
-    if( o.visitedContainer.has( it.node, o.onNodeVariant ) )
+    if( o.visitedContainer.has( it.node, o.onNodeJunction ) )
     {
       if( o.revisiting < 2 )
       {
-        if( o.onNodeVariant && o.revisiting === 0 )
+        if( o.onNodeJunction && o.revisiting === 0 )
         o.visitedContainer.appendOnce( it.node );
         return;
       }
@@ -2067,11 +2067,11 @@ function lookDfs( o )
   function visitFast( it )
   {
     if( o.revisiting < 3 )
-    if( o.visitedContainer.has( it.node, o.onNodeVariant ) )
+    if( o.visitedContainer.has( it.node, o.onNodeJunction ) )
     {
       if( o.revisiting < 2 )
       {
-        if( o.onNodeVariant && o.revisiting === 0 )
+        if( o.onNodeJunction && o.revisiting === 0 )
         o.visitedContainer.appendOnce( it.node );
         return;
       }
@@ -2147,7 +2147,7 @@ lookDfs.defaults =
   revisiting : 0,
   fast : 1,
 
-  onNodeVariant : null,
+  onNodeJunction : null,
   onBegin : null,
   onEnd : null,
   onNode : null,
@@ -2170,8 +2170,8 @@ function lookCfs( o )
   o.visitedContainer = o.revisiting === 2 ? new Array() : new Set();
   if( o.visitedContainer )
   o.visitedContainer = sys.ContainerAdapterFrom( o.visitedContainer );
-  if( o.onNodeVariant === null )
-  o.onNodeVariant = group.onNodeVariant;
+  if( o.onNodeJunction === null )
+  o.onNodeJunction = group.onNodeJunction;
 
   if( Config.debug )
   {
@@ -2264,7 +2264,7 @@ function lookCfs( o )
     it.visited = false;
 
     if( o.revisiting < 3 )
-    if( o.visitedContainer.has( node, o.onNodeVariant ) )
+    if( o.visitedContainer.has( node, o.onNodeJunction ) )
     {
       it.visited = true;
       if( o.revisiting === 2 )
@@ -2278,7 +2278,7 @@ function lookCfs( o )
       }
       if( o.revisiting === 0 )
       {
-        if( o.onNodeVariant )
+        if( o.onNodeJunction )
         o.visitedContainer.appendOnce( it.node );
         return true;
       }
@@ -2369,7 +2369,7 @@ lookCfs.defaults =
   revisiting : 0,
   fast : 1,
 
-  onNodeVariant : null,
+  onNodeJunction : null,
   onBegin : null,
   onEnd : null,
   onNode : null,
@@ -2430,7 +2430,7 @@ function dagTopSortDfs( nodes )
 
   nodes.each( ( node ) =>
   {
-    if( visitedContainer.has( node, group.onNodeVariant ) )
+    if( visitedContainer.has( node, group.onNodeJunction ) )
     return;
     group.lookDfs
     ({
@@ -2450,7 +2450,7 @@ function dagTopSortDfs( nodes )
   function handleDown( node, it )
   {
     let outNodes = group.nodeOutNodesFor( node );
-    outNodes = outNodes.filter( ( node2 ) => !visitedContainer.has( node2, group.onNodeVariant ) ? node2 : undefined );
+    outNodes = outNodes.filter( ( node2 ) => !visitedContainer.has( node2, group.onNodeJunction ) ? node2 : undefined );
     if( outNodes.length === 0 )
     ordering.push( node );
   }
@@ -2823,7 +2823,7 @@ function topSortCycledSourceBasedPreciseBfs( nodes )
     function add( node )
     {
       _.assert( !!node );
-      /* qqq xxx : is group.onNodeVariant required here? probably not? cover please */
+      /* qqq xxx : is group.onNodeJunction required here? probably not? cover please */
       nodeToOutNodes.get( node ).each( ( node2 ) => nodeToInNodes.get( node2 ).removeOnce( node ) );
       nodeToInNodes.get( node ).each( ( node2 ) => nodeToOutNodes.get( node2 ).removeOnce( node ) );
       added.append( node );
@@ -3052,7 +3052,7 @@ function pairIsConnectedDfs( pair )
   function onUp2( node, it )
   {
 
-    if( node === node1 || visitedAdapter.has( node, group.onNodeVariant ) )
+    if( node === node1 || visitedAdapter.has( node, group.onNodeJunction ) )
     {
       it.iterator.continue = false;
       it.result = true;
@@ -3134,7 +3134,7 @@ function pairIsConnectedStronglyDfs( pair )
   function onUp2( node, it )
   {
 
-    if( node === node1 || visitedAdapter.has( node, group.onNodeVariant ) )
+    if( node === node1 || visitedAdapter.has( node, group.onNodeJunction ) )
     {
       it.iterator.continue = false;
       it.result = true;
@@ -3208,7 +3208,7 @@ function nodesConnectedLayersDfs( nodes )
 
   nodes.each( ( node ) =>
   {
-    if( visitedContainer.has( node, group.onNodeVariant ) )
+    if( visitedContainer.has( node, group.onNodeJunction ) )
     return;
     groups.push( [] );
     group.lookDfs
@@ -3261,7 +3261,7 @@ function nodesStronglyConnectedLayersDfs( nodes )
 
   nodes.each( ( node ) =>
   {
-    if( visited1.has( node, group.onNodeVariant ) )
+    if( visited1.has( node, group.onNodeJunction ) )
     return;
     /*
       both visited1 and visitedContainer made with revisiting : 0 are required
@@ -3285,7 +3285,7 @@ function nodesStronglyConnectedLayersDfs( nodes )
 
   visited1.eachRight( ( node, i ) =>
   {
-    if( visited2.has( node, group.onNodeVariant ) )
+    if( visited2.has( node, group.onNodeJunction ) )
     return;
     let layer = [];
     layers.push( layer );
@@ -3306,7 +3306,7 @@ function nodesStronglyConnectedLayersDfs( nodes )
 
   function handleUp1( node, it )
   {
-    if( visited1.has( node, group.onNodeVariant ) )
+    if( visited1.has( node, group.onNodeJunction ) )
     {
       it.continueUp = false;
       return;
@@ -3330,7 +3330,7 @@ function nodesStronglyConnectedLayersDfs( nodes )
     {
       _.assert
       (
-          visited1.has( node, group.onNodeVariant )
+          visited1.has( node, group.onNodeJunction )
         , () => `Input set of nodes does not have ${group.nodeToQualifiedNameTry( node )}`
       );
       layer.push( node );
@@ -3354,7 +3354,7 @@ function nodesStronglyConnectedCollectionDfs( nodes )
   let visited1 = sys.ContainerAdapterFrom( [] );
   let visited2 = sys.ContainerAdapterFrom( new Set );
   let fromOriginal = new HashMap();
-  let variantToNodes;
+  let junctionToNodes;
 
   nodes = group.asNodesAdapter( nodes )
 
@@ -3363,16 +3363,16 @@ function nodesStronglyConnectedCollectionDfs( nodes )
 
   /* mark */
 
-  if( group.onNodeVariant )
+  if( group.onNodeJunction )
   {
-    variantToNodes = new HashMap();
+    junctionToNodes = new HashMap();
     nodes.each( ( node ) =>
     {
-      let variant = group.nodeVariant( node ); /* xxx : introduce onVariantNodes */
-      if( !variantToNodes.has( variant ) )
-      variantToNodes.set( variant, [ node ] )
+      let junction = group.nodeJunction( node ); /* xxx : introduce onJunctionNodes */
+      if( !junctionToNodes.has( junction ) )
+      junctionToNodes.set( junction, [ node ] )
       else
-      variantToNodes.set( variant, _.arrayAppend( variantToNodes.get( variant ), node ) )
+      junctionToNodes.set( junction, _.arrayAppend( junctionToNodes.get( junction ), node ) )
     });
   }
 
@@ -3383,9 +3383,9 @@ function nodesStronglyConnectedCollectionDfs( nodes )
 
   nodes.each( ( node ) =>
   {
-    if( visited1.has( node, group.onNodeVariant ) )
+    if( visited1.has( node, group.onNodeJunction ) )
     {
-      _.assert( visited1.has( node ), 'All nodes of the variant should be in the list so far' );
+      _.assert( visited1.has( node ), 'All nodes of the junction should be in the list so far' );
       return;
     }
     /*
@@ -3419,13 +3419,13 @@ function nodesStronglyConnectedCollectionDfs( nodes )
   visited1.eachRight( ( node, i ) =>
   {
 
-    if( group.onNodeVariant )
+    if( group.onNodeJunction )
     {
-      if( visited2.has( node, group.onNodeVariant ) )
+      if( visited2.has( node, group.onNodeJunction ) )
       {
         if( fromOriginal.has( node ) )
         return;
-        let node2 = visited2.left( node, group.onNodeVariant ).element;
+        let node2 = visited2.left( node, group.onNodeJunction ).element;
         let dnode2 = fromOriginal.get( node2 );
         _.assert( !!dnode2 );
         dnode2.originalNodes.appendOnce( node );
@@ -3466,7 +3466,7 @@ function nodesStronglyConnectedCollectionDfs( nodes )
         () => `Input set of nodes does not have ${group.nodeToQualifiedNameTry( node )}`
       );
 
-      if( dnode.originalNodes.has( node, group.onNodeVariant ) )
+      if( dnode.originalNodes.has( node, group.onNodeJunction ) )
       return;
       let dnode2 = fromOriginal.get( node );
       _.assert( !!dnode2 );
@@ -3497,10 +3497,10 @@ function nodesStronglyConnectedCollectionDfs( nodes )
   function handleUp1( node, it )
   {
     _.assert( nodes.has( node ) );
-    if( visited1.has( node, group.onNodeVariant ) )
+    if( visited1.has( node, group.onNodeJunction ) )
     {
       // _.assert( 0, 'not tested' ); /* xxx : impossible? */
-      _.assert( visited1.has( node ), 'All nodes of the variant should be in the list so far' );
+      _.assert( visited1.has( node ), 'All nodes of the junction should be in the list so far' );
       it.continueUp = false;
       return;
     }
@@ -3512,11 +3512,11 @@ function nodesStronglyConnectedCollectionDfs( nodes )
   {
     if( !it.continueUp )
     return;
-    if( group.onNodeVariant )
+    if( group.onNodeJunction )
     {
       /* xxx : use appendContainerOnceStrictly later */
-      visited1.appendContainerOnce( variantToNodes.get( group.nodeVariant( node ) ) );
-      // visited1.appendContainerOnceStrictly( variantToNodes.get( group.nodeVariant( node ) ) );
+      visited1.appendContainerOnce( junctionToNodes.get( group.nodeJunction( node ) ) );
+      // visited1.appendContainerOnceStrictly( junctionToNodes.get( group.nodeJunction( node ) ) );
     }
     else
     {
@@ -3524,7 +3524,7 @@ function nodesStronglyConnectedCollectionDfs( nodes )
     }
     _.assert
     (
-        nodes.has( node, group.onNodeVariant )
+        nodes.has( node, group.onNodeJunction )
       , () => `Input set of nodes does not have ${group.nodeToQualifiedNameTry( node )}`
     );
   }
@@ -3637,10 +3637,10 @@ let Aggregates =
   onNodeInNodes : null,
   onNodeInfoExport : null,
   onNodeFrom : null,
-  onNodeVariant : null, /* qqq : cover by tests */
+  onNodeJunction : null, /* qqq : cover by tests */
 
-  onVariantIs : _IsDefinedNotNull,
-  onVariantNodes : null,
+  onJunctionIs : _IsDefinedNotNull,
+  onJunctionNodes : null,
 
 }
 
@@ -3711,7 +3711,7 @@ let Extend =
 
   optionsExport,
   exportStructure,
-  infoExport,
+  exportInfo,
 
   // descriptor
 
@@ -3738,8 +3738,8 @@ let Extend =
   nodesOutNodesFor : Vectorize( nodeOutNodesFor ),
   nodeInNodesFor,
   nodesInNodesFor : Vectorize( nodeInNodesFor ),
-  nodeVariant,
-  nodesVariants : Vectorize( nodeVariant ),
+  nodeJunction,
+  nodesJunctions : Vectorize( nodeJunction ),
 
   nodeDataExport,
   nodesDataExport : Vectorize( nodeDataExport ),
@@ -3756,16 +3756,16 @@ let Extend =
   nodeToNameTry,
   nodesToNamesTry : Vectorize( nodeToNameTry ),
 
-  // variant
+  // junction
 
-  variantIs,
-  variantsAre : Vectorize( variantIs ),
-  variantsAreAll : VectorizeAll( variantIs ),
-  variantsAreAny : VectorizeAny( variantIs ),
-  variantsAreNone : VectorizeNone( variantIs ),
+  junctionIs,
+  junctionsAre : Vectorize( junctionIs ),
+  junctionsAreAll : VectorizeAll( junctionIs ),
+  junctionsAreAny : VectorizeAny( junctionIs ),
+  junctionsAreNone : VectorizeNone( junctionIs ),
 
-  variantNodes,
-  variantsNodes : Vectorize( variantNodes ),
+  junctionNodes,
+  junctionsNodes : Vectorize( junctionNodes ),
 
   // filter
 
