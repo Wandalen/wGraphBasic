@@ -1282,9 +1282,7 @@ function sourcesFromNodes( dstNodes, srcNodes )
     dstNodes.filter( dstNodes, ( node ) => group.nodeIndegree( node ) === 0 ? node : undefined );
   }
 
-  debugger;
   let collection = group.nodesStronglyConnectedCollection( srcNodes );
-  debugger;
   collection.nodes.each( ( node ) =>
   {
     if( collection.group.nodeIndegree( node ) === 0 )
