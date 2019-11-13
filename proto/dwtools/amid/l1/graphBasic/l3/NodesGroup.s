@@ -25,6 +25,20 @@ let Self = function wAbstractNodesGroup( o )
 Self.shortName = 'AbstractNodesGroup';
 Self.shortName2 = 'Group';
 
+/*
+
+visiting rules
+
+|     | s:0 v:0 | s:0 v:1 | s:0 v:2 | s:1 v:0 | s:1 v:1 | s:1 v:2 | s:2 v:0 | s:2 v:1 | s:2 v:2 |
+| --- | ------- | ------- | ------- | ------- | ------- | ------- | ------- | ------- | ------- |
+| r:0 |         |         |         |         |         |         |         |         |         |
+| r:1 |         |         |         |         |         |         |         |         |         |
+| r:2 |         |         |         |         |         |         |         |         |         |
+| r:3 |         |         |         |         |         |         |         |         |         |
+| --- | ------- | ------- | ------- | ------- | ------- | ------- | ------- | ------- | ------- |
+
+*/
+
 // --
 // functor
 // --
@@ -587,238 +601,6 @@ routine.input = 'Node';
 
 //
 
-function nodeDataExport( node )
-{
-  let group = this;
-  let sys = group.sys;
-  _.assert( group.nodeIs( node ) );
-
-  let result = Object.create( null );
-  result.id = group.nodeToId( node );
-  result.outNodeIds = group.nodesToIdsTry( group.nodeOutNodesFor( node ) );
-
-  return result;
-}
-
-var routine = nodeDataExport;
-var properties = routine.properties = Object.create( null );
-routine.input = 'Node';
-
-//
-
-function nodeInfoExport( node, opts )
-{
-  let group = this;
-  let sys = group.sys;
-
-  if( group.onNodeInfoExport )
-  {
-    let node2 = node;
-    return group.onNodeInfoExport( node2, o );
-  }
-
-  let name = group.nodeToName( node );
-  let outNames = group.nodesToNames( group.nodeOutNodesFor( node ) );
-
-  let result = name + ' : ' + outNames.join( ' ' );
-  return result;
-}
-
-var routine = nodeDataExport;
-var properties = routine.properties = Object.create( null );
-routine.input =
-`
-(
-  Node
-  Map
-)
-`;
-
-//
-
-function nodesInfoExport( nodes, opts )
-{
-  let group = this;
-  let sys = group.sys;
-
-  _.assert( arguments.length === 0 || arguments.length === 1 || arguments.length === 2 )
-
-  // if( nodes === undefined )
-  // nodes = group.nodes;
-  // else
-  nodes = group.asNodesAdapter( nodes );
-
-  let result = nodes.map( ( node ) => group.nodeInfoExport( node, opts ) );
-
-  result = result.join( '\n' );
-  return result;
-}
-
-var routine = nodesInfoExport;
-var properties = routine.properties = Object.create( null );
-routine.input =
-`
-(
-  [ [ Set, Array ] of (*Node), Node ] :: nodes
-  Map :: opts
-)
-`;
-
-//
-
-function rootsExportInfoTree( roots, opts )
-{
-  let group = this;
-  let sys = group.sys;
-  let result = '';
-  let prevIt;
-  let lastNodes;
-  let tab;
-
-  roots = group._routineArguments1( roots );
-  opts = _.routineOptions( rootsExportInfoTree, opts );
-
-  if( opts.onNodeName === null )
-  opts.onNodeName = defaultOnNodeName;
-
-  _.assert( opts.dtab1.length === opts.dtab2.length );
-  _.assert( arguments.length === 0 || arguments.length === 1 || arguments.length === 2 );
-
-  let l = roots.length-1;
-  _.assert( _.intIs( l ) );
-  roots.each( ( node, i ) =>
-  {
-    _.assert( _.intIs( i ) );
-    lastNodes = new HashMap;
-    tab = '';
-
-    if( opts.rootsDelimiting && i > 0 )
-    result += opts.linePrefix + opts.dtab1 + opts.linePostfix;
-
-    prevIt = { level : Infinity };
-    group.lookDfs
-    ({
-      roots : node,
-      onBegin : handleBegin,
-      onUp : handleUp1,
-      onDown : handleDown1,
-      fast : 0,
-      revisiting : 1,
-    });
-
-    if( i === l )
-    lastNodes.set( node, new Set([ undefined ]) );
-
-    prevIt = { level : 0, node : undefined };
-    group.lookDfs
-    ({
-      roots : node,
-      onBegin : handleBegin,
-      onUp : handleUp2,
-      onDown : handleDown2,
-      fast : 0,
-      revisiting : 1,
-    });
-
-  });
-
-  return result;
-
-  /* */
-
-  function defaultOnNodeName( node )
-  {
-    return group.nodeToName( node );
-  }
-
-  /* */
-
-  function handleBegin( it )
-  {
-  }
-
-  /* */
-
-  function handleUp1( node, it )
-  {
-  }
-
-  /* */
-
-  function handleDown1( node, it )
-  {
-    if( !it.iterator.continue || !it.continue || !it.continueUp || !it.continueNode )
-    {
-      debugger;
-      return;
-    }
-    let dLevel = it.level - prevIt.level;
-    debugger;
-    if( dLevel < 0 && prevIt.node !== undefined )
-    {
-      lastNodes.set( prevIt.node, lastNodes.get( prevIt.node ) || new Set() );
-      lastNodes.get( prevIt.node ).add( prevIt.down.node );
-    }
-    prevIt = it;
-  }
-
-  /* */
-
-  function handleUp2( node, it )
-  {
-
-    if( opts.onUp )
-    opts.onUp( node, it );
-    if( !it.iterator.continue || !it.continue || !it.continueUp || !it.continueNode )
-    {
-      debugger;
-      return;
-    }
-
-    let isLast = lastNodes.has( prevIt.node ) && lastNodes.get( prevIt.node ).has( prevIt.down.node );
-    let dLevel = it.level - prevIt.level;
-    let name = opts.onNodeName( node );
-
-    if( dLevel < 0 )
-    tab = tab.substring( 0, tab.length + dLevel*opts.dtab1.length );
-
-    if( dLevel > 0 )
-    tab += isLast ? opts.dtab2 : opts.dtab1;
-
-    let tab2 = tab;
-
-    tab2 = opts.tabPrefix + tab2 + opts.tabPostfix;
-
-    result += opts.linePrefix + tab2 + name + opts.linePostfix;
-
-    prevIt = it;
-  }
-
-  /* */
-
-  function handleDown2( node, it )
-  {
-    if( opts.onDown )
-    opts.onDown( node, it );
-  }
-
-}
-
-rootsExportInfoTree.defaults =
-{
-  linePrefix : ' ',
-  linePostfix : '\n',
-  tabPrefix : '',
-  tabPostfix : '+-- ',
-  dtab1 : '| ',
-  dtab2 : '  ',
-  rootsDelimiting : 1,
-  onNodeName : null,
-  onUp : null,
-}
-
-//
-
 /**
  * @summary Returns qualified name of node. Takes single argument - a node.
  * @param {Object} node Node descriptor.
@@ -920,6 +702,280 @@ function nodeToNameTry( node )
 var routine = nodeToNameTry;
 var properties = routine.properties = Object.create( null );
 routine.input = 'Node';
+
+// --
+// node exporter
+// --
+
+function nodeDataExport( node )
+{
+  let group = this;
+  let sys = group.sys;
+  _.assert( group.nodeIs( node ) );
+
+  let result = Object.create( null );
+  result.id = group.nodeToId( node );
+  result.outNodeIds = group.nodesToIdsTry( group.nodeOutNodesFor( node ) );
+
+  return result;
+}
+
+var routine = nodeDataExport;
+var properties = routine.properties = Object.create( null );
+routine.input = 'Node';
+
+//
+
+function nodeInfoExport( node, opts )
+{
+  let group = this;
+  let sys = group.sys;
+
+  if( group.onNodeInfoExport )
+  {
+    let node2 = node;
+    return group.onNodeInfoExport( node2, o );
+  }
+
+  let name = group.nodeToName( node );
+  let outNames = group.nodesToNames( group.nodeOutNodesFor( node ) );
+
+  let result = name + ' : ' + outNames.join( ' ' );
+  return result;
+}
+
+var routine = nodeDataExport;
+var properties = routine.properties = Object.create( null );
+routine.input =
+`
+(
+  Node
+  Map
+)
+`;
+
+//
+
+function nodesInfoExport( nodes, opts )
+{
+  let group = this;
+  let sys = group.sys;
+
+  _.assert( arguments.length === 0 || arguments.length === 1 || arguments.length === 2 )
+
+  // if( nodes === undefined )
+  // nodes = group.nodes;
+  // else
+  nodes = group.asNodesAdapter( nodes );
+
+  let result = nodes.map( ( node ) => group.nodeInfoExport( node, opts ) );
+
+  result = result.join( '\n' );
+  return result;
+}
+
+var routine = nodesInfoExport;
+var properties = routine.properties = Object.create( null );
+routine.input =
+`
+(
+  [ [ Set, Array ] of (*Node), Node ] :: nodes
+  Map :: opts
+)
+`;
+
+//
+
+function rootsExportInfoTree( roots, opts )
+{
+  let group = this;
+  let sys = group.sys;
+  let result = '';
+  let prevIt;
+  let lastNodes;
+  let tab;
+
+  roots = group._routineArguments1( roots );
+  opts = _.routineOptions( rootsExportInfoTree, opts );
+
+  if( opts.onNodeName === null )
+  opts.onNodeName = defaultOnNodeName;
+
+  _.assert( opts.dtab1.length === opts.dtab2.length );
+  _.assert( arguments.length === 0 || arguments.length === 1 || arguments.length === 2 );
+
+  lastNodes = new HashMap;
+  tab = '';
+
+  prevIt = { level : Infinity };
+  group.lookDfs
+  ({
+    roots : roots,
+    onBegin : handleBegin,
+    onUp : handleUp1,
+    onDown : handleDown1,
+    fast : 0,
+    revisiting : opts.revisiting,
+    allSiblings : opts.allSiblings,
+    allVariants : opts.allVariants,
+  });
+
+  if( prevIt.down )
+  lastNodeAdd( prevIt.node, prevIt.down.node, prevIt.index );
+
+  /*
+    for debugging. do not delete
+  */
+
+    // logger.log( '' );
+    // logger.log( 'Last nodes' );
+    // for( let [ node, parents ] of lastNodes )
+    // {
+    //   for( let parent of parents )
+    //   logger.log( ( parent ? group.nodeToName( parent ) : String( parent ) ) + ' -> ' + group.nodeToName( node ) );
+    // }
+    // logger.log( '' );
+
+  prevIt = { level : 0, node : null };
+  group.lookDfs
+  ({
+    roots : roots,
+    onBegin : handleBegin,
+    onUp : handleUp2,
+    onDown : handleDown2,
+    fast : 0,
+    revisiting : opts.revisiting,
+    allSiblings : opts.allSiblings,
+    allVariants : opts.allVariants,
+  });
+
+  return result;
+
+  /* */
+
+  function lastNodeAdd( node, downNode, index )
+  {
+    _.assert( _.intIs( index ) );
+    lastNodes.set( node, lastNodes.get( node ) || [] );
+    let descriptors = lastNodes.get( node );
+    descriptors.push({ downNode, index });
+  }
+
+  /* */
+
+  function lastNodeIs( node, downNode, index )
+  {
+    _.assert( _.intIs( index ) );
+    let descriptors = lastNodes.get( node );
+    if( !descriptors )
+    return false;
+    return _.any( descriptors, ( descriptor ) => descriptor.downNode === downNode && descriptor.index === index );
+    // lastNodes.has( prevIt.node ) && lastNodes.get( prevIt.node ).has( prevIt.down.node )
+  }
+
+  /* */
+
+  function defaultOnNodeName( node )
+  {
+    return group.nodeToName( node );
+  }
+
+  /* */
+
+  function handleBegin( it )
+  {
+  }
+
+  /* */
+
+  function handleUp1( node, it )
+  {
+  }
+
+  /* */
+
+  function handleDown1( node, it )
+  {
+
+    if( !it.iterator.continue || !it.continueNode )
+    {
+      debugger;
+      return;
+    }
+
+    let dLevel = it.level - prevIt.level;
+    if( dLevel < 0 && prevIt.node !== undefined )
+    {
+      lastNodeAdd( prevIt.node, prevIt.down.node, prevIt.index );
+    }
+    prevIt = it;
+  }
+
+  /* */
+
+  function handleUp2( node, it )
+  {
+
+    if( opts.onUp )
+    opts.onUp( node, it );
+
+    if( !it.iterator.continue || !it.continueNode )
+    {
+      debugger;
+      return;
+    }
+
+    let isLast = ( prevIt && prevIt.down ) ? lastNodeIs( prevIt.node, prevIt.down.node, prevIt.index ) : false;
+    let dLevel = it.level - prevIt.level;
+    let name = opts.onNodeName( node );
+
+    if( dLevel < 0 )
+    tab = tab.substring( 0, tab.length + dLevel*opts.dtab1.length );
+
+    if( dLevel > 0 )
+    tab += isLast ? opts.dtab2 : opts.dtab1;
+
+    if( opts.rootsDelimiting )
+    if( it.level === 0 && it.index > 0 )
+    {
+      result += opts.linePrefix + opts.dtab1 + opts.linePostfix;
+    }
+
+    let tab2 = tab;
+    tab2 = opts.tabPrefix + tab2 + opts.tabPostfix;
+    result += opts.linePrefix + tab2 + name + opts.linePostfix;
+
+    prevIt = it;
+  }
+
+  /* */
+
+  function handleDown2( node, it )
+  {
+    if( opts.onDown )
+    opts.onDown( node, it );
+  }
+
+  /* */
+
+}
+
+rootsExportInfoTree.defaults =
+{
+  linePrefix : ' ',
+  linePostfix : '\n',
+  tabPrefix : '',
+  tabPostfix : '+-- ',
+  dtab1 : '| ',
+  dtab2 : '  ',
+  rootsDelimiting : 1,
+  revisiting : 2,
+  allSiblings : 2,
+  allVariants : 2,
+  onNodeName : null,
+  onUp : null,
+  onDown : null,
+}
 
 // --
 // junction
@@ -1345,6 +1401,7 @@ function rootsToAllReachable( dstNodes, srcRoots )
 
   [ dstNodes, srcRoots ] = group._routineArguments2( ... arguments );
 
+  // let o2 = { roots : srcRoots, onUp : onUp, allVariants : 2 }
   let o2 = { roots : srcRoots, onUp : onUp, onNodeJunction : 0 }
   // let o2 = { roots : srcRoots, onUp : onUp }
   group.lookDfs( o2 );
@@ -1379,6 +1436,7 @@ function rootsToAll( dstNodes, srcRoots )
   if( srcRoots === dstNodes )
   srcRoots = srcRoots.make();
 
+  // group.lookDfs({ roots : srcRoots, onUp : onUp, allVariants : 2 });
   group.lookDfs({ roots : srcRoots, onUp : onUp, onNodeJunction : 0 });
   // group.lookDfs({ roots : srcRoots, onUp : onUp });
   if( !group.direct || group.onNodeInNodes )
@@ -1388,6 +1446,7 @@ function rootsToAll( dstNodes, srcRoots )
     group.cacheInNodesFromOutNodesUpdate( srcRoots );
 
     group.reverse();
+    // group.lookDfs({ roots : srcRoots, onUp : onUp, allVariants : 2 });
     group.lookDfs({ roots : srcRoots, onUp : onUp, onNodeJunction : 0 });
     // group.lookDfs({ roots : srcRoots, onUp : onUp });
     group.reverse();
@@ -1641,6 +1700,69 @@ function _routineArguments2( dstNodes, srcNodes )
 // traverser
 // --
 
+function _look_pre( routine, args )
+{
+  let group = this;
+  let sys = group.sys;
+
+  let o = _.routineOptions( routine, args );
+
+  if( o.revisiting < 3 && o.visitedContainer === null )
+  o.visitedContainer = o.revisiting === 2 ? new Array() : new Set();
+  if( o.visitedContainer )
+  o.visitedContainer = sys.ContainerAdapterFrom( o.visitedContainer );
+
+  if( o.allVariants === null )
+  o.allVariants = 0;
+  if( o.allSiblings === null )
+  o.allSiblings = 0;
+  _.assert( 0 <= o.allVariants && o.allVariants <= 2 );
+  _.assert( 0 <= o.allSiblings && o.allSiblings <= 2 );
+
+  let onNodeJunction = o.onNodeJunction === null ? group.onNodeJunction : o.onNodeJunction;
+  let allDirect = o.left ? 'allLeft' : 'allRight';
+  let allRevert = o.left ? 'allRight' : 'allLeft';
+
+  o.roots = group.asNodesPreferSet( o.roots );
+  o.roots = group.asNodesAdapter( o.roots );
+
+  if( Config.debug )
+  {
+    _.assert( args.length === 1 );
+    _.assert( group.nodesAreAll( o.roots ) );
+    _.assert( 0 <= o.revisiting && o.revisiting <= 3 );
+    _.assert( o.allVariants === null || ( 0 <= o.allVariants && o.allVariants <= 2 ) );
+    _.assert( o.allSiblings === null || ( 0 <= o.allSiblings && o.allSiblings <= 2 ) );
+    _.assert( o.roots.all( ( node ) => group.nodeIs( node ) ) );
+    _.assert( !o.visitedContainer || o.revisiting !== 2 || _.arrayIs( o.visitedContainer.original ) )
+  }
+
+  return o;
+}
+
+let _lookDefaults =
+{
+
+  roots : null,
+  visitedContainer : null,
+
+  left : 1, /* qqq : cover option left */
+  revisiting : 0,
+  allVariants : null,
+  allSiblings : null,
+  fast : 1,
+
+  onBegin : null,
+  onEnd : null,
+  onNode : null,
+  onUp : null,
+  onDown : null,
+  onNodeJunction : null,
+
+}
+
+//
+
 /**
  * @summary Performs breadth-first search on graph.
  * @param {Object} o Options map.
@@ -1677,43 +1799,56 @@ function _routineArguments2( dstNodes, srcNodes )
  * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesGroup#
  */
 
-function lookBfs( o )
+function lookBfs_body( o )
 {
   let group = this;
   let sys = group.sys;
 
-  _.routineOptions( lookBfs, o );
+  if( o.allVariants === null )
+  o.allVariants = o.revisiting === 0 ? 0 : 1;
+  if( o.allSiblings === null )
+  o.allSiblings = o.revisiting === 0 ? 0 : 1;
+  _.assert( 0 <= o.allVariants && o.allVariants <= 2 );
+  _.assert( 0 <= o.allSiblings && o.allSiblings <= 2 );
 
+  _.assertRoutineOptions( lookBfs_body, o );
+
+  let onNodeJunction = o.onNodeJunction === null ? group.onNodeJunction : o.onNodeJunction;
   let allDirect = o.left ? 'allLeft' : 'allRight';
   let allRevert = o.left ? 'allRight' : 'allLeft';
+  let containerIsSet = true;
 
-  if( o.revisiting < 3 && o.visitedContainer === null )
-  o.visitedContainer = o.revisiting === 2 ? new Array() : new Set();
-  if( o.visitedContainer )
-  o.visitedContainer = sys.ContainerAdapterFrom( o.visitedContainer );
-  if( o.onNodeJunction === null )
-  o.onNodeJunction = group.onNodeJunction;
-
-  o.roots = group.asNodesPreferSet( o.roots );
-  o.roots = group.asNodesAdapter( o.roots );
-  o.roots.once( o.roots, o.onNodeJunction );
-
-  if( Config.debug )
+  if( o.allSiblings === 0 )
   {
-    _.assert( arguments.length === 1 );
-    _.assert( group.nodesAreAll( o.roots ) );
-    _.assert( 0 <= o.revisiting && o.revisiting <= 3 );
-    _.assert( o.roots.all( ( node ) => group.nodeIs( node ) ) );
-    _.assert( !o.visitedContainer || o.revisiting !== 2 || _.arrayIs( o.visitedContainer.original ) )
+    if( !onNodeJunction || o.allVariants === 0 )
+    {
+      o.roots = o.roots.toSet();
+      o.roots.once( o.roots, onNodeJunction );
+    }
+    else if( o.allVariants === 1 )
+    {
+      o.roots = o.roots.toSet();
+    }
+    else
+    {
+      o.roots = o.roots.toSet();
+      // containerIsSet = false;
+    }
+  }
+  else
+  {
+    o.roots = o.roots.toArray();
+    containerIsSet = false;
   }
 
-  // let iterator = Object.create( null );
   let iterator = o;
   iterator.iterator = iterator;
   iterator.options = o;
   iterator.visitedContainer = o.visitedContainer;
   iterator.layers = [];
   iterator.level = 0;
+  iterator.index = null;
+  iterator.node = null;
   iterator.continue = true;
   iterator.continueUp = true;
   iterator.continueNode = true;
@@ -1723,7 +1858,7 @@ function lookBfs( o )
   if( o.onBegin )
   o.onBegin( iterator );
 
-  visit( o.roots, iterator );
+  nodesVisit( o.roots, iterator );
 
   if( o.onEnd )
   o.onEnd( iterator );
@@ -1732,14 +1867,24 @@ function lookBfs( o )
 
   /* */
 
-  function visit( nodes, it )
+  function nodesVisit( nodes, it )
   {
-    let nodes2 = sys.ContainerAdapterFrom( new Set );
+    let nodes2 = sys.ContainerAdapterFrom( containerIsSet ? new Set : new Array );
     let nodesStatus = new HashMap;
+    let siblingsContainer;
+
+    it.layers.push( nodes.original );
+
+    /* qqq : optimize. add proper condition */
+    // if( ( o.revisiting >= 1 && o.allVariants === 0 ) || ( o.revisiting === 0 && o.allVariants === 1 ) )
+    siblingsContainer = sys.ContainerAdapterFrom( new Set )
 
     if( o.onLayerUp )
-    o.onLayerUp( _.setFrom( nodes ), it );
+    o.onLayerUp( nodes, it );
 
+    delete it.node;
+    let itIndex = it.index;
+    let itVisited = it.visited;
     let itContinueUp = it.continueUp;
     let itContinueNode = it.continueNode;
 
@@ -1747,58 +1892,33 @@ function lookBfs( o )
     nodes[ allDirect ]( ( node, k ) =>
     {
 
+      it.node = node;
+      it.index = k;
       it.visited = false;
-      if( o.revisiting === 2 )
+      it.continueUp = true;
+      it.continueNode = true;
+
+      if( !nodeCanVisit1( it, siblingsContainer, nodesStatus ) )
       {
-        it.visited = o.visitedContainer.count( node, o.onNodeJunction );
-        if( it.visited > 1 )
-        {
-          nodesStatus.set( node, [ false, false, true ] );
-          return true;
-        }
-      }
-      else if( o.revisiting < 2 )
-      {
-        if( o.visitedContainer.has( node, o.onNodeJunction ) )
-        {
-          if( o.onNodeJunction )
-          o.visitedContainer.appendOnce( node );
-          it.visited = true;
-          nodesStatus.set( node, [ false, false, true ] );
-          return true;
-        }
-      }
-
-      if( o.onUp )
-      o.onUp( node, it );
-
-      if( it.continueNode )
-      if( o.onNode )
-      o.onNode( node, it );
-
-      if( !it.continueNode )
-      it.continueUp = false;
-
-      if( it.continueUp )
-      {
-        if( o.revisiting === 2 )
-        {
-          if( !it.visited )
-          {
-            nodes2.append( node );
-          }
-          if( o.visitedContainer )
-          o.visitedContainer.push( node );
-        }
-        else
-        {
-          nodes2.append( node );
-          if( o.visitedContainer )
-          o.visitedContainer.push( node );
-        }
+        // if( onNodeJunction )
+        // {
+        //   if( o.visitedContainer )
+        //   o.visitedContainer.appendOnce( node );
+        // }
+        // if( !onNodeJunction || o.allVariants !== 2 || !nodesStatus.has( it.node ) )
+        // {
+        //   nodesStatus.set( it.node, [ false, false, true ] );
+        // }
+        // else
+        // {
+        // }
+        return true;
       }
 
-      nodesStatus.set( node, [ it.continueUp, it.continueNode, it.visited ] );
+      nodeUp( it );
+      nodeAdd( it, siblingsContainer, nodes2 );
+
+      nodesStatus.set( k, [ it.continueUp, it.continueNode, it.visited ] );
 
       it.continueNode = itContinueNode;
       it.continueUp = itContinueUp;
@@ -1806,84 +1926,298 @@ function lookBfs( o )
       return it.iterator.continue;
     });
 
+    delete it.node;
+    it.index = itIndex;
+    it.visited = itVisited;
     it.continueUp = itContinueUp;
     it.continueNode = itContinueNode;
 
     if( !it.continueNode )
     it.continueUp = false;
 
+    if( o.visitedContainer )
+    o.visitedContainer.appendContainerOnce( siblingsContainer );
+
     if( nodes2.length )
-    visitUp( nodes2, it );
+    levelUp( nodes2, it );
 
     /* */
 
+    /* zzz : use filterRight/filterLeft */
     nodes[ allRevert ]( ( node, k ) =>
     {
-      [ it.continueUp, it.continueNode, it.visited ] = nodesStatus.get( node );
-
-      if( !it.continueNode )
+      it.node = node;
+      it.index = k;
+      _.assert( nodesStatus.has( k ) );
+      [ it.continueUp, it.continueNode, it.visited ] = nodesStatus.get( k );
+      nodeDown( it );
       return true;
-
-      if( o.onDown )
-      o.onDown( node, it );
-
-      return true;
+    });
+    nodes.filter( nodes, ( node, k ) =>
+    {
+      [ it.continueUp, it.continueNode, it.visited ] = nodesStatus.get( k );
+      return it.continueNode ? node : undefined;
     });
 
     if( o.onLayerDown )
-    o.onLayerDown( nodes2, it );
+    o.onLayerDown( nodes, it );
 
     it.continueUp = true;
   }
 
   /* */
 
-  function visitUp( nodes2, it )
+  function levelUp( nodes2, it )
   {
-    let nodes3 = sys.ContainerAdapterFrom( new Array );
-
-    it.layers.push( nodes2.original );
 
     if( !it.iterator.continue || !it.continueUp )
     return;
 
-    nodes2.each( ( node ) =>
-    {
-      let outNodes = group.nodeOutNodesFor( node );
-      nodes3.appendContainerOnce( outNodes, o.onNodeJunction );
-    });
-
     let level = it.level;
     let continueNode = it.continueNode;
     it.level += 1;
-    visit( nodes3, it );
+    nodesVisit( nodes2, it );
     it.level = level;
     it.continueNode = continueNode;
 
   }
 
+  /* */
+
+  function nodeCanVisit1( it, siblingsContainer, nodesStatus )
+  {
+    let _hasJunction;
+    let _hasNode;
+
+    if( o.revisiting === 2 )
+    {
+      it.visited = o.visitedContainer.count( it.node, onNodeJunction );
+
+      if( it.visited >= 1 )
+      {
+        it.continueUp = false;
+      }
+
+    }
+    else if( o.revisiting < 2 )
+    {
+
+      if( o.visitedContainer.has( it.node, onNodeJunction ) )
+      {
+        it.visited = true;
+        if( siblingsContainer && siblingsHasJunction() )
+        return end( true );
+        return end( false );
+      }
+
+    }
+
+    if( o.allSiblings === 0 && siblingsContainer )
+    {
+      if( siblingsHasNode() )
+      return end( false );
+    }
+
+    if( o.allVariants === 0 && onNodeJunction && siblingsContainer )
+    {
+      if( siblingsHasJunction() )
+      if( !siblingsHasNode() )
+      return end( false );
+    }
+
+    return end( true );
+
+    function end( result )
+    {
+      if( !result )
+      {
+        if( onNodeJunction )
+        {
+          if( o.visitedContainer )
+          o.visitedContainer.appendOnce( it.node );
+        }
+        // if( !onNodeJunction || o.allVariants !== 2 || !nodesStatus.has( it.node ) )
+        // {
+          nodesStatus.set( it.index, [ false, false, true ] );
+        // }
+        // else
+        // {
+        //   it.continueUp = false;
+        //   it.continueNode = false;
+        // }
+      }
+      return result;
+    }
+
+    function siblingsHasNode()
+    {
+      if( _hasNode !== undefined )
+      return _hasNode ;
+      _hasNode = siblingsContainer.has( it.node );
+      if( !onNodeJunction )
+      _hasJunction = _hasNode;
+      return _hasNode;
+    }
+
+    function siblingsHasJunction()
+    {
+      if( _hasJunction !== undefined )
+      return _hasJunction ;
+      _hasJunction = siblingsContainer.has( it.node, onNodeJunction );
+      if( !onNodeJunction || !_hasJunction )
+      _hasNode = _hasJunction;
+      return _hasJunction;
+    }
+
+  }
+
+  /* */
+
+  function nodeAdd( it, siblingsContainer, nodes2 )
+  {
+
+    let isFirstNode = !siblingsContainer.has( it.node );
+    let isFirstVariant = isFirstNode;
+    if( isFirstVariant && onNodeJunction )
+    isFirstVariant = !siblingsContainer.has( it.node, onNodeJunction );
+    if( siblingsContainer && isFirstNode )
+    siblingsContainer.append( it.node );
+
+    if( it.continueUp )
+    {
+      let adding1 = 0;
+      let adding2 = 0;
+
+      if( o.allSiblings === 0 )
+      {
+        if( isFirstNode )
+        adding1 = 1;
+        else
+        adding1 = 0;
+      }
+      else if( o.allSiblings === 1 )
+      {
+        if( isFirstNode )
+        adding1 = 2;
+        else
+        adding1 = 0;
+      }
+      else if( o.allSiblings === 2 )
+      {
+        adding1 = 2;
+      }
+
+      if( o.allVariants === 0 )
+      {
+        if( isFirstVariant )
+        adding2 = 1;
+        else
+        adding2 = 0;
+      }
+      else if( o.allVariants === 1 )
+      {
+        if( isFirstVariant )
+        adding2 = 2;
+        else
+        adding2 = 0;
+      }
+      else if( o.allVariants === 2 )
+      {
+        adding2 = 2;
+      }
+
+      if( adding1 === 0 )
+      {
+      }
+      else if( adding2 === 0 )
+      {
+        if( !isFirstNode )
+        if( adding1 === 2 )
+        nodes2.appendContainer( group.nodeOutNodesFor( it.node ) );
+        else
+        nodes2.appendContainerOnce( group.nodeOutNodesFor( it.node ) );
+      }
+      else if( adding2 === 1 )
+      {
+        if( adding1 === 1 )
+        nodes2.appendContainerOnce( group.nodeOutNodesFor( it.node ), onNodeJunction );
+        else
+        group.nodeOutNodesFor( it.node ).each( ( node ) =>
+        {
+          let hasNode = nodes2.has( node );
+          let hasJunction = hasNode;
+          if( !hasJunction && onNodeJunction )
+          hasJunction = nodes2.has( node, onNodeJunction );
+          if( hasJunction && !hasNode )
+          return;
+          nodes2.append( node );
+        });
+      }
+      else if( adding1 === 1 )
+      {
+        nodes2.appendContainerOnce( group.nodeOutNodesFor( it.node ) );
+      }
+      else
+      {
+        nodes2.appendContainer( group.nodeOutNodesFor( it.node ) );
+      }
+
+    }
+
+  }
+
+  /* */
+
+  function nodeUp( it )
+  {
+
+    // logger.log( _.strDup( '  ', it.level ) + ' up ' + it.node.name );
+
+    if( o.onUp )
+    o.onUp( it.node, it );
+
+    if( !it.continueNode )
+    it.continueUp = false;
+
+    if( it.continueNode )
+    if( o.onNode )
+    o.onNode( it.node, it );
+
+    if( !it.continueNode )
+    it.continueUp = false;
+
+  }
+
+  /* */
+
+  function nodeDown( it )
+  {
+
+    if( !it.continueNode )
+    return true;
+
+    // logger.log( _.strDup( '  ', it.level ) + ' down ' + it.node.name );
+
+    if( o.onDown )
+    o.onDown( it.node, it );
+
+  }
+
+  /* */
+
 }
 
-lookBfs.defaults =
+lookBfs_body.defaults =
 {
 
-  roots : null,
-  visitedContainer : null,
+  ... _lookDefaults,
 
-  left : 1, /* qqq xxx : cover option left */
-  revisiting : 0,
-  fast : 1,
-
-  onNodeJunction : null,
-  onBegin : null,
-  onEnd : null,
-  onNode : null,
-  onUp : null,
-  onDown : null,
   onLayerUp : null,
   onLayerDown : null,
 
 }
+
+let lookBfs = _.routineFromPreAndBody( _look_pre, lookBfs_body );
 
 //
 
@@ -1922,67 +2256,47 @@ lookBfs.defaults =
  * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesGroup#
  */
 
-function lookDfs( o )
+function lookDfs_body( o )
 {
   let group = this;
   let sys = group.sys;
 
-  _.routineOptions( lookDfs, o );
+  if( o.allVariants === null )
+  o.allVariants = o.revisiting === 0 ? 0 : 2;
+  if( o.allSiblings === null )
+  o.allSiblings = o.revisiting === 0 ? 0 : 2;
+  _.assert( 0 <= o.allVariants && o.allVariants <= 2 );
+  _.assert( 0 <= o.allSiblings && o.allSiblings <= 2 );
+  _.assertRoutineOptions( lookDfs_body, o );
 
-  o.roots = group.asNodesAdapter( o.roots );
+  if( o.onIteration === null )
+  {
+    if( o.fast )
+    o.onIteration = iterationFast;
+    else
+    o.onIteration = iterationSlow;
+  }
 
-  if( o.revisiting < 3 && o.visitedContainer === null )
-  o.visitedContainer = o.revisiting === 2 ? new Array() : new Set();
-  if( o.visitedContainer )
-  o.visitedContainer = sys.ContainerAdapterFrom( o.visitedContainer );
-  if( o.onNodeJunction === null )
-  o.onNodeJunction = group.onNodeJunction;
+  let onNodeJunction = o.onNodeJunction === null ? group.onNodeJunction : o.onNodeJunction;
+  let allDirect = o.left ? 'allLeft' : 'allRight';
+  let allRevert = o.left ? 'allRight' : 'allLeft';
+  let eachDirect = o.left ? 'eachLeft' : 'eachRight';
 
-  _.assert( arguments.length === 1 );
-  _.assert( 0 <= o.revisiting && o.revisiting <= 3 );
-
-  let allMethod = o.left ? 'allLeft' : 'allRight';
-
-  // let iterator = Object.create( null );
   let iterator = o;
   iterator.iterator = iterator;
   iterator.options = o;
   iterator.visitedContainer = o.visitedContainer;
   iterator.continue = true;
   iterator.continueUp = true;
-  iterator.result = null;
-  iterator.level = 0
-  iterator.visited = false;
   iterator.continueNode = true;
+  iterator.result = null;
+  iterator.level = -1;
+  iterator.visited = false;
 
   if( o.onBegin )
   o.onBegin( iterator );
 
-  if( o.fast )
-  {
-    o.roots[ allMethod ]( ( node, index ) =>
-    {
-      iterator.node = node;
-      iterator.index = index;
-      visitFast( iterator )
-      return iterator.continue;
-    });
-  }
-  else
-  {
-    o.roots[ allMethod ]( ( node, index ) =>
-    {
-      let it = Object.create( iterator );
-      it.down = iterator;
-      it.node = node;
-      it.index = index;
-      it.visited = false;
-      it.continueNode = true;
-      it.level = 0;
-      visitSlow( it );
-      return it.iterator.continue;
-    });
-  }
+  nodesVisit( o.roots, iterator );
 
   if( o.onEnd )
   o.onEnd( iterator );
@@ -1991,67 +2305,39 @@ function lookDfs( o )
 
   /* */
 
-  function visitSlow( it )
+  function nodeVisit( it, siblingsContainer )
   {
 
-    if( o.revisiting < 3 )
-    if( o.visitedContainer.has( it.node, o.onNodeJunction ) )
-    {
-      if( o.revisiting < 2 )
-      {
-        if( o.onNodeJunction && o.revisiting === 0 )
-        o.visitedContainer.appendOnce( it.node );
-        return;
-      }
-      it.continueUp = false;
-      it.visited = true;
-    }
+    if( !nodeCanVisit2( it, siblingsContainer ) )
+    return;
 
     if( o.visitedContainer )
-    o.visitedContainer.append( it.node );
+    o.visitedContainer.push( it.node );
 
-    if( o.onUp )
-    o.onUp( it.node, it );
-
-    if( o.onNode )
-    if( it.continueNode )
-    o.onNode( it.node, it );
+    nodeUp( it );
 
     if( !it.continueNode )
     {
       it.continueUp = false;
-
-      if( o.visitedContainer )
-      if( o.revisiting !== 1 && o.revisiting !== 2 )
-      o.visitedContainer.pop( it.node );
-
     }
-
-    let level = it.level + 1;
 
     if( it.iterator.continue && it.continueUp )
     {
       let outNodes = group.nodeOutNodesFor( it.node );
-      outNodes[ allMethod ]( ( node, n ) =>
-      {
-
-        let it2 = Object.create( iterator );
-        it2.node = node;
-        it2.index = n;
-        it2.down = it;
-        it2.level = level;
-        it2.visited = false;
-        it2.continueNode = true;
-
-        visitSlow( it2 );
-        _.assert( !_.mapOwnKey( it2, 'continue' ) );
-
-        return iterator.continue;
-      });
+      nodesVisit( outNodes, it );
     }
 
-    if( o.onDown )
-    o.onDown( it.node, it );
+    nodeDown( it );
+
+    if( siblingsContainer )
+    siblingsContainer.append( it.node );
+
+    if( !it.continueNode )
+    {
+      if( o.visitedContainer )
+      if( o.revisiting !== 1 && o.revisiting !== 2 )
+      o.visitedContainer.pop( it.node );
+    }
 
     if( o.revisiting === 1 || o.revisiting === 2 )
     {
@@ -2062,23 +2348,188 @@ function lookDfs( o )
 
   /* */
 
-  function visitFast( it )
+  function nodesVisit( outNodes, it )
   {
-    if( o.revisiting < 3 )
-    if( o.visitedContainer.has( it.node, o.onNodeJunction ) )
+    let itLevel = it.level;
+    let itNode = it.node;
+    let itIndex = it.index;
+    let itVisited = it.visited;
+    let itContinueNode = it.continueNode;
+    let itContinueUp = it.continueUp;
+    let siblingsContainer;
+    let continueContainer;
+
+    if( onNodeJunction )
+    if( ( o.revisiting >= 1 && o.allVariants === 0 ) || ( o.revisiting === 0 && o.allVariants >= 1 ) || ( o.revisiting >= 1 && o.allVariants === 1 ) )
+    siblingsContainer = sys.ContainerAdapterFrom( new Set );
+    if( !siblingsContainer )
+    if( ( o.revisiting >= 1 && o.allSiblings === 0 ) || ( o.revisiting === 0 && o.allSiblings >= 1 ) || ( o.revisiting >= 1 && o.allSiblings === 1 ) )
+    siblingsContainer = sys.ContainerAdapterFrom( new Set );
+
+    if( o.revisiting === 0 )
+    if( o.allVariants >= 1 || o.allSiblings >= 1 )
+    continueContainer = new Array( outNodes.length );
+    if( continueContainer )
+    outNodes[ eachDirect ]( ( node, k ) =>
     {
-      if( o.revisiting < 2 )
+      it.node = node;
+      continueContainer[ k ] = nodeCanVisit1( it );
+    });
+
+    outNodes[ allDirect ]( ( node, k ) =>
+    {
+
+      if( continueContainer )
+      if( !continueContainer[ k ] )
+      return true;
+
+      let it2 = o.onIteration( iterator, it );
+
+      // let it2 = it;
+      // if( o.fast )
+      // {
+      //   it2.visited = false;
+      //   it2.continueNode = true;
+      //   it2.continueUp = true;
+      // }
+      // else
+      // {
+      //   it2 = Object.create( iterator );
+      //   it2.down = it;
+      // }
+
+      it2.node = node;
+      it2.index = k;
+      it2.level = itLevel + 1;
+
+      nodeVisit( it2, siblingsContainer );
+
+      return it2.iterator.continue;
+    });
+
+    it.level = itLevel;
+    it.node = itNode;
+    it.index = itIndex;
+    it.visited = itVisited;
+    it.continueNode = itContinueNode;
+    it.continueUp = itContinueUp;
+  }
+
+  /* */
+
+  function nodeCanVisit1( it )
+  {
+
+    if( o.revisiting < 2 )
+    {
+      if( o.visitedContainer.has( it.node, onNodeJunction ) )
       {
-        if( o.onNodeJunction && o.revisiting === 0 )
+        if( onNodeJunction && o.revisiting === 0 )
         o.visitedContainer.appendOnce( it.node );
-        return;
+        return false;
       }
-      it.continueUp = false;
-      it.visited = true;
     }
 
-    if( o.visitedContainer )
-    o.visitedContainer.push( it.node );
+    return true;
+  }
+
+  /* */
+
+  function nodeCanVisit2( it, siblingsContainer )
+  {
+    let hasNode;
+    if( siblingsContainer )
+    hasNode = siblingsContainer.has( it.node );
+    let hasJunction = hasNode;
+    if( siblingsContainer && onNodeJunction && hasJunction === false )
+    hasJunction = siblingsContainer.has( it.node, onNodeJunction );
+
+    if( siblingsContainer && o.allSiblings === 0 )
+    if( hasNode )
+    {
+      it.continueNode = false;
+      return false;
+    }
+
+    if( it.continueUp )
+    if( o.revisiting >= 1 && o.allSiblings === 1 && siblingsContainer )
+    if( hasNode )
+    {
+      it.continueUp = false;
+    }
+
+    if( it.continueUp )
+    if( siblingsContainer && onNodeJunction && o.allVariants === 0 )
+    if( hasJunction )
+    if( o.allSiblings === 0 || !hasNode )
+    {
+      it.continueNode = false;
+      return false;
+    }
+
+    if( it.continueUp )
+    if( o.revisiting >= 1 && o.allVariants === 1 && siblingsContainer && onNodeJunction )
+    if( hasJunction )
+    if( o.allSiblings === 0 || !hasNode )
+    {
+      it.continueUp = false;
+    }
+
+    if( o.revisiting < 3 )
+    {
+
+      if( o.visitedContainer.has( it.node, onNodeJunction ) )
+      {
+
+        it.continueUp = false;
+        it.visited = true;
+
+        if( o.revisiting < 2 )
+        {
+          if( onNodeJunction && o.revisiting === 0 )
+          o.visitedContainer.appendOnce( it.node );
+
+          if( o.revisiting === 0 )
+          if( o.allVariants >= 1 || o.allSiblings >= 1 )
+          return true;
+
+          it.continueNode = false;
+          return false;
+        }
+
+      }
+
+    }
+
+    return true;
+  }
+
+  /* */
+
+  function iterationFast( iterator, it )
+  {
+    let it2 = it;
+    it2.visited = false;
+    it2.continueNode = true;
+    it2.continueUp = true;
+    return it2;
+  }
+
+  /* */
+
+  function iterationSlow( iterator, it )
+  {
+    let it2 = Object.create( iterator );
+    it2.down = it;
+    return it2;
+  }
+
+  /* */
+
+  function nodeUp( it )
+  {
+
+    // logger.log( _.strDup( '  ', it.level ) + ' up ' + it.node.name );
 
     if( o.onUp )
     o.onUp( it.node, it );
@@ -2087,98 +2538,78 @@ function lookDfs( o )
     if( it.continueNode )
     o.onNode( it.node, it );
 
-    if( !it.continueNode )
-    {
-      it.continueUp = false;
+  }
 
-      if( o.visitedContainer )
-      if( o.revisiting !== 1 && o.revisiting !== 2 )
-      o.visitedContainer.pop( it.node );
+  /* */
 
-    }
+  function nodeDown( it )
+  {
 
-    if( it.iterator.continue && it.continueUp )
-    {
-      let level = it.level;
-      let node = it.node;
-      let index = it.index;
-      let visited = it.visited;
-      let outNodes = group.nodeOutNodesFor( it.node );
-
-      outNodes[ allMethod ]( ( node, n ) =>
-      {
-        it.node = node;
-        it.index = n;
-        it.level = level + 1;
-        it.visited = false;
-        visitFast( it );
-        return it.iterator.continue;
-      });
-
-      it.level = level;
-      it.node = node;
-      it.index = index;
-      it.visited = visited;
-    }
+    // logger.log( _.strDup( '  ', it.level ) + ' down ' + it.node.name );
 
     if( o.onDown )
     o.onDown( it.node, it );
 
-    if( o.revisiting === 1 || o.revisiting === 2 )
-    {
-      o.visitedContainer.pop( it.node );
-    }
-
-    it.continueNode = true;
-    it.continueUp = true;
   }
 
+  /* */
+
 }
 
-lookDfs.defaults =
+lookDfs_body.defaults =
 {
 
-  roots : null,
-  visitedContainer : null,
+  ... _lookDefaults,
 
-  left : 1, /* qqq xxx : cover option left */
-  revisiting : 0,
-  fast : 1,
-
-  onNodeJunction : null,
-  onBegin : null,
-  onEnd : null,
-  onNode : null,
-  onUp : null,
-  onDown : null,
+  onIteration : null,
 
 }
+
+let lookDfs = _.routineFromPreAndBody( _look_pre, lookDfs_body );
 
 //
 
-function lookCfs( o )
+function lookCfs_body( o )
 {
   let group = this;
   let sys = group.sys;
 
-  _.routineOptions( lookCfs, o );
+  if( o.allVariants === null )
+  o.allVariants = o.revisiting === 0 ? 0 : 1;
+  if( o.allSiblings === null )
+  o.allSiblings = o.revisiting === 0 ? 0 : 1;
+  _.assert( 0 <= o.allVariants && o.allVariants <= 2 );
+  _.assert( 0 <= o.allSiblings && o.allSiblings <= 2 );
 
-  o.roots = group.asNodesAdapter( o.roots );
-  if( o.revisiting < 3 && o.visitedContainer === null )
-  o.visitedContainer = o.revisiting === 2 ? new Array() : new Set();
-  if( o.visitedContainer )
-  o.visitedContainer = sys.ContainerAdapterFrom( o.visitedContainer );
-  if( o.onNodeJunction === null )
-  o.onNodeJunction = group.onNodeJunction;
+  _.assertRoutineOptions( lookCfs_body, o );
 
-  if( Config.debug )
-  {
-    _.assert( arguments.length === 1 );
-    _.assert( 0 <= o.revisiting && o.revisiting <= 3 );
-    _.assert( group.nodesAreAll( o.roots ) );
-  }
+  let onNodeJunction = o.onNodeJunction === null ? group.onNodeJunction : o.onNodeJunction;
+  let allDirect = o.left ? 'allLeft' : 'allRight';
+  let allRevert = o.left ? 'allRight' : 'allLeft';
 
-  let allMethod = o.left ? 'allLeft' : 'allRight';
+  // _.routineOptions( lookCfs, o );
+  //
+  // o.roots = group.asNodesAdapter( o.roots );
+  // if( o.revisiting < 3 && o.visitedContainer === null )
+  // o.visitedContainer = o.revisiting === 2 ? new Array() : new Set();
+  // if( o.visitedContainer )
+  // o.visitedContainer = sys.ContainerAdapterFrom( o.visitedContainer );
+  // if( o.allVariants === null )
+  // o.allVariants = o.revisiting === 0 ? 0 : 1;
+  // // if( o.onNodeJunction === null )
+  // let onNodeJunction = o.allVariants === 2 ? null : group.onNodeJunction;
+  //
+  // if( Config.debug )
+  // {
+  //   _.assert( arguments.length === 1 );
+  //   _.assert( group.nodesAreAll( o.roots ) );
+  //   _.assert( 0 <= o.revisiting && o.revisiting <= 3 );
+  //   _.assert( 0 <= o.allVariants && o.allVariants <= 2 );
+  //   _.assert( o.roots.all( ( node ) => group.nodeIs( node ) ) );
+  //   _.assert( !o.visitedContainer || o.revisiting !== 2 || _.arrayIs( o.visitedContainer.original ) )
+  // }
+  //
+  // let allDirect = o.left ? 'allLeft' : 'allRight';
 
   // let iterator = Object.create( null );
   let iterator = o;
@@ -2187,8 +2618,8 @@ function lookCfs( o )
   iterator.visitedContainer = o.visitedContainer;
   iterator.continue = true;
   iterator.continueUp = true;
-  iterator.visited = false;
   iterator.continueNode = true;
+  iterator.visited = false;
   iterator.result = null;
   iterator.level = -1;
 
@@ -2228,7 +2659,7 @@ function lookCfs( o )
       if( o.revisiting === 0 )
       outNodes2 = sys.ContainerAdapterFrom( [] );
 
-      outNodes[ allMethod ]( ( node, n ) => pre( node, n, it, level, nodesStatus, outNodes2 ) );
+      outNodes[ allDirect ]( ( node, n ) => pre( node, n, it, level, nodesStatus, outNodes2 ) );
       outNodes2.all( ( node, n ) => post( node, it, nodesStatus ) );
 
       it.level = level;
@@ -2262,7 +2693,7 @@ function lookCfs( o )
     it.visited = false;
 
     if( o.revisiting < 3 )
-    if( o.visitedContainer.has( node, o.onNodeJunction ) )
+    if( o.visitedContainer.has( node, onNodeJunction ) )
     {
       it.visited = true;
       if( o.revisiting === 2 )
@@ -2276,7 +2707,7 @@ function lookCfs( o )
       }
       if( o.revisiting === 0 )
       {
-        if( o.onNodeJunction )
+        if( onNodeJunction )
         o.visitedContainer.appendOnce( it.node );
         return true;
       }
@@ -2357,24 +2788,14 @@ function lookCfs( o )
   /* */
 }
 
-lookCfs.defaults =
+lookCfs_body.defaults =
 {
 
-  roots : null,
-  visitedContainer : null,
-
-  left : 1, /* qqq xxx : cover option left */
-  revisiting : 0,
-  fast : 1,
-
-  onNodeJunction : null,
-  onBegin : null,
-  onEnd : null,
-  onNode : null,
-  onUp : null,
-  onDown : null,
+  ... _lookDefaults,
 
 }
+
+let lookCfs = _.routineFromPreAndBody( _look_pre, lookCfs_body );
 
 // --
 // orderer
@@ -2609,7 +3030,7 @@ function each_body( o )
 
   function handleBegin( it )
   {
-    it.result = o.result;
+    it.iterator.result = o.result;
     if( o.onBegin )
     o.onBegin.apply( this, arguments );
   }
@@ -2702,17 +3123,15 @@ function topSortLeastDegreeBfs( nodes )
   let group = this;
   let sys = group.sys;
 
-  // if( nodes === undefined )
-  // nodes = group.nodes;
-  // else
   nodes = group.asNodesAdapter( nodes );
 
   _.assert( arguments.length === 0 || arguments.length === 1 );
 
   let sources = group.leastIndegreeOnlyAmong( nodes );
-  let result = group.lookBfs({ roots : sources });
-
-  return _.arrayFlatten( null, result );
+  debugger;
+  let layers = group.lookBfs({ roots : sources });
+  debugger;
+  return _.arrayFlatten( layers );
 }
 
 var routine = topSortLeastDegreeBfs;
@@ -2749,7 +3168,7 @@ function topSortCycledSourceBasedFastBfs( nodes )
   let layers = group.lookBfs({ roots : sources2 });
   debugger;
 
-  return _.arrayFlatten( null, layers );
+  return _.arrayFlatten( layers );
 }
 
 var routine = topSortCycledSourceBasedFastBfs;
@@ -2760,12 +3179,12 @@ properties.forCollection = 1;
 
 //
 
-function topSortCycledSourceBasedPreciseBfs( nodes )
+function topSortCycledSourceBasedPrecise( nodes )
 {
   let group = this;
   let sys = group.sys;
 
-  nodes = group.asNodesAdapter( nodes )
+  nodes = group.asNodesAdapter( nodes );
 
   _.assert( arguments.length === 0 || arguments.length === 1 );
 
@@ -2821,7 +3240,6 @@ function topSortCycledSourceBasedPreciseBfs( nodes )
     function add( node )
     {
       _.assert( !!node );
-      /* qqq xxx : is group.onNodeJunction required here? probably not? cover please */
       nodeToOutNodes.get( node ).each( ( node2 ) => nodeToInNodes.get( node2 ).removeOnce( node ) );
       nodeToInNodes.get( node ).each( ( node2 ) => nodeToOutNodes.get( node2 ).removeOnce( node ) );
       added.append( node );
@@ -2836,7 +3254,7 @@ function topSortCycledSourceBasedPreciseBfs( nodes )
   return result;
 }
 
-var routine = topSortCycledSourceBasedPreciseBfs;
+var routine = topSortCycledSourceBasedPrecise;
 
 var properties = routine.properties = Object.create( null );
 routine.input = '(*Node)';
@@ -2997,21 +3415,24 @@ function pairIsConnectedDfs( pair )
   _.assert( _.pair.is( pair ), 'Expects pair of nodes' );
   _.assert( arguments.length === 1 );
 
-  let visited = new Set();
-  let visitedAdapter = sys.ContainerAdapterFrom( visited );
+  let visitedAdapter1 = sys.ContainerAdapterFrom( new Set() );
   let node1 = pair[ 0 ];
   let node2 = pair[ 1 ];
 
   _.assert( !!group.nodeIs( node1 ) );
   _.assert( !!group.nodeIs( node2 ) );
 
+  debugger;
   let r = group.lookDfs
   ({
     roots : node1,
-    visitedContainer : visitedAdapter,
+    visitedContainer : visitedAdapter1,
+    revisiting : 0,
+    fast : 1,
     onUp : onUp1,
     onBegin,
   });
+  debugger;
 
   if( r )
   return true;
@@ -3020,6 +3441,7 @@ function pairIsConnectedDfs( pair )
   ({
     roots : node2,
     revisiting : 0,
+    fast : 1,
     visitedContainer : new Set(),
     onUp : onUp2,
     onBegin,
@@ -3040,7 +3462,7 @@ function pairIsConnectedDfs( pair )
     if( node === node2 )
     {
       it.iterator.continue = false;
-      it.result = true;
+      it.iterator.result = true;
     }
 
   }
@@ -3050,10 +3472,10 @@ function pairIsConnectedDfs( pair )
   function onUp2( node, it )
   {
 
-    if( node === node1 || visitedAdapter.has( node, group.onNodeJunction ) )
+    if( node === node1 || visitedAdapter1.has( node, group.onNodeJunction ) )
     {
       it.iterator.continue = false;
-      it.result = true;
+      it.iterator.result = true;
     }
 
   }
@@ -3079,21 +3501,24 @@ function pairIsConnectedStronglyDfs( pair )
   _.assert( _.pair.is( pair ), 'Expects pair of nodes' );
   _.assert( arguments.length === 1 );
 
-  let visited = new Set();
-  let visitedAdapter = sys.ContainerAdapterFrom( visited );
+  let visitedAdapter1 = sys.ContainerAdapterFrom( new Set() );
   let node1 = pair[ 0 ];
   let node2 = pair[ 1 ];
 
   _.assert( !!group.nodeIs( node1 ) );
   _.assert( !!group.nodeIs( node2 ) );
 
+  debugger;
   let r = group.lookDfs
   ({
     roots : node1,
-    visitedContainer : visitedAdapter,
+    visitedContainer : visitedAdapter1,
+    revisiting : 0,
+    fast : 1,
     onUp : onUp1,
     onBegin,
   });
+  debugger;
 
   if( !r )
   return false;
@@ -3102,6 +3527,7 @@ function pairIsConnectedStronglyDfs( pair )
   ({
     roots : node2,
     revisiting : 0,
+    fast : 1,
     visitedContainer : new Set(),
     onUp : onUp2,
     onBegin,
@@ -3122,7 +3548,7 @@ function pairIsConnectedStronglyDfs( pair )
     if( node === node2 )
     {
       it.iterator.continue = false;
-      it.result = true;
+      it.iterator.result = true;
     }
 
   }
@@ -3132,10 +3558,10 @@ function pairIsConnectedStronglyDfs( pair )
   function onUp2( node, it )
   {
 
-    if( node === node1 || visitedAdapter.has( node, group.onNodeJunction ) )
+    if( node === node1 || visitedAdapter1.has( node, group.onNodeJunction ) )
     {
       it.iterator.continue = false;
-      it.result = true;
+      it.iterator.result = true;
     }
 
   }
@@ -3213,6 +3639,8 @@ function nodesConnectedLayersDfs( nodes )
     ({
       roots : node,
       onUp : handleUp,
+      revisiting : 0,
+      fast : 1,
       visitedContainer : visitedContainer,
     });
   });
@@ -3274,6 +3702,7 @@ function nodesStronglyConnectedLayersDfs( nodes )
       handleUp1,
       onDown : handleDown1,
       revisiting : 0,
+      fast : 1,
     });
   });
 
@@ -3366,13 +3795,15 @@ function nodesStronglyConnectedCollectionDfs( nodes )
     junctionToNodes = new HashMap();
     nodes.each( ( node ) =>
     {
-      let junction = group.nodeJunction( node ); /* xxx : introduce onJunctionNodes */
+      let junction = group.nodeJunction( node ); /* qqq : implement test orutine *Junction for nodesStronglyConnectedCollectionDfs */
       if( !junctionToNodes.has( junction ) )
       junctionToNodes.set( junction, [ node ] )
       else
       junctionToNodes.set( junction, _.arrayAppend( junctionToNodes.get( junction ), node ) )
     });
   }
+
+  debugger;
 
   if( group.direct && !group.onNodeInNodes )
   group.cacheInNodesFromOutNodesOnce( nodes );
@@ -3397,7 +3828,8 @@ function nodesStronglyConnectedCollectionDfs( nodes )
       roots : [ node ],
       onUp : handleUp1,
       onDown : handleDown1,
-      revisiting : 0, /* xxx : use revisiting:3 for optimization */
+      revisiting : 0, /* revisiting cant be 3 */
+      allVariants : 1,
     });
   });
 
@@ -3448,6 +3880,7 @@ function nodesStronglyConnectedCollectionDfs( nodes )
       onUp : handleUp2_functor( dnode ),
       visitedContainer : visited2,
       revisiting : 0,
+      allVariants : 1,
     });
   });
 
@@ -3494,10 +3927,11 @@ function nodesStronglyConnectedCollectionDfs( nodes )
 
   function handleUp1( node, it )
   {
+    // if( node.id === 920 )
+    // debugger;
     _.assert( nodes.has( node ) );
     if( visited1.has( node, group.onNodeJunction ) )
     {
-      // _.assert( 0, 'not tested' ); /* xxx : impossible? */
       _.assert( visited1.has( node ), 'All nodes of the junction should be in the list so far' );
       it.continueUp = false;
       return;
@@ -3508,11 +3942,13 @@ function nodesStronglyConnectedCollectionDfs( nodes )
 
   function handleDown1( node, it )
   {
+    // if( node.id === 920 )
+    // debugger;
     if( !it.continueUp )
     return;
     if( group.onNodeJunction )
     {
-      /* xxx : use appendContainerOnceStrictly later */
+      /* zzz : use appendContainerOnceStrictly later */
       visited1.appendContainerOnce( junctionToNodes.get( group.nodeJunction( node ) ) );
       // visited1.appendContainerOnceStrictly( junctionToNodes.get( group.nodeJunction( node ) ) );
     }
@@ -3533,6 +3969,9 @@ function nodesStronglyConnectedCollectionDfs( nodes )
   {
     return function handleUp2( node, it )
     {
+      // if( node.id === 920 )
+      // debugger;
+
       _.assert( node === it.node );
       _.assert
       (
@@ -3739,12 +4178,6 @@ let Extend =
   nodeJunction,
   nodesJunctions : Vectorize( nodeJunction ),
 
-  nodeDataExport,
-  nodesDataExport : Vectorize( nodeDataExport ),
-  nodeInfoExport,
-  nodesInfoExport,
-  rootsExportInfoTree,
-
   nodeToQualifiedName,
   nodesToQualifiedNames : Vectorize( nodeToQualifiedName ),
   nodeToQualifiedNameTry,
@@ -3753,6 +4186,14 @@ let Extend =
   nodesToNames : Vectorize( nodeToName ),
   nodeToNameTry,
   nodesToNamesTry : Vectorize( nodeToNameTry ),
+
+  // node exporter
+
+  nodeDataExport,
+  nodesDataExport : Vectorize( nodeDataExport ),
+  nodeInfoExport,
+  nodesInfoExport,
+  rootsExportInfoTree,
 
   // junction
 
@@ -3816,8 +4257,8 @@ let Extend =
   dagTopSort : dagTopSortDfs,
   topSortLeastDegreeBfs,
   topSortCycledSourceBasedFastBfs,
-  topSortCycledSourceBasedPreciseBfs,
-  topSort : topSortCycledSourceBasedPreciseBfs,
+  topSortCycledSourceBasedPrecise,
+  topSort : topSortCycledSourceBasedPrecise,
 
   // connectivity
 

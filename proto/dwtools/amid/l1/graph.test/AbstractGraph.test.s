@@ -22,7 +22,6 @@ var _ = _global_.wTools;
 function dag6()
 {
   let context = this;
-  var length = 5;
   var a = { name : 'a', nodes : [] }
   var b = { name : 'b', nodes : [] }
   var c = { name : 'c', nodes : [] }
@@ -46,7 +45,7 @@ function dag6()
   e.nodes.push( f );
   f.nodes.push();
 
-  let gr = { length }
+  let gr = {}
   gr.sys = new _.graph.AbstractGraphSystem({ onNodeName : ( node ) => node.name });
   gr.nodes = [ a, b, c, d, e, f ];
   gr.nodes.forEach( ( e ) => gr[ e.name ] = e );
@@ -56,10 +55,37 @@ function dag6()
 
 //
 
+function cycled0Scc()
+{
+  let context = this;
+  var a = { name : 'a', nodes : [] }
+  var b = { name : 'b', nodes : [] }
+  var c = { name : 'c', nodes : [] }
+
+/*
+
+    a ↔ b ↩
+    ↓
+    c
+
+*/
+
+  a.nodes.push( b, c );
+  b.nodes.push( a, b );
+  c.nodes.push();
+
+  let gr = {}
+  gr.sys = new _.graph.AbstractGraphSystem({ onNodeName : ( node ) => node.name });
+  gr.nodes = [ a, b, c ];
+  gr.nodes.forEach( ( e ) => gr[ e.name ] = e );
+  return gr;
+}
+
+//
+
 function cycled1Scc()
 {
   let context = this;
-  var length = 3;
   var a = { name : 'a', nodes : [] }
   var b = { name : 'b', nodes : [] }
   var c = { name : 'c', nodes : [] }
@@ -76,7 +102,7 @@ function cycled1Scc()
   b.nodes.push( a );
   c.nodes.push();
 
-  let gr = { length }
+  let gr = {}
   gr.sys = new _.graph.AbstractGraphSystem({ onNodeName : ( node ) => node.name });
   gr.nodes = [ a, b, c ];
   gr.nodes.forEach( ( e ) => gr[ e.name ] = e );
@@ -88,7 +114,6 @@ function cycled1Scc()
 function cycled2Scc()
 {
   let context = this;
-  var length = 5;
   var a = { name : 'a', nodes : [] }
   var b = { name : 'b', nodes : [] }
   var c = { name : 'c', nodes : [] }
@@ -111,7 +136,7 @@ function cycled2Scc()
   d.nodes.push();
   e.nodes.push( c, b );
 
-  let gr = { length }
+  let gr = {}
   gr.sys = new _.graph.AbstractGraphSystem({ onNodeName : ( node ) => node.name });
   gr.nodes = [ a, b, c, d, e ];
   gr.nodes.forEach( ( e ) => gr[ e.name ] = e );
@@ -124,7 +149,6 @@ function cycled2Scc()
 function cycled3Scc()
 {
   let context = this;
-  var length = 8;
   var a = { name : 'a', nodes : [] }
   var b = { name : 'b', nodes : [] }
   var c = { name : 'c', nodes : [] }
@@ -156,7 +180,7 @@ function cycled3Scc()
   g.nodes.push( f, h );
   h.nodes.push( g );
 
-  let gr = { length }
+  let gr = {}
   gr.sys = new _.graph.AbstractGraphSystem({ onNodeName : ( node ) => node.name });
   gr.nodes = [ a, b, c, d, e, f, g, h ];
   gr.nodes.forEach( ( e ) => gr[ e.name ] = e );
@@ -169,7 +193,6 @@ function cycled3Scc()
 function cycled4Scc()
 {
   let context = this;
-  var length = 10;
   var a = { name : 'a', nodes : [] } /* 1 */
   var b = { name : 'b', nodes : [] } /* 2 */
   var c = { name : 'c', nodes : [] } /* 3 */
@@ -206,7 +229,7 @@ function cycled4Scc()
   i.nodes.push( f, h );     /*  9  */
   j.nodes.push();           /*  10 */
 
-  let gr = { length }
+  let gr = {}
   gr.sys = new _.graph.AbstractGraphSystem({ onNodeName : ( node ) => node.name });
   gr.nodes = [ a, b, c, d, e, f, g, h, i, j ];
   gr.connectedNodes = [ a, b, c, d, e, f, g, h, i ];
@@ -241,7 +264,7 @@ function _cycledJunctions( gr )
   gr.nodeToJunction = new HashMap;
   gr.junctionFrom = function junctionFrom( node )
   {
-    _.assert( node.original === undefined );
+    _.assert( !!node && node.original === undefined );
     _.assert( _.arrayIs( node.nodes ) );
     if( gr.nodeToJunction.has( node ) )
     return gr.nodeToJunction.get( node );
@@ -297,7 +320,6 @@ function _cycledJunctions( gr )
 function cycledJunctionsTriplet()
 {
   let context = this;
-  var length = 6;
   var a0 = { name : 'a0', nodes : [] }
   var a1 = { name : 'a1', nodes : [] }
   var a2 = { name : 'a2', nodes : [] }
@@ -330,7 +352,6 @@ function cycledJunctionsTriplet()
 function cycledJunctions2()
 {
   let context = this;
-  var length = 9;
   var a0 = { name : 'a0', nodes : [] }
   var a1 = { name : 'a1', nodes : [] }
   var a2 = { name : 'a2', nodes : [] }
@@ -375,7 +396,6 @@ function cycledJunctions2()
 function cycledJunctions3()
 {
   let context = this;
-  var length = 8;
   var a = { name : 'a', nodes : [] }
   var b = { name : 'b', nodes : [] }
   var c1 = { name : 'c1', nodes : [] }
@@ -416,7 +436,6 @@ function cycledJunctions3()
 function cycledJunctions4()
 {
   let context = this;
-  var length = 9;
   var a = { name : 'a', nodes : [] }
   var b1 = { name : 'b1', nodes : [] }
   var b2 = { name : 'b2', nodes : [] }
@@ -460,7 +479,6 @@ function cycledJunctions4()
 function cycledJunctions5()
 {
   let context = this;
-  var length = 9;
   var a0 = { name : 'a0', nodes : [] }
   var a1 = { name : 'a1', nodes : [] }
   var b1 = { name : 'b1', nodes : [] }
@@ -475,7 +493,7 @@ function cycledJunctions5()
 /*
 
      ↗ c2 → b2
-   g
+   g ↩
    ↑ ↘ b1 → c1
    a0  a1
    ↓
@@ -494,7 +512,7 @@ function cycledJunctions5()
   d.nodes.push( e );
   e.nodes.push( f );
   f.nodes.push( d );
-  g.nodes.push( b1, c2 );
+  g.nodes.push( b1, c2, g );
 
   let gr = Object.create( null );
   gr.nodes = [ a0, b1, b2, c1, c2, d, e, f, g, a1 ];
@@ -509,7 +527,6 @@ function cycledJunctions5()
 function cycledOmicron()
 {
   let context = this;
-  var length = 3;
   var a = { name : 'a', nodes : [] }
   var b = { name : 'b', nodes : [] }
   var c = { name : 'c', nodes : [] }
@@ -534,7 +551,7 @@ function cycledOmicron()
   e.nodes.push( c );
   f.nodes.push( e );
 
-  let gr = { length }
+  let gr = {}
   gr.sys = new _.graph.AbstractGraphSystem
   ({
     onNodeName : ( node ) =>
@@ -561,7 +578,6 @@ function cycledOmicron()
 function cycledGamma()
 {
   let context = this;
-  var length = 6;
   var a = { name : 'a', nodes : [] }
   var b = { name : 'b', nodes : [] }
   var c = { name : 'c', nodes : [] }
@@ -589,7 +605,7 @@ function cycledGamma()
   e.nodes.push();
   f.nodes.push( f );
 
-  let gr = { length }
+  let gr = {}
   gr.sys = new _.graph.AbstractGraphSystem({ onNodeName : ( node ) => node.name });
   gr.nodes = [ a, b, c, d, e, f ];
   gr.nodes.forEach( ( e ) => gr[ e.name ] = e );
@@ -602,7 +618,6 @@ function cycledGamma()
 function cycledAsymetricZeta()
 {
   let context = this;
-  var length = 8;
   var a = { name : 'a', nodes : [] }
   var b = { name : 'b', nodes : [] }
   var c = { name : 'c', nodes : [] }
@@ -636,7 +651,7 @@ function cycledAsymetricZeta()
   g.nodes.push( h );
   h.nodes.push( f );
 
-  let gr = { length }
+  let gr = {}
   gr.sys = new _.graph.AbstractGraphSystem({ onNodeName : ( node ) => node.name });
   gr.nodes = [ a, b, c, d, e, f, g, h ];
   gr.nodes.forEach( ( e ) => gr[ e.name ] = e );
@@ -649,7 +664,6 @@ function cycledAsymetricZeta()
 function cycledAsymetricChi()
 {
   let context = this;
-  var length = 13;
   var a = { name : 'a', nodes : [] }
   var b = { name : 'b', nodes : [] }
   var c = { name : 'c', nodes : [] }
@@ -694,7 +708,7 @@ function cycledAsymetricChi()
   l.nodes.push( m );
   m.nodes.push( l );
 
-  let gr = { length }
+  let gr = {}
   gr.sys = new _.graph.AbstractGraphSystem({ onNodeName : ( node ) => node.name });
   gr.nodes = [ a, b, c, d, e, f, g, h, i, j, k, l, m ];
   gr.nodes.forEach( ( e ) => gr[ e.name ] = e );
@@ -1797,13 +1811,13 @@ function rootsToAllReachableJunctions( test )
 
   /* - */
 
-  test.case = 'cycledJunctions4';
-  var gr = context.cycledJunctions4();
+  test.case = 'cycledJunctions5';
+  var gr = context.cycledJunctions5();
 
-  test.description = 'a';
+  test.description = 'a0';
   var group = gr.sys.nodesGroup();
-  var exp = new Set([ 'a', 'd', 'e', 'f', 'g', 'b1', 'b2', 'c1', 'c2' ]);
-  var dst = gr.a;
+  var exp = new Set([ 'a0', 'd', 'e', 'f', 'g', 'b1', 'b2', 'c1', 'c2' ]);
+  var dst = gr.a0;
   var got = group.rootsToAllReachable( dst );
   test.identical( group.nodesToNames( got ), exp );
 
@@ -2211,7 +2225,11 @@ function lookBfs( test )
   clean();
   var layers = group.lookBfs({ roots : gr.nodes, onNode, onUp, onDown, onLayerUp, onLayerDown });
 
-  var expected = _.setsFrom([ [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j' ] ]);
+  var expected =
+  [
+    new Set([ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j' ]),
+    new Set([])
+  ]
   test.identical( layers.map( ( nodes ) => group.nodesToNames( nodes ) ), expected );
 
   var expectedNds = [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j' ];
@@ -2222,11 +2240,11 @@ function lookBfs( test )
     [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j' ],
     [ 'b', 'e', 'f', 'b', 'a', 'g', 'a', 'c', 'h', 'h', 'i', 'f', 'h' ],
   ]);
-  var expectedLdws = _.setsFrom
-  ([
-    [],
-    [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j' ],
-  ]);
+  var expectedLdws =
+  [
+    new Set([]),
+    new Set([ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j' ])
+  ]
 
   test.identical( nds, expectedNds );
   test.identical( ups, expectedUps );
@@ -2241,30 +2259,38 @@ function lookBfs( test )
   clean();
   var layers = group.lookBfs({ roots : gr.a, onNode, onUp, onDown, onLayerUp, onLayerDown }); debugger;
 
-  var expected = _.setsFrom([ [ 'a' ], [ 'b' ], [ 'e', 'f' ], [ 'c', 'h' ], [ 'i' ] ]);
+  var expected =
+  [
+    new Set([ 'a' ]),
+    new Set([ 'b' ]),
+    new Set([ 'e', 'f' ]),
+    new Set([ 'c', 'h' ]),
+    new Set([ 'i' ]),
+    new Set([])
+  ]
   test.identical( layers.map( ( nodes ) => group.nodesToNames( nodes ) ), expected );
 
   var expectedNds = [ 'a', 'b', 'e', 'f', 'c', 'h', 'i' ];
   var expectedUps = [ 'a', 'b', 'e', 'f', 'c', 'h', 'i' ];
   var expectedDws = [ 'i', 'h', 'c', 'f', 'e', 'b', 'a' ];
-  var expectedLups = _.setsFrom
-  ([
-    [ 'a' ],
-    [ 'b' ],
-    [ 'e', 'f' ],
-    [ 'a', 'c', 'h' ],
-    [ 'b', 'i' ],
-    [ 'f', 'h' ]
-  ]);
-  var expectedLdws = _.setsFrom
-  ([
-    [],
-    [ 'i' ],
-    [ 'c', 'h' ],
-    [ 'e', 'f' ],
-    [ 'b' ],
-    [ 'a' ]
-  ]);
+  var expectedLups =
+  [
+    new Set([ 'a' ]),
+    new Set([ 'b' ]),
+    new Set([ 'e', 'f' ]),
+    new Set([ 'a', 'c', 'h' ]),
+    new Set([ 'b', 'i' ]),
+    new Set([ 'f', 'h' ])
+  ]
+  var expectedLdws =
+  [
+    new Set([]),
+    new Set([ 'i' ]),
+    new Set([ 'c', 'h' ]),
+    new Set([ 'e', 'f' ]),
+    new Set([ 'b' ]),
+    new Set([ 'a' ])
+  ]
 
   test.identical( nds, expectedNds );
   test.identical( ups, expectedUps );
@@ -2279,37 +2305,38 @@ function lookBfs( test )
   clean();
   var layers = group.lookBfs({ roots : gr.d, onNode, onUp, onDown, onLayerUp, onLayerDown });
 
-  var expected = _.setsFrom
-  ([
-    [ 'd' ],
-    [ 'a', 'g' ],
-    [ 'b', 'h' ],
-    [ 'e', 'f', 'i' ],
-    [ 'c' ]
-  ])
+  var expected =
+  [
+    new Set([ 'd' ]),
+    new Set([ 'a', 'g' ]),
+    new Set([ 'b', 'h' ]),
+    new Set([ 'e', 'f', 'i' ]),
+    new Set([ 'c' ]),
+    new Set([])
+  ]
   test.identical( layers.map( ( nodes ) => group.nodesToNames( nodes ) ), expected );
 
   var expectedNds = [ 'd', 'a', 'g', 'b', 'h', 'e', 'f', 'i', 'c' ];
   var expectedUps = [ 'd', 'a', 'g', 'b', 'h', 'e', 'f', 'i', 'c' ];
   var expectedDws = [ 'c', 'i', 'f', 'e', 'h', 'b', 'g', 'a', 'd' ];
-  var expectedLups = _.setsFrom
-  ([
-    [ 'd' ],
-    [ 'a', 'g' ],
-    [ 'b', 'h' ],
-    [ 'e', 'f', 'i' ],
-    [ 'a', 'c', 'h', 'f', 'h' ],
-    [ 'b' ]
-  ])
-  var expectedLdws = _.setsFrom
-  ([
-    [],
-    [ 'c' ],
-    [ 'e', 'f', 'i' ],
-    [ 'b', 'h' ],
-    [ 'a', 'g' ],
-    [ 'd' ]
-  ])
+  var expectedLups =
+  [
+    new Set([ 'd' ]),
+    new Set([ 'a', 'g' ]),
+    new Set([ 'b', 'h' ]),
+    new Set([ 'e', 'f', 'i' ]),
+    new Set([ 'a', 'c', 'h', 'f' ]),
+    new Set([ 'b' ])
+  ]
+  var expectedLdws =
+  [
+    new Set([]),
+    new Set([ 'c' ]),
+    new Set([ 'e', 'f', 'i' ]),
+    new Set([ 'b', 'h' ]),
+    new Set([ 'a', 'g' ]),
+    new Set([ 'd' ])
+  ]
 
   test.identical( nds, expectedNds );
   test.identical( ups, expectedUps );
@@ -2324,35 +2351,35 @@ function lookBfs( test )
   clean();
   var layers = group.lookBfs({ roots : [ gr.d, gr.a ], onNode, onUp, onDown, onLayerUp, onLayerDown });
 
-  var expected = _.setsFrom
-  ([
-    [ 'd', 'a' ],
-    [ 'g', 'b' ],
-    [ 'h', 'e', 'f' ],
-    [ 'i', 'c' ]
-  ])
+  var expected =
+  [
+    new Set([ 'd', 'a' ]),
+    new Set([ 'g', 'b' ]),
+    new Set([ 'h', 'e', 'f' ]),
+    new Set([ 'i', 'c' ]),
+    new Set([])
+  ]
   test.identical( layers.map( ( nodes ) => group.nodesToNames( nodes ) ), expected );
 
   var expectedNds = [ 'd', 'a', 'g', 'b', 'h', 'e', 'f', 'i', 'c' ];
   var expectedUps = [ 'd', 'a', 'g', 'b', 'h', 'e', 'f', 'i', 'c' ];
   var expectedDws = [ 'c', 'i', 'f', 'e', 'h', 'b', 'g', 'a', 'd' ];
-  var expectedLups = _.setsFrom
-  ([
-    [ 'd', 'a' ],
-    [ 'a', 'g', 'b' ],
-    [ 'h', 'e', 'f' ],
-    [ 'i', 'a', 'c', 'h' ],
-    [ 'f', 'h', 'b' ]
-  ])
-  var expectedLdws = _.setsFrom
-  ([
-    [],
-    [ 'i', 'c' ],
-    [ 'h', 'e', 'f' ],
-    [ 'g', 'b' ],
-    [ 'd', 'a' ]
-  ])
-
+  var expectedLups =
+  [
+    new Set([ 'd', 'a' ]),
+    new Set([ 'a', 'g', 'b' ]),
+    new Set([ 'h', 'e', 'f' ]),
+    new Set([ 'i', 'a', 'c', 'h' ]),
+    new Set([ 'f', 'h', 'b' ])
+  ]
+  var expectedLdws =
+  [
+    new Set([]),
+    new Set([ 'i', 'c' ]),
+    new Set([ 'h', 'e', 'f' ]),
+    new Set([ 'g', 'b' ]),
+    new Set([ 'd', 'a' ])
+  ]
   test.identical( nds, expectedNds );
   test.identical( ups, expectedUps );
   test.identical( dws, expectedDws );
@@ -2635,63 +2662,11 @@ function lookBfsSuspending( test )
 function lookBfsRevisiting( test )
 {
   let context = this;
-
   var nds = [];
   var ups = [];
   var dws = [];
   var lups = [];
   var ldws = [];
-
-  function clean()
-  {
-    nds = [];
-    ups = [];
-    dws = [];
-    lups = [];
-    ldws = [];
-  }
-
-  function onNode( node, it )
-  {
-    nds.push( group.nodesToNames( node ) );
-  }
-
-  function onUp( node, it )
-  {
-    if( it.level > 4 )
-    it.continueUp = false;
-    ups.push( group.nodesToNames( node ) );
-  }
-
-  function onUp2( node, it )
-  {
-    ups.push( group.nodesToNames( node ) );
-  }
-
-  function onDown( node, it )
-  {
-    dws.push( group.nodesToNames( node ) );
-  }
-
-  function onLayerUp( nodes, it )
-  {
-    debugger;
-    lups.push( _.containerAdapter.toOriginal( group.nodesToNames( nodes ) ) );
-  }
-
-  function onLayerUp2( nodes, it )
-  {
-    debugger;
-    if( it.level > 4 )
-    it.continueUp = false;
-    lups.push( _.containerAdapter.toOriginal( group.nodesToNames( nodes ) ) );
-  }
-
-  function onLayerDown( nodes, it )
-  {
-    debugger;
-    ldws.push( _.containerAdapter.toOriginal( group.nodesToNames( nodes ) ) );
-  }
 
   test.description = 'setup';
   var gr = context.cycledGamma();
@@ -2732,21 +2707,20 @@ function lookBfsRevisiting( test )
     var expectedUps = [ 'a', 'b', 'd', 'c', 'e', 'f' ];
     var expectedDws = [ 'f', 'e', 'c', 'd', 'b', 'a' ];
 
-    var expectedLups = _.setsFrom
-    ([
-      [ 'a' ],
-      [ 'b', 'd' ],
-      [ 'c', 'd', 'b', 'c', 'e', 'f' ],
-      [ 'a', 'f' ]
-    ])
-    var expectedLdws = _.setsFrom
-    ([
-      [],
-      [ 'c', 'e', 'f' ],
-      [ 'b', 'd' ],
-      [ 'a' ]
-    ])
-
+    var expectedLups =
+    [
+      new Set([ 'a' ]),
+      new Set([ 'b', 'd' ]),
+      new Set([ 'c', 'd', 'b', 'e', 'f' ]),
+      new Set([ 'a', 'f' ])
+    ]
+    var expectedLdws =
+    [
+      new Set([]),
+      new Set([ 'c', 'e', 'f' ]),
+      new Set([ 'b', 'd' ]),
+      new Set([ 'a' ])
+    ]
     test.identical( nds, expectedNds );
     test.identical( ups, expectedUps );
     test.identical( dws, expectedDws );
@@ -2774,21 +2748,20 @@ function lookBfsRevisiting( test )
     var expectedUps = [ 'b', 'c', 'd', 'a', 'e', 'f' ];
     var expectedDws = [ 'f', 'e', 'a', 'd', 'c', 'b' ];
 
-    var expectedLups = _.setsFrom
-    ([
-      [ 'b' ],
-      [ 'c', 'd', 'b' ],
-      [ 'a', 'c', 'e', 'f' ],
-      [ 'b', 'd', 'f' ]
-    ])
-    var expectedLdws = _.setsFrom
-    ([
-      [],
-      [ 'a', 'e', 'f' ],
-      [ 'c', 'd' ],
-      [ 'b' ]
-    ])
-
+    var expectedLups =
+    [
+      new Set([ 'b' ]),
+      new Set([ 'c', 'd', 'b' ]),
+      new Set([ 'a', 'c', 'e', 'f' ]),
+      new Set([ 'b', 'd', 'f' ])
+    ]
+    var expectedLdws =
+    [
+      new Set([]),
+      new Set([ 'a', 'e', 'f' ]),
+      new Set([ 'c', 'd' ]),
+      new Set([ 'b' ])
+    ]
     test.identical( nds, expectedNds );
     test.identical( ups, expectedUps );
     test.identical( dws, expectedDws );
@@ -2816,16 +2789,14 @@ function lookBfsRevisiting( test )
     var expectedUps = [ 'e' ];
     var expectedDws = [ 'e' ];
 
-    var expectedLups = _.setsFrom
-    ([
-      [ 'e' ],
-      []
-    ])
-    var expectedLdws = _.setsFrom
-    ([
-      [],
-      [ 'e' ]
-    ])
+    var expectedLups =
+    [
+      new Set([ 'e' ])
+    ]
+    var expectedLdws =
+    [
+      new Set([ 'e' ])
+    ]
 
     test.identical( nds, expectedNds );
     test.identical( ups, expectedUps );
@@ -2854,17 +2825,16 @@ function lookBfsRevisiting( test )
     var expectedUps = [ 'f' ];
     var expectedDws = [ 'f' ];
 
-    var expectedLups = _.setsFrom
-    ([
-      [ 'f' ],
-      [ 'f' ]
-    ])
-    var expectedLdws = _.setsFrom
-    ([
-      [],
-      [ 'f' ]
-    ])
-
+    var expectedLups =
+    [
+      new Set([ 'f' ]),
+      new Set([ 'f' ])
+    ]
+    var expectedLdws =
+    [
+      new Set([]),
+      new Set([ 'f' ])
+    ]
     test.identical( nds, expectedNds );
     test.identical( ups, expectedUps );
     test.identical( dws, expectedDws );
@@ -2898,20 +2868,20 @@ function lookBfsRevisiting( test )
     var expectedUps = [ 'a', 'b', 'd', 'c', 'e', 'f' ];
     var expectedDws = [ 'f', 'e', 'c', 'd', 'b', 'a' ];
 
-    var expectedLups = _.setsFrom
-    ([
-      [ 'a' ],
-      [ 'b', 'd' ],
-      [ 'c', 'd', 'b', 'c', 'e', 'f' ],
-      [ 'a', 'f' ]
-    ])
-    var expectedLdws = _.setsFrom
-    ([
-      [],
-      [ 'c', 'e', 'f' ],
-      [ 'b', 'd' ],
-      [ 'a' ]
-    ])
+    var expectedLups =
+    [
+      new Set([ 'a' ]),
+      new Set([ 'b', 'd' ]),
+      new Set([ 'c', 'd', 'b', 'e', 'f' ]),
+      new Set([ 'a', 'f' ])
+    ]
+    var expectedLdws =
+    [
+      new Set([]),
+      new Set([ 'c', 'e', 'f' ]),
+      new Set([ 'b', 'd' ]),
+      new Set([ 'a' ])
+    ]
 
     test.identical( nds, expectedNds );
     test.identical( ups, expectedUps );
@@ -2940,21 +2910,20 @@ function lookBfsRevisiting( test )
     var expectedUps = [ 'b', 'c', 'd', 'a', 'e', 'f' ];
     var expectedDws = [ 'f', 'e', 'a', 'd', 'c', 'b' ];
 
-    var expectedLups = _.setsFrom
-    ([
-      [ 'b' ],
-      [ 'c', 'd', 'b' ],
-      [ 'a', 'c', 'e', 'f' ],
-      [ 'b', 'd', 'f' ]
-    ])
-    var expectedLdws = _.setsFrom
-    ([
-      [],
-      [ 'a', 'e', 'f' ],
-      [ 'c', 'd' ],
-      [ 'b' ]
-    ])
-
+    var expectedLups =
+    [
+      new Set([ 'b' ]),
+      new Set([ 'c', 'd', 'b' ]),
+      new Set([ 'a', 'c', 'e', 'f' ]),
+      new Set([ 'b', 'd', 'f' ])
+    ]
+    var expectedLdws =
+    [
+      new Set([]),
+      new Set([ 'a', 'e', 'f' ]),
+      new Set([ 'c', 'd' ]),
+      new Set([ 'b' ])
+    ]
     test.identical( nds, expectedNds );
     test.identical( ups, expectedUps );
     test.identical( dws, expectedDws );
@@ -2982,17 +2951,14 @@ function lookBfsRevisiting( test )
     var expectedUps = [ 'e' ];
     var expectedDws = [ 'e' ];
 
-    var expectedLups = _.setsFrom
-    ([
-      [ 'e' ],
-      []
-    ])
-    var expectedLdws = _.setsFrom
-    ([
-      [],
-      [ 'e' ]
-    ])
-
+    var expectedLups =
+    [
+      new Set([ 'e' ])
+    ]
+    var expectedLdws =
+    [
+      new Set([ 'e' ])
+    ]
     test.identical( nds, expectedNds );
     test.identical( ups, expectedUps );
     test.identical( dws, expectedDws );
@@ -3020,17 +2986,16 @@ function lookBfsRevisiting( test )
     var expectedUps = [ 'f' ];
     var expectedDws = [ 'f' ];
 
-    var expectedLups = _.setsFrom
+    var expectedLups =
     ([
-      [ 'f' ],
-      [ 'f' ]
+      new Set([ 'f' ]),
+      new Set([ 'f' ])
     ])
-    var expectedLdws = _.setsFrom
-    ([
-      [],
-      [ 'f' ]
-    ])
-
+    var expectedLdws =
+    [
+      new Set([]),
+      new Set([ 'f' ])
+    ]
     test.identical( nds, expectedNds );
     test.identical( ups, expectedUps );
     test.identical( dws, expectedDws );
@@ -3064,21 +3029,20 @@ function lookBfsRevisiting( test )
     var expectedUps = [ 'a', 'b', 'd', 'c', 'd', 'b', 'e', 'f', 'a', 'f' ];
     var expectedDws = [ 'f', 'a', 'f', 'e', 'b', 'd', 'c', 'd', 'b', 'a' ];
 
-    var expectedLups = _.setsFrom
-    ([
-      [ 'a' ],
-      [ 'b', 'd' ],
-      [ 'c', 'd', 'b', 'c', 'e', 'f' ],
-      [ 'a', 'f' ]
-    ])
-    var expectedLdws = _.setsFrom
-    ([
-      [],
-      [ 'c', 'e', 'f' ],
-      [ 'b', 'd' ],
-      [ 'a' ]
-    ])
-
+    var expectedLups =
+    [
+      new Set([ 'a' ]),
+      new Set([ 'b', 'd' ]),
+      new Set([ 'c', 'd', 'b', 'e', 'f' ]),
+      new Set([ 'a', 'f' ])
+    ]
+    var expectedLdws =
+    [
+      new Set([ 'a', 'f' ]),
+      new Set([ 'c', 'd', 'b', 'e', 'f' ]),
+      new Set([ 'b', 'd' ]),
+      new Set([ 'a' ])
+    ]
     test.identical( nds, expectedNds );
     test.identical( ups, expectedUps );
     test.identical( dws, expectedDws );
@@ -3102,25 +3066,24 @@ function lookBfsRevisiting( test )
       fast : o.fast,
     });
 
-    var expectedNds = [ 'b', 'c', 'd', 'b', 'a', 'c', 'e', 'f', 'd', 'f' ];
-    var expectedUps = [ 'b', 'c', 'd', 'b', 'a', 'c', 'e', 'f', 'd', 'f' ];
-    var expectedDws = [ 'f', 'd', 'f', 'e', 'c', 'a', 'b', 'd', 'c', 'b' ];
+    var expectedNds = [ 'b', 'c', 'd', 'b', 'a', 'c', 'e', 'f', 'b', 'd', 'f' ];
+    var expectedUps = [ 'b', 'c', 'd', 'b', 'a', 'c', 'e', 'f', 'b', 'd', 'f' ];
+    var expectedDws = [ 'f', 'd', 'b', 'f', 'e', 'c', 'a', 'b', 'd', 'c', 'b' ];
 
-    var expectedLups = _.setsFrom
-    ([
-      [ 'b' ],
-      [ 'c', 'd', 'b' ],
-      [ 'a', 'c', 'e', 'f' ],
-      [ 'b', 'd', 'f' ]
-    ])
-    var expectedLdws = _.setsFrom
-    ([
-      [],
-      [ 'a', 'e', 'f' ],
-      [ 'c', 'd' ],
-      [ 'b' ]
-    ])
-
+    var expectedLups =
+    [
+      new Set([ 'b' ]),
+      new Set([ 'c', 'd', 'b' ]),
+      new Set([ 'a', 'c', 'e', 'f' ]),
+      new Set([ 'b', 'd', 'f' ])
+    ]
+    var expectedLdws =
+    [
+      new Set([ 'b', 'd', 'f' ]),
+      new Set([ 'a', 'c', 'e', 'f' ]),
+      new Set([ 'c', 'd', 'b' ]),
+      new Set([ 'b' ])
+    ]
     test.identical( nds, expectedNds );
     test.identical( ups, expectedUps );
     test.identical( dws, expectedDws );
@@ -3148,16 +3111,14 @@ function lookBfsRevisiting( test )
     var expectedUps = [ 'e' ];
     var expectedDws = [ 'e' ];
 
-    var expectedLups = _.setsFrom
-    ([
-      [ 'e' ],
-      []
-    ])
-    var expectedLdws = _.setsFrom
-    ([
-      [],
-      [ 'e' ]
-    ])
+    var expectedLups =
+    [
+      new Set([ 'e' ])
+    ]
+    var expectedLdws =
+    [
+      new Set([ 'e' ])
+    ]
 
     test.identical( nds, expectedNds );
     test.identical( ups, expectedUps );
@@ -3186,17 +3147,16 @@ function lookBfsRevisiting( test )
     var expectedUps = [ 'f', 'f' ];
     var expectedDws = [ 'f', 'f' ];
 
-    var expectedLups = _.setsFrom
-    ([
-      [ 'f' ],
-      [ 'f' ]
-    ])
-    var expectedLdws = _.setsFrom
-    ([
-      [],
-      [ 'f' ]
-    ])
-
+    var expectedLups =
+    [
+      new Set([ 'f' ]),
+      new Set([ 'f' ]),
+    ]
+    var expectedLdws =
+    [
+      new Set([ 'f' ]),
+      new Set([ 'f' ]),
+    ]
     test.identical( nds, expectedNds );
     test.identical( ups, expectedUps );
     test.identical( dws, expectedDws );
@@ -3230,24 +3190,24 @@ function lookBfsRevisiting( test )
     var expectedUps = [ 'a', 'b', 'd', 'c', 'd', 'b', 'e', 'f', 'a', 'c', 'e', 'f', 'd', 'b', 'b', 'd', 'a', 'f', 'c', 'e', 'c', 'd', 'b', 'e', 'f', 'a' ];
     var expectedDws = [ 'a', 'f', 'e', 'b', 'd', 'c', 'e', 'c', 'f', 'a', 'd', 'b', 'b', 'd', 'f', 'e', 'c', 'a', 'f', 'e', 'b', 'd', 'c', 'd', 'b', 'a' ];
 
-    var expectedLups = _.setsFrom
-    ([
-      [ 'a' ],
-      [ 'b', 'd' ],
-      [ 'c', 'd', 'b', 'c', 'e', 'f' ],
-      [ 'a', 'c', 'e', 'f', 'c', 'd', 'b', 'a', 'f' ],
-      [ 'b', 'd', 'a', 'f', 'a', 'c', 'e', 'f', 'c', 'd', 'b', 'b', 'd', 'f' ],
-      [ 'c', 'd', 'b', 'c', 'e', 'f', 'b', 'd', 'f', 'b', 'd', 'a', 'f', 'a', 'c', 'e', 'f', 'c', 'd', 'b', 'c', 'd', 'b', 'c', 'e', 'f', 'f' ]
-    ])
-    var expectedLdws = _.setsFrom
-    ([
-      [],
-      [ 'b', 'd', 'a', 'f', 'a', 'c', 'e', 'f', 'c', 'd', 'b', 'b', 'd', 'f' ],
-      [ 'a', 'c', 'e', 'f', 'c', 'd', 'b', 'a', 'f' ],
-      [ 'c', 'd', 'b', 'c', 'e', 'f' ],
-      [ 'b', 'd' ],
-      [ 'a' ]
-    ])
+    var expectedLups =
+    [
+      new Set([ 'a' ]),
+      new Set([ 'b', 'd' ]),
+      new Set([ 'c', 'd', 'b', 'e', 'f' ]),
+      new Set([ 'a', 'c', 'e', 'f', 'd', 'b' ]),
+      new Set([ 'b', 'd', 'a', 'f', 'c', 'e' ]),
+      new Set([ 'c', 'd', 'b', 'e', 'f', 'a' ])
+    ]
+    var expectedLdws =
+    [
+      new Set([ 'c', 'd', 'b', 'e', 'f', 'a' ]),
+      new Set([ 'b', 'd', 'a', 'f', 'c', 'e' ]),
+      new Set([ 'a', 'c', 'e', 'f', 'd', 'b' ]),
+      new Set([ 'c', 'd', 'b', 'e', 'f' ]),
+      new Set([ 'b', 'd' ]),
+      new Set([ 'a' ])
+    ]
 
     test.identical( nds, expectedNds );
     test.identical( ups, expectedUps );
@@ -3276,24 +3236,24 @@ function lookBfsRevisiting( test )
     var expectedUps = [ 'b', 'c', 'd', 'b', 'a', 'c', 'e', 'f', 'd', 'b', 'b', 'd', 'a', 'f', 'c', 'e', 'c', 'd', 'b', 'e', 'f', 'a', 'a', 'c', 'e', 'f', 'd', 'b' ];
     var expectedDws = [ 'b', 'd', 'f', 'e', 'c', 'a', 'a', 'f', 'e', 'b', 'd', 'c', 'e', 'c', 'f', 'a', 'd', 'b', 'b', 'd', 'f', 'e', 'c', 'a', 'b', 'd', 'c', 'b' ];
 
-    var expectedLups = _.setsFrom
-    ([
-      [ 'b' ],
-      [ 'c', 'd', 'b' ],
-      [ 'a', 'c', 'e', 'f', 'c', 'd', 'b' ],
-      [ 'b', 'd', 'a', 'f', 'a', 'c', 'e', 'f', 'c', 'd', 'b' ],
-      [ 'c', 'd', 'b', 'c', 'e', 'f', 'b', 'd', 'f', 'b', 'd', 'a', 'f', 'a', 'c', 'e', 'f', 'c', 'd', 'b' ],
-      [ 'a', 'c', 'e', 'f', 'c', 'd', 'b', 'a', 'f', 'c', 'd', 'b', 'c', 'e', 'f', 'f', 'c', 'd', 'b', 'c', 'e', 'f', 'b', 'd', 'f', 'b', 'd', 'a', 'f', 'a', 'c', 'e', 'f', 'c', 'd', 'b' ]
-    ])
-    var expectedLdws = _.setsFrom
-    ([
-      [],
-      [ 'c', 'd', 'b', 'c', 'e', 'f', 'b', 'd', 'f', 'b', 'd', 'a', 'f', 'a', 'c', 'e', 'f', 'c', 'd', 'b' ],
-      [ 'b', 'd', 'a', 'f', 'a', 'c', 'e', 'f', 'c', 'd', 'b' ],
-      [ 'a', 'c', 'e', 'f', 'c', 'd', 'b' ],
-      [ 'c', 'd', 'b' ],
-      [ 'b' ]
-    ])
+    var expectedLups =
+    [
+      new Set([ 'b' ]),
+      new Set([ 'c', 'd', 'b' ]),
+      new Set([ 'a', 'c', 'e', 'f', 'd', 'b' ]),
+      new Set([ 'b', 'd', 'a', 'f', 'c', 'e' ]),
+      new Set([ 'c', 'd', 'b', 'e', 'f', 'a' ]),
+      new Set([ 'a', 'c', 'e', 'f', 'd', 'b' ])
+    ]
+    var expectedLdws =
+    [
+      new Set([ 'a', 'c', 'e', 'f', 'd', 'b' ]),
+      new Set([ 'c', 'd', 'b', 'e', 'f', 'a' ]),
+      new Set([ 'b', 'd', 'a', 'f', 'c', 'e' ]),
+      new Set([ 'a', 'c', 'e', 'f', 'd', 'b' ]),
+      new Set([ 'c', 'd', 'b' ]),
+      new Set([ 'b' ])
+    ]
 
     test.identical( nds, expectedNds );
     test.identical( ups, expectedUps );
@@ -3322,17 +3282,14 @@ function lookBfsRevisiting( test )
     var expectedUps = [ 'e' ];
     var expectedDws = [ 'e' ];
 
-    var expectedLups = _.setsFrom
-    ([
-      [ 'e' ],
-      []
-    ])
-    var expectedLdws = _.setsFrom
-    ([
-      [],
-      [ 'e' ]
-    ])
-
+    var expectedLups =
+    [
+      new Set([ 'e' ])
+    ]
+    var expectedLdws =
+    [
+      new Set([ 'e' ])
+    ]
     test.identical( nds, expectedNds );
     test.identical( ups, expectedUps );
     test.identical( dws, expectedDws );
@@ -3360,25 +3317,24 @@ function lookBfsRevisiting( test )
     var expectedUps = [ 'f', 'f', 'f', 'f', 'f', 'f' ];
     var expectedDws = [ 'f', 'f', 'f', 'f', 'f', 'f' ];
 
-    var expectedLups = _.setsFrom
-    ([
-      [ 'f' ],
-      [ 'f' ],
-      [ 'f' ],
-      [ 'f' ],
-      [ 'f' ],
-      [ 'f' ]
-    ])
-    var expectedLdws = _.setsFrom
-    ([
-      [],
-      [ 'f' ],
-      [ 'f' ],
-      [ 'f' ],
-      [ 'f' ],
-      [ 'f' ]
-    ])
-
+    var expectedLups =
+    [
+      new Set([ 'f' ]),
+      new Set([ 'f' ]),
+      new Set([ 'f' ]),
+      new Set([ 'f' ]),
+      new Set([ 'f' ]),
+      new Set([ 'f' ])
+    ]
+    var expectedLdws =
+    [
+      new Set([ 'f' ]),
+      new Set([ 'f' ]),
+      new Set([ 'f' ]),
+      new Set([ 'f' ]),
+      new Set([ 'f' ]),
+      new Set([ 'f' ])
+    ]
 
     test.identical( nds, expectedNds );
     test.identical( ups, expectedUps );
@@ -3413,24 +3369,24 @@ function lookBfsRevisiting( test )
     var expectedUps = [ 'a', 'b', 'd', 'c', 'd', 'b', 'e', 'f', 'a', 'c', 'e', 'f', 'd', 'b', 'b', 'd', 'a', 'f', 'c', 'e', 'c', 'd', 'b', 'e', 'f', 'a' ];
     var expectedDws = [ 'a', 'f', 'e', 'b', 'd', 'c', 'e', 'c', 'f', 'a', 'd', 'b', 'b', 'd', 'f', 'e', 'c', 'a', 'f', 'e', 'b', 'd', 'c', 'd', 'b', 'a' ];
 
-    var expectedLups = _.setsFrom
-    ([
-      [ 'a' ],
-      [ 'b', 'd' ],
-      [ 'c', 'd', 'b', 'c', 'e', 'f' ],
-      [ 'a', 'c', 'e', 'f', 'c', 'd', 'b', 'a', 'f' ],
-      [ 'b', 'd', 'a', 'f', 'a', 'c', 'e', 'f', 'c', 'd', 'b', 'b', 'd', 'f' ],
-      [ 'c', 'd', 'b', 'c', 'e', 'f', 'b', 'd', 'f', 'b', 'd', 'a', 'f', 'a', 'c', 'e', 'f', 'c', 'd', 'b', 'c', 'd', 'b', 'c', 'e', 'f', 'f' ]
-    ])
-    var expectedLdws = _.setsFrom
-    ([
-      [],
-      [ 'b', 'd', 'a', 'f', 'a', 'c', 'e', 'f', 'c', 'd', 'b', 'b', 'd', 'f' ],
-      [ 'a', 'c', 'e', 'f', 'c', 'd', 'b', 'a', 'f' ],
-      [ 'c', 'd', 'b', 'c', 'e', 'f' ],
-      [ 'b', 'd' ],
-      [ 'a' ]
-    ])
+    var expectedLups =
+    [
+      new Set([ 'a' ]),
+      new Set([ 'b', 'd' ]),
+      new Set([ 'c', 'd', 'b', 'e', 'f' ]),
+      new Set([ 'a', 'c', 'e', 'f', 'd', 'b' ]),
+      new Set([ 'b', 'd', 'a', 'f', 'c', 'e' ]),
+      new Set([ 'c', 'd', 'b', 'e', 'f', 'a' ])
+    ]
+    var expectedLdws =
+    [
+      new Set([ 'c', 'd', 'b', 'e', 'f', 'a' ]),
+      new Set([ 'b', 'd', 'a', 'f', 'c', 'e' ]),
+      new Set([ 'a', 'c', 'e', 'f', 'd', 'b' ]),
+      new Set([ 'c', 'd', 'b', 'e', 'f' ]),
+      new Set([ 'b', 'd' ]),
+      new Set([ 'a' ])
+    ]
 
     test.identical( nds, expectedNds );
     test.identical( ups, expectedUps );
@@ -3459,24 +3415,24 @@ function lookBfsRevisiting( test )
     var expectedUps = [ 'b', 'c', 'd', 'b', 'a', 'c', 'e', 'f', 'd', 'b', 'b', 'd', 'a', 'f', 'c', 'e', 'c', 'd', 'b', 'e', 'f', 'a', 'a', 'c', 'e', 'f', 'd', 'b' ];
     var expectedDws = [ 'b', 'd', 'f', 'e', 'c', 'a', 'a', 'f', 'e', 'b', 'd', 'c', 'e', 'c', 'f', 'a', 'd', 'b', 'b', 'd', 'f', 'e', 'c', 'a', 'b', 'd', 'c', 'b' ];
 
-    var expectedLups = _.setsFrom
-    ([
-      [ 'b' ],
-      [ 'c', 'd', 'b' ],
-      [ 'a', 'c', 'e', 'f', 'c', 'd', 'b' ],
-      [ 'b', 'd', 'a', 'f', 'a', 'c', 'e', 'f', 'c', 'd', 'b' ],
-      [ 'c', 'd', 'b', 'c', 'e', 'f', 'b', 'd', 'f', 'b', 'd', 'a', 'f', 'a', 'c', 'e', 'f', 'c', 'd', 'b' ],
-      [ 'a', 'c', 'e', 'f', 'c', 'd', 'b', 'a', 'f', 'c', 'd', 'b', 'c', 'e', 'f', 'f', 'c', 'd', 'b', 'c', 'e', 'f', 'b', 'd', 'f', 'b', 'd', 'a', 'f', 'a', 'c', 'e', 'f', 'c', 'd', 'b' ]
-    ])
-    var expectedLdws = _.setsFrom
-    ([
-      [],
-      [ 'c', 'd', 'b', 'c', 'e', 'f', 'b', 'd', 'f', 'b', 'd', 'a', 'f', 'a', 'c', 'e', 'f', 'c', 'd', 'b' ],
-      [ 'b', 'd', 'a', 'f', 'a', 'c', 'e', 'f', 'c', 'd', 'b' ],
-      [ 'a', 'c', 'e', 'f', 'c', 'd', 'b' ],
-      [ 'c', 'd', 'b' ],
-      [ 'b' ]
-    ])
+    var expectedLups =
+    [
+      new Set([ 'b' ]),
+      new Set([ 'c', 'd', 'b' ]),
+      new Set([ 'a', 'c', 'e', 'f', 'd', 'b' ]),
+      new Set([ 'b', 'd', 'a', 'f', 'c', 'e' ]),
+      new Set([ 'c', 'd', 'b', 'e', 'f', 'a' ]),
+      new Set([ 'a', 'c', 'e', 'f', 'd', 'b' ])
+    ]
+    var expectedLdws =
+    [
+      new Set([ 'a', 'c', 'e', 'f', 'd', 'b' ]),
+      new Set([ 'c', 'd', 'b', 'e', 'f', 'a' ]),
+      new Set([ 'b', 'd', 'a', 'f', 'c', 'e' ]),
+      new Set([ 'a', 'c', 'e', 'f', 'd', 'b' ]),
+      new Set([ 'c', 'd', 'b' ]),
+      new Set([ 'b' ])
+    ]
 
     test.identical( nds, expectedNds );
     test.identical( ups, expectedUps );
@@ -3505,17 +3461,14 @@ function lookBfsRevisiting( test )
     var expectedUps = [ 'e' ];
     var expectedDws = [ 'e' ];
 
-    var expectedLups = _.setsFrom
-    ([
-      [ 'e' ],
-      []
-    ])
-    var expectedLdws = _.setsFrom
-    ([
-      [],
-      [ 'e' ]
-    ])
-
+    var expectedLups =
+    [
+      new Set([ 'e' ])
+    ]
+    var expectedLdws =
+    [
+      new Set([ 'e' ])
+    ]
     test.identical( nds, expectedNds );
     test.identical( ups, expectedUps );
     test.identical( dws, expectedDws );
@@ -3543,24 +3496,24 @@ function lookBfsRevisiting( test )
     var expectedUps = [ 'f', 'f', 'f', 'f', 'f', 'f' ];
     var expectedDws = [ 'f', 'f', 'f', 'f', 'f', 'f' ];
 
-    var expectedLups = _.setsFrom
-    ([
-      [ 'f' ],
-      [ 'f' ],
-      [ 'f' ],
-      [ 'f' ],
-      [ 'f' ],
-      [ 'f' ]
-    ])
-    var expectedLdws = _.setsFrom
-    ([
-      [],
-      [ 'f' ],
-      [ 'f' ],
-      [ 'f' ],
-      [ 'f' ],
-      [ 'f' ]
-    ])
+    var expectedLups =
+    [
+      new Set([ 'f' ]),
+      new Set([ 'f' ]),
+      new Set([ 'f' ]),
+      new Set([ 'f' ]),
+      new Set([ 'f' ]),
+      new Set([ 'f' ])
+    ]
+    var expectedLdws =
+    [
+      new Set([ 'f' ]),
+      new Set([ 'f' ]),
+      new Set([ 'f' ]),
+      new Set([ 'f' ]),
+      new Set([ 'f' ]),
+      new Set([ 'f' ])
+    ]
 
     test.identical( nds, expectedNds );
     test.identical( ups, expectedUps );
@@ -3573,6 +3526,54 @@ function lookBfsRevisiting( test )
     test.close( 'revisiting : 3, with onLayerUp' );
 
     test.close( 'fast : ' + o.fast );
+  }
+
+  function clean()
+  {
+    nds = [];
+    ups = [];
+    dws = [];
+    lups = [];
+    ldws = [];
+  }
+
+  function onNode( node, it )
+  {
+    nds.push( group.nodesToNames( node ) );
+  }
+
+  function onUp( node, it )
+  {
+    if( it.level > 4 )
+    it.continueUp = false;
+    ups.push( group.nodesToNames( node ) );
+  }
+
+  function onUp2( node, it )
+  {
+    onUp( node, it );
+  }
+
+  function onDown( node, it )
+  {
+    dws.push( group.nodesToNames( node ) );
+  }
+
+  function onLayerUp( nodes, it )
+  {
+    lups.push( _.containerAdapter.toOriginal( group.nodesToNames( nodes ) ) );
+  }
+
+  function onLayerUp2( nodes, it )
+  {
+    if( it.level > 4 )
+    it.continueUp = false;
+    onLayerUp( nodes, it );
+  }
+
+  function onLayerDown( nodes, it )
+  {
+    ldws.push( _.containerAdapter.toOriginal( group.nodesToNames( nodes ) ) );
   }
 
 } /* end of lookBfsRevisiting */
@@ -3641,7 +3642,7 @@ function lookBfsExcluding( test )
     if( it.level > 1 )
     it.continueNode = 0;
     if( it.continueNode )
-    lups.push( _.containerAdapter.toOriginal( group.nodesToNames( nodes ) ) );
+    onLayerUp( nodes, it );
   }
 
   function onLayerUp4( nodes, it )
@@ -3649,7 +3650,7 @@ function lookBfsExcluding( test )
     debugger;
     if( it.level > 0 )
     it.continueUp = false;
-    lups.push( _.containerAdapter.toOriginal( group.nodesToNames( nodes ) ) );
+    onLayerUp( nodes, it );
   }
 
   function onLayerDown( nodes, it )
@@ -3659,8 +3660,9 @@ function lookBfsExcluding( test )
 
   function onLayerDown3( nodes, it )
   {
-    if( it.continueNode )
-    ldws.push( _.containerAdapter.toOriginal( group.nodesToNames( nodes ) ) );
+    if( !it.continueNode )
+    return
+    onLayerDown( nodes, it );
   }
 
   test.description = 'setup';
@@ -3704,13 +3706,12 @@ function lookBfsExcluding( test )
       [ 'b', 'd' ],
       [ 'c', 'd', 'b', 'c', 'e', 'f' ],
     ])
-    var expectedLdws = _.setsFrom
-    ([
-      [],
-      [ 'b', 'd' ],
-      [ 'a' ]
-    ])
-
+    var expectedLdws =
+    [
+      new Set([]),
+      new Set([ 'b', 'd' ]),
+      new Set([ 'a' ])
+    ]
     test.identical( nds, expectedNds );
     test.identical( ups, expectedUps );
     test.identical( dws, expectedDws );
@@ -3742,13 +3743,12 @@ function lookBfsExcluding( test )
       [ 'c', 'd', 'b' ],
       [ 'a', 'c', 'e', 'f' ]
     ])
-    var expectedLdws = _.setsFrom
-    ([
-      [],
-      [ 'c', 'd' ],
-      [ 'b' ]
-    ])
-
+    var expectedLdws =
+    [
+      new Set([]),
+      new Set([ 'c', 'd' ]),
+      new Set([ 'b' ])
+    ]
     test.identical( nds, expectedNds );
     test.identical( ups, expectedUps );
     test.identical( dws, expectedDws );
@@ -3779,12 +3779,11 @@ function lookBfsExcluding( test )
       [ 'a' ],
       [ 'b', 'd' ],
     ])
-    var expectedLdws = _.setsFrom
-    ([
-      [],
-      [ 'a' ]
-    ])
-
+    var expectedLdws =
+    [
+      new Set([ 'b', 'd' ]),
+      new Set([ 'a' ])
+    ]
     test.identical( nds, expectedNds );
     test.identical( ups, expectedUps );
     test.identical( dws, expectedDws );
@@ -3815,12 +3814,11 @@ function lookBfsExcluding( test )
       [ 'b' ],
       [ 'c', 'd', 'b' ]
     ])
-    var expectedLdws = _.setsFrom
-    ([
-      [],
-      [ 'b' ]
-    ])
-
+    var expectedLdws =
+    [
+      new Set([ 'c', 'd' ]),
+      new Set([ 'b' ])
+    ]
     test.identical( nds, expectedNds );
     test.identical( ups, expectedUps );
     test.identical( dws, expectedDws );
@@ -3887,12 +3885,10 @@ function lookBfsExcluding( test )
       [ 'b' ],
       [ 'c', 'd', 'b' ],
     ])
-    var expectedLdws = _.setsFrom
-    ([
-      [ 'c', 'd' ],
-      [ 'b' ]
-    ])
-
+    var expectedLdws =
+    [
+      new Set([ 'b' ])
+    ]
     test.identical( nds, expectedNds );
     test.identical( ups, expectedUps );
     test.identical( dws, expectedDws );
@@ -3923,12 +3919,11 @@ function lookBfsExcluding( test )
       [ 'a' ],
       [ 'b', 'd' ],
     ])
-    var expectedLdws = _.setsFrom
-    ([
-      [],
-      [ 'a' ]
-    ])
-
+    var expectedLdws =
+    [
+      new Set([ 'b', 'd' ]),
+      new Set([ 'a' ])
+    ]
     test.identical( nds, expectedNds );
     test.identical( ups, expectedUps );
     test.identical( dws, expectedDws );
@@ -3959,12 +3954,11 @@ function lookBfsExcluding( test )
       [ 'b' ],
       [ 'c', 'd', 'b' ]
     ])
-    var expectedLdws = _.setsFrom
-    ([
-      [],
-      [ 'b' ]
-    ])
-
+    var expectedLdws =
+    [
+      new Set([ 'c', 'd' ]),
+      new Set([ 'b' ])
+    ]
     test.identical( nds, expectedNds );
     test.identical( ups, expectedUps );
     test.identical( dws, expectedDws );
@@ -3998,7 +3992,7 @@ function lookBfsRevisitingTrivial( test )
   var group = gr.sys.nodesGroup();
 
   run({ fast : 1 });
-  // run({ fast : 0 });
+  run({ fast : 0 });
 
   /* - */
 
@@ -4100,10 +4094,10 @@ function lookBfsRevisitingTrivial( test )
     var expectedUps = [ 'a', 'c', 'b', 'c', 'a' ];
     var expectedDws = [ 'a', 'c', 'b', 'c', 'a' ];
     var expectedUpContinueNode = [ true, true, true, true, true ];
-    var expectedUpContinueUp = [ true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, false, false ];
     var expectedUpVisited = [ 0, 0, 0, 1, 1 ];
     var expectedDownContinueNode = [ true, true, true, true, true ];
-    var expectedDownContinueUp = [ true, true, true, true, true ];
+    var expectedDownContinueUp = [ false, false, true, true, true ];
     var expectedDownVisited = [ 1, 1, 0, 0, 0 ];
 
     test.identical( group.nodesToNames( nds ), expectedNds );
@@ -4245,18 +4239,12 @@ function lookBfsRevisitingTrivial( test )
   {
     if( it.level >= 2 )
     it.continueUp = false;
-    upContinueNode.push( it.continueNode );
-    upContinueUp.push( it.continueUp );
-    upVisited.push( it.visited );
-    ups.push( node );
+    onUp( node, it );
   }
 
   function onDown2( node, it )
   {
-    downContinueNode.push( it.continueNode );
-    downContinueUp.push( it.continueUp );
-    downVisited.push( it.visited );
-    dws.push( node );
+    onDown( node, it );
   }
 
   function onNode3( node, it )
@@ -4268,18 +4256,12 @@ function lookBfsRevisitingTrivial( test )
   {
     if( it.level >= 3 )
     it.continueUp = false;
-    upContinueNode.push( it.continueNode );
-    upContinueUp.push( it.continueUp );
-    upVisited.push( it.visited );
-    ups.push( node );
+    onUp( node, it );
   }
 
   function onDown3( node, it )
   {
-    downContinueNode.push( it.continueNode );
-    downContinueUp.push( it.continueUp );
-    downVisited.push( it.visited );
-    dws.push( node );
+    onDown( node, it );
   }
 
 } /* end of lookBfsRevisitingTrivial */
@@ -4289,18 +4271,19 @@ function lookBfsRevisitingTrivial( test )
 function lookBfsRepeatsRoots( test )
 {
   let context = this;
-  var ups = [];
-  var dws = [];
-  var nds = [];
-  var upContinueNode = [];
-  var downContinueNode = [];
-  var upContinueUp = [];
-  var downContinueUp = [];
-  var upVisited = [];
-  var downVisited = [];
+  let ups = [];
+  let dws = [];
+  let nds = [];
+  let upContinueNode = [];
+  let downContinueNode = [];
+  let upContinueUp = [];
+  let downContinueUp = [];
+  let upVisited = [];
+  let downVisited = [];
+  let logStr = '';
 
   test.description = 'setup';
-  var gr = context.cycled1Scc();
+  var gr = context.cycled0Scc();
   var group = gr.sys.nodesGroup();
 
   run({ fast : 1 });
@@ -4320,7 +4303,7 @@ function lookBfsRepeatsRoots( test )
     test.case = 'revisiting : 0';
 
     clean();
-    group.lookBfs
+    var gotResult = group.lookBfs
     ({
       roots : [ gr.a, gr.a, gr.c, gr.c ],
       onUp : onUp,
@@ -4339,6 +4322,21 @@ function lookBfsRepeatsRoots( test )
     var expectedDownContinueNode = [ true, true, true ];
     var expectedDownContinueUp = [ true, true, true ];
     var expectedDownVisited = [ false, false, false ];
+    var expectedResult =
+    [
+      new Set([ 'a', 'c' ]),
+      new Set([ 'b' ]),
+      new Set([])
+    ]
+    var expectedLog =
+`
+up a
+up c
+ up b
+ down b
+down c
+down a
+`
 
     test.identical( group.nodesToNames( nds ), expectedNds );
     test.identical( group.nodesToNames( ups ), expectedUps );
@@ -4349,13 +4347,15 @@ function lookBfsRepeatsRoots( test )
     test.identical( downContinueNode, expectedDownContinueNode );
     test.identical( downContinueUp, expectedDownContinueUp );
     test.identical( downVisited, expectedDownVisited );
+    test.identical( gotResult.map( ( nodes ) => group.nodesToNames( nodes ) ), expectedResult );
+    test.equivalent( logStr, expectedLog );
 
     /* - */
 
     test.case = 'revisiting : 1';
 
     clean();
-    group.lookBfs
+    var gotResult = group.lookBfs
     ({
       roots : [ gr.a, gr.a, gr.c, gr.c ],
       onUp : onUp,
@@ -4374,6 +4374,21 @@ function lookBfsRepeatsRoots( test )
     var expectedDownContinueNode = [ true, true, true ];
     var expectedDownContinueUp = [ true, true, true ];
     var expectedDownVisited = [ false, false, false ];
+    var expectedResult =
+    [
+      new Set([ 'a', 'c' ]),
+      new Set([ 'b' ]),
+      new Set([])
+    ]
+    var expectedLog =
+`
+up a
+up c
+ up b
+ down b
+down c
+down a
+`
 
     test.identical( group.nodesToNames( nds ), expectedNds );
     test.identical( group.nodesToNames( ups ), expectedUps );
@@ -4384,13 +4399,15 @@ function lookBfsRepeatsRoots( test )
     test.identical( downContinueNode, expectedDownContinueNode );
     test.identical( downContinueUp, expectedDownContinueUp );
     test.identical( downVisited, expectedDownVisited );
+    test.identical( gotResult.map( ( nodes ) => group.nodesToNames( nodes ) ), expectedResult );
+    test.equivalent( logStr, expectedLog );
 
     /* - */
 
     test.case = 'revisiting : 2';
 
     clean();
-    group.lookBfs
+    var gotResult = group.lookBfs
     ({
       roots : [ gr.a, gr.a, gr.c, gr.c ],
       onUp : onUp,
@@ -4400,15 +4417,36 @@ function lookBfsRepeatsRoots( test )
       revisiting : 2,
     });
 
-    var expectedNds = [ 'a', 'c', 'b', 'c', 'a' ];
-    var expectedUps = [ 'a', 'c', 'b', 'c', 'a' ];
-    var expectedDws = [ 'a', 'c', 'b', 'c', 'a' ];
-    var expectedUpContinueNode = [ true, true, true, true, true ];
-    var expectedUpContinueUp = [ true, true, true, true, true ];
-    var expectedUpVisited = [ 0, 0, 0, 1, 1 ];
-    var expectedDownContinueNode = [ true, true, true, true, true ];
-    var expectedDownContinueUp = [ true, true, true, true, true ];
-    var expectedDownVisited = [ 1, 1, 0, 0, 0 ];
+    var expectedNds = [ 'a', 'c', 'b', 'c', 'a', 'b' ];
+    var expectedUps = [ 'a', 'c', 'b', 'c', 'a', 'b' ];
+    var expectedDws = [ 'b', 'a', 'c', 'b', 'c', 'a' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, false, false, false ];
+    var expectedUpVisited = [ 0, 0, 0, 1, 1, 1 ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ false, false, false, true, true, true ];
+    var expectedDownVisited = [ 1, 1, 1, 0, 0, 0 ];
+    var expectedResult =
+    [
+      new Set([ 'a', 'c' ]),
+      new Set([ 'b', 'c' ]),
+      new Set([ 'a', 'b' ])
+    ]
+    var expectedLog =
+`
+up a
+up c
+ up b
+ up c
+   up a
+   up b
+   down b
+   down a
+ down c
+ down b
+down c
+down a
+`
 
     test.identical( group.nodesToNames( nds ), expectedNds );
     test.identical( group.nodesToNames( ups ), expectedUps );
@@ -4419,13 +4457,15 @@ function lookBfsRepeatsRoots( test )
     test.identical( downContinueNode, expectedDownContinueNode );
     test.identical( downContinueUp, expectedDownContinueUp );
     test.identical( downVisited, expectedDownVisited );
+    test.identical( gotResult.map( ( nodes ) => group.nodesToNames( nodes ) ), expectedResult );
+    test.equivalent( logStr, expectedLog );
 
     /* - */
 
     test.case = 'revisiting : 3, levels : 0-2';
 
     clean();
-    group.lookBfs
+    var gotResult = group.lookBfs
     ({
       roots : [ gr.a, gr.a, gr.c, gr.c ],
       onUp : onUp2,
@@ -4435,15 +4475,36 @@ function lookBfsRepeatsRoots( test )
       revisiting : 3,
     });
 
-    var expectedNds = [ 'a', 'c', 'b', 'c', 'a' ];
-    var expectedUps = [ 'a', 'c', 'b', 'c', 'a' ];
-    var expectedDws = [ 'a', 'c', 'b', 'c', 'a' ];
-    var expectedUpContinueNode = [ true, true, true, true, true ];
-    var expectedUpContinueUp = [ true, true, true, true, false ];
-    var expectedUpVisited = [ false, false, false, false, false ];
-    var expectedDownContinueNode = [ true, true, true, true, true ];
-    var expectedDownContinueUp = [ false, true, true, true, true ];
-    var expectedDownVisited = [ false, false, false, false, false ];
+    var expectedNds = [ 'a', 'c', 'b', 'c', 'a', 'b' ];
+    var expectedUps = [ 'a', 'c', 'b', 'c', 'a', 'b' ];
+    var expectedDws = [ 'b', 'a', 'c', 'b', 'c', 'a' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, true ];
+    var expectedUpVisited = [ false, false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ false, false, true, true, true, true ];
+    var expectedDownVisited = [ false, false, false, false, false, false ];
+    var expectedResult =
+    [
+      new Set([ 'a', 'c' ]),
+      new Set([ 'b', 'c' ]),
+      new Set([ 'a', 'b' ])
+    ]
+    var expectedLog =
+`
+up a
+up c
+ up b
+ up c
+   up a
+   up b
+   down b
+   down a
+ down c
+ down b
+down c
+down a
+`
 
     test.identical( group.nodesToNames( nds ), expectedNds );
     test.identical( group.nodesToNames( ups ), expectedUps );
@@ -4454,13 +4515,15 @@ function lookBfsRepeatsRoots( test )
     test.identical( downContinueNode, expectedDownContinueNode );
     test.identical( downContinueUp, expectedDownContinueUp );
     test.identical( downVisited, expectedDownVisited );
+    test.identical( gotResult.map( ( nodes ) => group.nodesToNames( nodes ) ), expectedResult );
+    test.equivalent( logStr, expectedLog );
 
     /* - */
 
     test.case = 'revisiting : 3, levels : 0-3';
 
     clean();
-    group.lookBfs
+    var gotResult = group.lookBfs
     ({
       roots : [ gr.a, gr.a, gr.c, gr.c ],
       onUp : onUp3,
@@ -4470,15 +4533,43 @@ function lookBfsRepeatsRoots( test )
       revisiting : 3,
     });
 
-    var expectedNds = [ 'a', 'c', 'b', 'c', 'a', 'b', 'c' ];
-    var expectedUps = [ 'a', 'c', 'b', 'c', 'a', 'b', 'c' ];
-    var expectedDws = [ 'c', 'b', 'a', 'c', 'b', 'c', 'a' ];
-    var expectedUpContinueNode = [ true, true, true, true, true, true, true ];
-    var expectedUpContinueUp = [ true, true, true, true, true, false, false ];
-    var expectedUpVisited = [ false, false, false, false, false, false, false ];
-    var expectedDownContinueNode = [ true, true, true, true, true, true, true ];
-    var expectedDownContinueUp = [ false, false, true, true, true, true, true ];
-    var expectedDownVisited = [ false, false, false, false, false, false, false ];
+    var expectedNds = [ 'a', 'c', 'b', 'c', 'a', 'b', 'b', 'c', 'a' ];
+    var expectedUps = [ 'a', 'c', 'b', 'c', 'a', 'b', 'b', 'c', 'a' ];
+    var expectedDws = [ 'a', 'c', 'b', 'b', 'a', 'c', 'b', 'c', 'a' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, true, true, true, true ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ false, false, false, true, true, true, true, true, true ];
+    var expectedDownVisited = [ false, false, false, false, false, false, false, false, false ];
+    var expectedResult =
+    [
+      new Set([ 'a', 'c' ]),
+      new Set([ 'b', 'c' ]),
+      new Set([ 'a', 'b' ]),
+      new Set([ 'b', 'c', 'a' ])
+    ]
+    var expectedLog =
+`
+up a
+up c
+ up b
+ up c
+   up a
+   up b
+     up b
+     up c
+     up a
+     down a
+     down c
+     down b
+   down b
+   down a
+ down c
+ down b
+down c
+down a
+`
 
     test.identical( group.nodesToNames( nds ), expectedNds );
     test.identical( group.nodesToNames( ups ), expectedUps );
@@ -4489,14 +4580,24 @@ function lookBfsRepeatsRoots( test )
     test.identical( downContinueNode, expectedDownContinueNode );
     test.identical( downContinueUp, expectedDownContinueUp );
     test.identical( downVisited, expectedDownVisited );
+    test.identical( gotResult.map( ( nodes ) => group.nodesToNames( nodes ) ), expectedResult );
+    test.equivalent( logStr, expectedLog );
 
     /* - */
 
     test.close( 'fast : ' + o.fast );
   }
 
+  function log( srcStr )
+  {
+    _.assert( arguments.length === 1 );
+    logStr += srcStr + '\n'; /* qqq : add similar checks to each similar test cases of each similar test routines */
+    /* logger.log( srcStr ); */
+  }
+
   function clean()
   {
+    logStr = '\n';
     ups = [];
     dws = [];
     nds = [];
@@ -4515,7 +4616,7 @@ function lookBfsRepeatsRoots( test )
 
   function onUp( node, it )
   {
-    console.log( 'up', node.name );
+    log( _.strDup( '  ', it.level ) + ' up ' + node.name );
     upContinueNode.push( it.continueNode );
     upContinueUp.push( it.continueUp );
     upVisited.push( it.visited );
@@ -4524,7 +4625,7 @@ function lookBfsRepeatsRoots( test )
 
   function onDown( node, it )
   {
-    console.log( 'down', node.name );
+    log( _.strDup( '  ', it.level ) + ' down ' + node.name );
     downContinueNode.push( it.continueNode );
     downContinueUp.push( it.continueUp );
     downVisited.push( it.visited );
@@ -4538,20 +4639,14 @@ function lookBfsRepeatsRoots( test )
 
   function onUp2( node, it )
   {
+    onUp( node, it );
     if( it.level >= 2 )
     it.continueUp = false;
-    upContinueNode.push( it.continueNode );
-    upContinueUp.push( it.continueUp );
-    upVisited.push( it.visited );
-    ups.push( node );
   }
 
   function onDown2( node, it )
   {
-    downContinueNode.push( it.continueNode );
-    downContinueUp.push( it.continueUp );
-    downVisited.push( it.visited );
-    dws.push( node );
+    onDown( node, it );
   }
 
   function onNode3( node, it )
@@ -4561,41 +4656,1337 @@ function lookBfsRepeatsRoots( test )
 
   function onUp3( node, it )
   {
+    onUp( node, it );
     if( it.level >= 3 )
     it.continueUp = false;
-    upContinueNode.push( it.continueNode );
-    upContinueUp.push( it.continueUp );
-    upVisited.push( it.visited );
-    ups.push( node );
   }
 
   function onDown3( node, it )
   {
-    downContinueNode.push( it.continueNode );
-    downContinueUp.push( it.continueUp );
-    downVisited.push( it.visited );
-    dws.push( node );
+    onDown( node, it );
   }
 
 } /* end of lookBfsRepeatsRoots */
 
 //
 
+function lookBfsRepeatsRootsAllSiblings0( test )
+{
+  let context = this;
+  let ups = [];
+  let dws = [];
+  let nds = [];
+  let upContinueNode = [];
+  let downContinueNode = [];
+  let upContinueUp = [];
+  let downContinueUp = [];
+  let upVisited = [];
+  let downVisited = [];
+  let logStr = '';
+
+  test.description = 'setup';
+  var gr = context.cycled0Scc();
+  var group = gr.sys.nodesGroup();
+
+  run({ fast : 1 });
+  run({ fast : 0 });
+
+  /* - */
+
+  gr.sys.finit();
+
+  function run( o )
+  {
+
+    test.open( 'fast : ' + o.fast );
+
+    /* - */
+
+    test.case = 'revisiting : 0';
+
+    clean();
+    var gotResult = group.lookBfs
+    ({
+      roots : [ gr.a, gr.a, gr.c, gr.c ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 0,
+      allSiblings : 0,
+    });
+
+    var expectedNds = [ 'a', 'c', 'b' ];
+    var expectedUps = [ 'a', 'c', 'b' ];
+    var expectedDws = [ 'b', 'c', 'a' ];
+    var expectedUpContinueNode = [ true, true, true ];
+    var expectedUpContinueUp = [ true, true, true ];
+    var expectedUpVisited = [ false, false, false ];
+    var expectedDownContinueNode = [ true, true, true ];
+    var expectedDownContinueUp = [ true, true, true ];
+    var expectedDownVisited = [ false, false, false ];
+    var expectedResult =
+    [
+      new Set([ 'a', 'c' ]),
+      new Set([ 'b' ]),
+      new Set([])
+    ]
+    var expectedLog =
+`
+up a
+up c
+ up b
+ down b
+down c
+down a
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( gotResult.map( ( nodes ) => group.nodesToNames( nodes ) ), expectedResult );
+    test.equivalent( logStr, expectedLog );
+
+    /* - */
+
+    test.case = 'revisiting : 1';
+
+    clean();
+    var gotResult = group.lookBfs
+    ({
+      roots : [ gr.a, gr.a, gr.c, gr.c ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 1,
+      allSiblings : 0,
+    });
+
+    var expectedNds = [ 'a', 'c', 'b' ];
+    var expectedUps = [ 'a', 'c', 'b' ];
+    var expectedDws = [ 'b', 'c', 'a' ];
+    var expectedUpContinueNode = [ true, true, true ];
+    var expectedUpContinueUp = [ true, true, true ];
+    var expectedUpVisited = [ false, false, false ];
+    var expectedDownContinueNode = [ true, true, true ];
+    var expectedDownContinueUp = [ true, true, true ];
+    var expectedDownVisited = [ false, false, false ];
+    var expectedResult =
+    [
+      new Set([ 'a', 'c' ]),
+      new Set([ 'b' ]),
+      new Set([])
+    ]
+    var expectedLog =
+`
+up a
+up c
+ up b
+ down b
+down c
+down a
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( gotResult.map( ( nodes ) => group.nodesToNames( nodes ) ), expectedResult );
+    test.equivalent( logStr, expectedLog );
+
+    /* - */
+
+    test.case = 'revisiting : 2';
+
+    clean();
+    var gotResult = group.lookBfs
+    ({
+      roots : [ gr.a, gr.a, gr.c, gr.c ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 2,
+      allSiblings : 0,
+    });
+
+    var expectedNds = [ 'a', 'c', 'b', 'c', 'a', 'b' ];
+    var expectedUps = [ 'a', 'c', 'b', 'c', 'a', 'b' ];
+    var expectedDws = [ 'b', 'a', 'c', 'b', 'c', 'a' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, false, false, false ];
+    var expectedUpVisited = [ 0, 0, 0, 1, 1, 1 ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ false, false, false, true, true, true ];
+    var expectedDownVisited = [ 1, 1, 1, 0, 0, 0 ];
+    var expectedResult =
+    [
+      new Set([ 'a', 'c' ]),
+      new Set([ 'b', 'c' ]),
+      new Set([ 'a', 'b' ])
+    ]
+    var expectedLog =
+`
+up a
+up c
+ up b
+ up c
+   up a
+   up b
+   down b
+   down a
+ down c
+ down b
+down c
+down a
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( gotResult.map( ( nodes ) => group.nodesToNames( nodes ) ), expectedResult );
+    test.equivalent( logStr, expectedLog );
+
+    /* - */
+
+    test.case = 'revisiting : 3, levels : 0-2';
+
+    clean();
+    var gotResult = group.lookBfs
+    ({
+      roots : [ gr.a, gr.a, gr.c, gr.c ],
+      onUp : onUp2,
+      onDown : onDown2,
+      onNode : onNode2,
+      fast : o.fast,
+      revisiting : 3,
+      allSiblings : 0,
+    });
+
+    var expectedNds = [ 'a', 'c', 'b', 'c', 'a', 'b' ];
+    var expectedUps = [ 'a', 'c', 'b', 'c', 'a', 'b' ];
+    var expectedDws = [ 'b', 'a', 'c', 'b', 'c', 'a' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, true ];
+    var expectedUpVisited = [ false, false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ false, false, true, true, true, true ];
+    var expectedDownVisited = [ false, false, false, false, false, false ];
+    var expectedResult =
+    [
+      new Set([ 'a', 'c' ]),
+      new Set([ 'b', 'c' ]),
+      new Set([ 'a', 'b' ])
+    ]
+    var expectedLog =
+`
+up a
+up c
+ up b
+ up c
+   up a
+   up b
+   down b
+   down a
+ down c
+ down b
+down c
+down a
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( gotResult.map( ( nodes ) => group.nodesToNames( nodes ) ), expectedResult );
+    test.equivalent( logStr, expectedLog );
+
+    /* - */
+
+    test.case = 'revisiting : 3, levels : 0-3';
+
+    clean();
+    var gotResult = group.lookBfs
+    ({
+      roots : [ gr.a, gr.a, gr.c, gr.c ],
+      onUp : onUp3,
+      onDown : onDown3,
+      onNode : onNode3,
+      fast : o.fast,
+      revisiting : 3,
+      allSiblings : 0,
+    });
+
+    var expectedNds = [ 'a', 'c', 'b', 'c', 'a', 'b', 'b', 'c', 'a' ];
+    var expectedUps = [ 'a', 'c', 'b', 'c', 'a', 'b', 'b', 'c', 'a' ];
+    var expectedDws = [ 'a', 'c', 'b', 'b', 'a', 'c', 'b', 'c', 'a' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, true, true, true, true ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ false, false, false, true, true, true, true, true, true ];
+    var expectedDownVisited = [ false, false, false, false, false, false, false, false, false ];
+    var expectedResult =
+    [
+      new Set([ 'a', 'c' ]),
+      new Set([ 'b', 'c' ]),
+      new Set([ 'a', 'b' ]),
+      new Set([ 'b', 'c', 'a' ])
+    ]
+    var expectedLog =
+`
+up a
+up c
+ up b
+ up c
+   up a
+   up b
+     up b
+     up c
+     up a
+     down a
+     down c
+     down b
+   down b
+   down a
+ down c
+ down b
+down c
+down a
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( gotResult.map( ( nodes ) => group.nodesToNames( nodes ) ), expectedResult );
+    test.equivalent( logStr, expectedLog );
+
+    /* - */
+
+    test.close( 'fast : ' + o.fast );
+  }
+
+  function log( srcStr )
+  {
+    _.assert( arguments.length === 1 );
+    logStr += srcStr + '\n'; /* qqq : add similar checks to each similar test cases of each similar test routines */
+    /* logger.log( srcStr ); */
+  }
+
+  function clean()
+  {
+    logStr = '\n';
+    ups = [];
+    dws = [];
+    nds = [];
+    upContinueNode = [];
+    downContinueNode = [];
+    upContinueUp = [];
+    downContinueUp = [];
+    upVisited = [];
+    downVisited = [];
+  }
+
+  function onNode( node, it )
+  {
+    nds.push( node );
+  }
+
+  function onUp( node, it )
+  {
+    log( _.strDup( '  ', it.level ) + ' up ' + node.name );
+    upContinueNode.push( it.continueNode );
+    upContinueUp.push( it.continueUp );
+    upVisited.push( it.visited );
+    ups.push( node );
+  }
+
+  function onDown( node, it )
+  {
+    log( _.strDup( '  ', it.level ) + ' down ' + node.name );
+    downContinueNode.push( it.continueNode );
+    downContinueUp.push( it.continueUp );
+    downVisited.push( it.visited );
+    dws.push( node );
+  }
+
+  function onNode2( node, it )
+  {
+    nds.push( node );
+  }
+
+  function onUp2( node, it )
+  {
+    onUp( node, it );
+    if( it.level >= 2 )
+    it.continueUp = false;
+  }
+
+  function onDown2( node, it )
+  {
+    onDown( node, it );
+  }
+
+  function onNode3( node, it )
+  {
+    nds.push( node );
+  }
+
+  function onUp3( node, it )
+  {
+    onUp( node, it );
+    if( it.level >= 3 )
+    it.continueUp = false;
+  }
+
+  function onDown3( node, it )
+  {
+    onDown( node, it );
+  }
+
+} /* end of lookBfsRepeatsRootsAllSiblings0 */
+
+//
+
+function lookBfsRepeatsRootsAllSiblings1( test )
+{
+  let context = this;
+  let ups = [];
+  let dws = [];
+  let nds = [];
+  let upContinueNode = [];
+  let downContinueNode = [];
+  let upContinueUp = [];
+  let downContinueUp = [];
+  let upVisited = [];
+  let downVisited = [];
+  let logStr = '';
+
+  test.description = 'setup';
+  var gr = context.cycled0Scc();
+  var group = gr.sys.nodesGroup();
+
+  run({ fast : 1 });
+  run({ fast : 0 });
+
+  /* - */
+
+  gr.sys.finit();
+
+  function run( o )
+  {
+
+    test.open( 'fast : ' + o.fast );
+
+    /* - */
+
+    test.case = 'revisiting : 0';
+
+    clean();
+    var gotResult = group.lookBfs
+    ({
+      roots : [ gr.a, gr.a, gr.c, gr.c ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 0,
+      allSiblings : 1,
+    });
+
+    var expectedNds = [ 'a', 'a', 'c', 'c', 'b' ];
+    var expectedUps = [ 'a', 'a', 'c', 'c', 'b' ];
+    var expectedDws = [ 'b', 'c', 'c', 'a', 'a' ];
+    var expectedUpContinueNode = [ true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true ];
+    var expectedUpVisited = [ false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true ];
+    var expectedDownContinueUp = [ true, true, true, true, true ];
+    var expectedDownVisited = [ false, false, false, false, false ];
+    var expectedResult =
+    [
+      [ 'a', 'a', 'c', 'c' ],
+      [ 'b' ],
+      []
+    ]
+    var expectedLog =
+`
+up a
+up a
+up c
+up c
+ up b
+ down b
+down c
+down c
+down a
+down a
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( gotResult.map( ( nodes ) => group.nodesToNames( nodes ) ), expectedResult );
+    test.equivalent( logStr, expectedLog );
+
+    /* - */
+
+    test.case = 'revisiting : 1';
+
+    clean();
+    var gotResult = group.lookBfs
+    ({
+      roots : [ gr.a, gr.a, gr.c, gr.c ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 1,
+      allSiblings : 1,
+    });
+
+    var expectedNds = [ 'a', 'a', 'c', 'c', 'b' ];
+    var expectedUps = [ 'a', 'a', 'c', 'c', 'b' ];
+    var expectedDws = [ 'b', 'c', 'c', 'a', 'a' ];
+    var expectedUpContinueNode = [ true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true ];
+    var expectedUpVisited = [ false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true ];
+    var expectedDownContinueUp = [ true, true, true, true, true ];
+    var expectedDownVisited = [ false, false, false, false, false ];
+    var expectedResult =
+    [
+      [ 'a', 'a', 'c', 'c' ],
+      [ 'b' ],
+      []
+    ]
+    var expectedLog =
+`
+up a
+up a
+up c
+up c
+ up b
+ down b
+down c
+down c
+down a
+down a
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( gotResult.map( ( nodes ) => group.nodesToNames( nodes ) ), expectedResult );
+    test.equivalent( logStr, expectedLog );
+
+    /* - */
+
+    test.case = 'revisiting : 2';
+
+    clean();
+    var gotResult = group.lookBfs
+    ({
+      roots : [ gr.a, gr.a, gr.c, gr.c ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 2,
+      allSiblings : 1,
+    });
+
+    var expectedNds = [ 'a', 'a', 'c', 'c', 'b', 'c', 'a', 'b' ];
+    var expectedUps = [ 'a', 'a', 'c', 'c', 'b', 'c', 'a', 'b' ];
+    var expectedDws = [ 'b', 'a', 'c', 'b', 'c', 'c', 'a', 'a' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, false, false, false ];
+    var expectedUpVisited = [ 0, 0, 0, 0, 0, 1, 1, 1 ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ false, false, false, true, true, true, true, true ];
+    var expectedDownVisited = [ 1, 1, 1, 0, 0, 0, 0, 0 ];
+    var expectedResult =
+    [
+      [ 'a', 'a', 'c', 'c' ],
+      [ 'b', 'c' ],
+      [ 'a', 'b' ]
+    ]
+    var expectedLog =
+`
+up a
+up a
+up c
+up c
+ up b
+ up c
+   up a
+   up b
+   down b
+   down a
+ down c
+ down b
+down c
+down c
+down a
+down a
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( gotResult.map( ( nodes ) => group.nodesToNames( nodes ) ), expectedResult );
+    test.equivalent( logStr, expectedLog );
+
+    /* - */
+
+    test.case = 'revisiting : 3, levels : 0-2';
+
+    clean();
+    var gotResult = group.lookBfs
+    ({
+      roots : [ gr.a, gr.a, gr.c, gr.c ],
+      onUp : onUp2,
+      onDown : onDown2,
+      onNode : onNode2,
+      fast : o.fast,
+      revisiting : 3,
+      allSiblings : 1,
+    });
+
+    var expectedNds = [ 'a', 'a', 'c', 'c', 'b', 'c', 'a', 'b' ];
+    var expectedUps = [ 'a', 'a', 'c', 'c', 'b', 'c', 'a', 'b' ];
+    var expectedDws = [ 'b', 'a', 'c', 'b', 'c', 'c', 'a', 'a' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, true, true, true ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ false, false, true, true, true, true, true, true ];
+    var expectedDownVisited = [ false, false, false, false, false, false, false, false ];
+    var expectedResult =
+    [
+      [ 'a', 'a', 'c', 'c' ],
+      [ 'b', 'c' ],
+      [ 'a', 'b' ]
+    ]
+    var expectedLog =
+`
+up a
+up a
+up c
+up c
+ up b
+ up c
+   up a
+   up b
+   down b
+   down a
+ down c
+ down b
+down c
+down c
+down a
+down a
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( gotResult.map( ( nodes ) => group.nodesToNames( nodes ) ), expectedResult );
+    test.equivalent( logStr, expectedLog );
+
+    /* - */
+
+    test.case = 'revisiting : 3, levels : 0-3';
+
+    clean();
+    var gotResult = group.lookBfs
+    ({
+      roots : [ gr.a, gr.a, gr.c, gr.c ],
+      onUp : onUp3,
+      onDown : onDown3,
+      onNode : onNode3,
+      fast : o.fast,
+      revisiting : 3,
+      allSiblings : 1,
+    });
+
+    var expectedNds = [ 'a', 'a', 'c', 'c', 'b', 'c', 'a', 'b', 'b', 'c', 'a', 'b' ];
+    var expectedUps = [ 'a', 'a', 'c', 'c', 'b', 'c', 'a', 'b', 'b', 'c', 'a', 'b' ];
+    var expectedDws = [ 'b', 'a', 'c', 'b', 'b', 'a', 'c', 'b', 'c', 'c', 'a', 'a' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ false, false, false, false, true, true, true, true, true, true, true, true ];
+    var expectedDownVisited = [ false, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedResult =
+    [
+      [ 'a', 'a', 'c', 'c' ],
+      [ 'b', 'c' ],
+      [ 'a', 'b' ],
+      [ 'b', 'c', 'a', 'b' ]
+    ]
+    var expectedLog =
+`
+up a
+up a
+up c
+up c
+ up b
+ up c
+   up a
+   up b
+     up b
+     up c
+     up a
+     up b
+     down b
+     down a
+     down c
+     down b
+   down b
+   down a
+ down c
+ down b
+down c
+down c
+down a
+down a
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( gotResult.map( ( nodes ) => group.nodesToNames( nodes ) ), expectedResult );
+    test.equivalent( logStr, expectedLog );
+
+    /* - */
+
+    test.close( 'fast : ' + o.fast );
+  }
+
+  function log( srcStr )
+  {
+    _.assert( arguments.length === 1 );
+    logStr += srcStr + '\n'; /* qqq : add similar checks to each similar test cases of each similar test routines */
+    /* logger.log( srcStr ); */
+  }
+
+  function clean()
+  {
+    logStr = '\n';
+    ups = [];
+    dws = [];
+    nds = [];
+    upContinueNode = [];
+    downContinueNode = [];
+    upContinueUp = [];
+    downContinueUp = [];
+    upVisited = [];
+    downVisited = [];
+  }
+
+  function onNode( node, it )
+  {
+    nds.push( node );
+  }
+
+  function onUp( node, it )
+  {
+    log( _.strDup( '  ', it.level ) + ' up ' + node.name );
+    upContinueNode.push( it.continueNode );
+    upContinueUp.push( it.continueUp );
+    upVisited.push( it.visited );
+    ups.push( node );
+  }
+
+  function onDown( node, it )
+  {
+    log( _.strDup( '  ', it.level ) + ' down ' + node.name );
+    downContinueNode.push( it.continueNode );
+    downContinueUp.push( it.continueUp );
+    downVisited.push( it.visited );
+    dws.push( node );
+  }
+
+  function onNode2( node, it )
+  {
+    nds.push( node );
+  }
+
+  function onUp2( node, it )
+  {
+    onUp( node, it );
+    if( it.level >= 2 )
+    it.continueUp = false;
+  }
+
+  function onDown2( node, it )
+  {
+    onDown( node, it );
+  }
+
+  function onNode3( node, it )
+  {
+    nds.push( node );
+  }
+
+  function onUp3( node, it )
+  {
+    onUp( node, it );
+    if( it.level >= 3 )
+    it.continueUp = false;
+  }
+
+  function onDown3( node, it )
+  {
+    onDown( node, it );
+  }
+
+} /* end of lookBfsRepeatsRootsAllSiblings1 */
+
+//
+
+function lookBfsRepeatsRootsAllSiblings2( test )
+{
+  let context = this;
+  let ups = [];
+  let dws = [];
+  let nds = [];
+  let upContinueNode = [];
+  let downContinueNode = [];
+  let upContinueUp = [];
+  let downContinueUp = [];
+  let upVisited = [];
+  let downVisited = [];
+  let logStr = '';
+
+  test.description = 'setup';
+  var gr = context.cycled0Scc();
+  var group = gr.sys.nodesGroup();
+
+  run({ fast : 1 });
+  run({ fast : 0 });
+
+  /* - */
+
+  gr.sys.finit();
+
+  function run( o )
+  {
+
+    test.open( 'fast : ' + o.fast );
+
+    /* - */
+
+    test.case = 'revisiting : 0';
+
+    clean();
+    var gotResult = group.lookBfs
+    ({
+      roots : [ gr.a, gr.a, gr.c, gr.c ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 0,
+      allSiblings : 2,
+    });
+
+    var expectedNds = [ 'a', 'a', 'c', 'c', 'b', 'b' ];
+    var expectedUps = [ 'a', 'a', 'c', 'c', 'b', 'b' ];
+    var expectedDws = [ 'b', 'b', 'c', 'c', 'a', 'a' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, true ];
+    var expectedUpVisited = [ false, false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ true, true, true, true, true, true ];
+    var expectedDownVisited = [ false, false, false, false, false, false ];
+    var expectedResult =
+    [
+      [ 'a', 'a', 'c', 'c' ],
+      [ 'b', 'b' ],
+      []
+    ]
+    var expectedLog =
+`
+up a
+up a
+up c
+up c
+ up b
+ up b
+ down b
+ down b
+down c
+down c
+down a
+down a
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( gotResult.map( ( nodes ) => group.nodesToNames( nodes ) ), expectedResult );
+    test.equivalent( logStr, expectedLog );
+
+    /* - */
+
+    test.case = 'revisiting : 1';
+
+    clean();
+    var gotResult = group.lookBfs
+    ({
+      roots : [ gr.a, gr.a, gr.c, gr.c ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 1,
+      allSiblings : 2,
+    });
+
+    var expectedNds = [ 'a', 'a', 'c', 'c', 'b', 'b' ];
+    var expectedUps = [ 'a', 'a', 'c', 'c', 'b', 'b' ];
+    var expectedDws = [ 'b', 'b', 'c', 'c', 'a', 'a' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, true ];
+    var expectedUpVisited = [ false, false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ true, true, true, true, true, true ];
+    var expectedDownVisited = [ false, false, false, false, false, false ];
+    var expectedResult =
+    [
+      [ 'a', 'a', 'c', 'c' ],
+      [ 'b', 'b' ],
+      []
+    ]
+    var expectedLog =
+`
+up a
+up a
+up c
+up c
+ up b
+ up b
+ down b
+ down b
+down c
+down c
+down a
+down a
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( gotResult.map( ( nodes ) => group.nodesToNames( nodes ) ), expectedResult );
+    test.equivalent( logStr, expectedLog );
+
+    /* - */
+
+    test.case = 'revisiting : 2';
+
+    clean();
+    var gotResult = group.lookBfs
+    ({
+      roots : [ gr.a, gr.a, gr.c, gr.c ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 2,
+      allSiblings : 2,
+    });
+
+    var expectedNds = [ 'a', 'a', 'c', 'c', 'b', 'c', 'b', 'c', 'a', 'b', 'a', 'b' ];
+    var expectedUps = [ 'a', 'a', 'c', 'c', 'b', 'c', 'b', 'c', 'a', 'b', 'a', 'b' ];
+    var expectedDws = [ 'b', 'a', 'b', 'a', 'c', 'b', 'c', 'b', 'c', 'c', 'a', 'a' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, false, true, false, false, false, false, false ];
+    var expectedUpVisited = [ 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1 ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ false, false, false, false, false, true, false, true, true, true, true, true ];
+    var expectedDownVisited = [ 1, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0 ];
+    var expectedResult =
+    [
+      [ 'a', 'a', 'c', 'c' ],
+      [ 'b', 'c', 'b', 'c' ],
+      [ 'a', 'b', 'a', 'b' ]
+    ]
+    var expectedLog =
+`
+up a
+up a
+up c
+up c
+ up b
+ up c
+ up b
+ up c
+   up a
+   up b
+   up a
+   up b
+   down b
+   down a
+   down b
+   down a
+ down c
+ down b
+ down c
+ down b
+down c
+down c
+down a
+down a
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( gotResult.map( ( nodes ) => group.nodesToNames( nodes ) ), expectedResult );
+    test.equivalent( logStr, expectedLog );
+
+    /* - */
+
+    test.case = 'revisiting : 3, levels : 0-2';
+
+    clean();
+    var gotResult = group.lookBfs
+    ({
+      roots : [ gr.a, gr.a, gr.c, gr.c ],
+      onUp : onUp2,
+      onDown : onDown2,
+      onNode : onNode2,
+      fast : o.fast,
+      revisiting : 3,
+      allSiblings : 2,
+    });
+
+    var expectedNds = [ 'a', 'a', 'c', 'c', 'b', 'c', 'b', 'c', 'a', 'b', 'a', 'b' ];
+    var expectedUps = [ 'a', 'a', 'c', 'c', 'b', 'c', 'b', 'c', 'a', 'b', 'a', 'b' ];
+    var expectedDws = [ 'b', 'a', 'b', 'a', 'c', 'b', 'c', 'b', 'c', 'c', 'a', 'a' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ false, false, false, false, true, true, true, true, true, true, true, true ];
+    var expectedDownVisited = [ false, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedResult =
+    [
+      [ 'a', 'a', 'c', 'c' ],
+      [ 'b', 'c', 'b', 'c' ],
+      [ 'a', 'b', 'a', 'b' ]
+    ]
+    var expectedLog =
+`
+up a
+up a
+up c
+up c
+ up b
+ up c
+ up b
+ up c
+   up a
+   up b
+   up a
+   up b
+   down b
+   down a
+   down b
+   down a
+ down c
+ down b
+ down c
+ down b
+down c
+down c
+down a
+down a
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( gotResult.map( ( nodes ) => group.nodesToNames( nodes ) ), expectedResult );
+    test.equivalent( logStr, expectedLog );
+
+    /* - */
+
+    test.case = 'revisiting : 3, levels : 0-3';
+
+    clean();
+    var gotResult = group.lookBfs
+    ({
+      roots : [ gr.a, gr.a, gr.c, gr.c ],
+      onUp : onUp3,
+      onDown : onDown3,
+      onNode : onNode3,
+      fast : o.fast,
+      revisiting : 3,
+      allSiblings : 2,
+    });
+
+    var expectedNds = [ 'a', 'a', 'c', 'c', 'b', 'c', 'b', 'c', 'a', 'b', 'a', 'b', 'b', 'c', 'a', 'b', 'b', 'c', 'a', 'b' ];
+    var expectedUps = [ 'a', 'a', 'c', 'c', 'b', 'c', 'b', 'c', 'a', 'b', 'a', 'b', 'b', 'c', 'a', 'b', 'b', 'c', 'a', 'b' ];
+    var expectedDws = [ 'b', 'a', 'c', 'b', 'b', 'a', 'c', 'b', 'b', 'a', 'b', 'a', 'c', 'b', 'c', 'b', 'c', 'c', 'a', 'a' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ false, false, false, false, false, false, false, false, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownVisited = [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedResult =
+    [
+      [ 'a', 'a', 'c', 'c' ],
+      [ 'b', 'c', 'b', 'c' ],
+      [ 'a', 'b', 'a', 'b' ],
+      [ 'b', 'c', 'a', 'b', 'b', 'c', 'a', 'b' ]
+    ]
+    var expectedLog =
+`
+up a
+up a
+up c
+up c
+ up b
+ up c
+ up b
+ up c
+   up a
+   up b
+   up a
+   up b
+     up b
+     up c
+     up a
+     up b
+     up b
+     up c
+     up a
+     up b
+     down b
+     down a
+     down c
+     down b
+     down b
+     down a
+     down c
+     down b
+   down b
+   down a
+   down b
+   down a
+ down c
+ down b
+ down c
+ down b
+down c
+down c
+down a
+down a
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( gotResult.map( ( nodes ) => group.nodesToNames( nodes ) ), expectedResult );
+    test.equivalent( logStr, expectedLog );
+
+    /* - */
+
+    test.close( 'fast : ' + o.fast );
+  }
+
+  function log( srcStr )
+  {
+    _.assert( arguments.length === 1 );
+    logStr += srcStr + '\n'; /* qqq : add similar checks to each similar test cases of each similar test routines */
+    /* logger.log( srcStr ); */
+  }
+
+  function clean()
+  {
+    logStr = '\n';
+    ups = [];
+    dws = [];
+    nds = [];
+    upContinueNode = [];
+    downContinueNode = [];
+    upContinueUp = [];
+    downContinueUp = [];
+    upVisited = [];
+    downVisited = [];
+  }
+
+  function onNode( node, it )
+  {
+    nds.push( node );
+  }
+
+  function onUp( node, it )
+  {
+    log( _.strDup( '  ', it.level ) + ' up ' + node.name );
+    upContinueNode.push( it.continueNode );
+    upContinueUp.push( it.continueUp );
+    upVisited.push( it.visited );
+    ups.push( node );
+  }
+
+  function onDown( node, it )
+  {
+    log( _.strDup( '  ', it.level ) + ' down ' + node.name );
+    downContinueNode.push( it.continueNode );
+    downContinueUp.push( it.continueUp );
+    downVisited.push( it.visited );
+    dws.push( node );
+  }
+
+  function onNode2( node, it )
+  {
+    nds.push( node );
+  }
+
+  function onUp2( node, it )
+  {
+    onUp( node, it );
+    if( it.level >= 2 )
+    it.continueUp = false;
+  }
+
+  function onDown2( node, it )
+  {
+    onDown( node, it );
+  }
+
+  function onNode3( node, it )
+  {
+    nds.push( node );
+  }
+
+  function onUp3( node, it )
+  {
+    onUp( node, it );
+    if( it.level >= 3 )
+    it.continueUp = false;
+  }
+
+  function onDown3( node, it )
+  {
+    onDown( node, it );
+  }
+
+} /* end of lookBfsRepeatsRootsAllSiblings1 */
+
+//
+
 function lookBfsJunctions( test )
 {
   let context = this;
-  var ups = [];
-  var dws = [];
-  var nds = [];
-  var upContinueNode = [];
-  var downContinueNode = [];
-  var upContinueUp = [];
-  var downContinueUp = [];
-  var upVisited = [];
-  var downVisited = [];
+  let ups = [];
+  let dws = [];
+  let nds = [];
+  let upContinueNode = [];
+  let downContinueNode = [];
+  let upContinueUp = [];
+  let downContinueUp = [];
+  let upVisited = [];
+  let downVisited = [];
+  let logStr = '';
 
-  test.description = 'setup cycledJunctions4';
-  var gr = context.cycledJunctions4();
+  test.description = 'setup cycledJunctions5';
+  var gr = context.cycledJunctions5();
   var group = gr.sys.nodesGroup();
 
   run({ fast : 1 });
@@ -4617,25 +6008,50 @@ function lookBfsJunctions( test )
     clean();
     var o2 =
     {
-      roots : [ gr.a ],
+      roots : [ gr.a0, gr.a0, gr.a1 ],
       onUp : onUp,
       onDown : onDown,
       onNode : onNode,
       fast : o.fast,
       revisiting : 0,
     }
-    group.lookBfs( o2 );
+    var gotResult = group.lookBfs( o2 );
 
-    var expectedNds = [ 'a', 'd', 'g', 'e', 'b1', 'c2', 'f' ];
-    var expectedUps = [ 'a', 'd', 'g', 'e', 'b1', 'c2', 'f' ];
-    var expectedDws = [ 'f', 'c2', 'b1', 'e', 'g', 'd', 'a' ];
+    var expectedNds = [ 'a0', 'd', 'g', 'e', 'b1', 'c2', 'f' ];
+    var expectedUps = [ 'a0', 'd', 'g', 'e', 'b1', 'c2', 'f' ];
+    var expectedDws = [ 'f', 'c2', 'b1', 'e', 'g', 'd', 'a0' ];
     var expectedUpContinueNode = [ true, true, true, true, true, true, true ];
     var expectedUpContinueUp = [ true, true, true, true, true, true, true ];
     var expectedUpVisited = [ false, false, false, false, false, false, false ];
     var expectedDownContinueNode = [ true, true, true, true, true, true, true ];
     var expectedDownContinueUp = [ true, true, true, true, true, true, true ];
     var expectedDownVisited = [ false, false, false, false, false, false, false ];
-    var expectedVisited = new Set([ 'a', 'd', 'e', 'f', 'g', 'b1', 'c1', 'b2', 'c2' ])
+    var expectedVisited = new Set([ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'b2', 'c2' ])
+    var expectedResult =
+    [
+      new Set([ 'a0' ]),
+      new Set([ 'd', 'g' ]),
+      new Set([ 'e', 'b1', 'c2' ]),
+      new Set([ 'f' ]),
+      new Set([])
+    ]
+    var expectedLogStr =
+`
+up a0
+ up d
+ up g
+   up e
+   up b1
+   up c2
+     up f
+     down f
+   down c2
+   down b1
+   down e
+ down g
+ down d
+down a0
+`
 
     test.identical( group.nodesToNames( nds ), expectedNds );
     test.identical( group.nodesToNames( ups ), expectedUps );
@@ -4646,7 +6062,9 @@ function lookBfsJunctions( test )
     test.identical( downContinueNode, expectedDownContinueNode );
     test.identical( downContinueUp, expectedDownContinueUp );
     test.identical( downVisited, expectedDownVisited );
+    test.identical( gotResult.map( ( nodes ) => group.nodesToNames( nodes ) ), expectedResult );
     test.identical( o2.visitedContainer.map( ( node ) => group.nodeToName( node ) ).original, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
 
     /* - */
 
@@ -4655,25 +6073,50 @@ function lookBfsJunctions( test )
     clean();
     var o2 =
     {
-      roots : [ gr.a ],
+      roots : [ gr.a0, gr.a0, gr.a1 ],
       onUp : onUp,
       onDown : onDown,
       onNode : onNode,
       fast : o.fast,
       revisiting : 1,
     }
-    group.lookBfs( o2 );
+    var gotResult = group.lookBfs( o2 );
 
-    var expectedNds = [ 'a', 'd', 'g', 'e', 'b1', 'c2', 'f' ];
-    var expectedUps = [ 'a', 'd', 'g', 'e', 'b1', 'c2', 'f' ];
-    var expectedDws = [ 'f', 'c2', 'b1', 'e', 'g', 'd', 'a' ];
+    var expectedNds = [ 'a0', 'd', 'g', 'e', 'b1', 'c2', 'f' ];
+    var expectedUps = [ 'a0', 'd', 'g', 'e', 'b1', 'c2', 'f' ];
+    var expectedDws = [ 'f', 'c2', 'b1', 'e', 'g', 'd', 'a0' ];
     var expectedUpContinueNode = [ true, true, true, true, true, true, true ];
     var expectedUpContinueUp = [ true, true, true, true, true, true, true ];
     var expectedUpVisited = [ false, false, false, false, false, false, false ];
     var expectedDownContinueNode = [ true, true, true, true, true, true, true ];
     var expectedDownContinueUp = [ true, true, true, true, true, true, true ];
     var expectedDownVisited = [ false, false, false, false, false, false, false ];
-    var expectedVisited = new Set([ 'a', 'd', 'e', 'f', 'g', 'b1', 'c1', 'b2', 'c2' ])
+    var expectedVisited = new Set([ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'b2', 'c2' ])
+    var expectedResult =
+    [
+      new Set([ 'a0' ]),
+      new Set([ 'd', 'g' ]),
+      new Set([ 'e', 'b1', 'c2' ]),
+      new Set([ 'f' ]),
+      new Set([])
+    ]
+    var expectedLogStr =
+`
+up a0
+ up d
+ up g
+   up e
+   up b1
+   up c2
+     up f
+     down f
+   down c2
+   down b1
+   down e
+ down g
+ down d
+down a0
+`
 
     test.identical( group.nodesToNames( nds ), expectedNds );
     test.identical( group.nodesToNames( ups ), expectedUps );
@@ -4684,7 +6127,9 @@ function lookBfsJunctions( test )
     test.identical( downContinueNode, expectedDownContinueNode );
     test.identical( downContinueUp, expectedDownContinueUp );
     test.identical( downVisited, expectedDownVisited );
+    test.identical( gotResult.map( ( nodes ) => group.nodesToNames( nodes ) ), expectedResult );
     test.identical( o2.visitedContainer.map( ( node ) => group.nodeToName( node ) ).original, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
 
     /* - */
 
@@ -4693,25 +6138,58 @@ function lookBfsJunctions( test )
     clean();
     var o2 =
     {
-      roots : [ gr.a ],
+      roots : [ gr.a0, gr.a0, gr.a1 ],
       onUp : onUp,
       onDown : onDown,
       onNode : onNode,
       fast : o.fast,
       revisiting : 2,
     }
-    group.lookBfs( o2 );
+    var gotResult = group.lookBfs( o2 );
 
-    var expectedNds = [ 'a', 'd', 'g', 'e', 'b1', 'c2', 'f', 'c1', 'b2', 'd' ];
-    var expectedUps = [ 'a', 'd', 'g', 'e', 'b1', 'c2', 'f', 'c1', 'b2', 'd' ];
-    var expectedDws = [ 'd', 'b2', 'c1', 'f', 'c2', 'b1', 'e', 'g', 'd', 'a' ];
-    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true ];
-    var expectedUpContinueUp = [ true, true, true, true, true, true, true, true, true, true ]
-    var expectedUpVisited = [ 0, 0, 0, 0, 0, 0, 0, 1, 1, 1 ];
-    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true ];
-    var expectedDownContinueUp = [ true, true, true, true, true, true, true, true, true, true ];
-    var expectedDownVisited = [ 1, 1, 1, 0, 0, 0, 0, 0, 0, 0 ];
-    var expectedVisited = [ 'a', 'd', 'g', 'e', 'b1', 'c2', 'f', 'c1', 'b2', 'd' ];
+    var expectedNds = [ 'a0', 'd', 'g', 'e', 'b1', 'c2', 'g', 'f', 'c1', 'b2', 'd' ];
+    var expectedUps = [ 'a0', 'd', 'g', 'e', 'b1', 'c2', 'g', 'f', 'c1', 'b2', 'd' ];
+    var expectedDws = [ 'd', 'b2', 'c1', 'f', 'g', 'c2', 'b1', 'e', 'g', 'd', 'a0' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, true, false, true, false, false, false ];
+    var expectedUpVisited = [ 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1 ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ false, false, false, true, false, true, true, true, true, true, true ];
+    var expectedDownVisited = [ 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0 ];
+    var expectedVisited = [ 'a0', 'd', 'g', 'e', 'b1', 'c2', 'f', 'c1', 'b2' ];
+    var expectedResult =
+    [
+      new Set([ 'a0' ]),
+      new Set([ 'd', 'g' ]),
+      new Set([ 'e', 'b1', 'c2', 'g' ]),
+      new Set([ 'f', 'c1', 'b2' ]),
+      new Set([ 'd' ])
+    ]
+    var expectedLogStr =
+`
+up a0
+ up d
+ up g
+   up e
+   up b1
+   up c2
+   up g
+     up f
+     up c1
+     up b2
+       up d
+       down d
+     down b2
+     down c1
+     down f
+   down g
+   down c2
+   down b1
+   down e
+ down g
+ down d
+down a0
+`
 
     test.identical( group.nodesToNames( nds ), expectedNds );
     test.identical( group.nodesToNames( ups ), expectedUps );
@@ -4723,6 +6201,89 @@ function lookBfsJunctions( test )
     test.identical( downContinueUp, expectedDownContinueUp );
     test.identical( downVisited, expectedDownVisited );
     test.identical( o2.visitedContainer.map( ( node ) => group.nodeToName( node ) ).original, expectedVisited );
+    test.identical( gotResult.map( ( nodes ) => group.nodesToNames( nodes ) ), expectedResult );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.case = 'revisiting : 3';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a0, gr.a0, gr.a1 ],
+      onUp : onUp2,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 3,
+    }
+    var gotResult = group.lookBfs( o2 );
+
+    var expectedNds = [ 'a0', 'd', 'g', 'e', 'b1', 'c2', 'g', 'f', 'c1', 'b2', 'g', 'd', 'b1', 'c1', 'g' ];
+    var expectedUps = [ 'a0', 'd', 'g', 'e', 'b1', 'c2', 'g', 'f', 'c1', 'b2', 'g', 'd', 'b1', 'c1', 'g' ];
+    var expectedDws = [ 'g', 'c1', 'b1', 'd', 'g', 'b2', 'c1', 'f', 'g', 'c2', 'b1', 'e', 'g', 'd', 'a0' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ false, false, false, false, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownVisited = [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedVisited = null;
+    var expectedResult =
+    [
+      new Set([ 'a0' ]),
+      new Set([ 'd', 'g' ]),
+      new Set([ 'e', 'b1', 'c2', 'g' ]),
+      new Set([ 'f', 'c1', 'b2', 'g' ]),
+      new Set([ 'd', 'b1', 'c1', 'g' ])
+    ]
+    var expectedLogStr =
+`
+up a0
+ up d
+ up g
+   up e
+   up b1
+   up c2
+   up g
+     up f
+     up c1
+     up b2
+     up g
+       up d
+       up b1
+       up c1
+       up g
+       down g
+       down c1
+       down b1
+       down d
+     down g
+     down b2
+     down c1
+     down f
+   down g
+   down c2
+   down b1
+   down e
+ down g
+ down d
+down a0
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer, expectedVisited );
+    test.identical( gotResult.map( ( nodes ) => group.nodesToNames( nodes ) ), expectedResult );
+    test.equivalent( logStr, expectedLogStr );
 
     /* - */
 
@@ -4731,8 +6292,16 @@ function lookBfsJunctions( test )
 
   /* - */
 
+  function log( srcStr )
+  {
+    _.assert( arguments.length === 1 );
+    logStr += srcStr + '\n';
+    /* logger.log( srcStr ); */
+  }
+
   function clean()
   {
+    logStr = '\n';
     ups = [];
     dws = [];
     nds = [];
@@ -4751,7 +6320,7 @@ function lookBfsJunctions( test )
 
   function onUp( node, it )
   {
-    logger.log( _.strDup( '  ', it.level ), 'up', node.name );
+    log( _.strDup( '  ', it.level ) + ' up ' + node.name );
     upContinueNode.push( it.continueNode );
     upContinueUp.push( it.continueUp );
     upVisited.push( it.visited );
@@ -4760,14 +6329,1249 @@ function lookBfsJunctions( test )
 
   function onDown( node, it )
   {
-    logger.log( _.strDup( '  ', it.level ), 'down', node.name );
+    log( _.strDup( '  ', it.level ) + ' down ' + node.name );
     downContinueNode.push( it.continueNode );
     downContinueUp.push( it.continueUp );
     downVisited.push( it.visited );
     dws.push( node );
   }
 
+  function onUp2( node, it )
+  {
+    onUp( node, it );
+    if( it.level >= 4 )
+    {
+      debugger;
+      it.continueUp = false;
+    }
+  }
+
 } /* end of function lookBfsJunctions */
+
+//
+
+function lookBfsJunctionsAllVariants0( test )
+{
+  let context = this;
+  let ups = [];
+  let dws = [];
+  let nds = [];
+  let upContinueNode = [];
+  let downContinueNode = [];
+  let upContinueUp = [];
+  let downContinueUp = [];
+  let upVisited = [];
+  let downVisited = [];
+  let logStr = '';
+
+  test.description = 'setup cycledJunctions5';
+  var gr = context.cycledJunctions5();
+  var group = gr.sys.nodesGroup();
+
+  run({ fast : 1 });
+  run({ fast : 0 });
+
+  /* - */
+
+  gr.sys.finit();
+
+  function run( o )
+  {
+
+    test.open( 'fast : ' + o.fast );
+
+    /* - */
+
+    test.case = 'revisiting : 0';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a0, gr.a0, gr.a1 ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 0,
+      allVariants : 0,
+    }
+    var gotResult = group.lookBfs( o2 );
+
+    var expectedNds = [ 'a0', 'd', 'g', 'e', 'b1', 'c2', 'f' ];
+    var expectedUps = [ 'a0', 'd', 'g', 'e', 'b1', 'c2', 'f' ];
+    var expectedDws = [ 'f', 'c2', 'b1', 'e', 'g', 'd', 'a0' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, true, true ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ true, true, true, true, true, true, true ];
+    var expectedDownVisited = [ false, false, false, false, false, false, false ];
+    var expectedVisited = new Set([ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'b2', 'c2' ])
+    var expectedResult =
+    [
+      new Set([ 'a0' ]),
+      new Set([ 'd', 'g' ]),
+      new Set([ 'e', 'b1', 'c2' ]),
+      new Set([ 'f' ]),
+      new Set([])
+    ]
+    var expectedLogStr =
+`
+up a0
+ up d
+ up g
+   up e
+   up b1
+   up c2
+     up f
+     down f
+   down c2
+   down b1
+   down e
+ down g
+ down d
+down a0
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( gotResult.map( ( nodes ) => group.nodesToNames( nodes ) ), expectedResult );
+    test.identical( o2.visitedContainer.map( ( node ) => group.nodeToName( node ) ).original, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.case = 'revisiting : 1';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a0, gr.a0, gr.a1 ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 1,
+      allVariants : 0,
+    }
+    var gotResult = group.lookBfs( o2 );
+
+    var expectedNds = [ 'a0', 'd', 'g', 'e', 'b1', 'c2', 'f' ];
+    var expectedUps = [ 'a0', 'd', 'g', 'e', 'b1', 'c2', 'f' ];
+    var expectedDws = [ 'f', 'c2', 'b1', 'e', 'g', 'd', 'a0' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, true, true ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ true, true, true, true, true, true, true ];
+    var expectedDownVisited = [ false, false, false, false, false, false, false ];
+    var expectedVisited = new Set([ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'b2', 'c2' ])
+    var expectedResult =
+    [
+      new Set([ 'a0' ]),
+      new Set([ 'd', 'g' ]),
+      new Set([ 'e', 'b1', 'c2' ]),
+      new Set([ 'f' ]),
+      new Set([])
+    ]
+    var expectedLogStr =
+`
+up a0
+ up d
+ up g
+   up e
+   up b1
+   up c2
+     up f
+     down f
+   down c2
+   down b1
+   down e
+ down g
+ down d
+down a0
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( gotResult.map( ( nodes ) => group.nodesToNames( nodes ) ), expectedResult );
+    test.identical( o2.visitedContainer.map( ( node ) => group.nodeToName( node ) ).original, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.case = 'revisiting : 2';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a0, gr.a0, gr.a1 ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 2,
+      allVariants : 0,
+    }
+    var gotResult = group.lookBfs( o2 );
+
+    var expectedNds = [ 'a0', 'd', 'g', 'e', 'b1', 'c2', 'g', 'f', 'c1', 'b2', 'd' ];
+    var expectedUps = [ 'a0', 'd', 'g', 'e', 'b1', 'c2', 'g', 'f', 'c1', 'b2', 'd' ];
+    var expectedDws = [ 'd', 'b2', 'c1', 'f', 'g', 'c2', 'b1', 'e', 'g', 'd', 'a0' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, true, false, true, false, false, false ];
+    var expectedUpVisited = [ 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1 ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ false, false, false, true, false, true, true, true, true, true, true ];
+    var expectedDownVisited = [ 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0 ];
+    var expectedVisited = [ 'a0', 'd', 'g', 'e', 'b1', 'c2', 'f', 'c1', 'b2' ];
+    var expectedResult =
+    [
+      new Set([ 'a0' ]),
+      new Set([ 'd', 'g' ]),
+      new Set([ 'e', 'b1', 'c2', 'g' ]),
+      new Set([ 'f', 'c1', 'b2' ]),
+      new Set([ 'd' ])
+    ]
+    var expectedLogStr =
+`
+up a0
+ up d
+ up g
+   up e
+   up b1
+   up c2
+   up g
+     up f
+     up c1
+     up b2
+       up d
+       down d
+     down b2
+     down c1
+     down f
+   down g
+   down c2
+   down b1
+   down e
+ down g
+ down d
+down a0
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer.map( ( node ) => group.nodeToName( node ) ).original, expectedVisited );
+    test.identical( gotResult.map( ( nodes ) => group.nodesToNames( nodes ) ), expectedResult );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.case = 'revisiting : 3';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a0, gr.a0, gr.a1 ],
+      onUp : onUp2,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 3,
+      allVariants : 0,
+    }
+    var gotResult = group.lookBfs( o2 );
+
+    var expectedNds = [ 'a0', 'd', 'g', 'e', 'b1', 'c2', 'g', 'f', 'c1', 'b2', 'g', 'd', 'b1', 'c1', 'g' ];
+    var expectedUps = [ 'a0', 'd', 'g', 'e', 'b1', 'c2', 'g', 'f', 'c1', 'b2', 'g', 'd', 'b1', 'c1', 'g' ];
+    var expectedDws = [ 'g', 'c1', 'b1', 'd', 'g', 'b2', 'c1', 'f', 'g', 'c2', 'b1', 'e', 'g', 'd', 'a0' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ false, false, false, false, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownVisited = [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedVisited = null;
+    var expectedResult =
+    [
+      new Set([ 'a0' ]),
+      new Set([ 'd', 'g' ]),
+      new Set([ 'e', 'b1', 'c2', 'g' ]),
+      new Set([ 'f', 'c1', 'b2', 'g' ]),
+      new Set([ 'd', 'b1', 'c1', 'g' ])
+    ]
+    var expectedLogStr =
+`
+up a0
+ up d
+ up g
+   up e
+   up b1
+   up c2
+   up g
+     up f
+     up c1
+     up b2
+     up g
+       up d
+       up b1
+       up c1
+       up g
+       down g
+       down c1
+       down b1
+       down d
+     down g
+     down b2
+     down c1
+     down f
+   down g
+   down c2
+   down b1
+   down e
+ down g
+ down d
+down a0
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer, expectedVisited );
+    test.identical( gotResult.map( ( nodes ) => group.nodesToNames( nodes ) ), expectedResult );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.close( 'fast : ' + o.fast );
+  }
+
+  /* - */
+
+  function log( srcStr )
+  {
+    _.assert( arguments.length === 1 );
+    logStr += srcStr + '\n';
+    /* logger.log( srcStr ); */
+  }
+
+  function clean()
+  {
+    logStr = '\n';
+    ups = [];
+    dws = [];
+    nds = [];
+    upContinueNode = [];
+    downContinueNode = [];
+    upContinueUp = [];
+    downContinueUp = [];
+    upVisited = [];
+    downVisited = [];
+  }
+
+  function onNode( node, it )
+  {
+    nds.push( node );
+  }
+
+  function onUp( node, it )
+  {
+    log( _.strDup( '  ', it.level ) + ' up ' + node.name );
+    upContinueNode.push( it.continueNode );
+    upContinueUp.push( it.continueUp );
+    upVisited.push( it.visited );
+    ups.push( node );
+  }
+
+  function onDown( node, it )
+  {
+    log( _.strDup( '  ', it.level ) + ' down ' + node.name );
+    downContinueNode.push( it.continueNode );
+    downContinueUp.push( it.continueUp );
+    downVisited.push( it.visited );
+    dws.push( node );
+  }
+
+  function onUp2( node, it )
+  {
+    onUp( node, it );
+    if( it.level >= 4 )
+    {
+      debugger;
+      it.continueUp = false;
+    }
+  }
+
+} /* end of function lookBfsJunctionsAllVariants0 */
+
+//
+
+function lookBfsJunctionsAllVariants1( test )
+{
+  let context = this;
+  let ups = [];
+  let dws = [];
+  let nds = [];
+  let upContinueNode = [];
+  let downContinueNode = [];
+  let upContinueUp = [];
+  let downContinueUp = [];
+  let upVisited = [];
+  let downVisited = [];
+  let logStr = '';
+
+  test.description = 'setup cycledJunctions5';
+  var gr = context.cycledJunctions5();
+  var group = gr.sys.nodesGroup();
+
+  run({ fast : 1 });
+  run({ fast : 0 });
+
+  /* - */
+
+  gr.sys.finit();
+
+  function run( o )
+  {
+
+    test.open( 'fast : ' + o.fast );
+
+    /* - */
+
+    test.case = 'revisiting : 0';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a0, gr.a0, gr.a1 ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 0,
+      allVariants : 1,
+    }
+    var gotResult = group.lookBfs( o2 );
+
+    var expectedNds = [ 'a0', 'a1', 'd', 'g', 'e', 'b1', 'c2', 'b2', 'c1', 'f' ];
+    var expectedUps = [ 'a0', 'a1', 'd', 'g', 'e', 'b1', 'c2', 'b2', 'c1', 'f' ];
+    var expectedDws = [ 'f', 'c1', 'b2', 'c2', 'b1', 'e', 'g', 'd', 'a1', 'a0' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false, false, false, false ]
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownVisited = [ false, false, false, false, false, false, false, false, false, false ];
+    var expectedVisited = new Set([ 'a0', 'a1', 'd', 'g', 'e', 'b1', 'c2', 'b2', 'c1', 'f' ]);
+    var expectedResult =
+    [
+      new Set([ 'a0', 'a1' ]),
+      new Set([ 'd', 'g' ]),
+      new Set([ 'e', 'b1', 'c2', 'b2', 'c1' ]),
+      new Set([ 'f' ]),
+      new Set([])
+    ]
+    var expectedLogStr =
+`
+up a0
+up a1
+ up d
+ up g
+   up e
+   up b1
+   up c2
+   up b2
+   up c1
+     up f
+     down f
+   down c1
+   down b2
+   down c2
+   down b1
+   down e
+ down g
+ down d
+down a1
+down a0
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( gotResult.map( ( nodes ) => group.nodesToNames( nodes ) ), expectedResult );
+    test.identical( o2.visitedContainer.map( ( node ) => group.nodeToName( node ) ).original, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.case = 'revisiting : 1';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a0, gr.a0, gr.a1 ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 1,
+      allVariants : 1,
+    }
+    var gotResult = group.lookBfs( o2 );
+
+    var expectedNds = [ 'a0', 'a1', 'd', 'g', 'e', 'b1', 'c2', 'b2', 'c1', 'f' ];
+    var expectedUps = [ 'a0', 'a1', 'd', 'g', 'e', 'b1', 'c2', 'b2', 'c1', 'f' ];
+    var expectedDws = [ 'f', 'c1', 'b2', 'c2', 'b1', 'e', 'g', 'd', 'a1', 'a0' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownVisited = [ false, false, false, false, false, false, false, false, false, false ];
+    var expectedVisited = new Set([ 'a0', 'a1', 'd', 'e', 'f', 'g', 'b1', 'c1', 'b2', 'c2' ])
+    var expectedResult =
+    [
+      new Set([ 'a0', 'a1' ]),
+      new Set([ 'd', 'g' ]),
+      new Set([ 'e', 'b1', 'c2', 'b2', 'c1' ]),
+      new Set([ 'f' ]),
+      new Set([])
+    ]
+    var expectedLogStr =
+`
+up a0
+up a1
+ up d
+ up g
+   up e
+   up b1
+   up c2
+   up b2
+   up c1
+     up f
+     down f
+   down c1
+   down b2
+   down c2
+   down b1
+   down e
+ down g
+ down d
+down a1
+down a0
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( gotResult.map( ( nodes ) => group.nodesToNames( nodes ) ), expectedResult );
+    test.identical( o2.visitedContainer.map( ( node ) => group.nodeToName( node ) ).original, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.case = 'revisiting : 2';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a0, gr.a0, gr.a1 ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 2,
+      allVariants : 1,
+    }
+    var gotResult = group.lookBfs( o2 );
+
+    var expectedNds = [ 'a0', 'a1', 'd', 'g', 'e', 'b1', 'c2', 'g', 'b2', 'c1', 'f', 'c1', 'c2', 'b2', 'b1', 'd' ];
+    var expectedUps = [ 'a0', 'a1', 'd', 'g', 'e', 'b1', 'c2', 'g', 'b2', 'c1', 'f', 'c1', 'c2', 'b2', 'b1', 'd' ];
+    var expectedDws = [ 'd', 'b1', 'b2', 'c2', 'c1', 'f', 'c1', 'b2', 'g', 'c2', 'b1', 'e', 'g', 'd', 'a1', 'a0' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, true, true, false, true, true, true, false, false, false, false, false ]
+    var expectedUpVisited = [ 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 2, 2, 2, 2, 1 ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ false, false, false, false, false, true, true, true, false, true, true, true, true, true, true, true ];
+    var expectedDownVisited = [ 1, 2, 2, 2, 2, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 ];
+    var expectedVisited = [ 'a0', 'a1', 'd', 'g', 'e', 'b1', 'c2', 'b2', 'c1', 'f' ];
+    var expectedResult =
+    [
+      new Set([ 'a0', 'a1' ]),
+      new Set([ 'd', 'g' ]),
+      new Set([ 'e', 'b1', 'c2', 'g', 'b2', 'c1' ]),
+      new Set([ 'f', 'c1', 'c2', 'b2', 'b1' ]),
+      new Set([ 'd' ])
+    ]
+    var expectedLogStr =
+`
+up a0
+up a1
+ up d
+ up g
+   up e
+   up b1
+   up c2
+   up g
+   up b2
+   up c1
+     up f
+     up c1
+     up c2
+     up b2
+     up b1
+       up d
+       down d
+     down b1
+     down b2
+     down c2
+     down c1
+     down f
+   down c1
+   down b2
+   down g
+   down c2
+   down b1
+   down e
+ down g
+ down d
+down a1
+down a0
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( gotResult.map( ( nodes ) => group.nodesToNames( nodes ) ), expectedResult );
+    test.identical( o2.visitedContainer.map( ( node ) => group.nodeToName( node ) ).original, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.case = 'revisiting : 3';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a0, gr.a0, gr.a1 ],
+      onUp : onUp2,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 3,
+      allVariants : 1,
+    }
+    var gotResult = group.lookBfs( o2 );
+
+    var expectedNds = [ 'a0', 'a1', 'd', 'g', 'e', 'b1', 'c2', 'g', 'b2', 'c1', 'f', 'c1', 'c2', 'b2', 'b1', 'g', 'd', 'b1', 'b2', 'c1', 'c2', 'g' ];
+    var expectedUps = [ 'a0', 'a1', 'd', 'g', 'e', 'b1', 'c2', 'g', 'b2', 'c1', 'f', 'c1', 'c2', 'b2', 'b1', 'g', 'd', 'b1', 'b2', 'c1', 'c2', 'g' ];
+    var expectedDws = [ 'g', 'c2', 'c1', 'b2', 'b1', 'd', 'g', 'b1', 'b2', 'c2', 'c1', 'f', 'c1', 'b2', 'g', 'c2', 'b1', 'e', 'g', 'd', 'a1', 'a0' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ false, false, false, false, false, false, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownVisited = [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedVisited = null;
+    var expectedResult =
+    [
+      new Set([ 'a0', 'a1' ]),
+      new Set([ 'd', 'g' ]),
+      new Set([ 'e', 'b1', 'c2', 'g', 'b2', 'c1' ]),
+      new Set([ 'f', 'c1', 'c2', 'b2', 'b1', 'g' ]),
+      new Set([ 'd', 'b1', 'b2', 'c1', 'c2', 'g' ])
+    ]
+    var expectedLogStr =
+`
+up a0
+up a1
+ up d
+ up g
+   up e
+   up b1
+   up c2
+   up g
+   up b2
+   up c1
+     up f
+     up c1
+     up c2
+     up b2
+     up b1
+     up g
+       up d
+       up b1
+       up b2
+       up c1
+       up c2
+       up g
+       down g
+       down c2
+       down c1
+       down b2
+       down b1
+       down d
+     down g
+     down b1
+     down b2
+     down c2
+     down c1
+     down f
+   down c1
+   down b2
+   down g
+   down c2
+   down b1
+   down e
+ down g
+ down d
+down a1
+down a0
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( gotResult.map( ( nodes ) => group.nodesToNames( nodes ) ), expectedResult );
+    test.identical( o2.visitedContainer, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.close( 'fast : ' + o.fast );
+  }
+
+  /* - */
+
+  function log( srcStr )
+  {
+    _.assert( arguments.length === 1 );
+    logStr += srcStr + '\n';
+    /* logger.log( srcStr ); */
+  }
+
+  function clean()
+  {
+    logStr = '\n';
+    ups = [];
+    dws = [];
+    nds = [];
+    upContinueNode = [];
+    downContinueNode = [];
+    upContinueUp = [];
+    downContinueUp = [];
+    upVisited = [];
+    downVisited = [];
+  }
+
+  function onNode( node, it )
+  {
+    nds.push( node );
+  }
+
+  function onUp( node, it )
+  {
+    log( _.strDup( '  ', it.level ) + ' up ' + node.name );
+    upContinueNode.push( it.continueNode );
+    upContinueUp.push( it.continueUp );
+    upVisited.push( it.visited );
+    ups.push( node );
+  }
+
+  function onDown( node, it )
+  {
+    log( _.strDup( '  ', it.level ) + ' down ' + node.name );
+    downContinueNode.push( it.continueNode );
+    downContinueUp.push( it.continueUp );
+    downVisited.push( it.visited );
+    dws.push( node );
+  }
+
+  function onUp2( node, it )
+  {
+    onUp( node, it );
+    if( it.level >= 4 )
+    {
+      debugger;
+      it.continueUp = false;
+    }
+  }
+
+} /* end of function lookBfsJunctionsAllVariants1 */
+
+//
+
+function lookBfsJunctionsAllVariants2( test )
+{
+  let context = this;
+  let ups = [];
+  let dws = [];
+  let nds = [];
+  let upContinueNode = [];
+  let downContinueNode = [];
+  let upContinueUp = [];
+  let downContinueUp = [];
+  let upVisited = [];
+  let downVisited = [];
+  let logStr = '';
+
+  test.description = 'setup cycledJunctions5';
+  var gr = context.cycledJunctions5();
+  var group = gr.sys.nodesGroup();
+
+/*
+qqq : replace all [ gr.a0, gr.a0, gr.a1 ] -> [ gr.a0, gr.a0, gr.a1, gr.a1 ]
+*/
+
+  run({ fast : 1 });
+  run({ fast : 0 });
+
+  /* - */
+
+  gr.sys.finit();
+
+  function run( o )
+  {
+
+    test.open( 'fast : ' + o.fast );
+
+    /* - */
+
+    test.case = 'revisiting : 0';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a0, gr.a0, gr.a1 ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 0,
+      allVariants : 2,
+    }
+    var gotResult = group.lookBfs( o2 );
+
+    var expectedNds = [ 'a0', 'a1', 'd', 'g', 'e', 'b1', 'c2', 'b2', 'c1', 'f' ];
+    var expectedUps = [ 'a0', 'a1', 'd', 'g', 'e', 'b1', 'c2', 'b2', 'c1', 'f' ];
+    var expectedDws = [ 'f', 'c1', 'b2', 'c2', 'b1', 'e', 'g', 'd', 'a1', 'a0' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownVisited = [ false, false, false, false, false, false, false, false, false, false ];
+    var expectedVisited = new Set([ 'a0', 'a1', 'd', 'g', 'e', 'b1', 'c2', 'b2', 'c1', 'f' ]);
+    var expectedResult =
+    [
+      new Set([ 'a0', 'a1' ]),
+      new Set([ 'd', 'g' ]),
+      new Set([ 'e', 'b1', 'c2', 'b2', 'c1' ]),
+      new Set([ 'f' ]),
+      new Set([])
+    ]
+    var expectedLogStr =
+`
+up a0
+up a1
+ up d
+ up g
+   up e
+   up b1
+   up c2
+   up b2
+   up c1
+     up f
+     down f
+   down c1
+   down b2
+   down c2
+   down b1
+   down e
+ down g
+ down d
+down a1
+down a0
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( gotResult.map( ( nodes ) => group.nodesToNames( nodes ) ), expectedResult );
+    test.identical( o2.visitedContainer.map( ( node ) => group.nodeToName( node ) ).original, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.case = 'revisiting : 1';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a0, gr.a0, gr.a1 ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 1,
+      allVariants : 2,
+    }
+    var gotResult = group.lookBfs( o2 );
+
+    var expectedNds = [ 'a0', 'a1', 'd', 'g', 'e', 'b1', 'c2', 'b2', 'c1', 'f' ];
+    var expectedUps = [ 'a0', 'a1', 'd', 'g', 'e', 'b1', 'c2', 'b2', 'c1', 'f' ];
+    var expectedDws = [ 'f', 'c1', 'b2', 'c2', 'b1', 'e', 'g', 'd', 'a1', 'a0' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownVisited = [ false, false, false, false, false, false, false, false, false, false ];
+    var expectedVisited = new Set([ 'a0', 'a1', 'd', 'e', 'f', 'g', 'b1', 'c1', 'b2', 'c2' ])
+    var expectedResult =
+    [
+      new Set([ 'a0', 'a1' ]),
+      new Set([ 'd', 'g' ]),
+      new Set([ 'e', 'b1', 'c2', 'b2', 'c1' ]),
+      new Set([ 'f' ]),
+      new Set([])
+    ]
+    var expectedLogStr =
+`
+up a0
+up a1
+ up d
+ up g
+   up e
+   up b1
+   up c2
+   up b2
+   up c1
+     up f
+     down f
+   down c1
+   down b2
+   down c2
+   down b1
+   down e
+ down g
+ down d
+down a1
+down a0
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( gotResult.map( ( nodes ) => group.nodesToNames( nodes ) ), expectedResult );
+    test.identical( o2.visitedContainer.map( ( node ) => group.nodeToName( node ) ).original, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.case = 'revisiting : 2';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a0, gr.a0, gr.a1 ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 2,
+      allVariants : 2,
+    }
+    var gotResult = group.lookBfs( o2 );
+
+    var expectedNds = [ 'a0', 'a1', 'd', 'g', 'e', 'b1', 'c2', 'g', 'b2', 'c1', 'f', 'c1', 'c2', 'b2', 'b1', 'd' ];
+    var expectedUps = [ 'a0', 'a1', 'd', 'g', 'e', 'b1', 'c2', 'g', 'b2', 'c1', 'f', 'c1', 'c2', 'b2', 'b1', 'd' ];
+    var expectedDws = [ 'd', 'b1', 'b2', 'c2', 'c1', 'f', 'c1', 'b2', 'g', 'c2', 'b1', 'e', 'g', 'd', 'a1', 'a0' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, true, true, false, true, true, true, false, false, false, false, false ];
+    var expectedUpVisited = [ 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 2, 2, 2, 2, 1 ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ false, false, false, false, false, true, true, true, false, true, true, true, true, true, true, true ];
+    var expectedDownVisited = [ 1, 2, 2, 2, 2, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 ];
+    var expectedVisited = [ 'a0', 'a1', 'd', 'g', 'e', 'b1', 'c2', 'b2', 'c1', 'f' ];
+    var expectedResult =
+    [
+      new Set([ 'a0', 'a1' ]),
+      new Set([ 'd', 'g' ]),
+      new Set([ 'e', 'b1', 'c2', 'g', 'b2', 'c1' ]),
+      new Set([ 'f', 'c1', 'c2', 'b2', 'b1' ]),
+      new Set([ 'd' ])
+    ]
+    var expectedLogStr =
+`
+up a0
+up a1
+ up d
+ up g
+   up e
+   up b1
+   up c2
+   up g
+   up b2
+   up c1
+     up f
+     up c1
+     up c2
+     up b2
+     up b1
+       up d
+       down d
+     down b1
+     down b2
+     down c2
+     down c1
+     down f
+   down c1
+   down b2
+   down g
+   down c2
+   down b1
+   down e
+ down g
+ down d
+down a1
+down a0
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( gotResult.map( ( nodes ) => group.nodesToNames( nodes ) ), expectedResult );
+    test.identical( o2.visitedContainer.map( ( node ) => group.nodeToName( node ) ).original, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.case = 'revisiting : 3';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a0, gr.a0, gr.a1 ],
+      onUp : onUp2,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 3,
+      allVariants : 2,
+    }
+    var gotResult = group.lookBfs( o2 );
+
+    var expectedNds = [ 'a0', 'a1', 'd', 'g', 'e', 'b1', 'c2', 'g', 'b2', 'c1', 'f', 'c1', 'c2', 'b2', 'b1', 'g', 'd', 'b1', 'b2', 'c1', 'c2', 'g' ];
+    var expectedUps = [ 'a0', 'a1', 'd', 'g', 'e', 'b1', 'c2', 'g', 'b2', 'c1', 'f', 'c1', 'c2', 'b2', 'b1', 'g', 'd', 'b1', 'b2', 'c1', 'c2', 'g' ];
+    var expectedDws = [ 'g', 'c2', 'c1', 'b2', 'b1', 'd', 'g', 'b1', 'b2', 'c2', 'c1', 'f', 'c1', 'b2', 'g', 'c2', 'b1', 'e', 'g', 'd', 'a1', 'a0' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ false, false, false, false, false, false, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownVisited = [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedVisited = null;
+    var expectedResult =
+    [
+      new Set([ 'a0', 'a1' ]),
+      new Set([ 'd', 'g' ]),
+      new Set([ 'e', 'b1', 'c2', 'g', 'b2', 'c1' ]),
+      new Set([ 'f', 'c1', 'c2', 'b2', 'b1', 'g' ]),
+      new Set([ 'd', 'b1', 'b2', 'c1', 'c2', 'g' ])
+    ]
+    var expectedLogStr =
+`
+up a0
+up a1
+ up d
+ up g
+   up e
+   up b1
+   up c2
+   up g
+   up b2
+   up c1
+     up f
+     up c1
+     up c2
+     up b2
+     up b1
+     up g
+       up d
+       up b1
+       up b2
+       up c1
+       up c2
+       up g
+       down g
+       down c2
+       down c1
+       down b2
+       down b1
+       down d
+     down g
+     down b1
+     down b2
+     down c2
+     down c1
+     down f
+   down c1
+   down b2
+   down g
+   down c2
+   down b1
+   down e
+ down g
+ down d
+down a1
+down a0
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( gotResult.map( ( nodes ) => group.nodesToNames( nodes ) ), expectedResult );
+    test.identical( o2.visitedContainer, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.close( 'fast : ' + o.fast );
+  }
+
+  /* - */
+
+  function log( srcStr )
+  {
+    _.assert( arguments.length === 1 );
+    logStr += srcStr + '\n';
+    /* logger.log( srcStr ); */
+  }
+
+  function clean()
+  {
+    logStr = '\n';
+    ups = [];
+    dws = [];
+    nds = [];
+    upContinueNode = [];
+    downContinueNode = [];
+    upContinueUp = [];
+    downContinueUp = [];
+    upVisited = [];
+    downVisited = [];
+  }
+
+  function onNode( node, it )
+  {
+    nds.push( node );
+  }
+
+  function onUp( node, it )
+  {
+    log( _.strDup( '  ', it.level ) + ' up ' + node.name );
+    upContinueNode.push( it.continueNode );
+    upContinueUp.push( it.continueUp );
+    upVisited.push( it.visited );
+    ups.push( node );
+  }
+
+  function onDown( node, it )
+  {
+    log( _.strDup( '  ', it.level ) + ' down ' + node.name );
+    downContinueNode.push( it.continueNode );
+    downContinueUp.push( it.continueUp );
+    downVisited.push( it.visited );
+    dws.push( node );
+  }
+
+  function onUp2( node, it )
+  {
+    onUp( node, it );
+    if( it.level >= 4 )
+    {
+      debugger;
+      it.continueUp = false;
+    }
+  }
+
+} /* end of function lookBfsJunctionsAllVariants2 */
 
 //
 
@@ -5946,18 +8750,12 @@ function lookDfsRevisitingTrivial( test )
   {
     if( it.level >= 2 )
     it.continueUp = false;
-    upContinueNode.push( it.continueNode );
-    upContinueUp.push( it.continueUp );
-    upVisited.push( it.visited );
-    ups.push( node );
+    onUp( node, it );
   }
 
   function onDown2( node, it )
   {
-    downContinueNode.push( it.continueNode );
-    downContinueUp.push( it.continueUp );
-    downVisited.push( it.visited );
-    dws.push( node );
+    onDown( node, it );
   }
 
   function onNode3( node, it )
@@ -5969,36 +8767,35 @@ function lookDfsRevisitingTrivial( test )
   {
     if( it.level >= 3 )
     it.continueUp = false;
-    upContinueNode.push( it.continueNode );
-    upContinueUp.push( it.continueUp );
-    upVisited.push( it.visited );
-    ups.push( node );
+    onUp( node, it );
   }
 
   function onDown3( node, it )
   {
-    downContinueNode.push( it.continueNode );
-    downContinueUp.push( it.continueUp );
-    downVisited.push( it.visited );
-    dws.push( node );
+    onDown( node, it );
   }
 
 } /* end of lookDfsRevisitingTrivial */
 
 //
 
+/*
+qqq : use graph cycled0Scc in look*RepeatsRoots* tests
+*/
+
 function lookDfsRepeatsRoots( test )
 {
   let context = this;
-  var ups = [];
-  var dws = [];
-  var nds = [];
-  var upContinueNode = [];
-  var downContinueNode = [];
-  var upContinueUp = [];
-  var downContinueUp = [];
-  var upVisited = [];
-  var downVisited = [];
+  let ups = [];
+  let dws = [];
+  let nds = [];
+  let upContinueNode = [];
+  let downContinueNode = [];
+  let upContinueUp = [];
+  let downContinueUp = [];
+  let upVisited = [];
+  let downVisited = [];
+  let logStr = '';
 
   test.description = 'setup';
   var gr = context.cycled1Scc();
@@ -6021,15 +8818,16 @@ function lookDfsRepeatsRoots( test )
     test.case = 'revisiting : 0';
 
     clean();
-    group.lookDfs
-    ({
+    var o2 =
+    {
       roots : [ gr.a, gr.a, gr.c, gr.c ],
       onUp : onUp,
       onDown : onDown,
       onNode : onNode,
       fast : o.fast,
       revisiting : 0,
-    });
+    }
+    var gotResult = group.lookDfs( o2 );
 
     var expectedNds = [ 'a', 'b', 'c' ];
     var expectedUps = [ 'a', 'b', 'c' ];
@@ -6040,6 +8838,16 @@ function lookDfsRepeatsRoots( test )
     var expectedDownContinueNode = [ true, true, true ];
     var expectedDownContinueUp = [ true, true, true ];
     var expectedDownVisited = [ false, false, false ];
+    var expectedVisited = new Set([ 'a', 'b', 'c' ]);
+    var expectedLogStr =
+`
+up a
+ up b
+ down b
+ up c
+ down c
+down a
+`
 
     test.identical( group.nodesToNames( nds ), expectedNds );
     test.identical( group.nodesToNames( ups ), expectedUps );
@@ -6050,31 +8858,46 @@ function lookDfsRepeatsRoots( test )
     test.identical( downContinueNode, expectedDownContinueNode );
     test.identical( downContinueUp, expectedDownContinueUp );
     test.identical( downVisited, expectedDownVisited );
+    test.identical( group.nodesToNames( o2.visitedContainer ).original, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
 
     /* - */
 
     test.case = 'revisiting : 1';
 
     clean();
-    group.lookDfs
-    ({
+    var o2 =
+    {
       roots : [ gr.a, gr.a, gr.c, gr.c ],
       onUp : onUp,
       onDown : onDown,
       onNode : onNode,
       fast : o.fast,
       revisiting : 1,
-    });
+    }
+    var gotResult = group.lookDfs( o2 );
 
-    var expectedNds = [ 'a', 'b', 'c', 'a', 'b', 'c', 'c', 'c' ];
-    var expectedUps = [ 'a', 'b', 'c', 'a', 'b', 'c', 'c', 'c' ];
-    var expectedDws = [ 'b', 'c', 'a', 'b', 'c', 'a', 'c', 'c' ];
-    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true ];
-    var expectedUpContinueUp = [ true, true, true, true, true, true, true, true ];
-    var expectedUpVisited = [ false, false, false, false, false, false, false, false ];
-    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true ];
-    var expectedDownContinueUp = [ true, true, true, true, true, true, true, true ];
-    var expectedDownVisited = [ false, false, false, false, false, false, false, false ];
+    var expectedNds = [ 'a', 'b', 'c', 'c' ];
+    var expectedUps = [ 'a', 'b', 'c', 'c' ];
+    var expectedDws = [ 'b', 'c', 'a', 'c' ];
+    var expectedUpContinueNode = [ true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true ];
+    var expectedUpVisited = [ false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true ];
+    var expectedDownContinueUp = [ true, true, true, true ];
+    var expectedDownVisited = [ false, false, false, false ];
+    var expectedVisited = new Set([]);
+    var expectedLogStr =
+`
+up a
+ up b
+ down b
+ up c
+ down c
+down a
+up c
+down c
+`
 
     test.identical( group.nodesToNames( nds ), expectedNds );
     test.identical( group.nodesToNames( ups ), expectedUps );
@@ -6085,31 +8908,48 @@ function lookDfsRepeatsRoots( test )
     test.identical( downContinueNode, expectedDownContinueNode );
     test.identical( downContinueUp, expectedDownContinueUp );
     test.identical( downVisited, expectedDownVisited );
+    test.identical( group.nodesToNames( o2.visitedContainer ).original, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
 
     /* - */
 
     test.case = 'revisiting : 2';
 
     clean();
-    group.lookDfs
-    ({
+    var o2 =
+    {
       roots : [ gr.a, gr.a, gr.c, gr.c ],
       onUp : onUp,
       onDown : onDown,
       onNode : onNode,
       fast : o.fast,
       revisiting : 2,
-    });
+    }
+    var gotResult = group.lookDfs( o2 );
 
-    var expectedNds = [ 'a', 'b', 'a', 'c', 'a', 'b', 'a', 'c', 'c', 'c' ];
-    var expectedUps = [ 'a', 'b', 'a', 'c', 'a', 'b', 'a', 'c', 'c', 'c' ];
-    var expectedDws = [ 'a', 'b', 'c', 'a', 'a', 'b', 'c', 'a', 'c', 'c' ];
-    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true ];
-    var expectedUpContinueUp = [ true, true, false, true, true, true, false, true, true, true ];
-    var expectedUpVisited = [ false, false, true, false, false, false, true, false, false, false ];
-    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true ];
-    var expectedDownContinueUp = [ false, true, true, true, false, true, true, true, true, true ];
-    var expectedDownVisited = [ true, false, false, false, true, false, false, false, false, false ];
+    var expectedNds = [ 'a', 'b', 'a', 'c', 'c' ];
+    var expectedUps = [ 'a', 'b', 'a', 'c', 'c' ];
+    var expectedDws = [ 'a', 'b', 'c', 'a', 'c' ];
+    var expectedUpContinueNode = [ true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, false, true, true ];
+    var expectedUpVisited = [ false, false, true, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true ];
+    var expectedDownContinueUp = [ false, true, true, true, true ];
+    var expectedDownVisited = [ true, false, false, false, false ];
+    var expectedVisited = [];
+    var expectedLogStr =
+`
+up a
+ up b
+   up a
+   down a
+ down b
+ up c
+ down c
+down a
+up c
+down c
+`
 
     test.identical( group.nodesToNames( nds ), expectedNds );
     test.identical( group.nodesToNames( ups ), expectedUps );
@@ -6120,31 +8960,48 @@ function lookDfsRepeatsRoots( test )
     test.identical( downContinueNode, expectedDownContinueNode );
     test.identical( downContinueUp, expectedDownContinueUp );
     test.identical( downVisited, expectedDownVisited );
+    test.identical( group.nodesToNames( o2.visitedContainer ).original, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
 
     /* - */
 
     test.case = 'revisiting : 3, levels : 0-2';
 
     clean();
-    group.lookDfs
-    ({
+    var o2 =
+    {
       roots : [ gr.a, gr.a, gr.c, gr.c ],
       onUp : onUp2,
-      onDown : onDown2,
-      onNode : onNode2,
+      onDown : onDown,
+      onNode : onNode,
       fast : o.fast,
       revisiting : 3,
-    });
+    }
+    var gotResult = group.lookDfs( o2 );
 
-    var expectedNds = [ 'a', 'b', 'a', 'c', 'a', 'b', 'a', 'c', 'c', 'c' ];
-    var expectedUps = [ 'a', 'b', 'a', 'c', 'a', 'b', 'a', 'c', 'c', 'c' ];
-    var expectedDws = [ 'a', 'b', 'c', 'a', 'a', 'b', 'c', 'a', 'c', 'c' ];
-    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true ];
-    var expectedUpContinueUp = [ true, true, false, true, true, true, false, true, true, true ];
-    var expectedUpVisited = [ false, false, false, false, false, false, false, false, false, false ];
-    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true ];
-    var expectedDownContinueUp = [ false, true, true, true, false, true, true, true, true, true ];
-    var expectedDownVisited = [ false, false, false, false, false, false, false, false, false, false ];
+    var expectedNds = [ 'a', 'b', 'a', 'c', 'c' ];
+    var expectedUps = [ 'a', 'b', 'a', 'c', 'c' ];
+    var expectedDws = [ 'a', 'b', 'c', 'a', 'c' ];
+    var expectedUpContinueNode = [ true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true ];
+    var expectedUpVisited = [ false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true ];
+    var expectedDownContinueUp = [ false, true, true, true, true ];
+    var expectedDownVisited = [ false, false, false, false, false ];
+    var expectedVisited = null;
+    var expectedLogStr =
+`
+up a
+ up b
+   up a
+   down a
+ down b
+ up c
+ down c
+down a
+up c
+down c
+`
 
     test.identical( group.nodesToNames( nds ), expectedNds );
     test.identical( group.nodesToNames( ups ), expectedUps );
@@ -6155,31 +9012,52 @@ function lookDfsRepeatsRoots( test )
     test.identical( downContinueNode, expectedDownContinueNode );
     test.identical( downContinueUp, expectedDownContinueUp );
     test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
 
     /* - */
 
     test.case = 'revisiting : 3, levels : 0-3';
 
     clean();
-    group.lookDfs
-    ({
+    var o2 =
+    {
       roots : [ gr.a, gr.a, gr.c, gr.c ],
       onUp : onUp3,
-      onDown : onDown3,
-      onNode : onNode3,
+      onDown : onDown,
+      onNode : onNode,
       fast : o.fast,
       revisiting : 3,
-    });
+    }
+    var gotResult = group.lookDfs( o2 );
 
-    var expectedNds = [ 'a', 'b', 'a', 'b', 'c', 'c', 'a', 'b', 'a', 'b', 'c', 'c', 'c', 'c' ];
-    var expectedUps = [ 'a', 'b', 'a', 'b', 'c', 'c', 'a', 'b', 'a', 'b', 'c', 'c', 'c', 'c' ];
-    var expectedDws = [ 'b', 'c', 'a', 'b', 'c', 'a', 'b', 'c', 'a', 'b', 'c', 'a', 'c', 'c' ];
-    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
-    var expectedUpContinueUp = [ true, true, true, false, false, true, true, true, true, false, false, true, true, true ];
-    var expectedUpVisited = [ false, false, false, false, false, false, false, false, false, false, false, false, false, false ];
-    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
-    var expectedDownContinueUp = [ false, false, true, true, true, true, false, false, true, true, true, true, true, true ];
-    var expectedDownVisited = [ false, false, false, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedNds = [ 'a', 'b', 'a', 'b', 'c', 'c', 'c' ];
+    var expectedUps = [ 'a', 'b', 'a', 'b', 'c', 'c', 'c' ];
+    var expectedDws = [ 'b', 'c', 'a', 'b', 'c', 'a', 'c' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, true, true ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ false, false, true, true, true, true, true ];
+    var expectedDownVisited = [ false, false, false, false, false, false, false ];
+    var expectedVisited = null;
+    var expectedLogStr =
+`
+up a
+ up b
+   up a
+     up b
+     down b
+     up c
+     down c
+   down a
+ down b
+ up c
+ down c
+down a
+up c
+down c
+`
 
     test.identical( group.nodesToNames( nds ), expectedNds );
     test.identical( group.nodesToNames( ups ), expectedUps );
@@ -6190,10 +9068,19 @@ function lookDfsRepeatsRoots( test )
     test.identical( downContinueNode, expectedDownContinueNode );
     test.identical( downContinueUp, expectedDownContinueUp );
     test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
 
     /* - */
 
     test.close( 'fast : ' + o.fast );
+  }
+
+  function log( srcStr )
+  {
+    _.assert( arguments.length === 1 );
+    logStr += srcStr + '\n';
+    /* logger.log( srcStr ); */
   }
 
   function clean()
@@ -6207,6 +9094,7 @@ function lookDfsRepeatsRoots( test )
     downContinueUp = [];
     upVisited = [];
     downVisited = [];
+    logStr = '\n';
   }
 
   function onNode( node, it )
@@ -6216,6 +9104,7 @@ function lookDfsRepeatsRoots( test )
 
   function onUp( node, it )
   {
+    log( _.strDup( '  ', it.level ) + ' up ' + node.name );
     upContinueNode.push( it.continueNode );
     upContinueUp.push( it.continueUp );
     upVisited.push( it.visited );
@@ -6224,6 +9113,7 @@ function lookDfsRepeatsRoots( test )
 
   function onDown( node, it )
   {
+    log( _.strDup( '  ', it.level ) + ' down ' + node.name );
     downContinueNode.push( it.continueNode );
     downContinueUp.push( it.continueUp );
     downVisited.push( it.visited );
@@ -6237,20 +9127,14 @@ function lookDfsRepeatsRoots( test )
 
   function onUp2( node, it )
   {
+    onUp( node, it );
     if( it.level >= 2 )
     it.continueUp = false;
-    upContinueNode.push( it.continueNode );
-    upContinueUp.push( it.continueUp );
-    upVisited.push( it.visited );
-    ups.push( node );
   }
 
   function onDown2( node, it )
   {
-    downContinueNode.push( it.continueNode );
-    downContinueUp.push( it.continueUp );
-    downVisited.push( it.visited );
-    dws.push( node );
+    onDown( node, it );
   }
 
   function onNode3( node, it )
@@ -6260,45 +9144,40 @@ function lookDfsRepeatsRoots( test )
 
   function onUp3( node, it )
   {
+    onUp( node, it );
     if( it.level >= 3 )
     it.continueUp = false;
-    upContinueNode.push( it.continueNode );
-    upContinueUp.push( it.continueUp );
-    upVisited.push( it.visited );
-    ups.push( node );
   }
 
   function onDown3( node, it )
   {
-    downContinueNode.push( it.continueNode );
-    downContinueUp.push( it.continueUp );
-    downVisited.push( it.visited );
-    dws.push( node );
+    onDown( node, it );
   }
 
 } /* end of lookDfsRepeatsRoots */
 
 //
 
-function lookDfsJunctions( test )
+function lookDfsRepeatsRootsAllSiblings0( test )
 {
   let context = this;
-  var ups = [];
-  var dws = [];
-  var nds = [];
-  var upContinueNode = [];
-  var downContinueNode = [];
-  var upContinueUp = [];
-  var downContinueUp = [];
-  var upVisited = [];
-  var downVisited = [];
+  let ups = [];
+  let dws = [];
+  let nds = [];
+  let upContinueNode = [];
+  let downContinueNode = [];
+  let upContinueUp = [];
+  let downContinueUp = [];
+  let upVisited = [];
+  let downVisited = [];
+  let logStr = '';
 
-  test.description = 'setup cycledJunctions4';
-  var gr = context.cycledJunctions4();
+  test.description = 'setup';
+  var gr = context.cycled1Scc();
   var group = gr.sys.nodesGroup();
 
   run({ fast : 1 });
-  // run({ fast : 0 });
+  run({ fast : 0 });
 
   /* - */
 
@@ -6316,25 +9195,35 @@ function lookDfsJunctions( test )
     clean();
     var o2 =
     {
-      roots : [ gr.a ],
+      roots : [ gr.a, gr.a, gr.c, gr.c ],
       onUp : onUp,
       onDown : onDown,
       onNode : onNode,
       fast : o.fast,
       revisiting : 0,
+      allSiblings : 0,
     }
-    group.lookDfs( o2 );
+    var gotResult = group.lookDfs( o2 );
 
-    var expectedNds = [ 'a', 'd', 'e', 'f', 'g', 'b1', 'c1' ];
-    var expectedUps = [ 'a', 'd', 'e', 'f', 'g', 'b1', 'c1' ];
-    var expectedDws = [ 'f', 'e', 'd', 'c1', 'b1', 'g', 'a' ];
-    var expectedUpContinueNode = [ true, true, true, true, true, true, true ];
-    var expectedUpContinueUp = [ true, true, true, true, true, true, true ];
-    var expectedUpVisited = [ false, false, false, false, false, false, false ];
-    var expectedDownContinueNode = [ true, true, true, true, true, true, true ];
-    var expectedDownContinueUp = [ true, true, true, true, true, true, true ];
-    var expectedDownVisited = [ false, false, false, false, false, false, false ];
-    var expectedVisited = new Set([ 'a', 'd', 'e', 'f', 'g', 'b1', 'c1', 'b2', 'c2' ])
+    var expectedNds = [ 'a', 'b', 'c' ];
+    var expectedUps = [ 'a', 'b', 'c' ];
+    var expectedDws = [ 'b', 'c', 'a' ];
+    var expectedUpContinueNode = [ true, true, true ];
+    var expectedUpContinueUp = [ true, true, true ];
+    var expectedUpVisited = [ false, false, false ];
+    var expectedDownContinueNode = [ true, true, true ];
+    var expectedDownContinueUp = [ true, true, true ];
+    var expectedDownVisited = [ false, false, false ];
+    var expectedVisited = new Set([ 'a', 'b', 'c' ]);
+    var expectedLogStr =
+`
+up a
+ up b
+ down b
+ up c
+ down c
+down a
+`
 
     test.identical( group.nodesToNames( nds ), expectedNds );
     test.identical( group.nodesToNames( ups ), expectedUps );
@@ -6345,7 +9234,8 @@ function lookDfsJunctions( test )
     test.identical( downContinueNode, expectedDownContinueNode );
     test.identical( downContinueUp, expectedDownContinueUp );
     test.identical( downVisited, expectedDownVisited );
-    test.identical( o2.visitedContainer.map( ( node ) => group.nodeToName( node ) ).original, expectedVisited );
+    test.identical( group.nodesToNames( o2.visitedContainer ).original, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
 
     /* - */
 
@@ -6354,25 +9244,37 @@ function lookDfsJunctions( test )
     clean();
     var o2 =
     {
-      roots : [ gr.a ],
+      roots : [ gr.a, gr.a, gr.c, gr.c ],
       onUp : onUp,
       onDown : onDown,
       onNode : onNode,
       fast : o.fast,
       revisiting : 1,
+      allSiblings : 0,
     }
-    group.lookDfs( o2 );
+    var gotResult = group.lookDfs( o2 );
 
-    var expectedNds = [ 'a', 'd', 'e', 'f', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'b1', 'b2', 'c1', 'c2', 'c1', 'b1', 'b2' ];
-    var expectedUps = [ 'a', 'd', 'e', 'f', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'b1', 'b2', 'c1', 'c2', 'c1', 'b1', 'b2' ];
-    var expectedDws = [ 'f', 'e', 'd', 'c1', 'c2', 'b1', 'b2', 'b1', 'c2', 'c1', 'c2', 'b2', 'b1', 'b2', 'c1', 'g', 'a' ];
-    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
-    var expectedUpContinueUp = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
-    var expectedUpVisited = [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ];
-    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
-    var expectedDownContinueUp = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
-    var expectedDownVisited = [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ];
-    var expectedVisited = new Set([])
+    var expectedNds = [ 'a', 'b', 'c', 'c' ];
+    var expectedUps = [ 'a', 'b', 'c', 'c' ];
+    var expectedDws = [ 'b', 'c', 'a', 'c' ];
+    var expectedUpContinueNode = [ true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true ];
+    var expectedUpVisited = [ false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true ];
+    var expectedDownContinueUp = [ true, true, true, true ];
+    var expectedDownVisited = [ false, false, false, false ];
+    var expectedVisited = new Set([]);
+    var expectedLogStr =
+`
+up a
+ up b
+ down b
+ up c
+ down c
+down a
+up c
+down c
+`
 
     test.identical( group.nodesToNames( nds ), expectedNds );
     test.identical( group.nodesToNames( ups ), expectedUps );
@@ -6383,7 +9285,8 @@ function lookDfsJunctions( test )
     test.identical( downContinueNode, expectedDownContinueNode );
     test.identical( downContinueUp, expectedDownContinueUp );
     test.identical( downVisited, expectedDownVisited );
-    test.identical( o2.visitedContainer.map( ( node ) => group.nodeToName( node ) ).original, expectedVisited );
+    test.identical( group.nodesToNames( o2.visitedContainer ).original, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
 
     /* - */
 
@@ -6392,25 +9295,1152 @@ function lookDfsJunctions( test )
     clean();
     var o2 =
     {
-      roots : [ gr.a ],
+      roots : [ gr.a, gr.a, gr.c, gr.c ],
       onUp : onUp,
       onDown : onDown,
       onNode : onNode,
       fast : o.fast,
       revisiting : 2,
+      allSiblings : 0,
+    }
+    var gotResult = group.lookDfs( o2 );
+
+    var expectedNds = [ 'a', 'b', 'a', 'c', 'c' ];
+    var expectedUps = [ 'a', 'b', 'a', 'c', 'c' ];
+    var expectedDws = [ 'a', 'b', 'c', 'a', 'c' ];
+    var expectedUpContinueNode = [ true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, false, true, true ];
+    var expectedUpVisited = [ false, false, true, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true ];
+    var expectedDownContinueUp = [ false, true, true, true, true ];
+    var expectedDownVisited = [ true, false, false, false, false ];
+    var expectedVisited = [];
+    var expectedLogStr =
+`
+up a
+ up b
+   up a
+   down a
+ down b
+ up c
+ down c
+down a
+up c
+down c
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( group.nodesToNames( o2.visitedContainer ).original, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.case = 'revisiting : 3, levels : 0-2';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a, gr.a, gr.c, gr.c ],
+      onUp : onUp2,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 3,
+      allSiblings : 0,
+    }
+    var gotResult = group.lookDfs( o2 );
+
+    var expectedNds = [ 'a', 'b', 'a', 'c', 'c' ];
+    var expectedUps = [ 'a', 'b', 'a', 'c', 'c' ];
+    var expectedDws = [ 'a', 'b', 'c', 'a', 'c' ];
+    var expectedUpContinueNode = [ true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true ];
+    var expectedUpVisited = [ false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true ];
+    var expectedDownContinueUp = [ false, true, true, true, true ];
+    var expectedDownVisited = [ false, false, false, false, false ];
+    var expectedVisited = null;
+    var expectedLogStr =
+`
+up a
+ up b
+   up a
+   down a
+ down b
+ up c
+ down c
+down a
+up c
+down c
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.case = 'revisiting : 3, levels : 0-3';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a, gr.a, gr.c, gr.c ],
+      onUp : onUp3,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 3,
+      allSiblings : 0,
+    }
+    var gotResult = group.lookDfs( o2 );
+
+    var expectedNds = [ 'a', 'b', 'a', 'b', 'c', 'c', 'c' ];
+    var expectedUps = [ 'a', 'b', 'a', 'b', 'c', 'c', 'c' ];
+    var expectedDws = [ 'b', 'c', 'a', 'b', 'c', 'a', 'c' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, true, true ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ false, false, true, true, true, true, true ];
+    var expectedDownVisited = [ false, false, false, false, false, false, false ];
+    var expectedVisited = null;
+    var expectedLogStr =
+`
+up a
+ up b
+   up a
+     up b
+     down b
+     up c
+     down c
+   down a
+ down b
+ up c
+ down c
+down a
+up c
+down c
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.close( 'fast : ' + o.fast );
+  }
+
+  function log( srcStr )
+  {
+    _.assert( arguments.length === 1 );
+    logStr += srcStr + '\n';
+    /* logger.log( srcStr ); */
+  }
+
+  function clean()
+  {
+    ups = [];
+    dws = [];
+    nds = [];
+    upContinueNode = [];
+    downContinueNode = [];
+    upContinueUp = [];
+    downContinueUp = [];
+    upVisited = [];
+    downVisited = [];
+    logStr = '\n';
+  }
+
+  function onNode( node, it )
+  {
+    nds.push( node );
+  }
+
+  function onUp( node, it )
+  {
+    log( _.strDup( '  ', it.level ) + ' up ' + node.name );
+    upContinueNode.push( it.continueNode );
+    upContinueUp.push( it.continueUp );
+    upVisited.push( it.visited );
+    ups.push( node );
+  }
+
+  function onDown( node, it )
+  {
+    log( _.strDup( '  ', it.level ) + ' down ' + node.name );
+    downContinueNode.push( it.continueNode );
+    downContinueUp.push( it.continueUp );
+    downVisited.push( it.visited );
+    dws.push( node );
+  }
+
+  function onNode2( node, it )
+  {
+    nds.push( node );
+  }
+
+  function onUp2( node, it )
+  {
+    onUp( node, it );
+    if( it.level >= 2 )
+    it.continueUp = false;
+  }
+
+  function onDown2( node, it )
+  {
+    onDown( node, it );
+  }
+
+  function onNode3( node, it )
+  {
+    nds.push( node );
+  }
+
+  function onUp3( node, it )
+  {
+    onUp( node, it );
+    if( it.level >= 3 )
+    it.continueUp = false;
+  }
+
+  function onDown3( node, it )
+  {
+    onDown( node, it );
+  }
+
+} /* end of lookDfsRepeatsRootsAllSiblings0 */
+
+//
+
+function lookDfsRepeatsRootsAllSiblings1( test )
+{
+  let context = this;
+  let ups = [];
+  let dws = [];
+  let nds = [];
+  let upContinueNode = [];
+  let downContinueNode = [];
+  let upContinueUp = [];
+  let downContinueUp = [];
+  let upVisited = [];
+  let downVisited = [];
+  let logStr = '';
+
+  test.description = 'setup';
+  var gr = context.cycled1Scc();
+  var group = gr.sys.nodesGroup();
+
+  run({ fast : 1 });
+  run({ fast : 0 });
+
+  /* - */
+
+  gr.sys.finit();
+
+  function run( o )
+  {
+
+    test.open( 'fast : ' + o.fast );
+
+    /* - */
+
+    test.case = 'revisiting : 0';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a, gr.a, gr.c, gr.c ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 0,
+      allSiblings : 1,
+    }
+    var gotResult = group.lookDfs( o2 );
+
+    var expectedNds = [ 'a', 'b', 'c', 'a', 'c', 'c' ];
+    var expectedUps = [ 'a', 'b', 'c', 'a', 'c', 'c' ];
+    var expectedDws = [ 'b', 'c', 'a', 'a', 'c', 'c' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, false, false, false ];
+    var expectedUpVisited = [ false, false, false, true, true, true ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ true, true, true, false, false, false ];
+    var expectedDownVisited = [ false, false, false, true, true, true ];
+    var expectedVisited = new Set([ 'a', 'b', 'c' ]);
+    var expectedLogStr =
+`
+up a
+ up b
+ down b
+ up c
+ down c
+down a
+up a
+down a
+up c
+down c
+up c
+down c
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( group.nodesToNames( o2.visitedContainer ).original, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.case = 'revisiting : 1';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a, gr.a, gr.c, gr.c ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 1,
+      allSiblings : 1,
+    }
+    var gotResult = group.lookDfs( o2 );
+
+    var expectedNds = [ 'a', 'b', 'c', 'a', 'c', 'c' ];
+    var expectedUps = [ 'a', 'b', 'c', 'a', 'c', 'c' ];
+    var expectedDws = [ 'b', 'c', 'a', 'a', 'c', 'c' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, false, true, false ];
+    var expectedUpVisited = [ false, false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ true, true, true, false, true, false ];
+    var expectedDownVisited = [ false, false, false, false, false, false ];
+    var expectedVisited = new Set([]);
+    var expectedLogStr =
+`
+up a
+ up b
+ down b
+ up c
+ down c
+down a
+up a
+down a
+up c
+down c
+up c
+down c
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( group.nodesToNames( o2.visitedContainer ).original, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.case = 'revisiting : 2';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a, gr.a, gr.c, gr.c ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 2,
+      allSiblings : 1,
+    }
+    var gotResult = group.lookDfs( o2 );
+
+    var expectedNds = [ 'a', 'b', 'a', 'c', 'a', 'c', 'c' ];
+    var expectedUps = [ 'a', 'b', 'a', 'c', 'a', 'c', 'c' ];
+    var expectedDws = [ 'a', 'b', 'c', 'a', 'a', 'c', 'c' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, false, true, false, true, false ];
+    var expectedUpVisited = [ false, false, true, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ false, true, true, true, false, true, false ];
+    var expectedDownVisited = [ true, false, false, false, false, false, false ];
+    var expectedVisited = [];
+    var expectedLogStr =
+`
+up a
+ up b
+   up a
+   down a
+ down b
+ up c
+ down c
+down a
+up a
+down a
+up c
+down c
+up c
+down c
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( group.nodesToNames( o2.visitedContainer ).original, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.case = 'revisiting : 3, levels : 0-2';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a, gr.a, gr.c, gr.c ],
+      onUp : onUp2,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 3,
+      allSiblings : 1,
+    }
+    var gotResult = group.lookDfs( o2 );
+
+    var expectedNds = [ 'a', 'b', 'a', 'c', 'a', 'c', 'c' ];
+    var expectedUps = [ 'a', 'b', 'a', 'c', 'a', 'c', 'c' ];
+    var expectedDws = [ 'a', 'b', 'c', 'a', 'a', 'c', 'c' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, false, true, false ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ false, true, true, true, false, true, false ];
+    var expectedDownVisited = [ false, false, false, false, false, false, false ];
+    var expectedVisited = null;
+    var expectedLogStr =
+`
+up a
+ up b
+   up a
+   down a
+ down b
+ up c
+ down c
+down a
+up a
+down a
+up c
+down c
+up c
+down c
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.case = 'revisiting : 3, levels : 0-3';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a, gr.a, gr.c, gr.c ],
+      onUp : onUp3,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 3,
+      allSiblings : 1,
+    }
+    var gotResult = group.lookDfs( o2 );
+
+    var expectedNds = [ 'a', 'b', 'a', 'b', 'c', 'c', 'a', 'c', 'c' ];
+    var expectedUps = [ 'a', 'b', 'a', 'b', 'c', 'c', 'a', 'c', 'c' ];
+    var expectedDws = [ 'b', 'c', 'a', 'b', 'c', 'a', 'a', 'c', 'c' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, true, false, true, false ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ false, false, true, true, true, true, false, true, false ];
+    var expectedDownVisited = [ false, false, false, false, false, false, false, false, false ];
+    var expectedVisited = null;
+    var expectedLogStr =
+`
+up a
+ up b
+   up a
+     up b
+     down b
+     up c
+     down c
+   down a
+ down b
+ up c
+ down c
+down a
+up a
+down a
+up c
+down c
+up c
+down c
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.close( 'fast : ' + o.fast );
+  }
+
+  function log( srcStr )
+  {
+    _.assert( arguments.length === 1 );
+    logStr += srcStr + '\n';
+    /* logger.log( srcStr ); */
+  }
+
+  function clean()
+  {
+    ups = [];
+    dws = [];
+    nds = [];
+    upContinueNode = [];
+    downContinueNode = [];
+    upContinueUp = [];
+    downContinueUp = [];
+    upVisited = [];
+    downVisited = [];
+    logStr = '\n';
+  }
+
+  function onNode( node, it )
+  {
+    nds.push( node );
+  }
+
+  function onUp( node, it )
+  {
+    log( _.strDup( '  ', it.level ) + ' up ' + node.name );
+    upContinueNode.push( it.continueNode );
+    upContinueUp.push( it.continueUp );
+    upVisited.push( it.visited );
+    ups.push( node );
+  }
+
+  function onDown( node, it )
+  {
+    log( _.strDup( '  ', it.level ) + ' down ' + node.name );
+    downContinueNode.push( it.continueNode );
+    downContinueUp.push( it.continueUp );
+    downVisited.push( it.visited );
+    dws.push( node );
+  }
+
+  function onNode2( node, it )
+  {
+    nds.push( node );
+  }
+
+  function onUp2( node, it )
+  {
+    onUp( node, it );
+    if( it.level >= 2 )
+    it.continueUp = false;
+  }
+
+  function onDown2( node, it )
+  {
+    onDown( node, it );
+  }
+
+  function onNode3( node, it )
+  {
+    nds.push( node );
+  }
+
+  function onUp3( node, it )
+  {
+    onUp( node, it );
+    if( it.level >= 3 )
+    it.continueUp = false;
+  }
+
+  function onDown3( node, it )
+  {
+    onDown( node, it );
+  }
+
+} /* end of lookDfsRepeatsRootsAllSiblings1 */
+
+//
+
+function lookDfsRepeatsRootsAllSiblings2( test )
+{
+  let context = this;
+  let ups = [];
+  let dws = [];
+  let nds = [];
+  let upContinueNode = [];
+  let downContinueNode = [];
+  let upContinueUp = [];
+  let downContinueUp = [];
+  let upVisited = [];
+  let downVisited = [];
+  let logStr = '';
+
+  test.description = 'setup';
+  var gr = context.cycled1Scc();
+  var group = gr.sys.nodesGroup();
+
+  run({ fast : 1 });
+  run({ fast : 0 });
+
+  /* - */
+
+  gr.sys.finit();
+
+  function run( o )
+  {
+
+    test.open( 'fast : ' + o.fast );
+
+    /* - */
+
+    test.case = 'revisiting : 0';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a, gr.a, gr.c, gr.c ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 0,
+      allSiblings : 2,
+    }
+    var gotResult = group.lookDfs( o2 );
+
+    var expectedNds = [ 'a', 'b', 'c', 'a', 'c', 'c' ];
+    var expectedUps = [ 'a', 'b', 'c', 'a', 'c', 'c' ];
+    var expectedDws = [ 'b', 'c', 'a', 'a', 'c', 'c' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, false, false, false ];
+    var expectedUpVisited = [ false, false, false, true, true, true ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ true, true, true, false, false, false ];
+    var expectedDownVisited = [ false, false, false, true, true, true ];
+    var expectedVisited = new Set([ 'a', 'b', 'c' ]);
+    var expectedLogStr =
+`
+up a
+ up b
+ down b
+ up c
+ down c
+down a
+up a
+down a
+up c
+down c
+up c
+down c
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( group.nodesToNames( o2.visitedContainer ).original, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.case = 'revisiting : 1';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a, gr.a, gr.c, gr.c ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 1,
+      allSiblings : 2,
+    }
+    var gotResult = group.lookDfs( o2 );
+
+    var expectedNds = [ 'a', 'b', 'c', 'a', 'b', 'c', 'c', 'c' ];
+    var expectedUps = [ 'a', 'b', 'c', 'a', 'b', 'c', 'c', 'c' ];
+    var expectedDws = [ 'b', 'c', 'a', 'b', 'c', 'a', 'c', 'c' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, true, true, true ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ true, true, true, true, true, true, true, true ];
+    var expectedDownVisited = [ false, false, false, false, false, false, false, false ];
+    var expectedVisited = new Set([]);
+    var expectedLogStr =
+`
+up a
+ up b
+ down b
+ up c
+ down c
+down a
+up a
+ up b
+ down b
+ up c
+ down c
+down a
+up c
+down c
+up c
+down c
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( group.nodesToNames( o2.visitedContainer ).original, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.case = 'revisiting : 2';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a, gr.a, gr.c, gr.c ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 2,
+      allSiblings : 2,
+    }
+    var gotResult = group.lookDfs( o2 );
+
+    var expectedNds = [ 'a', 'b', 'a', 'c', 'a', 'b', 'a', 'c', 'c', 'c' ];
+    var expectedUps = [ 'a', 'b', 'a', 'c', 'a', 'b', 'a', 'c', 'c', 'c' ];
+    var expectedDws = [ 'a', 'b', 'c', 'a', 'a', 'b', 'c', 'a', 'c', 'c' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, false, true, true, true, false, true, true, true ];
+    var expectedUpVisited = [ false, false, true, false, false, false, true, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ false, true, true, true, false, true, true, true, true, true ];
+    var expectedDownVisited = [ true, false, false, false, true, false, false, false, false, false ];
+    var expectedVisited = [];
+    var expectedLogStr =
+`
+up a
+ up b
+   up a
+   down a
+ down b
+ up c
+ down c
+down a
+up a
+ up b
+   up a
+   down a
+ down b
+ up c
+ down c
+down a
+up c
+down c
+up c
+down c
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( group.nodesToNames( o2.visitedContainer ).original, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.case = 'revisiting : 3, levels : 0-2';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a, gr.a, gr.c, gr.c ],
+      onUp : onUp2,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 3,
+      allSiblings : 2,
+    }
+    var gotResult = group.lookDfs( o2 );
+
+    var expectedNds = [ 'a', 'b', 'a', 'c', 'a', 'b', 'a', 'c', 'c', 'c' ];
+    var expectedUps = [ 'a', 'b', 'a', 'c', 'a', 'b', 'a', 'c', 'c', 'c' ];
+    var expectedDws = [ 'a', 'b', 'c', 'a', 'a', 'b', 'c', 'a', 'c', 'c' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ false, true, true, true, false, true, true, true, true, true ];
+    var expectedDownVisited = [ false, false, false, false, false, false, false, false, false, false ];
+    var expectedVisited = null;
+    var expectedLogStr =
+`
+up a
+ up b
+   up a
+   down a
+ down b
+ up c
+ down c
+down a
+up a
+ up b
+   up a
+   down a
+ down b
+ up c
+ down c
+down a
+up c
+down c
+up c
+down c
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.case = 'revisiting : 3, levels : 0-3';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a, gr.a, gr.c, gr.c ],
+      onUp : onUp3,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 3,
+      allSiblings : 2,
+    }
+    var gotResult = group.lookDfs( o2 );
+
+    var expectedNds = [ 'a', 'b', 'a', 'b', 'c', 'c', 'a', 'b', 'a', 'b', 'c', 'c', 'c', 'c' ];
+    var expectedUps = [ 'a', 'b', 'a', 'b', 'c', 'c', 'a', 'b', 'a', 'b', 'c', 'c', 'c', 'c' ];
+    var expectedDws = [ 'b', 'c', 'a', 'b', 'c', 'a', 'b', 'c', 'a', 'b', 'c', 'a', 'c', 'c' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ false, false, true, true, true, true, false, false, true, true, true, true, true, true ];
+    var expectedDownVisited = [ false, false, false, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedVisited = null;
+    var expectedLogStr =
+`
+up a
+ up b
+   up a
+     up b
+     down b
+     up c
+     down c
+   down a
+ down b
+ up c
+ down c
+down a
+up a
+ up b
+   up a
+     up b
+     down b
+     up c
+     down c
+   down a
+ down b
+ up c
+ down c
+down a
+up c
+down c
+up c
+down c
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.close( 'fast : ' + o.fast );
+  }
+
+  function log( srcStr )
+  {
+    _.assert( arguments.length === 1 );
+    logStr += srcStr + '\n';
+    /* logger.log( srcStr ); */
+  }
+
+  function clean()
+  {
+    ups = [];
+    dws = [];
+    nds = [];
+    upContinueNode = [];
+    downContinueNode = [];
+    upContinueUp = [];
+    downContinueUp = [];
+    upVisited = [];
+    downVisited = [];
+    logStr = '\n';
+  }
+
+  function onNode( node, it )
+  {
+    nds.push( node );
+  }
+
+  function onUp( node, it )
+  {
+    log( _.strDup( '  ', it.level ) + ' up ' + node.name );
+    upContinueNode.push( it.continueNode );
+    upContinueUp.push( it.continueUp );
+    upVisited.push( it.visited );
+    ups.push( node );
+  }
+
+  function onDown( node, it )
+  {
+    log( _.strDup( '  ', it.level ) + ' down ' + node.name );
+    downContinueNode.push( it.continueNode );
+    downContinueUp.push( it.continueUp );
+    downVisited.push( it.visited );
+    dws.push( node );
+  }
+
+  function onNode2( node, it )
+  {
+    nds.push( node );
+  }
+
+  function onUp2( node, it )
+  {
+    onUp( node, it );
+    if( it.level >= 2 )
+    it.continueUp = false;
+  }
+
+  function onDown2( node, it )
+  {
+    onDown( node, it );
+  }
+
+  function onNode3( node, it )
+  {
+    nds.push( node );
+  }
+
+  function onUp3( node, it )
+  {
+    onUp( node, it );
+    if( it.level >= 3 )
+    it.continueUp = false;
+  }
+
+  function onDown3( node, it )
+  {
+    onDown( node, it );
+  }
+
+} /* end of lookDfsRepeatsRootsAllSiblings2 */
+
+//
+
+function lookDfsJunctions( test )
+{
+  let context = this;
+  let ups = [];
+  let dws = [];
+  let nds = [];
+  let upContinueNode = [];
+  let downContinueNode = [];
+  let upContinueUp = [];
+  let downContinueUp = [];
+  let upVisited = [];
+  let downVisited = [];
+  let logStr = '';
+
+  test.description = 'setup cycledJunctions5';
+  var gr = context.cycledJunctions5();
+  var group = gr.sys.nodesGroup();
+
+  run({ fast : 1 });
+  run({ fast : 0 });
+
+  /* - */
+
+  gr.sys.finit();
+
+  function run( o )
+  {
+
+    test.open( 'fast : ' + o.fast );
+
+    /* - */
+
+    test.case = 'revisiting : 0';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a0, gr.a0, gr.a1 ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 0,
     }
     group.lookDfs( o2 );
 
-    var expectedNds = [ 'a', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'b2', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c1', 'b1', 'c1', 'c2', 'b2', 'c1', 'c2' ];
-    var expectedUps = [ 'a', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'b2', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c1', 'b1', 'c1', 'c2', 'b2', 'c1', 'c2' ];
-    var expectedDws = [ 'd', 'f', 'e', 'd', 'b1', 'b2', 'c1', 'b2', 'b1', 'c2', 'b1', 'c1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c2', 'b1', 'b2', 'c1', 'b2', 'b1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'b2', 'c1', 'g', 'a' ];
-    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
-    var expectedUpContinueUp = [ true, true, true, true, false, true, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, false, false, true, false, false ];
-    var expectedUpVisited = [ false, false, false, false, true, false, false, false, true, true, false, true, true, false, false, true, true, false, true, true, false, false, true, true, false, true, true, false, false, true, true, false, true, true ];
-    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
-    var expectedDownContinueUp = [ false, true, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, true, true ];
-    var expectedDownVisited = [ true, false, false, false, true, true, false, true, true, false, false, true, true, false, true, true, false, false, true, true, false, true, true, false, false, true, true, false, true, true, false, false, false, false ];
-    var expectedVisited = [];
+    var expectedNds = [ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1' ];
+    var expectedUps = [ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1' ];
+    var expectedDws = [ 'f', 'e', 'd', 'c1', 'b1', 'g', 'a0' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, true, true ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ true, true, true, true, true, true, true ];
+    var expectedDownVisited = [ false, false, false, false, false, false, false ];
+    var expectedVisited = new Set([ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'b2', 'c2', 'a1' ]);
+    var expectedLogStr =
+`
+up a0
+ up d
+   up e
+     up f
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+     down c1
+   down b1
+ down g
+down a0
+`
 
     test.identical( group.nodesToNames( nds ), expectedNds );
     test.identical( group.nodesToNames( ups ), expectedUps );
@@ -6422,6 +10452,219 @@ function lookDfsJunctions( test )
     test.identical( downContinueUp, expectedDownContinueUp );
     test.identical( downVisited, expectedDownVisited );
     test.identical( o2.visitedContainer.map( ( node ) => group.nodeToName( node ) ).original, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.case = 'revisiting : 1';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a0, gr.a0, gr.a1 ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 1,
+    }
+    group.lookDfs( o2 );
+
+    var expectedNds = [ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'c2', 'b2' ];
+    var expectedUps = [ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'c2', 'b2' ];
+    var expectedDws = [ 'f', 'e', 'd', 'c1', 'b1', 'b2', 'c2', 'g', 'a0' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, true, true, true, true ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ true, true, true, true, true, true, true, true, true ];
+    var expectedDownVisited = [ false, false, false, false, false, false, false, false, false ];
+    var expectedVisited = new Set([])
+    var expectedLogStr =
+`
+up a0
+ up d
+   up e
+     up f
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+     down c1
+   down b1
+   up c2
+     up b2
+     down b2
+   down c2
+ down g
+down a0
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer.map( ( node ) => group.nodeToName( node ) ).original, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.case = 'revisiting : 2';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a0, gr.a0, gr.a1 ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 2,
+    }
+    group.lookDfs( o2 );
+
+    var expectedNds = [ 'a0', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'c2', 'b2', 'c1', 'g' ];
+    var expectedUps = [ 'a0', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'c2', 'b2', 'c1', 'g' ];
+    var expectedDws = [ 'd', 'f', 'e', 'd', 'b1', 'c1', 'b1', 'c1', 'b2', 'c2', 'g', 'g', 'a0' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, false, true, true, true, false, true, true, false, false ];
+    var expectedUpVisited = [ false, false, false, false, true, false, false, false, true, false, false, true, true ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ false, true, true, true, false, true, true, false, true, true, false, true, true ];
+    var expectedDownVisited = [ true, false, false, false, true, false, false, true, false, false, true, false, false ];
+    var expectedVisited = [];
+    var expectedLogStr =
+`
+up a0
+ up d
+   up e
+     up f
+       up d
+       down d
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+       up b1
+       down b1
+     down c1
+   down b1
+   up c2
+     up b2
+       up c1
+       down c1
+     down b2
+   down c2
+   up g
+   down g
+ down g
+down a0
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer.map( ( node ) => group.nodeToName( node ) ).original, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.case = 'revisiting : 3';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a0, gr.a0, gr.a1 ],
+      onUp : onUp2,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 3,
+    }
+    group.lookDfs( o2 );
+
+    var expectedNds = [ 'a0', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'c2', 'b2', 'c1', 'g', 'b1', 'c1', 'c2', 'b2', 'g', 'b1', 'c2', 'g' ];
+    var expectedUps = [ 'a0', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'c2', 'b2', 'c1', 'g', 'b1', 'c1', 'c2', 'b2', 'g', 'b1', 'c2', 'g' ];
+    var expectedDws = [ 'd', 'f', 'e', 'd', 'b1', 'c1', 'b1', 'c1', 'b2', 'c2', 'c1', 'b1', 'b2', 'c2', 'b1', 'c2', 'g', 'g', 'g', 'g', 'a0' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, false, true, true, true, false, true, true, false, true, true, false, true, false, true, false, false, false ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ false, true, true, true, false, true, true, false, true, true, false, true, false, true, false, false, false, true, true, true, true ];
+    var expectedDownVisited = [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedVisited = null;
+    var expectedLogStr =
+`
+up a0
+ up d
+   up e
+     up f
+       up d
+       down d
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+       up b1
+       down b1
+     down c1
+   down b1
+   up c2
+     up b2
+       up c1
+       down c1
+     down b2
+   down c2
+   up g
+     up b1
+       up c1
+       down c1
+     down b1
+     up c2
+       up b2
+       down b2
+     down c2
+     up g
+       up b1
+       down b1
+       up c2
+       down c2
+       up g
+       down g
+     down g
+   down g
+ down g
+down a0
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
 
     /* - */
 
@@ -6430,8 +10673,16 @@ function lookDfsJunctions( test )
 
   /* - */
 
+  function log( srcStr )
+  {
+    _.assert( arguments.length === 1 );
+    logStr += srcStr + '\n';
+    /* logger.log( srcStr ); */
+  }
+
   function clean()
   {
+    logStr = '\n';
     ups = [];
     dws = [];
     nds = [];
@@ -6450,16 +10701,23 @@ function lookDfsJunctions( test )
 
   function onUp( node, it )
   {
-    logger.log( _.strDup( '  ', it.level ), 'up', node.name );
+    log( _.strDup( '  ', it.level ) + ' up ' + node.name );
     upContinueNode.push( it.continueNode );
     upContinueUp.push( it.continueUp );
     upVisited.push( it.visited );
     ups.push( node );
   }
 
+  function onUp2( node, it )
+  {
+    if( it.level >= 4 )
+    it.continueUp = false;
+    onUp( node, it );
+  }
+
   function onDown( node, it )
   {
-    logger.log( _.strDup( '  ', it.level ), 'down', node.name );
+    log( _.strDup( '  ', it.level ) + ' down ' + node.name );
     downContinueNode.push( it.continueNode );
     downContinueUp.push( it.continueUp );
     downVisited.push( it.visited );
@@ -6467,6 +10725,6492 @@ function lookDfsJunctions( test )
   }
 
 } /* end of function lookDfsJunctions */
+
+//
+
+function lookDfsJunctionsAllVariants0( test )
+{
+  let context = this;
+  let ups = [];
+  let dws = [];
+  let nds = [];
+  let upContinueNode = [];
+  let downContinueNode = [];
+  let upContinueUp = [];
+  let downContinueUp = [];
+  let upVisited = [];
+  let downVisited = [];
+  let logStr = '';
+
+  test.description = 'setup cycledJunctions5';
+  var gr = context.cycledJunctions5();
+  var group = gr.sys.nodesGroup();
+
+  run({ fast : 1 });
+  run({ fast : 0 });
+
+  /* - */
+
+  gr.sys.finit();
+
+  function run( o )
+  {
+
+    test.open( 'fast : ' + o.fast );
+
+    /* - */
+
+    test.case = 'revisiting : 0';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a0, gr.a0, gr.a1 ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 0,
+      allVariants : 0,
+    }
+    group.lookDfs( o2 );
+
+    var expectedNds = [ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1' ];
+    var expectedUps = [ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1' ];
+    var expectedDws = [ 'f', 'e', 'd', 'c1', 'b1', 'g', 'a0' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, true, true ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ true, true, true, true, true, true, true ];
+    var expectedDownVisited = [ false, false, false, false, false, false, false ];
+    var expectedVisited = new Set([ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'b2', 'c2', 'a1' ]);
+    var expectedLogStr =
+`
+up a0
+ up d
+   up e
+     up f
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+     down c1
+   down b1
+ down g
+down a0
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer.map( ( node ) => group.nodeToName( node ) ).original, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.case = 'revisiting : 1';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a0, gr.a0, gr.a1 ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 1,
+      allVariants : 0,
+    }
+    group.lookDfs( o2 );
+
+    var expectedNds = [ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'c2', 'b2' ];
+    var expectedUps = [ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'c2', 'b2' ];
+    var expectedDws = [ 'f', 'e', 'd', 'c1', 'b1', 'b2', 'c2', 'g', 'a0' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, true, true, true, true ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ true, true, true, true, true, true, true, true, true ];
+    var expectedDownVisited = [ false, false, false, false, false, false, false, false, false ];
+    var expectedVisited = new Set([])
+    var expectedLogStr =
+`
+up a0
+ up d
+   up e
+     up f
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+     down c1
+   down b1
+   up c2
+     up b2
+     down b2
+   down c2
+ down g
+down a0
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer.map( ( node ) => group.nodeToName( node ) ).original, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.case = 'revisiting : 2';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a0, gr.a0, gr.a1 ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 2,
+      allVariants : 0,
+    }
+    group.lookDfs( o2 );
+
+    var expectedNds = [ 'a0', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'c2', 'b2', 'c1', 'g' ];
+    var expectedUps = [ 'a0', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'c2', 'b2', 'c1', 'g' ];
+    var expectedDws = [ 'd', 'f', 'e', 'd', 'b1', 'c1', 'b1', 'c1', 'b2', 'c2', 'g', 'g', 'a0' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, false, true, true, true, false, true, true, false, false ];
+    var expectedUpVisited = [ false, false, false, false, true, false, false, false, true, false, false, true, true ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ false, true, true, true, false, true, true, false, true, true, false, true, true ];
+    var expectedDownVisited = [ true, false, false, false, true, false, false, true, false, false, true, false, false ];
+    var expectedVisited = [];
+    var expectedLogStr =
+`
+up a0
+ up d
+   up e
+     up f
+       up d
+       down d
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+       up b1
+       down b1
+     down c1
+   down b1
+   up c2
+     up b2
+       up c1
+       down c1
+     down b2
+   down c2
+   up g
+   down g
+ down g
+down a0
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer.map( ( node ) => group.nodeToName( node ) ).original, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.case = 'revisiting : 3';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a0, gr.a0, gr.a1 ],
+      onUp : onUp2,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 3,
+      allVariants : 0,
+    }
+    group.lookDfs( o2 );
+
+    var expectedNds = [ 'a0', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'c2', 'b2', 'c1', 'g', 'b1', 'c1', 'c2', 'b2', 'g', 'b1', 'c2', 'g' ];
+    var expectedUps = [ 'a0', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'c2', 'b2', 'c1', 'g', 'b1', 'c1', 'c2', 'b2', 'g', 'b1', 'c2', 'g' ];
+    var expectedDws = [ 'd', 'f', 'e', 'd', 'b1', 'c1', 'b1', 'c1', 'b2', 'c2', 'c1', 'b1', 'b2', 'c2', 'b1', 'c2', 'g', 'g', 'g', 'g', 'a0' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, false, true, true, true, false, true, true, false, true, true, false, true, false, true, false, false, false ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ false, true, true, true, false, true, true, false, true, true, false, true, false, true, false, false, false, true, true, true, true ];
+    var expectedDownVisited = [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedVisited = null;
+    var expectedLogStr =
+`
+up a0
+ up d
+   up e
+     up f
+       up d
+       down d
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+       up b1
+       down b1
+     down c1
+   down b1
+   up c2
+     up b2
+       up c1
+       down c1
+     down b2
+   down c2
+   up g
+     up b1
+       up c1
+       down c1
+     down b1
+     up c2
+       up b2
+       down b2
+     down c2
+     up g
+       up b1
+       down b1
+       up c2
+       down c2
+       up g
+       down g
+     down g
+   down g
+ down g
+down a0
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.close( 'fast : ' + o.fast );
+  }
+
+  /* - */
+
+  function log( srcStr )
+  {
+    _.assert( arguments.length === 1 );
+    logStr += srcStr + '\n';
+    /* logger.log( srcStr ); */
+  }
+
+  function clean()
+  {
+    logStr = '\n';
+    ups = [];
+    dws = [];
+    nds = [];
+    upContinueNode = [];
+    downContinueNode = [];
+    upContinueUp = [];
+    downContinueUp = [];
+    upVisited = [];
+    downVisited = [];
+  }
+
+  function onNode( node, it )
+  {
+    nds.push( node );
+  }
+
+  function onUp( node, it )
+  {
+    log( _.strDup( '  ', it.level ) + ' up ' + node.name );
+    upContinueNode.push( it.continueNode );
+    upContinueUp.push( it.continueUp );
+    upVisited.push( it.visited );
+    ups.push( node );
+  }
+
+  function onUp2( node, it )
+  {
+    if( it.level >= 4 )
+    it.continueUp = false;
+    onUp( node, it );
+  }
+
+  function onDown( node, it )
+  {
+    log( _.strDup( '  ', it.level ) + ' down ' + node.name );
+    downContinueNode.push( it.continueNode );
+    downContinueUp.push( it.continueUp );
+    downVisited.push( it.visited );
+    dws.push( node );
+  }
+
+} /* end of function lookDfsJunctionsAllVariants0 */
+
+//
+
+function lookDfsJunctionsAllVariants0AllSiblings0( test )
+{
+  let context = this;
+  let ups = [];
+  let dws = [];
+  let nds = [];
+  let upContinueNode = [];
+  let downContinueNode = [];
+  let upContinueUp = [];
+  let downContinueUp = [];
+  let upVisited = [];
+  let downVisited = [];
+  let logStr = '';
+
+  test.description = 'setup cycledJunctions5';
+  var gr = context.cycledJunctions5();
+  var group = gr.sys.nodesGroup();
+
+  run({ fast : 1 });
+  run({ fast : 0 });
+
+  /* - */
+
+  gr.sys.finit();
+
+  function run( o )
+  {
+
+    test.open( 'fast : ' + o.fast );
+
+    /* - */
+
+    test.case = 'revisiting : 0';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a0, gr.a0, gr.a1 ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 0,
+      allVariants : 0,
+      allSiblings : 0,
+    }
+    group.lookDfs( o2 );
+
+    var expectedNds = [ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1' ];
+    var expectedUps = [ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1' ];
+    var expectedDws = [ 'f', 'e', 'd', 'c1', 'b1', 'g', 'a0' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, true, true ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ true, true, true, true, true, true, true ];
+    var expectedDownVisited = [ false, false, false, false, false, false, false ];
+    var expectedVisited = new Set([ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'b2', 'c2', 'a1' ]);
+    var expectedLogStr =
+`
+up a0
+ up d
+   up e
+     up f
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+     down c1
+   down b1
+ down g
+down a0
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer.map( ( node ) => group.nodeToName( node ) ).original, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.case = 'revisiting : 1';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a0, gr.a0, gr.a1 ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 1,
+      allVariants : 0,
+      allSiblings : 0,
+    }
+    group.lookDfs( o2 );
+
+    var expectedNds = [ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'c2', 'b2' ];
+    var expectedUps = [ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'c2', 'b2' ];
+    var expectedDws = [ 'f', 'e', 'd', 'c1', 'b1', 'b2', 'c2', 'g', 'a0' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, true, true, true, true ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ true, true, true, true, true, true, true, true, true ];
+    var expectedDownVisited = [ false, false, false, false, false, false, false, false, false ];
+    var expectedVisited = new Set([])
+    var expectedLogStr =
+`
+up a0
+ up d
+   up e
+     up f
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+     down c1
+   down b1
+   up c2
+     up b2
+     down b2
+   down c2
+ down g
+down a0
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer.map( ( node ) => group.nodeToName( node ) ).original, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.case = 'revisiting : 2';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a0, gr.a0, gr.a1 ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 2,
+      allVariants : 0,
+      allSiblings : 0,
+    }
+    group.lookDfs( o2 );
+
+    var expectedNds = [ 'a0', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'c2', 'b2', 'c1', 'g' ];
+    var expectedUps = [ 'a0', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'c2', 'b2', 'c1', 'g' ];
+    var expectedDws = [ 'd', 'f', 'e', 'd', 'b1', 'c1', 'b1', 'c1', 'b2', 'c2', 'g', 'g', 'a0' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, false, true, true, true, false, true, true, false, false ];
+    var expectedUpVisited = [ false, false, false, false, true, false, false, false, true, false, false, true, true ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ false, true, true, true, false, true, true, false, true, true, false, true, true ];
+    var expectedDownVisited = [ true, false, false, false, true, false, false, true, false, false, true, false, false ];
+    var expectedVisited = [];
+    var expectedLogStr =
+`
+up a0
+ up d
+   up e
+     up f
+       up d
+       down d
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+       up b1
+       down b1
+     down c1
+   down b1
+   up c2
+     up b2
+       up c1
+       down c1
+     down b2
+   down c2
+   up g
+   down g
+ down g
+down a0
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer.map( ( node ) => group.nodeToName( node ) ).original, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.case = 'revisiting : 3';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a0, gr.a0, gr.a1 ],
+      onUp : onUp2,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 3,
+      allVariants : 0,
+      allSiblings : 0,
+    }
+    group.lookDfs( o2 );
+
+    var expectedNds = [ 'a0', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'c2', 'b2', 'c1', 'g', 'b1', 'c1', 'c2', 'b2', 'g', 'b1', 'c2', 'g' ];
+    var expectedUps = [ 'a0', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'c2', 'b2', 'c1', 'g', 'b1', 'c1', 'c2', 'b2', 'g', 'b1', 'c2', 'g' ];
+    var expectedDws = [ 'd', 'f', 'e', 'd', 'b1', 'c1', 'b1', 'c1', 'b2', 'c2', 'c1', 'b1', 'b2', 'c2', 'b1', 'c2', 'g', 'g', 'g', 'g', 'a0' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, false, true, true, true, false, true, true, false, true, true, false, true, false, true, false, false, false ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ false, true, true, true, false, true, true, false, true, true, false, true, false, true, false, false, false, true, true, true, true ];
+    var expectedDownVisited = [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedVisited = null;
+    var expectedLogStr =
+`
+up a0
+ up d
+   up e
+     up f
+       up d
+       down d
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+       up b1
+       down b1
+     down c1
+   down b1
+   up c2
+     up b2
+       up c1
+       down c1
+     down b2
+   down c2
+   up g
+     up b1
+       up c1
+       down c1
+     down b1
+     up c2
+       up b2
+       down b2
+     down c2
+     up g
+       up b1
+       down b1
+       up c2
+       down c2
+       up g
+       down g
+     down g
+   down g
+ down g
+down a0
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.close( 'fast : ' + o.fast );
+  }
+
+  /* - */
+
+  function log( srcStr )
+  {
+    _.assert( arguments.length === 1 );
+    logStr += srcStr + '\n';
+    /* logger.log( srcStr ); */
+  }
+
+  function clean()
+  {
+    logStr = '\n';
+    ups = [];
+    dws = [];
+    nds = [];
+    upContinueNode = [];
+    downContinueNode = [];
+    upContinueUp = [];
+    downContinueUp = [];
+    upVisited = [];
+    downVisited = [];
+  }
+
+  function onNode( node, it )
+  {
+    nds.push( node );
+  }
+
+  function onUp( node, it )
+  {
+    log( _.strDup( '  ', it.level ) + ' up ' + node.name );
+    upContinueNode.push( it.continueNode );
+    upContinueUp.push( it.continueUp );
+    upVisited.push( it.visited );
+    ups.push( node );
+  }
+
+  function onUp2( node, it )
+  {
+    if( it.level >= 4 )
+    it.continueUp = false;
+    onUp( node, it );
+  }
+
+  function onDown( node, it )
+  {
+    log( _.strDup( '  ', it.level ) + ' down ' + node.name );
+    downContinueNode.push( it.continueNode );
+    downContinueUp.push( it.continueUp );
+    downVisited.push( it.visited );
+    dws.push( node );
+  }
+
+} /* end of function lookDfsJunctionsAllVariants0AllSiblings0 */
+
+//
+
+function lookDfsJunctionsAllVariants0AllSiblings1( test )
+{
+  let context = this;
+  let ups = [];
+  let dws = [];
+  let nds = [];
+  let upContinueNode = [];
+  let downContinueNode = [];
+  let upContinueUp = [];
+  let downContinueUp = [];
+  let upVisited = [];
+  let downVisited = [];
+  let logStr = '';
+
+  test.description = 'setup cycledJunctions5';
+  var gr = context.cycledJunctions5();
+  var group = gr.sys.nodesGroup();
+
+  run({ fast : 1 });
+  run({ fast : 0 });
+
+  /* - */
+
+  gr.sys.finit();
+
+  function run( o )
+  {
+
+    test.open( 'fast : ' + o.fast );
+
+    /* - */
+
+    test.case = 'revisiting : 0';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a0, gr.a0, gr.a1 ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 0,
+      allVariants : 0,
+      allSiblings : 1,
+    }
+    group.lookDfs( o2 );
+
+    var expectedNds = [ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'c2', 'a0' ];
+    var expectedUps = [ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'c2', 'a0' ];
+    var expectedDws = [ 'f', 'e', 'd', 'c1', 'b1', 'c2', 'g', 'a0', 'a0' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, true, true, false, false ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false, true, true ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ true, true, true, true, true, false, true, true, false ];
+    var expectedDownVisited = [ false, false, false, false, false, true, false, false, true ];
+    var expectedVisited = new Set([ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'b2', 'c2' ]);
+    var expectedLogStr =
+`
+up a0
+ up d
+   up e
+     up f
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+     down c1
+   down b1
+   up c2
+   down c2
+ down g
+down a0
+up a0
+down a0
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer.map( ( node ) => group.nodeToName( node ) ).original, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.case = 'revisiting : 1';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a0, gr.a0, gr.a1 ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 1,
+      allVariants : 0,
+      allSiblings : 1,
+    }
+    group.lookDfs( o2 );
+
+    var expectedNds = [ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'c2', 'b2', 'a0' ];
+    var expectedUps = [ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'c2', 'b2', 'a0' ];
+    var expectedDws = [ 'f', 'e', 'd', 'c1', 'b1', 'b2', 'c2', 'g', 'a0', 'a0' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, true, true, true, true, false ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ true, true, true, true, true, true, true, true, true, false ];
+    var expectedDownVisited = [ false, false, false, false, false, false, false, false, false, false ];
+    var expectedVisited = new Set([])
+    var expectedLogStr =
+`
+up a0
+ up d
+   up e
+     up f
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+     down c1
+   down b1
+   up c2
+     up b2
+     down b2
+   down c2
+ down g
+down a0
+up a0
+down a0
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer.map( ( node ) => group.nodeToName( node ) ).original, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+   test.case = 'revisiting : 2';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a0, gr.a0, gr.a1 ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 2,
+      allVariants : 0,
+      allSiblings : 1,
+    }
+    group.lookDfs( o2 );
+
+    var expectedNds = [ 'a0', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'c2', 'b2', 'c1', 'g', 'a0' ];
+    var expectedUps = [ 'a0', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'c2', 'b2', 'c1', 'g', 'a0' ];
+    var expectedDws = [ 'd', 'f', 'e', 'd', 'b1', 'c1', 'b1', 'c1', 'b2', 'c2', 'g', 'g', 'a0', 'a0' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, false, true, true, true, false, true, true, false, false, false ];
+    var expectedUpVisited = [ false, false, false, false, true, false, false, false, true, false, false, true, true, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ false, true, true, true, false, true, true, false, true, true, false, true, true, false ];
+    var expectedDownVisited = [ true, false, false, false, true, false, false, true, false, false, true, false, false, false ];
+    var expectedVisited = [];
+    var expectedLogStr =
+`
+up a0
+ up d
+   up e
+     up f
+       up d
+       down d
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+       up b1
+       down b1
+     down c1
+   down b1
+   up c2
+     up b2
+       up c1
+       down c1
+     down b2
+   down c2
+   up g
+   down g
+ down g
+down a0
+up a0
+down a0
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer.map( ( node ) => group.nodeToName( node ) ).original, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.case = 'revisiting : 3';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a0, gr.a0, gr.a1 ],
+      onUp : onUp2,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 3,
+      allVariants : 0,
+      allSiblings : 1,
+    }
+    group.lookDfs( o2 );
+
+    var expectedNds = [ 'a0', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'c2', 'b2', 'c1', 'g', 'b1', 'c1', 'c2', 'b2', 'g', 'b1', 'c2', 'g', 'a0' ];
+    var expectedUps = [ 'a0', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'c2', 'b2', 'c1', 'g', 'b1', 'c1', 'c2', 'b2', 'g', 'b1', 'c2', 'g', 'a0' ];
+    var expectedDws = [ 'd', 'f', 'e', 'd', 'b1', 'c1', 'b1', 'c1', 'b2', 'c2', 'c1', 'b1', 'b2', 'c2', 'b1', 'c2', 'g', 'g', 'g', 'g', 'a0', 'a0' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, false, true, true, true, false, true, true, false, true, true, false, true, false, true, false, false, false, false ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ false, true, true, true, false, true, true, false, true, true, false, true, false, true, false, false, false, true, true, true, true, false ];
+    var expectedDownVisited = [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedVisited = null;
+    var expectedLogStr =
+`
+up a0
+ up d
+   up e
+     up f
+       up d
+       down d
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+       up b1
+       down b1
+     down c1
+   down b1
+   up c2
+     up b2
+       up c1
+       down c1
+     down b2
+   down c2
+   up g
+     up b1
+       up c1
+       down c1
+     down b1
+     up c2
+       up b2
+       down b2
+     down c2
+     up g
+       up b1
+       down b1
+       up c2
+       down c2
+       up g
+       down g
+     down g
+   down g
+ down g
+down a0
+up a0
+down a0
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.close( 'fast : ' + o.fast );
+  }
+
+  /* - */
+
+  function log( srcStr )
+  {
+    _.assert( arguments.length === 1 );
+    logStr += srcStr + '\n';
+    /* logger.log( srcStr ); */
+  }
+
+  function clean()
+  {
+    logStr = '\n';
+    ups = [];
+    dws = [];
+    nds = [];
+    upContinueNode = [];
+    downContinueNode = [];
+    upContinueUp = [];
+    downContinueUp = [];
+    upVisited = [];
+    downVisited = [];
+  }
+
+  function onNode( node, it )
+  {
+    nds.push( node );
+  }
+
+  function onUp( node, it )
+  {
+    log( _.strDup( '  ', it.level ) + ' up ' + node.name );
+    upContinueNode.push( it.continueNode );
+    upContinueUp.push( it.continueUp );
+    upVisited.push( it.visited );
+    ups.push( node );
+  }
+
+  function onUp2( node, it )
+  {
+    if( it.level >= 4 )
+    it.continueUp = false;
+    onUp( node, it );
+  }
+
+  function onDown( node, it )
+  {
+    log( _.strDup( '  ', it.level ) + ' down ' + node.name );
+    downContinueNode.push( it.continueNode );
+    downContinueUp.push( it.continueUp );
+    downVisited.push( it.visited );
+    dws.push( node );
+  }
+
+} /* end of function lookDfsJunctionsAllVariants0AllSiblings1 */
+
+//
+
+function lookDfsJunctionsAllVariants0AllSiblings2( test )
+{
+  let context = this;
+  let ups = [];
+  let dws = [];
+  let nds = [];
+  let upContinueNode = [];
+  let downContinueNode = [];
+  let upContinueUp = [];
+  let downContinueUp = [];
+  let upVisited = [];
+  let downVisited = [];
+  let logStr = '';
+
+  test.description = 'setup cycledJunctions5';
+  var gr = context.cycledJunctions5();
+  var group = gr.sys.nodesGroup();
+
+  run({ fast : 1 });
+  run({ fast : 0 });
+
+  /* - */
+
+  gr.sys.finit();
+
+  function run( o )
+  {
+
+    test.open( 'fast : ' + o.fast );
+
+    /* - */
+
+    test.case = 'revisiting : 0';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a0, gr.a0, gr.a1 ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 0,
+      allVariants : 0,
+      allSiblings : 2,
+    }
+    group.lookDfs( o2 );
+
+    var expectedNds = [ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'c2', 'a0' ];
+    var expectedUps = [ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'c2', 'a0' ];
+    var expectedDws = [ 'f', 'e', 'd', 'c1', 'b1', 'c2', 'g', 'a0', 'a0' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, true, true, false, false ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false, true, true ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ true, true, true, true, true, false, true, true, false ];
+    var expectedDownVisited = [ false, false, false, false, false, true, false, false, true ];
+    var expectedVisited = new Set([ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'b2', 'c2' ]);
+    var expectedLogStr =
+`
+up a0
+ up d
+   up e
+     up f
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+     down c1
+   down b1
+   up c2
+   down c2
+ down g
+down a0
+up a0
+down a0
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer.map( ( node ) => group.nodeToName( node ) ).original, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.case = 'revisiting : 1';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a0, gr.a0, gr.a1 ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 1,
+      allVariants : 0,
+      allSiblings : 2,
+    }
+    group.lookDfs( o2 );
+
+    var expectedNds = [ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'c2', 'b2', 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'c2', 'b2' ];
+    var expectedUps = [ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'c2', 'b2', 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'c2', 'b2' ];
+    var expectedDws = [ 'f', 'e', 'd', 'c1', 'b1', 'b2', 'c2', 'g', 'a0', 'f', 'e', 'd', 'c1', 'b1', 'b2', 'c2', 'g', 'a0' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownVisited = [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedVisited = new Set([])
+    var expectedLogStr =
+`
+up a0
+ up d
+   up e
+     up f
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+     down c1
+   down b1
+   up c2
+     up b2
+     down b2
+   down c2
+ down g
+down a0
+up a0
+ up d
+   up e
+     up f
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+     down c1
+   down b1
+   up c2
+     up b2
+     down b2
+   down c2
+ down g
+down a0
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer.map( ( node ) => group.nodeToName( node ) ).original, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+   test.case = 'revisiting : 2';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a0, gr.a0, gr.a1 ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 2,
+      allVariants : 0,
+      allSiblings : 2,
+    }
+    group.lookDfs( o2 );
+
+    var expectedNds = [ 'a0', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'c2', 'b2', 'c1', 'g', 'a0', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'c2', 'b2', 'c1', 'g' ];
+    var expectedUps = [ 'a0', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'c2', 'b2', 'c1', 'g', 'a0', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'c2', 'b2', 'c1', 'g' ];
+    var expectedDws = [ 'd', 'f', 'e', 'd', 'b1', 'c1', 'b1', 'c1', 'b2', 'c2', 'g', 'g', 'a0', 'd', 'f', 'e', 'd', 'b1', 'c1', 'b1', 'c1', 'b2', 'c2', 'g', 'g', 'a0' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, false, true, true, true, false, true, true, false, false, true, true, true, true, false, true, true, true, false, true, true, false, false ];
+    var expectedUpVisited = [ false, false, false, false, true, false, false, false, true, false, false, true, true, false, false, false, false, true, false, false, false, true, false, false, true, true ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ false, true, true, true, false, true, true, false, true, true, false, true, true, false, true, true, true, false, true, true, false, true, true, false, true, true ];
+    var expectedDownVisited = [ true, false, false, false, true, false, false, true, false, false, true, false, false, true, false, false, false, true, false, false, true, false, false, true, false, false ];
+    var expectedVisited = [];
+    var expectedLogStr =
+`
+up a0
+ up d
+   up e
+     up f
+       up d
+       down d
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+       up b1
+       down b1
+     down c1
+   down b1
+   up c2
+     up b2
+       up c1
+       down c1
+     down b2
+   down c2
+   up g
+   down g
+ down g
+down a0
+up a0
+ up d
+   up e
+     up f
+       up d
+       down d
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+       up b1
+       down b1
+     down c1
+   down b1
+   up c2
+     up b2
+       up c1
+       down c1
+     down b2
+   down c2
+   up g
+   down g
+ down g
+down a0
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer.map( ( node ) => group.nodeToName( node ) ).original, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.case = 'revisiting : 3';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a0, gr.a0, gr.a1 ],
+      onUp : onUp2,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 3,
+      allVariants : 0,
+      allSiblings : 2,
+    }
+    group.lookDfs( o2 );
+
+    var expectedNds = [ 'a0', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'c2', 'b2', 'c1', 'g', 'b1', 'c1', 'c2', 'b2', 'g', 'b1', 'c2', 'g', 'a0', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'c2', 'b2', 'c1', 'g', 'b1', 'c1', 'c2', 'b2', 'g', 'b1', 'c2', 'g' ];
+    var expectedUps = [ 'a0', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'c2', 'b2', 'c1', 'g', 'b1', 'c1', 'c2', 'b2', 'g', 'b1', 'c2', 'g', 'a0', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'c2', 'b2', 'c1', 'g', 'b1', 'c1', 'c2', 'b2', 'g', 'b1', 'c2', 'g' ];
+    var expectedDws = [ 'd', 'f', 'e', 'd', 'b1', 'c1', 'b1', 'c1', 'b2', 'c2', 'c1', 'b1', 'b2', 'c2', 'b1', 'c2', 'g', 'g', 'g', 'g', 'a0', 'd', 'f', 'e', 'd', 'b1', 'c1', 'b1', 'c1', 'b2', 'c2', 'c1', 'b1', 'b2', 'c2', 'b1', 'c2', 'g', 'g', 'g', 'g', 'a0' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, false, true, true, true, false, true, true, false, true, true, false, true, false, true, false, false, false, true, true, true, true, false, true, true, true, false, true, true, false, true, true, false, true, false, true, false, false, false ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ false, true, true, true, false, true, true, false, true, true, false, true, false, true, false, false, false, true, true, true, true, false, true, true, true, false, true, true, false, true, true, false, true, false, true, false, false, false, true, true, true, true ];
+    var expectedDownVisited = [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedVisited = null;
+    var expectedLogStr =
+`
+up a0
+ up d
+   up e
+     up f
+       up d
+       down d
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+       up b1
+       down b1
+     down c1
+   down b1
+   up c2
+     up b2
+       up c1
+       down c1
+     down b2
+   down c2
+   up g
+     up b1
+       up c1
+       down c1
+     down b1
+     up c2
+       up b2
+       down b2
+     down c2
+     up g
+       up b1
+       down b1
+       up c2
+       down c2
+       up g
+       down g
+     down g
+   down g
+ down g
+down a0
+up a0
+ up d
+   up e
+     up f
+       up d
+       down d
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+       up b1
+       down b1
+     down c1
+   down b1
+   up c2
+     up b2
+       up c1
+       down c1
+     down b2
+   down c2
+   up g
+     up b1
+       up c1
+       down c1
+     down b1
+     up c2
+       up b2
+       down b2
+     down c2
+     up g
+       up b1
+       down b1
+       up c2
+       down c2
+       up g
+       down g
+     down g
+   down g
+ down g
+down a0
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.close( 'fast : ' + o.fast );
+  }
+
+  /* - */
+
+  function log( srcStr )
+  {
+    _.assert( arguments.length === 1 );
+    logStr += srcStr + '\n';
+    /* logger.log( srcStr ); */
+  }
+
+  function clean()
+  {
+    logStr = '\n';
+    ups = [];
+    dws = [];
+    nds = [];
+    upContinueNode = [];
+    downContinueNode = [];
+    upContinueUp = [];
+    downContinueUp = [];
+    upVisited = [];
+    downVisited = [];
+  }
+
+  function onNode( node, it )
+  {
+    nds.push( node );
+  }
+
+  function onUp( node, it )
+  {
+    log( _.strDup( '  ', it.level ) + ' up ' + node.name );
+    upContinueNode.push( it.continueNode );
+    upContinueUp.push( it.continueUp );
+    upVisited.push( it.visited );
+    ups.push( node );
+  }
+
+  function onUp2( node, it )
+  {
+    if( it.level >= 4 )
+    it.continueUp = false;
+    onUp( node, it );
+  }
+
+  function onDown( node, it )
+  {
+    log( _.strDup( '  ', it.level ) + ' down ' + node.name );
+    downContinueNode.push( it.continueNode );
+    downContinueUp.push( it.continueUp );
+    downVisited.push( it.visited );
+    dws.push( node );
+  }
+
+} /* end of function lookDfsJunctionsAllVariants0AllSiblings2 */
+
+//
+
+function lookDfsJunctionsAllVariants1( test )
+{
+  let context = this;
+  let ups = [];
+  let dws = [];
+  let nds = [];
+  let upContinueNode = [];
+  let downContinueNode = [];
+  let upContinueUp = [];
+  let downContinueUp = [];
+  let upVisited = [];
+  let downVisited = [];
+  let logStr = '';
+
+  test.description = 'setup cycledJunctions5';
+  var gr = context.cycledJunctions5();
+  var group = gr.sys.nodesGroup();
+
+  run({ fast : 1 });
+  run({ fast : 0 });
+
+  /* - */
+
+  gr.sys.finit();
+
+  function run( o )
+  {
+
+    test.open( 'fast : ' + o.fast );
+
+    /* - */
+
+    test.case = 'revisiting : 0';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a0, gr.a0, gr.a1 ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 0,
+      allVariants : 1,
+    }
+    group.lookDfs( o2 );
+
+    var expectedNds = [ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'c1', 'a1' ];
+    var expectedUps = [ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'c1', 'a1' ];
+    var expectedDws = [ 'f', 'e', 'd', 'c1', 'c2', 'b1', 'c2', 'b2', 'c1', 'g', 'a0', 'a1' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, true, true, false, false, false, false, false ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false, true, true, true, true, true ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ true, true, true, true, false, true, false, false, false, true, true, false ];
+    var expectedDownVisited = [ false, false, false, false, true, false, true, true, true, false, false, true ];
+    var expectedVisited = new Set([ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'b2', 'c2', 'a1' ]);
+    var expectedLogStr =
+`
+up a0
+ up d
+   up e
+     up f
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+     down c1
+     up c2
+     down c2
+   down b1
+   up c2
+   down c2
+   up b2
+   down b2
+   up c1
+   down c1
+ down g
+down a0
+up a1
+down a1
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer.map( ( node ) => group.nodeToName( node ) ).original, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.case = 'revisiting : 1';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a0, gr.a0, gr.a1 ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 1,
+      allVariants : 1,
+    }
+    group.lookDfs( o2 );
+
+    var expectedNds = [ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'b1', 'b2', 'c1', 'a1' ];
+    var expectedUps = [ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'b1', 'b2', 'c1', 'a1' ];
+    var expectedDws = [ 'f', 'e', 'd', 'c1', 'c2', 'b1', 'b2', 'b1', 'c2', 'b2', 'c1', 'g', 'a0', 'a1' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, true, true, false, true, true, false, false, false, false ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ true, true, true, true, false, true, true, false, true, false, false, true, true, false ];
+    var expectedDownVisited = [ false, false, false, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedVisited = new Set([]);
+    var expectedLogStr =
+`
+up a0
+ up d
+   up e
+     up f
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+     down c1
+     up c2
+     down c2
+   down b1
+   up c2
+     up b2
+     down b2
+     up b1
+     down b1
+   down c2
+   up b2
+   down b2
+   up c1
+   down c1
+ down g
+down a0
+up a1
+down a1
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer.map( ( node ) => group.nodeToName( node ) ).original, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.case = 'revisiting : 2';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a0, gr.a0, gr.a1 ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 2,
+      allVariants : 1,
+    }
+    group.lookDfs( o2 );
+
+    var expectedNds = [ 'a0', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'b2', 'c2', 'c2', 'b2', 'c1', 'c2', 'b1', 'g', 'b2', 'c1', 'a1' ];
+    var expectedUps = [ 'a0', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'b2', 'c2', 'c2', 'b2', 'c1', 'c2', 'b1', 'g', 'b2', 'c1', 'a1' ];
+    var expectedDws = [ 'd', 'f', 'e', 'd', 'b1', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'b2', 'b1', 'c2', 'g', 'b2', 'c1', 'g', 'a0', 'a1' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, false, true, true, true, false, false, false, true, true, false, false, false, false, false, false, false ];
+    var expectedUpVisited = [ false, false, false, false, true, false, false, false, true, true, false, false, false, true, true, false, true, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ false, true, true, true, false, false, true, false, true, false, false, true, false, true, false, false, false, true, true, false ];
+    var expectedDownVisited = [ true, false, false, false, true, true, false, false, false, true, true, false, false, false, true, false, false, false, false, false ];
+    var expectedVisited = [];
+    var expectedLogStr =
+`
+up a0
+ up d
+   up e
+     up f
+       up d
+       down d
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+       up b1
+       down b1
+       up b2
+       down b2
+     down c1
+     up c2
+     down c2
+   down b1
+   up c2
+     up b2
+       up c1
+       down c1
+       up c2
+       down c2
+     down b2
+     up b1
+     down b1
+   down c2
+   up g
+   down g
+   up b2
+   down b2
+   up c1
+   down c1
+ down g
+down a0
+up a1
+down a1
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer.map( ( node ) => group.nodeToName( node ) ).original, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.case = 'revisiting : 3';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a0, gr.a0, gr.a1 ],
+      onUp : onUp2,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 3,
+      allVariants : 1,
+    }
+    group.lookDfs( o2 );
+
+    var expectedNds = [ 'a0', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'b2', 'c2', 'c2', 'b2', 'c1', 'c2', 'b1', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'b1', 'g', 'b1', 'c2', 'g', 'b2', 'c1', 'b2', 'c1', 'b2', 'c1', 'a1' ];
+    var expectedUps = [ 'a0', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'b2', 'c2', 'c2', 'b2', 'c1', 'c2', 'b1', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'b1', 'g', 'b1', 'c2', 'g', 'b2', 'c1', 'b2', 'c1', 'b2', 'c1', 'a1' ];
+    var expectedDws = [ 'd', 'f', 'e', 'd', 'b1', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'b2', 'b1', 'c2', 'c1', 'c2', 'b1', 'b2', 'b1', 'c2', 'b1', 'c2', 'g', 'b2', 'c1', 'g', 'b2', 'c1', 'g', 'b2', 'c1', 'g', 'a0', 'a1' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, false, true, true, true, false, false, false, true, true, false, false, false, true, true, false, false, true, false, false, true, false, false, false, false, false, false, false, false, false, false ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ false, true, true, true, false, false, true, false, true, false, false, true, false, true, false, false, true, false, false, true, false, false, false, false, false, true, false, false, true, false, false, true, true, false ];
+    var expectedDownVisited = [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedVisited = null;
+/*
+qqq : remake each expectedLogStr with prefix "--"
+ask for more details
+*/
+    var expectedLogStr =
+`
+up a0
+ up d
+   up e
+     up f
+       up d
+       down d
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+       up b1
+       down b1
+       up b2
+       down b2
+     down c1
+     up c2
+     down c2
+   down b1
+   up c2
+     up b2
+       up c1
+       down c1
+       up c2
+       down c2
+     down b2
+     up b1
+     down b1
+   down c2
+   up g
+     up b1
+       up c1
+       down c1
+       up c2
+       down c2
+     down b1
+     up c2
+       up b2
+       down b2
+       up b1
+       down b1
+     down c2
+     up g
+       up b1
+       down b1
+       up c2
+       down c2
+       up g
+       down g
+       up b2
+       down b2
+       up c1
+       down c1
+     down g
+     up b2
+     down b2
+     up c1
+     down c1
+   down g
+   up b2
+   down b2
+   up c1
+   down c1
+ down g
+down a0
+up a1
+down a1
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.close( 'fast : ' + o.fast );
+  }
+
+  /* - */
+
+  function log( srcStr )
+  {
+    _.assert( arguments.length === 1 );
+    logStr += srcStr + '\n';
+    /* logger.log( srcStr ); */
+  }
+
+  function clean()
+  {
+    logStr = '\n';
+    ups = [];
+    dws = [];
+    nds = [];
+    upContinueNode = [];
+    downContinueNode = [];
+    upContinueUp = [];
+    downContinueUp = [];
+    upVisited = [];
+    downVisited = [];
+  }
+
+  function onNode( node, it )
+  {
+    nds.push( node );
+  }
+
+  function onUp( node, it )
+  {
+    log( _.strDup( '  ', it.level ) + ' up ' + node.name );
+    upContinueNode.push( it.continueNode );
+    upContinueUp.push( it.continueUp );
+    upVisited.push( it.visited );
+    ups.push( node );
+  }
+
+  function onUp2( node, it )
+  {
+    if( it.level >= 4 )
+    it.continueUp = false;
+    onUp( node, it );
+  }
+
+  function onDown( node, it )
+  {
+    log( _.strDup( '  ', it.level ) + ' down ' + node.name );
+    downContinueNode.push( it.continueNode );
+    downContinueUp.push( it.continueUp );
+    downVisited.push( it.visited );
+    dws.push( node );
+  }
+
+} /* end of function lookDfsJunctionsAllVariants1 */
+
+//
+
+function lookDfsJunctionsAllVariants1AllSiblings0( test )
+{
+  let context = this;
+  let ups = [];
+  let dws = [];
+  let nds = [];
+  let upContinueNode = [];
+  let downContinueNode = [];
+  let upContinueUp = [];
+  let downContinueUp = [];
+  let upVisited = [];
+  let downVisited = [];
+  let logStr = '';
+
+  test.description = 'setup cycledJunctions5';
+  var gr = context.cycledJunctions5();
+  var group = gr.sys.nodesGroup();
+
+  run({ fast : 1 });
+  run({ fast : 0 });
+
+  /* - */
+
+  gr.sys.finit();
+
+  function run( o )
+  {
+
+    test.open( 'fast : ' + o.fast );
+
+    /* - */
+
+    test.case = 'revisiting : 0';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a0, gr.a0, gr.a1 ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 0,
+      allVariants : 1,
+      allSiblings : 0,
+    }
+    group.lookDfs( o2 );
+
+    var expectedNds = [ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'c1', 'a1' ];
+    var expectedUps = [ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'c1', 'a1' ];
+    var expectedDws = [ 'f', 'e', 'd', 'c1', 'c2', 'b1', 'c2', 'b2', 'c1', 'g', 'a0', 'a1' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, true, true, false, false, false, false, false ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false, true, true, true, true, true ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ true, true, true, true, false, true, false, false, false, true, true, false ];
+    var expectedDownVisited = [ false, false, false, false, true, false, true, true, true, false, false, true ];
+    var expectedVisited = new Set([ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'b2', 'c2', 'a1' ]);
+    var expectedLogStr =
+`
+up a0
+ up d
+   up e
+     up f
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+     down c1
+     up c2
+     down c2
+   down b1
+   up c2
+   down c2
+   up b2
+   down b2
+   up c1
+   down c1
+ down g
+down a0
+up a1
+down a1
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer.map( ( node ) => group.nodeToName( node ) ).original, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.case = 'revisiting : 1';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a0, gr.a0, gr.a1 ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 1,
+      allVariants : 1,
+      allSiblings : 0,
+    }
+    group.lookDfs( o2 );
+
+    var expectedNds = [ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'b1', 'b2', 'c1', 'a1' ];
+    var expectedUps = [ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'b1', 'b2', 'c1', 'a1' ];
+    var expectedDws = [ 'f', 'e', 'd', 'c1', 'c2', 'b1', 'b2', 'b1', 'c2', 'b2', 'c1', 'g', 'a0', 'a1' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, true, true, false, true, true, false, false, false, false ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ true, true, true, true, false, true, true, false, true, false, false, true, true, false ];
+    var expectedDownVisited = [ false, false, false, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedVisited = new Set([]);
+    var expectedLogStr =
+`
+up a0
+ up d
+   up e
+     up f
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+     down c1
+     up c2
+     down c2
+   down b1
+   up c2
+     up b2
+     down b2
+     up b1
+     down b1
+   down c2
+   up b2
+   down b2
+   up c1
+   down c1
+ down g
+down a0
+up a1
+down a1
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer.map( ( node ) => group.nodeToName( node ) ).original, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.case = 'revisiting : 2';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a0, gr.a0, gr.a1 ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 2,
+      allVariants : 1,
+      allSiblings : 0,
+    }
+    group.lookDfs( o2 );
+
+    var expectedNds = [ 'a0', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'b2', 'c2', 'c2', 'b2', 'c1', 'c2', 'b1', 'g', 'b2', 'c1', 'a1' ];
+    var expectedUps = [ 'a0', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'b2', 'c2', 'c2', 'b2', 'c1', 'c2', 'b1', 'g', 'b2', 'c1', 'a1' ];
+    var expectedDws = [ 'd', 'f', 'e', 'd', 'b1', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'b2', 'b1', 'c2', 'g', 'b2', 'c1', 'g', 'a0', 'a1' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, false, true, true, true, false, false, false, true, true, false, false, false, false, false, false, false ];
+    var expectedUpVisited = [ false, false, false, false, true, false, false, false, true, true, false, false, false, true, true, false, true, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ false, true, true, true, false, false, true, false, true, false, false, true, false, true, false, false, false, true, true, false ];
+    var expectedDownVisited = [ true, false, false, false, true, true, false, false, false, true, true, false, false, false, true, false, false, false, false, false ];
+    var expectedVisited = [];
+    var expectedLogStr =
+`
+up a0
+ up d
+   up e
+     up f
+       up d
+       down d
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+       up b1
+       down b1
+       up b2
+       down b2
+     down c1
+     up c2
+     down c2
+   down b1
+   up c2
+     up b2
+       up c1
+       down c1
+       up c2
+       down c2
+     down b2
+     up b1
+     down b1
+   down c2
+   up g
+   down g
+   up b2
+   down b2
+   up c1
+   down c1
+ down g
+down a0
+up a1
+down a1
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer.map( ( node ) => group.nodeToName( node ) ).original, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.case = 'revisiting : 3';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a0, gr.a0, gr.a1 ],
+      onUp : onUp2,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 3,
+      allVariants : 1,
+      allSiblings : 0,
+    }
+    group.lookDfs( o2 );
+
+    var expectedNds = [ 'a0', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'b2', 'c2', 'c2', 'b2', 'c1', 'c2', 'b1', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'b1', 'g', 'b1', 'c2', 'g', 'b2', 'c1', 'b2', 'c1', 'b2', 'c1', 'a1' ];
+    var expectedUps = [ 'a0', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'b2', 'c2', 'c2', 'b2', 'c1', 'c2', 'b1', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'b1', 'g', 'b1', 'c2', 'g', 'b2', 'c1', 'b2', 'c1', 'b2', 'c1', 'a1' ];
+    var expectedDws = [ 'd', 'f', 'e', 'd', 'b1', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'b2', 'b1', 'c2', 'c1', 'c2', 'b1', 'b2', 'b1', 'c2', 'b1', 'c2', 'g', 'b2', 'c1', 'g', 'b2', 'c1', 'g', 'b2', 'c1', 'g', 'a0', 'a1' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, false, true, true, true, false, false, false, true, true, false, false, false, true, true, false, false, true, false, false, true, false, false, false, false, false, false, false, false, false, false ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ false, true, true, true, false, false, true, false, true, false, false, true, false, true, false, false, true, false, false, true, false, false, false, false, false, true, false, false, true, false, false, true, true, false ];
+    var expectedDownVisited = [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedVisited = null;
+    var expectedLogStr =
+`
+up a0
+ up d
+   up e
+     up f
+       up d
+       down d
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+       up b1
+       down b1
+       up b2
+       down b2
+     down c1
+     up c2
+     down c2
+   down b1
+   up c2
+     up b2
+       up c1
+       down c1
+       up c2
+       down c2
+     down b2
+     up b1
+     down b1
+   down c2
+   up g
+     up b1
+       up c1
+       down c1
+       up c2
+       down c2
+     down b1
+     up c2
+       up b2
+       down b2
+       up b1
+       down b1
+     down c2
+     up g
+       up b1
+       down b1
+       up c2
+       down c2
+       up g
+       down g
+       up b2
+       down b2
+       up c1
+       down c1
+     down g
+     up b2
+     down b2
+     up c1
+     down c1
+   down g
+   up b2
+   down b2
+   up c1
+   down c1
+ down g
+down a0
+up a1
+down a1
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.close( 'fast : ' + o.fast );
+  }
+
+  /* - */
+
+  function log( srcStr )
+  {
+    _.assert( arguments.length === 1 );
+    logStr += srcStr + '\n';
+    /* logger.log( srcStr ); */
+  }
+
+  function clean()
+  {
+    logStr = '\n';
+    ups = [];
+    dws = [];
+    nds = [];
+    upContinueNode = [];
+    downContinueNode = [];
+    upContinueUp = [];
+    downContinueUp = [];
+    upVisited = [];
+    downVisited = [];
+  }
+
+  function onNode( node, it )
+  {
+    nds.push( node );
+  }
+
+  function onUp( node, it )
+  {
+    log( _.strDup( '  ', it.level ) + ' up ' + node.name );
+    upContinueNode.push( it.continueNode );
+    upContinueUp.push( it.continueUp );
+    upVisited.push( it.visited );
+    ups.push( node );
+  }
+
+  function onUp2( node, it )
+  {
+    if( it.level >= 4 )
+    it.continueUp = false;
+    onUp( node, it );
+  }
+
+  function onDown( node, it )
+  {
+    log( _.strDup( '  ', it.level ) + ' down ' + node.name );
+    downContinueNode.push( it.continueNode );
+    downContinueUp.push( it.continueUp );
+    downVisited.push( it.visited );
+    dws.push( node );
+  }
+
+} /* end of function lookDfsJunctionsAllVariants1AllSiblings0 */
+
+//
+
+function lookDfsJunctionsAllVariants1AllSiblings1( test )
+{
+  let context = this;
+  let ups = [];
+  let dws = [];
+  let nds = [];
+  let upContinueNode = [];
+  let downContinueNode = [];
+  let upContinueUp = [];
+  let downContinueUp = [];
+  let upVisited = [];
+  let downVisited = [];
+  let logStr = '';
+
+  test.description = 'setup cycledJunctions5';
+  var gr = context.cycledJunctions5();
+  var group = gr.sys.nodesGroup();
+
+  run({ fast : 1 });
+  run({ fast : 0 });
+
+  /* - */
+
+  gr.sys.finit();
+
+  function run( o )
+  {
+
+    test.open( 'fast : ' + o.fast );
+
+    /* - */
+
+    test.case = 'revisiting : 0';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a0, gr.a0, gr.a1 ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 0,
+      allVariants : 1,
+      allSiblings : 1,
+    }
+    group.lookDfs( o2 );
+
+    var expectedNds = [ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'c1', 'a0', 'a1' ];
+    var expectedUps = [ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'c1', 'a0', 'a1' ];
+    var expectedDws = [ 'f', 'e', 'd', 'c1', 'c2', 'b1', 'c2', 'b2', 'c1', 'g', 'a0', 'a0', 'a1' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, true, true, false, false, false, false, false, false ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false, true, true, true, true, true, true ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ true, true, true, true, false, true, false, false, false, true, true, false, false ];
+    var expectedDownVisited = [ false, false, false, false, true, false, true, true, true, false, false, true, true ];
+    var expectedVisited = new Set([ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'b2', 'c2', 'a1' ]);
+    var expectedLogStr =
+`
+up a0
+ up d
+   up e
+     up f
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+     down c1
+     up c2
+     down c2
+   down b1
+   up c2
+   down c2
+   up b2
+   down b2
+   up c1
+   down c1
+ down g
+down a0
+up a0
+down a0
+up a1
+down a1
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer.map( ( node ) => group.nodeToName( node ) ).original, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.case = 'revisiting : 1';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a0, gr.a0, gr.a1 ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 1,
+      allVariants : 1,
+      allSiblings : 1,
+    }
+    group.lookDfs( o2 );
+
+    var expectedNds = [ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'b1', 'b2', 'c1', 'a0', 'a1' ];
+    var expectedUps = [ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'b1', 'b2', 'c1', 'a0', 'a1' ];
+    var expectedDws = [ 'f', 'e', 'd', 'c1', 'c2', 'b1', 'b2', 'b1', 'c2', 'b2', 'c1', 'g', 'a0', 'a0', 'a1' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, true, true, false, true, true, false, false, false, false, false ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ true, true, true, true, false, true, true, false, true, false, false, true, true, false, false ];
+    var expectedDownVisited = [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedVisited = new Set([]);
+    var expectedLogStr =
+`
+up a0
+ up d
+   up e
+     up f
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+     down c1
+     up c2
+     down c2
+   down b1
+   up c2
+     up b2
+     down b2
+     up b1
+     down b1
+   down c2
+   up b2
+   down b2
+   up c1
+   down c1
+ down g
+down a0
+up a0
+down a0
+up a1
+down a1
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer.map( ( node ) => group.nodeToName( node ) ).original, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.case = 'revisiting : 2';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a0, gr.a0, gr.a1 ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 2,
+      allVariants : 1,
+      allSiblings : 1,
+    }
+    group.lookDfs( o2 );
+
+    var expectedNds = [ 'a0', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'b2', 'c2', 'c2', 'b2', 'c1', 'c2', 'b1', 'g', 'b2', 'c1', 'a0', 'a1' ];
+    var expectedUps = [ 'a0', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'b2', 'c2', 'c2', 'b2', 'c1', 'c2', 'b1', 'g', 'b2', 'c1', 'a0', 'a1' ];
+    var expectedDws = [ 'd', 'f', 'e', 'd', 'b1', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'b2', 'b1', 'c2', 'g', 'b2', 'c1', 'g', 'a0', 'a0', 'a1' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, false, true, true, true, false, false, false, true, true, false, false, false, false, false, false, false, false ];
+    var expectedUpVisited = [ false, false, false, false, true, false, false, false, true, true, false, false, false, true, true, false, true, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ false, true, true, true, false, false, true, false, true, false, false, true, false, true, false, false, false, true, true, false, false ];
+    var expectedDownVisited = [ true, false, false, false, true, true, false, false, false, true, true, false, false, false, true, false, false, false, false, false, false ];
+    var expectedVisited = [];
+    var expectedLogStr =
+`
+up a0
+ up d
+   up e
+     up f
+       up d
+       down d
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+       up b1
+       down b1
+       up b2
+       down b2
+     down c1
+     up c2
+     down c2
+   down b1
+   up c2
+     up b2
+       up c1
+       down c1
+       up c2
+       down c2
+     down b2
+     up b1
+     down b1
+   down c2
+   up g
+   down g
+   up b2
+   down b2
+   up c1
+   down c1
+ down g
+down a0
+up a0
+down a0
+up a1
+down a1
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer.map( ( node ) => group.nodeToName( node ) ).original, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.case = 'revisiting : 3';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a0, gr.a0, gr.a1 ],
+      onUp : onUp2,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 3,
+      allVariants : 1,
+      allSiblings : 1,
+    }
+    group.lookDfs( o2 );
+
+    var expectedNds = [ 'a0', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'b2', 'c2', 'c2', 'b2', 'c1', 'c2', 'b1', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'b1', 'g', 'b1', 'c2', 'g', 'b2', 'c1', 'b2', 'c1', 'b2', 'c1', 'a0', 'a1' ];
+    var expectedUps = [ 'a0', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'b2', 'c2', 'c2', 'b2', 'c1', 'c2', 'b1', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'b1', 'g', 'b1', 'c2', 'g', 'b2', 'c1', 'b2', 'c1', 'b2', 'c1', 'a0', 'a1' ];
+    var expectedDws = [ 'd', 'f', 'e', 'd', 'b1', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'b2', 'b1', 'c2', 'c1', 'c2', 'b1', 'b2', 'b1', 'c2', 'b1', 'c2', 'g', 'b2', 'c1', 'g', 'b2', 'c1', 'g', 'b2', 'c1', 'g', 'a0', 'a0', 'a1' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, false, true, true, true, false, false, false, true, true, false, false, false, true, true, false, false, true, false, false, true, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ false, true, true, true, false, false, true, false, true, false, false, true, false, true, false, false, true, false, false, true, false, false, false, false, false, true, false, false, true, false, false, true, true, false, false ];
+    var expectedDownVisited = [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedVisited = null;
+    var expectedLogStr =
+`
+up a0
+ up d
+   up e
+     up f
+       up d
+       down d
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+       up b1
+       down b1
+       up b2
+       down b2
+     down c1
+     up c2
+     down c2
+   down b1
+   up c2
+     up b2
+       up c1
+       down c1
+       up c2
+       down c2
+     down b2
+     up b1
+     down b1
+   down c2
+   up g
+     up b1
+       up c1
+       down c1
+       up c2
+       down c2
+     down b1
+     up c2
+       up b2
+       down b2
+       up b1
+       down b1
+     down c2
+     up g
+       up b1
+       down b1
+       up c2
+       down c2
+       up g
+       down g
+       up b2
+       down b2
+       up c1
+       down c1
+     down g
+     up b2
+     down b2
+     up c1
+     down c1
+   down g
+   up b2
+   down b2
+   up c1
+   down c1
+ down g
+down a0
+up a0
+down a0
+up a1
+down a1
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.close( 'fast : ' + o.fast );
+  }
+
+  /* - */
+
+  function log( srcStr )
+  {
+    _.assert( arguments.length === 1 );
+    logStr += srcStr + '\n';
+    /* logger.log( srcStr ); */
+  }
+
+  function clean()
+  {
+    logStr = '\n';
+    ups = [];
+    dws = [];
+    nds = [];
+    upContinueNode = [];
+    downContinueNode = [];
+    upContinueUp = [];
+    downContinueUp = [];
+    upVisited = [];
+    downVisited = [];
+  }
+
+  function onNode( node, it )
+  {
+    nds.push( node );
+  }
+
+  function onUp( node, it )
+  {
+    log( _.strDup( '  ', it.level ) + ' up ' + node.name );
+    upContinueNode.push( it.continueNode );
+    upContinueUp.push( it.continueUp );
+    upVisited.push( it.visited );
+    ups.push( node );
+  }
+
+  function onUp2( node, it )
+  {
+    if( it.level >= 4 )
+    it.continueUp = false;
+    onUp( node, it );
+  }
+
+  function onDown( node, it )
+  {
+    log( _.strDup( '  ', it.level ) + ' down ' + node.name );
+    downContinueNode.push( it.continueNode );
+    downContinueUp.push( it.continueUp );
+    downVisited.push( it.visited );
+    dws.push( node );
+  }
+
+} /* end of function lookDfsJunctionsAllVariants1AllSiblings1 */
+
+//
+
+function lookDfsJunctionsAllVariants1AllSiblings2( test )
+{
+  let context = this;
+  let ups = [];
+  let dws = [];
+  let nds = [];
+  let upContinueNode = [];
+  let downContinueNode = [];
+  let upContinueUp = [];
+  let downContinueUp = [];
+  let upVisited = [];
+  let downVisited = [];
+  let logStr = '';
+
+  test.description = 'setup cycledJunctions5';
+  var gr = context.cycledJunctions5();
+  var group = gr.sys.nodesGroup();
+
+  run({ fast : 1 });
+  run({ fast : 0 });
+
+  /* - */
+
+  gr.sys.finit();
+
+  function run( o )
+  {
+
+    test.open( 'fast : ' + o.fast );
+
+    /* - */
+
+    test.case = 'revisiting : 0';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a0, gr.a0, gr.a1 ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 0,
+      allVariants : 1,
+      allSiblings : 2,
+    }
+    group.lookDfs( o2 );
+
+    var expectedNds = [ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'c1', 'a0', 'a1' ];
+    var expectedUps = [ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'c1', 'a0', 'a1' ];
+    var expectedDws = [ 'f', 'e', 'd', 'c1', 'c2', 'b1', 'c2', 'b2', 'c1', 'g', 'a0', 'a0', 'a1' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, true, true, false, false, false, false, false, false ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false, true, true, true, true, true, true ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ true, true, true, true, false, true, false, false, false, true, true, false, false ];
+    var expectedDownVisited = [ false, false, false, false, true, false, true, true, true, false, false, true, true ];
+    var expectedVisited = new Set([ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'b2', 'c2', 'a1' ]);
+    var expectedLogStr =
+`
+up a0
+ up d
+   up e
+     up f
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+     down c1
+     up c2
+     down c2
+   down b1
+   up c2
+   down c2
+   up b2
+   down b2
+   up c1
+   down c1
+ down g
+down a0
+up a0
+down a0
+up a1
+down a1
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer.map( ( node ) => group.nodeToName( node ) ).original, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.case = 'revisiting : 1';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a0, gr.a0, gr.a1 ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 1,
+      allVariants : 1,
+      allSiblings : 2,
+    }
+    group.lookDfs( o2 );
+
+    var expectedNds = [ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'b1', 'b2', 'c1', 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'b1', 'b2', 'c1', 'a1' ];
+    var expectedUps = [ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'b1', 'b2', 'c1', 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'b1', 'b2', 'c1', 'a1' ];
+    var expectedDws = [ 'f', 'e', 'd', 'c1', 'c2', 'b1', 'b2', 'b1', 'c2', 'b2', 'c1', 'g', 'a0', 'f', 'e', 'd', 'c1', 'c2', 'b1', 'b2', 'b1', 'c2', 'b2', 'c1', 'g', 'a0', 'a1' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, true, true, false, true, true, false, false, false, true, true, true, true, true, true, true, false, true, true, false, false, false, false ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ true, true, true, true, false, true, true, false, true, false, false, true, true, true, true, true, true, false, true, true, false, true, false, false, true, true, false ];
+    var expectedDownVisited = [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedVisited = new Set([]);
+    var expectedLogStr =
+`
+up a0
+up d
+ up e
+   up f
+   down f
+ down e
+down d
+up g
+ up b1
+   up c1
+   down c1
+   up c2
+   down c2
+ down b1
+ up c2
+   up b2
+   down b2
+   up b1
+   down b1
+ down c2
+ up b2
+ down b2
+ up c1
+ down c1
+down g
+down a0
+up a0
+up d
+ up e
+   up f
+   down f
+ down e
+down d
+up g
+ up b1
+   up c1
+   down c1
+   up c2
+   down c2
+ down b1
+ up c2
+   up b2
+   down b2
+   up b1
+   down b1
+ down c2
+ up b2
+ down b2
+ up c1
+ down c1
+down g
+down a0
+up a1
+down a1
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer.map( ( node ) => group.nodeToName( node ) ).original, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.case = 'revisiting : 2';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a0, gr.a0, gr.a1 ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 2,
+      allVariants : 1,
+      allSiblings : 2,
+    }
+    group.lookDfs( o2 );
+
+    var expectedNds = [ 'a0', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'b2', 'c2', 'c2', 'b2', 'c1', 'c2', 'b1', 'g', 'b2', 'c1', 'a0', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'b2', 'c2', 'c2', 'b2', 'c1', 'c2', 'b1', 'g', 'b2', 'c1', 'a1' ];
+    var expectedUps = [ 'a0', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'b2', 'c2', 'c2', 'b2', 'c1', 'c2', 'b1', 'g', 'b2', 'c1', 'a0', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'b2', 'c2', 'c2', 'b2', 'c1', 'c2', 'b1', 'g', 'b2', 'c1', 'a1' ];
+    var expectedDws = [ 'd', 'f', 'e', 'd', 'b1', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'b2', 'b1', 'c2', 'g', 'b2', 'c1', 'g', 'a0', 'd', 'f', 'e', 'd', 'b1', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'b2', 'b1', 'c2', 'g', 'b2', 'c1', 'g', 'a0', 'a1' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, false, true, true, true, false, false, false, true, true, false, false, false, false, false, false, true, true, true, true, false, true, true, true, false, false, false, true, true, false, false, false, false, false, false, false ];
+    var expectedUpVisited = [ false, false, false, false, true, false, false, false, true, true, false, false, false, true, true, false, true, false, false, false, false, false, false, true, false, false, false, true, true, false, false, false, true, true, false, true, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ]
+    var expectedDownContinueUp = [ false, true, true, true, false, false, true, false, true, false, false, true, false, true, false, false, false, true, true, false, true, true, true, false, false, true, false, true, false, false, true, false, true, false, false, false, true, true, false ];
+    var expectedDownVisited = [ true, false, false, false, true, true, false, false, false, true, true, false, false, false, true, false, false, false, false, true, false, false, false, true, true, false, false, false, true, true, false, false, false, true, false, false, false, false, false ];
+    var expectedVisited = [];
+    var expectedLogStr =
+`
+up a0
+ up d
+   up e
+     up f
+       up d
+       down d
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+       up b1
+       down b1
+       up b2
+       down b2
+     down c1
+     up c2
+     down c2
+   down b1
+   up c2
+     up b2
+       up c1
+       down c1
+       up c2
+       down c2
+     down b2
+     up b1
+     down b1
+   down c2
+   up g
+   down g
+   up b2
+   down b2
+   up c1
+   down c1
+ down g
+down a0
+up a0
+ up d
+   up e
+     up f
+       up d
+       down d
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+       up b1
+       down b1
+       up b2
+       down b2
+     down c1
+     up c2
+     down c2
+   down b1
+   up c2
+     up b2
+       up c1
+       down c1
+       up c2
+       down c2
+     down b2
+     up b1
+     down b1
+   down c2
+   up g
+   down g
+   up b2
+   down b2
+   up c1
+   down c1
+ down g
+down a0
+up a1
+down a1
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer.map( ( node ) => group.nodeToName( node ) ).original, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.case = 'revisiting : 3';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a0, gr.a0, gr.a1 ],
+      onUp : onUp2,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 3,
+      allVariants : 1,
+      allSiblings : 2,
+    }
+    group.lookDfs( o2 );
+
+    var expectedNds = [ 'a0', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'b2', 'c2', 'c2', 'b2', 'c1', 'c2', 'b1', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'b1', 'g', 'b1', 'c2', 'g', 'b2', 'c1', 'b2', 'c1', 'b2', 'c1', 'a0', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'b2', 'c2', 'c2', 'b2', 'c1', 'c2', 'b1', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'b1', 'g', 'b1', 'c2', 'g', 'b2', 'c1', 'b2', 'c1', 'b2', 'c1', 'a1' ];
+    var expectedUps = [ 'a0', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'b2', 'c2', 'c2', 'b2', 'c1', 'c2', 'b1', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'b1', 'g', 'b1', 'c2', 'g', 'b2', 'c1', 'b2', 'c1', 'b2', 'c1', 'a0', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'b2', 'c2', 'c2', 'b2', 'c1', 'c2', 'b1', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'b1', 'g', 'b1', 'c2', 'g', 'b2', 'c1', 'b2', 'c1', 'b2', 'c1', 'a1' ];
+    var expectedDws = [ 'd', 'f', 'e', 'd', 'b1', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'b2', 'b1', 'c2', 'c1', 'c2', 'b1', 'b2', 'b1', 'c2', 'b1', 'c2', 'g', 'b2', 'c1', 'g', 'b2', 'c1', 'g', 'b2', 'c1', 'g', 'a0', 'd', 'f', 'e', 'd', 'b1', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'b2', 'b1', 'c2', 'c1', 'c2', 'b1', 'b2', 'b1', 'c2', 'b1', 'c2', 'g', 'b2', 'c1', 'g', 'b2', 'c1', 'g', 'b2', 'c1', 'g', 'a0', 'a1' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, false, true, true, true, false, false, false, true, true, false, false, false, true, true, false, false, true, false, false, true, false, false, false, false, false, false, false, false, false, true, true, true, true, false, true, true, true, false, false, false, true, true, false, false, false, true, true, false, false, true, false, false, true, false, false, false, false, false, false, false, false, false, false ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ false, true, true, true, false, false, true, false, true, false, false, true, false, true, false, false, true, false, false, true, false, false, false, false, false, true, false, false, true, false, false, true, true, false, true, true, true, false, false, true, false, true, false, false, true, false, true, false, false, true, false, false, true, false, false, false, false, false, true, false, false, true, false, false, true, true, false ];
+    var expectedDownVisited = [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedVisited = null;
+    var expectedLogStr =
+`
+up a0
+ up d
+   up e
+     up f
+       up d
+       down d
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+       up b1
+       down b1
+       up b2
+       down b2
+     down c1
+     up c2
+     down c2
+   down b1
+   up c2
+     up b2
+       up c1
+       down c1
+       up c2
+       down c2
+     down b2
+     up b1
+     down b1
+   down c2
+   up g
+     up b1
+       up c1
+       down c1
+       up c2
+       down c2
+     down b1
+     up c2
+       up b2
+       down b2
+       up b1
+       down b1
+     down c2
+     up g
+       up b1
+       down b1
+       up c2
+       down c2
+       up g
+       down g
+       up b2
+       down b2
+       up c1
+       down c1
+     down g
+     up b2
+     down b2
+     up c1
+     down c1
+   down g
+   up b2
+   down b2
+   up c1
+   down c1
+ down g
+down a0
+up a0
+ up d
+   up e
+     up f
+       up d
+       down d
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+       up b1
+       down b1
+       up b2
+       down b2
+     down c1
+     up c2
+     down c2
+   down b1
+   up c2
+     up b2
+       up c1
+       down c1
+       up c2
+       down c2
+     down b2
+     up b1
+     down b1
+   down c2
+   up g
+     up b1
+       up c1
+       down c1
+       up c2
+       down c2
+     down b1
+     up c2
+       up b2
+       down b2
+       up b1
+       down b1
+     down c2
+     up g
+       up b1
+       down b1
+       up c2
+       down c2
+       up g
+       down g
+       up b2
+       down b2
+       up c1
+       down c1
+     down g
+     up b2
+     down b2
+     up c1
+     down c1
+   down g
+   up b2
+   down b2
+   up c1
+   down c1
+ down g
+down a0
+up a1
+down a1
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.close( 'fast : ' + o.fast );
+  }
+
+  /* - */
+
+  function log( srcStr )
+  {
+    _.assert( arguments.length === 1 );
+    logStr += srcStr + '\n';
+    /* logger.log( srcStr ); */
+  }
+
+  function clean()
+  {
+    logStr = '\n';
+    ups = [];
+    dws = [];
+    nds = [];
+    upContinueNode = [];
+    downContinueNode = [];
+    upContinueUp = [];
+    downContinueUp = [];
+    upVisited = [];
+    downVisited = [];
+  }
+
+  function onNode( node, it )
+  {
+    nds.push( node );
+  }
+
+  function onUp( node, it )
+  {
+    log( _.strDup( '  ', it.level ) + ' up ' + node.name );
+    upContinueNode.push( it.continueNode );
+    upContinueUp.push( it.continueUp );
+    upVisited.push( it.visited );
+    ups.push( node );
+  }
+
+  function onUp2( node, it )
+  {
+    if( it.level >= 4 )
+    it.continueUp = false;
+    onUp( node, it );
+  }
+
+  function onDown( node, it )
+  {
+    log( _.strDup( '  ', it.level ) + ' down ' + node.name );
+    downContinueNode.push( it.continueNode );
+    downContinueUp.push( it.continueUp );
+    downVisited.push( it.visited );
+    dws.push( node );
+  }
+
+} /* end of function lookDfsJunctionsAllVariants1AllSiblings2 */
+
+//
+
+function lookDfsJunctionsAllVariants2( test )
+{
+  let context = this;
+  let ups = [];
+  let dws = [];
+  let nds = [];
+  let upContinueNode = [];
+  let downContinueNode = [];
+  let upContinueUp = [];
+  let downContinueUp = [];
+  let upVisited = [];
+  let downVisited = [];
+  let logStr = '';
+
+  test.description = 'setup cycledJunctions5';
+  var gr = context.cycledJunctions5();
+  var group = gr.sys.nodesGroup();
+
+  run({ fast : 1 });
+  run({ fast : 0 });
+
+  /* - */
+
+  gr.sys.finit();
+
+  function run( o )
+  {
+
+    test.open( 'fast : ' + o.fast );
+
+    /* - */
+
+    test.case = 'revisiting : 0';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a0, gr.a0, gr.a1 ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 0,
+      allVariants : 2,
+    }
+    group.lookDfs( o2 );
+
+    var expectedNds = [ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'c1', 'a1' ];
+    var expectedUps = [ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'c1', 'a1' ];
+    var expectedDws = [ 'f', 'e', 'd', 'c1', 'c2', 'b1', 'c2', 'b2', 'c1', 'g', 'a0', 'a1' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, true, true, false, false, false, false, false ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false, true, true, true, true, true ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ true, true, true, true, false, true, false, false, false, true, true, false ];
+    var expectedDownVisited = [ false, false, false, false, true, false, true, true, true, false, false, true ];
+    var expectedVisited = new Set([ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'b2', 'c2', 'a1' ]);
+    var expectedLogStr =
+`
+up a0
+ up d
+   up e
+     up f
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+     down c1
+     up c2
+     down c2
+   down b1
+   up c2
+   down c2
+   up b2
+   down b2
+   up c1
+   down c1
+ down g
+down a0
+up a1
+down a1
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer.map( ( node ) => group.nodeToName( node ) ).original, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.case = 'revisiting : 1';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a0, gr.a0, gr.a1 ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 1,
+      allVariants : 2,
+    }
+    group.lookDfs( o2 );
+
+    var expectedNds = [ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'b1', 'b2', 'c1', 'c2', 'c1', 'b1', 'b2', 'a1', 'd', 'e', 'f', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'b1', 'b2', 'c1', 'c2', 'c1', 'b1', 'b2' ];
+    var expectedUps = [ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'b1', 'b2', 'c1', 'c2', 'c1', 'b1', 'b2', 'a1', 'd', 'e', 'f', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'b1', 'b2', 'c1', 'c2', 'c1', 'b1', 'b2' ];
+    var expectedDws = [ 'f', 'e', 'd', 'c1', 'c2', 'b1', 'b2', 'b1', 'c2', 'c1', 'c2', 'b2', 'b1', 'b2', 'c1', 'g', 'a0', 'f', 'e', 'd', 'c1', 'c2', 'b1', 'b2', 'b1', 'c2', 'c1', 'c2', 'b2', 'b1', 'b2', 'c1', 'g', 'a1' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ]
+    var expectedDownVisited = [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedVisited = new Set([]);
+    var expectedLogStr =
+`
+up a0
+ up d
+   up e
+     up f
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+     down c1
+     up c2
+     down c2
+   down b1
+   up c2
+     up b2
+     down b2
+     up b1
+     down b1
+   down c2
+   up b2
+     up c1
+     down c1
+     up c2
+     down c2
+   down b2
+   up c1
+     up b1
+     down b1
+     up b2
+     down b2
+   down c1
+ down g
+down a0
+up a1
+ up d
+   up e
+     up f
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+     down c1
+     up c2
+     down c2
+   down b1
+   up c2
+     up b2
+     down b2
+     up b1
+     down b1
+   down c2
+   up b2
+     up c1
+     down c1
+     up c2
+     down c2
+   down b2
+   up c1
+     up b1
+     down b1
+     up b2
+     down b2
+   down c1
+ down g
+down a1
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer.map( ( node ) => group.nodeToName( node ) ).original, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.case = 'revisiting : 2';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a0, gr.a0, gr.a1 ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 2,
+      allVariants : 2,
+    }
+    group.lookDfs( o2 );
+
+    var expectedNds = [ 'a0', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'g', 'b2', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c1', 'b1', 'c1', 'c2', 'b2', 'c1', 'c2', 'a1', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'g', 'b2', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c1', 'b1', 'c1', 'c2', 'b2', 'c1', 'c2' ];
+    var expectedUps = [ 'a0', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'g', 'b2', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c1', 'b1', 'c1', 'c2', 'b2', 'c1', 'c2', 'a1', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'g', 'b2', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c1', 'b1', 'c1', 'c2', 'b2', 'c1', 'c2' ];
+    var expectedDws = [ 'd', 'f', 'e', 'd', 'b1', 'b2', 'c1', 'b2', 'b1', 'c2', 'b1', 'c1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c2', 'g', 'b1', 'b2', 'c1', 'b2', 'b1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'b2', 'c1', 'g', 'a0', 'd', 'f', 'e', 'd', 'b1', 'b2', 'c1', 'b2', 'b1', 'c2', 'b1', 'c1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c2', 'g', 'b1', 'b2', 'c1', 'b2', 'b1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'b2', 'c1', 'g', 'a1' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, false, true, true, true, false, false, true, false, false, true, true, false, false, true, false, false, false, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, true, true, false, true, true, true, false, false, true, false, false, true, true, false, false, true, false, false, false, true, true, false, false, true, false, false, true, true, false, false, true, false, false ];
+    var expectedUpVisited = [ false, false, false, false, true, false, false, false, true, true, false, true, true, false, false, true, true, false, true, true, true, false, false, true, true, false, true, true, false, false, true, true, false, true, true, false, false, false, false, true, false, false, false, true, true, false, true, true, false, false, true, true, false, true, true, true, false, false, true, true, false, true, true, false, false, true, true, false, true, true ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ false, true, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, false, false, false, true, false, false, true, true, false, false, true, false, false, true, true, true, true, false, true, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, false, false, false, true, false, false, true, true, false, false, true, false, false, true, true, true, true ];
+    var expectedDownVisited = [ true, false, false, false, true, true, false, true, true, false, false, true, true, false, true, true, false, false, true, true, true, false, true, true, false, false, true, true, false, true, true, false, false, false, false, true, false, false, false, true, true, false, true, true, false, false, true, true, false, true, true, false, false, true, true, true, false, true, true, false, false, true, true, false, true, true, false, false, false, false ];
+    var expectedVisited = [];
+    var expectedLogStr =
+`
+up a0
+ up d
+   up e
+     up f
+       up d
+       down d
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+       up b1
+       down b1
+       up b2
+       down b2
+     down c1
+     up c2
+       up b2
+       down b2
+       up b1
+       down b1
+     down c2
+   down b1
+   up c2
+     up b2
+       up c1
+       down c1
+       up c2
+       down c2
+     down b2
+     up b1
+       up c1
+       down c1
+       up c2
+       down c2
+     down b1
+   down c2
+   up g
+   down g
+   up b2
+     up c1
+       up b1
+       down b1
+       up b2
+       down b2
+     down c1
+     up c2
+       up b2
+       down b2
+       up b1
+       down b1
+     down c2
+   down b2
+   up c1
+     up b1
+       up c1
+       down c1
+       up c2
+       down c2
+     down b1
+     up b2
+       up c1
+       down c1
+       up c2
+       down c2
+     down b2
+   down c1
+ down g
+down a0
+up a1
+ up d
+   up e
+     up f
+       up d
+       down d
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+       up b1
+       down b1
+       up b2
+       down b2
+     down c1
+     up c2
+       up b2
+       down b2
+       up b1
+       down b1
+     down c2
+   down b1
+   up c2
+     up b2
+       up c1
+       down c1
+       up c2
+       down c2
+     down b2
+     up b1
+       up c1
+       down c1
+       up c2
+       down c2
+     down b1
+   down c2
+   up g
+   down g
+   up b2
+     up c1
+       up b1
+       down b1
+       up b2
+       down b2
+     down c1
+     up c2
+       up b2
+       down b2
+       up b1
+       down b1
+     down c2
+   down b2
+   up c1
+     up b1
+       up c1
+       down c1
+       up c2
+       down c2
+     down b1
+     up b2
+       up c1
+       down c1
+       up c2
+       down c2
+     down b2
+   down c1
+ down g
+down a1
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer.map( ( node ) => group.nodeToName( node ) ).original, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.case = 'revisiting : 3';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a0, gr.a0, gr.a1 ],
+      onUp : onUp2,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 3,
+      allVariants : 2,
+    }
+    group.lookDfs( o2 );
+
+    var expectedNds = [ 'a0', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'b1', 'g', 'b1', 'c2', 'g', 'b2', 'c1', 'b2', 'c1', 'c2', 'c1', 'b1', 'b2', 'b2', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c1', 'b1', 'c1', 'c2', 'b2', 'c1', 'c2', 'a1', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'b1', 'g', 'b1', 'c2', 'g', 'b2', 'c1', 'b2', 'c1', 'c2', 'c1', 'b1', 'b2', 'b2', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c1', 'b1', 'c1', 'c2', 'b2', 'c1', 'c2' ];
+    var expectedUps = [ 'a0', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'b1', 'g', 'b1', 'c2', 'g', 'b2', 'c1', 'b2', 'c1', 'c2', 'c1', 'b1', 'b2', 'b2', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c1', 'b1', 'c1', 'c2', 'b2', 'c1', 'c2', 'a1', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'b1', 'g', 'b1', 'c2', 'g', 'b2', 'c1', 'b2', 'c1', 'c2', 'c1', 'b1', 'b2', 'b2', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c1', 'b1', 'c1', 'c2', 'b2', 'c1', 'c2' ];
+    var expectedDws = [ 'd', 'f', 'e', 'd', 'b1', 'b2', 'c1', 'b2', 'b1', 'c2', 'b1', 'c1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c2', 'c1', 'c2', 'b1', 'b2', 'b1', 'c2', 'b1', 'c2', 'g', 'b2', 'c1', 'g', 'c1', 'c2', 'b2', 'b1', 'b2', 'c1', 'g', 'b1', 'b2', 'c1', 'b2', 'b1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'b2', 'c1', 'g', 'a0', 'd', 'f', 'e', 'd', 'b1', 'b2', 'c1', 'b2', 'b1', 'c2', 'b1', 'c1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c2', 'c1', 'c2', 'b1', 'b2', 'b1', 'c2', 'b1', 'c2', 'g', 'b2', 'c1', 'g', 'c1', 'c2', 'b2', 'b1', 'b2', 'c1', 'g', 'b1', 'b2', 'c1', 'b2', 'b1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'b2', 'c1', 'g', 'a1' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp =  [ true, true, true, true, false, true, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, false, false, false, false, false, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, true, true, false, true, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, false, false, false, false, false, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, false, false, true, false, false ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ false, true, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, false, false, false, false, false, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, true, true, false, true, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, false, false, false, false, false, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, true, true ];
+    var expectedDownVisited = [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedVisited = null;
+    var expectedLogStr =
+`
+up a0
+ up d
+   up e
+     up f
+       up d
+       down d
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+       up b1
+       down b1
+       up b2
+       down b2
+     down c1
+     up c2
+       up b2
+       down b2
+       up b1
+       down b1
+     down c2
+   down b1
+   up c2
+     up b2
+       up c1
+       down c1
+       up c2
+       down c2
+     down b2
+     up b1
+       up c1
+       down c1
+       up c2
+       down c2
+     down b1
+   down c2
+   up g
+     up b1
+       up c1
+       down c1
+       up c2
+       down c2
+     down b1
+     up c2
+       up b2
+       down b2
+       up b1
+       down b1
+     down c2
+     up g
+       up b1
+       down b1
+       up c2
+       down c2
+       up g
+       down g
+       up b2
+       down b2
+       up c1
+       down c1
+     down g
+     up b2
+       up c1
+       down c1
+       up c2
+       down c2
+     down b2
+     up c1
+       up b1
+       down b1
+       up b2
+       down b2
+     down c1
+   down g
+   up b2
+     up c1
+       up b1
+       down b1
+       up b2
+       down b2
+     down c1
+     up c2
+       up b2
+       down b2
+       up b1
+       down b1
+     down c2
+   down b2
+   up c1
+     up b1
+       up c1
+       down c1
+       up c2
+       down c2
+     down b1
+     up b2
+       up c1
+       down c1
+       up c2
+       down c2
+     down b2
+   down c1
+ down g
+down a0
+up a1
+ up d
+   up e
+     up f
+       up d
+       down d
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+       up b1
+       down b1
+       up b2
+       down b2
+     down c1
+     up c2
+       up b2
+       down b2
+       up b1
+       down b1
+     down c2
+   down b1
+   up c2
+     up b2
+       up c1
+       down c1
+       up c2
+       down c2
+     down b2
+     up b1
+       up c1
+       down c1
+       up c2
+       down c2
+     down b1
+   down c2
+   up g
+     up b1
+       up c1
+       down c1
+       up c2
+       down c2
+     down b1
+     up c2
+       up b2
+       down b2
+       up b1
+       down b1
+     down c2
+     up g
+       up b1
+       down b1
+       up c2
+       down c2
+       up g
+       down g
+       up b2
+       down b2
+       up c1
+       down c1
+     down g
+     up b2
+       up c1
+       down c1
+       up c2
+       down c2
+     down b2
+     up c1
+       up b1
+       down b1
+       up b2
+       down b2
+     down c1
+   down g
+   up b2
+     up c1
+       up b1
+       down b1
+       up b2
+       down b2
+     down c1
+     up c2
+       up b2
+       down b2
+       up b1
+       down b1
+     down c2
+   down b2
+   up c1
+     up b1
+       up c1
+       down c1
+       up c2
+       down c2
+     down b1
+     up b2
+       up c1
+       down c1
+       up c2
+       down c2
+     down b2
+   down c1
+ down g
+down a1
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.close( 'fast : ' + o.fast );
+  }
+
+  /* - */
+
+  function log( srcStr )
+  {
+    _.assert( arguments.length === 1 );
+    logStr += srcStr + '\n';
+    /* logger.log( srcStr ); */
+  }
+
+  function clean()
+  {
+    logStr = '\n';
+    ups = [];
+    dws = [];
+    nds = [];
+    upContinueNode = [];
+    downContinueNode = [];
+    upContinueUp = [];
+    downContinueUp = [];
+    upVisited = [];
+    downVisited = [];
+  }
+
+  function onNode( node, it )
+  {
+    nds.push( node );
+  }
+
+  function onUp( node, it )
+  {
+    log( _.strDup( '  ', it.level ) + ' up ' + node.name );
+    upContinueNode.push( it.continueNode );
+    upContinueUp.push( it.continueUp );
+    upVisited.push( it.visited );
+    ups.push( node );
+  }
+
+  function onUp2( node, it )
+  {
+    if( it.level >= 4 )
+    it.continueUp = false;
+    onUp( node, it );
+  }
+
+  function onDown( node, it )
+  {
+    log( _.strDup( '  ', it.level ) + ' down ' + node.name );
+    downContinueNode.push( it.continueNode );
+    downContinueUp.push( it.continueUp );
+    downVisited.push( it.visited );
+    dws.push( node );
+  }
+
+} /* end of function lookDfsJunctionsAllVariants2 */
+
+//
+
+function lookDfsJunctionsAllVariants2AllSiblings0( test )
+{
+  let context = this;
+  let ups = [];
+  let dws = [];
+  let nds = [];
+  let upContinueNode = [];
+  let downContinueNode = [];
+  let upContinueUp = [];
+  let downContinueUp = [];
+  let upVisited = [];
+  let downVisited = [];
+  let logStr = '';
+
+  test.description = 'setup cycledJunctions5';
+  var gr = context.cycledJunctions5();
+  var group = gr.sys.nodesGroup();
+
+  run({ fast : 1 });
+  run({ fast : 0 });
+
+  /* - */
+
+  gr.sys.finit();
+
+  function run( o )
+  {
+
+    test.open( 'fast : ' + o.fast );
+
+    /* - */
+
+    test.case = 'revisiting : 0';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a0, gr.a0, gr.a1 ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 0,
+      allVariants : 2,
+      allSiblings : 0,
+    }
+    group.lookDfs( o2 );
+
+    var expectedNds = [ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'c1', 'a1' ];
+    var expectedUps = [ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'c1', 'a1' ];
+    var expectedDws = [ 'f', 'e', 'd', 'c1', 'c2', 'b1', 'c2', 'b2', 'c1', 'g', 'a0', 'a1' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, true, true, false, false, false, false, false ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false, true, true, true, true, true ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ true, true, true, true, false, true, false, false, false, true, true, false ];
+    var expectedDownVisited = [ false, false, false, false, true, false, true, true, true, false, false, true ];
+    var expectedVisited = new Set([ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'b2', 'c2', 'a1' ]);
+    var expectedLogStr =
+`
+up a0
+ up d
+   up e
+     up f
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+     down c1
+     up c2
+     down c2
+   down b1
+   up c2
+   down c2
+   up b2
+   down b2
+   up c1
+   down c1
+ down g
+down a0
+up a1
+down a1
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer.map( ( node ) => group.nodeToName( node ) ).original, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.case = 'revisiting : 1';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a0, gr.a0, gr.a1 ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 1,
+      allVariants : 2,
+      allSiblings : 0,
+    }
+    group.lookDfs( o2 );
+
+    var expectedNds = [ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'b1', 'b2', 'c1', 'c2', 'c1', 'b1', 'b2', 'a1', 'd', 'e', 'f', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'b1', 'b2', 'c1', 'c2', 'c1', 'b1', 'b2' ];
+    var expectedUps = [ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'b1', 'b2', 'c1', 'c2', 'c1', 'b1', 'b2', 'a1', 'd', 'e', 'f', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'b1', 'b2', 'c1', 'c2', 'c1', 'b1', 'b2' ];
+    var expectedDws = [ 'f', 'e', 'd', 'c1', 'c2', 'b1', 'b2', 'b1', 'c2', 'c1', 'c2', 'b2', 'b1', 'b2', 'c1', 'g', 'a0', 'f', 'e', 'd', 'c1', 'c2', 'b1', 'b2', 'b1', 'c2', 'c1', 'c2', 'b2', 'b1', 'b2', 'c1', 'g', 'a1' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ]
+    var expectedDownVisited = [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedVisited = new Set([]);
+    var expectedLogStr =
+`
+up a0
+ up d
+   up e
+     up f
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+     down c1
+     up c2
+     down c2
+   down b1
+   up c2
+     up b2
+     down b2
+     up b1
+     down b1
+   down c2
+   up b2
+     up c1
+     down c1
+     up c2
+     down c2
+   down b2
+   up c1
+     up b1
+     down b1
+     up b2
+     down b2
+   down c1
+ down g
+down a0
+up a1
+ up d
+   up e
+     up f
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+     down c1
+     up c2
+     down c2
+   down b1
+   up c2
+     up b2
+     down b2
+     up b1
+     down b1
+   down c2
+   up b2
+     up c1
+     down c1
+     up c2
+     down c2
+   down b2
+   up c1
+     up b1
+     down b1
+     up b2
+     down b2
+   down c1
+ down g
+down a1
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer.map( ( node ) => group.nodeToName( node ) ).original, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.case = 'revisiting : 2';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a0, gr.a0, gr.a1 ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 2,
+      allVariants : 2,
+      allSiblings : 0,
+    }
+    group.lookDfs( o2 );
+
+    var expectedNds = [ 'a0', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'g', 'b2', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c1', 'b1', 'c1', 'c2', 'b2', 'c1', 'c2', 'a1', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'g', 'b2', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c1', 'b1', 'c1', 'c2', 'b2', 'c1', 'c2' ];
+    var expectedUps = [ 'a0', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'g', 'b2', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c1', 'b1', 'c1', 'c2', 'b2', 'c1', 'c2', 'a1', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'g', 'b2', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c1', 'b1', 'c1', 'c2', 'b2', 'c1', 'c2' ];
+    var expectedDws = [ 'd', 'f', 'e', 'd', 'b1', 'b2', 'c1', 'b2', 'b1', 'c2', 'b1', 'c1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c2', 'g', 'b1', 'b2', 'c1', 'b2', 'b1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'b2', 'c1', 'g', 'a0', 'd', 'f', 'e', 'd', 'b1', 'b2', 'c1', 'b2', 'b1', 'c2', 'b1', 'c1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c2', 'g', 'b1', 'b2', 'c1', 'b2', 'b1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'b2', 'c1', 'g', 'a1' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, false, true, true, true, false, false, true, false, false, true, true, false, false, true, false, false, false, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, true, true, false, true, true, true, false, false, true, false, false, true, true, false, false, true, false, false, false, true, true, false, false, true, false, false, true, true, false, false, true, false, false ];
+    var expectedUpVisited = [ false, false, false, false, true, false, false, false, true, true, false, true, true, false, false, true, true, false, true, true, true, false, false, true, true, false, true, true, false, false, true, true, false, true, true, false, false, false, false, true, false, false, false, true, true, false, true, true, false, false, true, true, false, true, true, true, false, false, true, true, false, true, true, false, false, true, true, false, true, true ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ false, true, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, false, false, false, true, false, false, true, true, false, false, true, false, false, true, true, true, true, false, true, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, false, false, false, true, false, false, true, true, false, false, true, false, false, true, true, true, true ];
+    var expectedDownVisited = [ true, false, false, false, true, true, false, true, true, false, false, true, true, false, true, true, false, false, true, true, true, false, true, true, false, false, true, true, false, true, true, false, false, false, false, true, false, false, false, true, true, false, true, true, false, false, true, true, false, true, true, false, false, true, true, true, false, true, true, false, false, true, true, false, true, true, false, false, false, false ];
+    var expectedVisited = [];
+    var expectedLogStr =
+`
+up a0
+ up d
+   up e
+     up f
+       up d
+       down d
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+       up b1
+       down b1
+       up b2
+       down b2
+     down c1
+     up c2
+       up b2
+       down b2
+       up b1
+       down b1
+     down c2
+   down b1
+   up c2
+     up b2
+       up c1
+       down c1
+       up c2
+       down c2
+     down b2
+     up b1
+       up c1
+       down c1
+       up c2
+       down c2
+     down b1
+   down c2
+   up g
+   down g
+   up b2
+     up c1
+       up b1
+       down b1
+       up b2
+       down b2
+     down c1
+     up c2
+       up b2
+       down b2
+       up b1
+       down b1
+     down c2
+   down b2
+   up c1
+     up b1
+       up c1
+       down c1
+       up c2
+       down c2
+     down b1
+     up b2
+       up c1
+       down c1
+       up c2
+       down c2
+     down b2
+   down c1
+ down g
+down a0
+up a1
+ up d
+   up e
+     up f
+       up d
+       down d
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+       up b1
+       down b1
+       up b2
+       down b2
+     down c1
+     up c2
+       up b2
+       down b2
+       up b1
+       down b1
+     down c2
+   down b1
+   up c2
+     up b2
+       up c1
+       down c1
+       up c2
+       down c2
+     down b2
+     up b1
+       up c1
+       down c1
+       up c2
+       down c2
+     down b1
+   down c2
+   up g
+   down g
+   up b2
+     up c1
+       up b1
+       down b1
+       up b2
+       down b2
+     down c1
+     up c2
+       up b2
+       down b2
+       up b1
+       down b1
+     down c2
+   down b2
+   up c1
+     up b1
+       up c1
+       down c1
+       up c2
+       down c2
+     down b1
+     up b2
+       up c1
+       down c1
+       up c2
+       down c2
+     down b2
+   down c1
+ down g
+down a1
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer.map( ( node ) => group.nodeToName( node ) ).original, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.case = 'revisiting : 3';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a0, gr.a0, gr.a1 ],
+      onUp : onUp2,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 3,
+      allVariants : 2,
+      allSiblings : 0,
+    }
+    group.lookDfs( o2 );
+
+    var expectedNds = [ 'a0', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'b1', 'g', 'b1', 'c2', 'g', 'b2', 'c1', 'b2', 'c1', 'c2', 'c1', 'b1', 'b2', 'b2', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c1', 'b1', 'c1', 'c2', 'b2', 'c1', 'c2', 'a1', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'b1', 'g', 'b1', 'c2', 'g', 'b2', 'c1', 'b2', 'c1', 'c2', 'c1', 'b1', 'b2', 'b2', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c1', 'b1', 'c1', 'c2', 'b2', 'c1', 'c2' ];
+    var expectedUps = [ 'a0', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'b1', 'g', 'b1', 'c2', 'g', 'b2', 'c1', 'b2', 'c1', 'c2', 'c1', 'b1', 'b2', 'b2', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c1', 'b1', 'c1', 'c2', 'b2', 'c1', 'c2', 'a1', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'b1', 'g', 'b1', 'c2', 'g', 'b2', 'c1', 'b2', 'c1', 'c2', 'c1', 'b1', 'b2', 'b2', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c1', 'b1', 'c1', 'c2', 'b2', 'c1', 'c2' ];
+    var expectedDws = [ 'd', 'f', 'e', 'd', 'b1', 'b2', 'c1', 'b2', 'b1', 'c2', 'b1', 'c1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c2', 'c1', 'c2', 'b1', 'b2', 'b1', 'c2', 'b1', 'c2', 'g', 'b2', 'c1', 'g', 'c1', 'c2', 'b2', 'b1', 'b2', 'c1', 'g', 'b1', 'b2', 'c1', 'b2', 'b1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'b2', 'c1', 'g', 'a0', 'd', 'f', 'e', 'd', 'b1', 'b2', 'c1', 'b2', 'b1', 'c2', 'b1', 'c1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c2', 'c1', 'c2', 'b1', 'b2', 'b1', 'c2', 'b1', 'c2', 'g', 'b2', 'c1', 'g', 'c1', 'c2', 'b2', 'b1', 'b2', 'c1', 'g', 'b1', 'b2', 'c1', 'b2', 'b1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'b2', 'c1', 'g', 'a1' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp =  [ true, true, true, true, false, true, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, false, false, false, false, false, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, true, true, false, true, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, false, false, false, false, false, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, false, false, true, false, false ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ false, true, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, false, false, false, false, false, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, true, true, false, true, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, false, false, false, false, false, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, true, true ];
+    var expectedDownVisited = [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedVisited = null;
+    var expectedLogStr =
+`
+up a0
+ up d
+   up e
+     up f
+       up d
+       down d
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+       up b1
+       down b1
+       up b2
+       down b2
+     down c1
+     up c2
+       up b2
+       down b2
+       up b1
+       down b1
+     down c2
+   down b1
+   up c2
+     up b2
+       up c1
+       down c1
+       up c2
+       down c2
+     down b2
+     up b1
+       up c1
+       down c1
+       up c2
+       down c2
+     down b1
+   down c2
+   up g
+     up b1
+       up c1
+       down c1
+       up c2
+       down c2
+     down b1
+     up c2
+       up b2
+       down b2
+       up b1
+       down b1
+     down c2
+     up g
+       up b1
+       down b1
+       up c2
+       down c2
+       up g
+       down g
+       up b2
+       down b2
+       up c1
+       down c1
+     down g
+     up b2
+       up c1
+       down c1
+       up c2
+       down c2
+     down b2
+     up c1
+       up b1
+       down b1
+       up b2
+       down b2
+     down c1
+   down g
+   up b2
+     up c1
+       up b1
+       down b1
+       up b2
+       down b2
+     down c1
+     up c2
+       up b2
+       down b2
+       up b1
+       down b1
+     down c2
+   down b2
+   up c1
+     up b1
+       up c1
+       down c1
+       up c2
+       down c2
+     down b1
+     up b2
+       up c1
+       down c1
+       up c2
+       down c2
+     down b2
+   down c1
+ down g
+down a0
+up a1
+ up d
+   up e
+     up f
+       up d
+       down d
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+       up b1
+       down b1
+       up b2
+       down b2
+     down c1
+     up c2
+       up b2
+       down b2
+       up b1
+       down b1
+     down c2
+   down b1
+   up c2
+     up b2
+       up c1
+       down c1
+       up c2
+       down c2
+     down b2
+     up b1
+       up c1
+       down c1
+       up c2
+       down c2
+     down b1
+   down c2
+   up g
+     up b1
+       up c1
+       down c1
+       up c2
+       down c2
+     down b1
+     up c2
+       up b2
+       down b2
+       up b1
+       down b1
+     down c2
+     up g
+       up b1
+       down b1
+       up c2
+       down c2
+       up g
+       down g
+       up b2
+       down b2
+       up c1
+       down c1
+     down g
+     up b2
+       up c1
+       down c1
+       up c2
+       down c2
+     down b2
+     up c1
+       up b1
+       down b1
+       up b2
+       down b2
+     down c1
+   down g
+   up b2
+     up c1
+       up b1
+       down b1
+       up b2
+       down b2
+     down c1
+     up c2
+       up b2
+       down b2
+       up b1
+       down b1
+     down c2
+   down b2
+   up c1
+     up b1
+       up c1
+       down c1
+       up c2
+       down c2
+     down b1
+     up b2
+       up c1
+       down c1
+       up c2
+       down c2
+     down b2
+   down c1
+ down g
+down a1
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.close( 'fast : ' + o.fast );
+  }
+
+  /* - */
+
+  function log( srcStr )
+  {
+    _.assert( arguments.length === 1 );
+    logStr += srcStr + '\n';
+    /* logger.log( srcStr ); */
+  }
+
+  function clean()
+  {
+    logStr = '\n';
+    ups = [];
+    dws = [];
+    nds = [];
+    upContinueNode = [];
+    downContinueNode = [];
+    upContinueUp = [];
+    downContinueUp = [];
+    upVisited = [];
+    downVisited = [];
+  }
+
+  function onNode( node, it )
+  {
+    nds.push( node );
+  }
+
+  function onUp( node, it )
+  {
+    log( _.strDup( '  ', it.level ) + ' up ' + node.name );
+    upContinueNode.push( it.continueNode );
+    upContinueUp.push( it.continueUp );
+    upVisited.push( it.visited );
+    ups.push( node );
+  }
+
+  function onUp2( node, it )
+  {
+    if( it.level >= 4 )
+    it.continueUp = false;
+    onUp( node, it );
+  }
+
+  function onDown( node, it )
+  {
+    log( _.strDup( '  ', it.level ) + ' down ' + node.name );
+    downContinueNode.push( it.continueNode );
+    downContinueUp.push( it.continueUp );
+    downVisited.push( it.visited );
+    dws.push( node );
+  }
+
+} /* end of function lookDfsJunctionsAllVariants2AllSiblings0 */
+
+//
+
+function lookDfsJunctionsAllVariants2AllSiblings1( test )
+{
+  let context = this;
+  let ups = [];
+  let dws = [];
+  let nds = [];
+  let upContinueNode = [];
+  let downContinueNode = [];
+  let upContinueUp = [];
+  let downContinueUp = [];
+  let upVisited = [];
+  let downVisited = [];
+  let logStr = '';
+
+  test.description = 'setup cycledJunctions5';
+  var gr = context.cycledJunctions5();
+  var group = gr.sys.nodesGroup();
+
+  run({ fast : 1 });
+  run({ fast : 0 });
+
+  /* - */
+
+  gr.sys.finit();
+
+  function run( o )
+  {
+
+    test.open( 'fast : ' + o.fast );
+
+    /* - */
+
+    test.case = 'revisiting : 0';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a0, gr.a0, gr.a1 ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 0,
+      allVariants : 2,
+      allSiblings : 1,
+    }
+    group.lookDfs( o2 );
+
+    var expectedNds = [ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'c1', 'a0', 'a1' ];
+    var expectedUps = [ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'c1', 'a0', 'a1' ];
+    var expectedDws = [ 'f', 'e', 'd', 'c1', 'c2', 'b1', 'c2', 'b2', 'c1', 'g', 'a0', 'a0', 'a1' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, true, true, false, false, false, false, false, false ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false, true, true, true, true, true, true ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ true, true, true, true, false, true, false, false, false, true, true, false, false ];
+    var expectedDownVisited = [ false, false, false, false, true, false, true, true, true, false, false, true, true ];
+    var expectedVisited = new Set([ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'b2', 'c2', 'a1' ]);
+    var expectedLogStr =
+`
+up a0
+ up d
+   up e
+     up f
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+     down c1
+     up c2
+     down c2
+   down b1
+   up c2
+   down c2
+   up b2
+   down b2
+   up c1
+   down c1
+ down g
+down a0
+up a0
+down a0
+up a1
+down a1
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer.map( ( node ) => group.nodeToName( node ) ).original, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.case = 'revisiting : 1';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a0, gr.a0, gr.a1 ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 1,
+      allVariants : 2,
+      allSiblings : 1,
+    }
+    group.lookDfs( o2 );
+
+    var expectedNds = [ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'b1', 'b2', 'c1', 'c2', 'c1', 'b1', 'b2', 'a0', 'a1', 'd', 'e', 'f', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'b1', 'b2', 'c1', 'c2', 'c1', 'b1', 'b2' ];
+    var expectedUps = [ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'b1', 'b2', 'c1', 'c2', 'c1', 'b1', 'b2', 'a0', 'a1', 'd', 'e', 'f', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'b1', 'b2', 'c1', 'c2', 'c1', 'b1', 'b2' ];
+    var expectedDws = [ 'f', 'e', 'd', 'c1', 'c2', 'b1', 'b2', 'b1', 'c2', 'c1', 'c2', 'b2', 'b1', 'b2', 'c1', 'g', 'a0', 'a0', 'f', 'e', 'd', 'c1', 'c2', 'b1', 'b2', 'b1', 'c2', 'c1', 'c2', 'b2', 'b1', 'b2', 'c1', 'g', 'a1' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, false, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, false, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ]
+    var expectedDownVisited = [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedVisited = new Set([]);
+    var expectedLogStr =
+`
+up a0
+ up d
+   up e
+     up f
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+     down c1
+     up c2
+     down c2
+   down b1
+   up c2
+     up b2
+     down b2
+     up b1
+     down b1
+   down c2
+   up b2
+     up c1
+     down c1
+     up c2
+     down c2
+   down b2
+   up c1
+     up b1
+     down b1
+     up b2
+     down b2
+   down c1
+ down g
+down a0
+up a0
+down a0
+up a1
+ up d
+   up e
+     up f
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+     down c1
+     up c2
+     down c2
+   down b1
+   up c2
+     up b2
+     down b2
+     up b1
+     down b1
+   down c2
+   up b2
+     up c1
+     down c1
+     up c2
+     down c2
+   down b2
+   up c1
+     up b1
+     down b1
+     up b2
+     down b2
+   down c1
+ down g
+down a1
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer.map( ( node ) => group.nodeToName( node ) ).original, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.case = 'revisiting : 2';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a0, gr.a0, gr.a1 ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 2,
+      allVariants : 2,
+      allSiblings : 1,
+    }
+    group.lookDfs( o2 );
+
+    var expectedNds = [ 'a0', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'g', 'b2', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c1', 'b1', 'c1', 'c2', 'b2', 'c1', 'c2', 'a0', 'a1', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'g', 'b2', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c1', 'b1', 'c1', 'c2', 'b2', 'c1', 'c2' ];
+    var expectedUps = [ 'a0', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'g', 'b2', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c1', 'b1', 'c1', 'c2', 'b2', 'c1', 'c2', 'a0', 'a1', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'g', 'b2', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c1', 'b1', 'c1', 'c2', 'b2', 'c1', 'c2' ];
+    var expectedDws = [ 'd', 'f', 'e', 'd', 'b1', 'b2', 'c1', 'b2', 'b1', 'c2', 'b1', 'c1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c2', 'g', 'b1', 'b2', 'c1', 'b2', 'b1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'b2', 'c1', 'g', 'a0', 'a0', 'd', 'f', 'e', 'd', 'b1', 'b2', 'c1', 'b2', 'b1', 'c2', 'b1', 'c1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c2', 'g', 'b1', 'b2', 'c1', 'b2', 'b1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'b2', 'c1', 'g', 'a1' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, false, true, true, true, false, false, true, false, false, true, true, false, false, true, false, false, false, true, true, false, false, true, false, false, true, true, false, false, true, false, false, false, true, true, true, true, false, true, true, true, false, false, true, false, false, true, true, false, false, true, false, false, false, true, true, false, false, true, false, false, true, true, false, false, true, false, false ];
+    var expectedUpVisited = [ false, false, false, false, true, false, false, false, true, true, false, true, true, false, false, true, true, false, true, true, true, false, false, true, true, false, true, true, false, false, true, true, false, true, true, false, false, false, false, false, true, false, false, false, true, true, false, true, true, false, false, true, true, false, true, true, true, false, false, true, true, false, true, true, false, false, true, true, false, true, true ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ false, true, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, false, false, false, true, false, false, true, true, false, false, true, false, false, true, true, true, true, false, false, true, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, false, false, false, true, false, false, true, true, false, false, true, false, false, true, true, true, true ];
+    var expectedDownVisited = [ true, false, false, false, true, true, false, true, true, false, false, true, true, false, true, true, false, false, true, true, true, false, true, true, false, false, true, true, false, true, true, false, false, false, false, false, true, false, false, false, true, true, false, true, true, false, false, true, true, false, true, true, false, false, true, true, true, false, true, true, false, false, true, true, false, true, true, false, false, false, false ];
+    var expectedVisited = [];
+    var expectedLogStr =
+`
+up a0
+ up d
+   up e
+     up f
+       up d
+       down d
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+       up b1
+       down b1
+       up b2
+       down b2
+     down c1
+     up c2
+       up b2
+       down b2
+       up b1
+       down b1
+     down c2
+   down b1
+   up c2
+     up b2
+       up c1
+       down c1
+       up c2
+       down c2
+     down b2
+     up b1
+       up c1
+       down c1
+       up c2
+       down c2
+     down b1
+   down c2
+   up g
+   down g
+   up b2
+     up c1
+       up b1
+       down b1
+       up b2
+       down b2
+     down c1
+     up c2
+       up b2
+       down b2
+       up b1
+       down b1
+     down c2
+   down b2
+   up c1
+     up b1
+       up c1
+       down c1
+       up c2
+       down c2
+     down b1
+     up b2
+       up c1
+       down c1
+       up c2
+       down c2
+     down b2
+   down c1
+ down g
+down a0
+up a0
+down a0
+up a1
+ up d
+   up e
+     up f
+       up d
+       down d
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+       up b1
+       down b1
+       up b2
+       down b2
+     down c1
+     up c2
+       up b2
+       down b2
+       up b1
+       down b1
+     down c2
+   down b1
+   up c2
+     up b2
+       up c1
+       down c1
+       up c2
+       down c2
+     down b2
+     up b1
+       up c1
+       down c1
+       up c2
+       down c2
+     down b1
+   down c2
+   up g
+   down g
+   up b2
+     up c1
+       up b1
+       down b1
+       up b2
+       down b2
+     down c1
+     up c2
+       up b2
+       down b2
+       up b1
+       down b1
+     down c2
+   down b2
+   up c1
+     up b1
+       up c1
+       down c1
+       up c2
+       down c2
+     down b1
+     up b2
+       up c1
+       down c1
+       up c2
+       down c2
+     down b2
+   down c1
+ down g
+down a1
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer.map( ( node ) => group.nodeToName( node ) ).original, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.case = 'revisiting : 3';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a0, gr.a0, gr.a1 ],
+      onUp : onUp2,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 3,
+      allVariants : 2,
+      allSiblings : 1,
+    }
+    group.lookDfs( o2 );
+
+    var expectedNds = [ 'a0', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'b1', 'g', 'b1', 'c2', 'g', 'b2', 'c1', 'b2', 'c1', 'c2', 'c1', 'b1', 'b2', 'b2', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c1', 'b1', 'c1', 'c2', 'b2', 'c1', 'c2', 'a0', 'a1', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'b1', 'g', 'b1', 'c2', 'g', 'b2', 'c1', 'b2', 'c1', 'c2', 'c1', 'b1', 'b2', 'b2', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c1', 'b1', 'c1', 'c2', 'b2', 'c1', 'c2' ];
+    var expectedUps = [ 'a0', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'b1', 'g', 'b1', 'c2', 'g', 'b2', 'c1', 'b2', 'c1', 'c2', 'c1', 'b1', 'b2', 'b2', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c1', 'b1', 'c1', 'c2', 'b2', 'c1', 'c2', 'a0', 'a1', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'b1', 'g', 'b1', 'c2', 'g', 'b2', 'c1', 'b2', 'c1', 'c2', 'c1', 'b1', 'b2', 'b2', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c1', 'b1', 'c1', 'c2', 'b2', 'c1', 'c2' ];
+    var expectedDws = [ 'd', 'f', 'e', 'd', 'b1', 'b2', 'c1', 'b2', 'b1', 'c2', 'b1', 'c1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c2', 'c1', 'c2', 'b1', 'b2', 'b1', 'c2', 'b1', 'c2', 'g', 'b2', 'c1', 'g', 'c1', 'c2', 'b2', 'b1', 'b2', 'c1', 'g', 'b1', 'b2', 'c1', 'b2', 'b1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'b2', 'c1', 'g', 'a0', 'a0', 'd', 'f', 'e', 'd', 'b1', 'b2', 'c1', 'b2', 'b1', 'c2', 'b1', 'c1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c2', 'c1', 'c2', 'b1', 'b2', 'b1', 'c2', 'b1', 'c2', 'g', 'b2', 'c1', 'g', 'c1', 'c2', 'b2', 'b1', 'b2', 'c1', 'g', 'b1', 'b2', 'c1', 'b2', 'b1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'b2', 'c1', 'g', 'a1' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp =  [ true, true, true, true, false, true, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, false, false, false, false, false, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, false, false, true, false, false, false, true, true, true, true, false, true, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, false, false, false, false, false, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, false, false, true, false, false ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ false, true, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, false, false, false, false, false, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, true, true, false, false, true, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, false, false, false, false, false, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, true, true ];
+    var expectedDownVisited = [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedVisited = null;
+    var expectedLogStr =
+`
+up a0
+ up d
+   up e
+     up f
+       up d
+       down d
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+       up b1
+       down b1
+       up b2
+       down b2
+     down c1
+     up c2
+       up b2
+       down b2
+       up b1
+       down b1
+     down c2
+   down b1
+   up c2
+     up b2
+       up c1
+       down c1
+       up c2
+       down c2
+     down b2
+     up b1
+       up c1
+       down c1
+       up c2
+       down c2
+     down b1
+   down c2
+   up g
+     up b1
+       up c1
+       down c1
+       up c2
+       down c2
+     down b1
+     up c2
+       up b2
+       down b2
+       up b1
+       down b1
+     down c2
+     up g
+       up b1
+       down b1
+       up c2
+       down c2
+       up g
+       down g
+       up b2
+       down b2
+       up c1
+       down c1
+     down g
+     up b2
+       up c1
+       down c1
+       up c2
+       down c2
+     down b2
+     up c1
+       up b1
+       down b1
+       up b2
+       down b2
+     down c1
+   down g
+   up b2
+     up c1
+       up b1
+       down b1
+       up b2
+       down b2
+     down c1
+     up c2
+       up b2
+       down b2
+       up b1
+       down b1
+     down c2
+   down b2
+   up c1
+     up b1
+       up c1
+       down c1
+       up c2
+       down c2
+     down b1
+     up b2
+       up c1
+       down c1
+       up c2
+       down c2
+     down b2
+   down c1
+ down g
+down a0
+up a0
+down a0
+up a1
+ up d
+   up e
+     up f
+       up d
+       down d
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+       up b1
+       down b1
+       up b2
+       down b2
+     down c1
+     up c2
+       up b2
+       down b2
+       up b1
+       down b1
+     down c2
+   down b1
+   up c2
+     up b2
+       up c1
+       down c1
+       up c2
+       down c2
+     down b2
+     up b1
+       up c1
+       down c1
+       up c2
+       down c2
+     down b1
+   down c2
+   up g
+     up b1
+       up c1
+       down c1
+       up c2
+       down c2
+     down b1
+     up c2
+       up b2
+       down b2
+       up b1
+       down b1
+     down c2
+     up g
+       up b1
+       down b1
+       up c2
+       down c2
+       up g
+       down g
+       up b2
+       down b2
+       up c1
+       down c1
+     down g
+     up b2
+       up c1
+       down c1
+       up c2
+       down c2
+     down b2
+     up c1
+       up b1
+       down b1
+       up b2
+       down b2
+     down c1
+   down g
+   up b2
+     up c1
+       up b1
+       down b1
+       up b2
+       down b2
+     down c1
+     up c2
+       up b2
+       down b2
+       up b1
+       down b1
+     down c2
+   down b2
+   up c1
+     up b1
+       up c1
+       down c1
+       up c2
+       down c2
+     down b1
+     up b2
+       up c1
+       down c1
+       up c2
+       down c2
+     down b2
+   down c1
+ down g
+down a1
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.close( 'fast : ' + o.fast );
+  }
+
+  /* - */
+
+  function log( srcStr )
+  {
+    _.assert( arguments.length === 1 );
+    logStr += srcStr + '\n';
+    /* logger.log( srcStr ); */
+  }
+
+  function clean()
+  {
+    logStr = '\n';
+    ups = [];
+    dws = [];
+    nds = [];
+    upContinueNode = [];
+    downContinueNode = [];
+    upContinueUp = [];
+    downContinueUp = [];
+    upVisited = [];
+    downVisited = [];
+  }
+
+  function onNode( node, it )
+  {
+    nds.push( node );
+  }
+
+  function onUp( node, it )
+  {
+    log( _.strDup( '  ', it.level ) + ' up ' + node.name );
+    upContinueNode.push( it.continueNode );
+    upContinueUp.push( it.continueUp );
+    upVisited.push( it.visited );
+    ups.push( node );
+  }
+
+  function onUp2( node, it )
+  {
+    if( it.level >= 4 )
+    it.continueUp = false;
+    onUp( node, it );
+  }
+
+  function onDown( node, it )
+  {
+    log( _.strDup( '  ', it.level ) + ' down ' + node.name );
+    downContinueNode.push( it.continueNode );
+    downContinueUp.push( it.continueUp );
+    downVisited.push( it.visited );
+    dws.push( node );
+  }
+
+} /* end of function lookDfsJunctionsAllVariants2AllSiblings1 */
+
+//
+
+function lookDfsJunctionsAllVariants2AllSiblings2( test )
+{
+  let context = this;
+  let ups = [];
+  let dws = [];
+  let nds = [];
+  let upContinueNode = [];
+  let downContinueNode = [];
+  let upContinueUp = [];
+  let downContinueUp = [];
+  let upVisited = [];
+  let downVisited = [];
+  let logStr = '';
+
+  test.description = 'setup cycledJunctions5';
+  var gr = context.cycledJunctions5();
+  var group = gr.sys.nodesGroup();
+
+  run({ fast : 1 });
+  run({ fast : 0 });
+
+  /* - */
+
+  gr.sys.finit();
+
+  function run( o )
+  {
+
+    test.open( 'fast : ' + o.fast );
+
+    /* - */
+
+    test.case = 'revisiting : 0';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a0, gr.a0, gr.a1 ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 0,
+      allVariants : 2,
+      allSiblings : 2,
+    }
+    group.lookDfs( o2 );
+
+    var expectedNds = [ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'c1', 'a0', 'a1' ];
+    var expectedUps = [ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'c1', 'a0', 'a1' ];
+    var expectedDws = [ 'f', 'e', 'd', 'c1', 'c2', 'b1', 'c2', 'b2', 'c1', 'g', 'a0', 'a0', 'a1' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, true, true, false, false, false, false, false, false ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false, true, true, true, true, true, true ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ true, true, true, true, false, true, false, false, false, true, true, false, false ];
+    var expectedDownVisited = [ false, false, false, false, true, false, true, true, true, false, false, true, true ];
+    var expectedVisited = new Set([ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'b2', 'c2', 'a1' ]);
+    var expectedLogStr =
+`
+up a0
+ up d
+   up e
+     up f
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+     down c1
+     up c2
+     down c2
+   down b1
+   up c2
+   down c2
+   up b2
+   down b2
+   up c1
+   down c1
+ down g
+down a0
+up a0
+down a0
+up a1
+down a1
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer.map( ( node ) => group.nodeToName( node ) ).original, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.case = 'revisiting : 1';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a0, gr.a0, gr.a1 ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 1,
+      allVariants : 2,
+      allSiblings : 2,
+    }
+    group.lookDfs( o2 );
+
+    var expectedNds = [ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'b1', 'b2', 'c1', 'c2', 'c1', 'b1', 'b2', 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'b1', 'b2', 'c1', 'c2', 'c1', 'b1', 'b2', 'a1', 'd', 'e', 'f', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'b1', 'b2', 'c1', 'c2', 'c1', 'b1', 'b2' ];
+    var expectedUps = [ 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'b1', 'b2', 'c1', 'c2', 'c1', 'b1', 'b2', 'a0', 'd', 'e', 'f', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'b1', 'b2', 'c1', 'c2', 'c1', 'b1', 'b2', 'a1', 'd', 'e', 'f', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'b1', 'b2', 'c1', 'c2', 'c1', 'b1', 'b2' ];
+    var expectedDws = [ 'f', 'e', 'd', 'c1', 'c2', 'b1', 'b2', 'b1', 'c2', 'c1', 'c2', 'b2', 'b1', 'b2', 'c1', 'g', 'a0', 'f', 'e', 'd', 'c1', 'c2', 'b1', 'b2', 'b1', 'c2', 'c1', 'c2', 'b2', 'b1', 'b2', 'c1', 'g', 'a0', 'f', 'e', 'd', 'c1', 'c2', 'b1', 'b2', 'b1', 'c2', 'c1', 'c2', 'b2', 'b1', 'b2', 'c1', 'g', 'a1' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownVisited = [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedVisited = new Set([]);
+    var expectedLogStr =
+`
+up a0
+ up d
+   up e
+     up f
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+     down c1
+     up c2
+     down c2
+   down b1
+   up c2
+     up b2
+     down b2
+     up b1
+     down b1
+   down c2
+   up b2
+     up c1
+     down c1
+     up c2
+     down c2
+   down b2
+   up c1
+     up b1
+     down b1
+     up b2
+     down b2
+   down c1
+ down g
+down a0
+up a0
+ up d
+   up e
+     up f
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+     down c1
+     up c2
+     down c2
+   down b1
+   up c2
+     up b2
+     down b2
+     up b1
+     down b1
+   down c2
+   up b2
+     up c1
+     down c1
+     up c2
+     down c2
+   down b2
+   up c1
+     up b1
+     down b1
+     up b2
+     down b2
+   down c1
+ down g
+down a0
+up a1
+ up d
+   up e
+     up f
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+     down c1
+     up c2
+     down c2
+   down b1
+   up c2
+     up b2
+     down b2
+     up b1
+     down b1
+   down c2
+   up b2
+     up c1
+     down c1
+     up c2
+     down c2
+   down b2
+   up c1
+     up b1
+     down b1
+     up b2
+     down b2
+   down c1
+ down g
+down a1
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer.map( ( node ) => group.nodeToName( node ) ).original, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.case = 'revisiting : 2';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a0, gr.a0, gr.a1 ],
+      onUp : onUp,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 2,
+      allVariants : 2,
+      allSiblings : 2,
+    }
+    group.lookDfs( o2 );
+
+    var expectedNds = [ 'a0', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'g', 'b2', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c1', 'b1', 'c1', 'c2', 'b2', 'c1', 'c2', 'a0', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'g', 'b2', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c1', 'b1', 'c1', 'c2', 'b2', 'c1', 'c2', 'a1', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'g', 'b2', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c1', 'b1', 'c1', 'c2', 'b2', 'c1', 'c2' ];
+    var expectedUps = [ 'a0', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'g', 'b2', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c1', 'b1', 'c1', 'c2', 'b2', 'c1', 'c2', 'a0', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'g', 'b2', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c1', 'b1', 'c1', 'c2', 'b2', 'c1', 'c2', 'a1', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'g', 'b2', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c1', 'b1', 'c1', 'c2', 'b2', 'c1', 'c2' ];
+    var expectedDws = [ 'd', 'f', 'e', 'd', 'b1', 'b2', 'c1', 'b2', 'b1', 'c2', 'b1', 'c1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c2', 'g', 'b1', 'b2', 'c1', 'b2', 'b1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'b2', 'c1', 'g', 'a0', 'd', 'f', 'e', 'd', 'b1', 'b2', 'c1', 'b2', 'b1', 'c2', 'b1', 'c1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c2', 'g', 'b1', 'b2', 'c1', 'b2', 'b1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'b2', 'c1', 'g', 'a0', 'd', 'f', 'e', 'd', 'b1', 'b2', 'c1', 'b2', 'b1', 'c2', 'b1', 'c1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c2', 'g', 'b1', 'b2', 'c1', 'b2', 'b1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'b2', 'c1', 'g', 'a1' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp = [ true, true, true, true, false, true, true, true, false, false, true, false, false, true, true, false, false, true, false, false, false, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, true, true, false, true, true, true, false, false, true, false, false, true, true, false, false, true, false, false, false, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, true, true, false, true, true, true, false, false, true, false, false, true, true, false, false, true, false, false, false, true, true, false, false, true, false, false, true, true, false, false, true, false, false ];
+    var expectedUpVisited = [ false, false, false, false, true, false, false, false, true, true, false, true, true, false, false, true, true, false, true, true, true, false, false, true, true, false, true, true, false, false, true, true, false, true, true, false, false, false, false, true, false, false, false, true, true, false, true, true, false, false, true, true, false, true, true, true, false, false, true, true, false, true, true, false, false, true, true, false, true, true, false, false, false, false, true, false, false, false, true, true, false, true, true, false, false, true, true, false, true, true, true, false, false, true, true, false, true, true, false, false, true, true, false, true, true ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ false, true, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, false, false, false, true, false, false, true, true, false, false, true, false, false, true, true, true, true, false, true, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, false, false, false, true, false, false, true, true, false, false, true, false, false, true, true, true, true, false, true, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, false, false, false, true, false, false, true, true, false, false, true, false, false, true, true, true, true ];
+    var expectedDownVisited = [ true, false, false, false, true, true, false, true, true, false, false, true, true, false, true, true, false, false, true, true, true, false, true, true, false, false, true, true, false, true, true, false, false, false, false, true, false, false, false, true, true, false, true, true, false, false, true, true, false, true, true, false, false, true, true, true, false, true, true, false, false, true, true, false, true, true, false, false, false, false, true, false, false, false, true, true, false, true, true, false, false, true, true, false, true, true, false, false, true, true, true, false, true, true, false, false, true, true, false, true, true, false, false, false, false ];
+    var expectedVisited = [];
+    var expectedLogStr =
+`
+up a0
+ up d
+   up e
+     up f
+       up d
+       down d
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+       up b1
+       down b1
+       up b2
+       down b2
+     down c1
+     up c2
+       up b2
+       down b2
+       up b1
+       down b1
+     down c2
+   down b1
+   up c2
+     up b2
+       up c1
+       down c1
+       up c2
+       down c2
+     down b2
+     up b1
+       up c1
+       down c1
+       up c2
+       down c2
+     down b1
+   down c2
+   up g
+   down g
+   up b2
+     up c1
+       up b1
+       down b1
+       up b2
+       down b2
+     down c1
+     up c2
+       up b2
+       down b2
+       up b1
+       down b1
+     down c2
+   down b2
+   up c1
+     up b1
+       up c1
+       down c1
+       up c2
+       down c2
+     down b1
+     up b2
+       up c1
+       down c1
+       up c2
+       down c2
+     down b2
+   down c1
+ down g
+down a0
+up a0
+ up d
+   up e
+     up f
+       up d
+       down d
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+       up b1
+       down b1
+       up b2
+       down b2
+     down c1
+     up c2
+       up b2
+       down b2
+       up b1
+       down b1
+     down c2
+   down b1
+   up c2
+     up b2
+       up c1
+       down c1
+       up c2
+       down c2
+     down b2
+     up b1
+       up c1
+       down c1
+       up c2
+       down c2
+     down b1
+   down c2
+   up g
+   down g
+   up b2
+     up c1
+       up b1
+       down b1
+       up b2
+       down b2
+     down c1
+     up c2
+       up b2
+       down b2
+       up b1
+       down b1
+     down c2
+   down b2
+   up c1
+     up b1
+       up c1
+       down c1
+       up c2
+       down c2
+     down b1
+     up b2
+       up c1
+       down c1
+       up c2
+       down c2
+     down b2
+   down c1
+ down g
+down a0
+up a1
+ up d
+   up e
+     up f
+       up d
+       down d
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+       up b1
+       down b1
+       up b2
+       down b2
+     down c1
+     up c2
+       up b2
+       down b2
+       up b1
+       down b1
+     down c2
+   down b1
+   up c2
+     up b2
+       up c1
+       down c1
+       up c2
+       down c2
+     down b2
+     up b1
+       up c1
+       down c1
+       up c2
+       down c2
+     down b1
+   down c2
+   up g
+   down g
+   up b2
+     up c1
+       up b1
+       down b1
+       up b2
+       down b2
+     down c1
+     up c2
+       up b2
+       down b2
+       up b1
+       down b1
+     down c2
+   down b2
+   up c1
+     up b1
+       up c1
+       down c1
+       up c2
+       down c2
+     down b1
+     up b2
+       up c1
+       down c1
+       up c2
+       down c2
+     down b2
+   down c1
+ down g
+down a1
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer.map( ( node ) => group.nodeToName( node ) ).original, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.case = 'revisiting : 3';
+
+    clean();
+    var o2 =
+    {
+      roots : [ gr.a0, gr.a0, gr.a1 ],
+      onUp : onUp2,
+      onDown : onDown,
+      onNode : onNode,
+      fast : o.fast,
+      revisiting : 3,
+      allVariants : 2,
+      allSiblings : 2,
+    }
+    group.lookDfs( o2 );
+
+    var expectedNds = [ 'a0', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'b1', 'g', 'b1', 'c2', 'g', 'b2', 'c1', 'b2', 'c1', 'c2', 'c1', 'b1', 'b2', 'b2', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c1', 'b1', 'c1', 'c2', 'b2', 'c1', 'c2', 'a0', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'b1', 'g', 'b1', 'c2', 'g', 'b2', 'c1', 'b2', 'c1', 'c2', 'c1', 'b1', 'b2', 'b2', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c1', 'b1', 'c1', 'c2', 'b2', 'c1', 'c2', 'a1', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'b1', 'g', 'b1', 'c2', 'g', 'b2', 'c1', 'b2', 'c1', 'c2', 'c1', 'b1', 'b2', 'b2', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c1', 'b1', 'c1', 'c2', 'b2', 'c1', 'c2' ];
+    var expectedUps = [ 'a0', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'b1', 'g', 'b1', 'c2', 'g', 'b2', 'c1', 'b2', 'c1', 'c2', 'c1', 'b1', 'b2', 'b2', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c1', 'b1', 'c1', 'c2', 'b2', 'c1', 'c2', 'a0', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'b1', 'g', 'b1', 'c2', 'g', 'b2', 'c1', 'b2', 'c1', 'c2', 'c1', 'b1', 'b2', 'b2', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c1', 'b1', 'c1', 'c2', 'b2', 'c1', 'c2', 'a1', 'd', 'e', 'f', 'd', 'g', 'b1', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'g', 'b1', 'c1', 'c2', 'c2', 'b2', 'b1', 'g', 'b1', 'c2', 'g', 'b2', 'c1', 'b2', 'c1', 'c2', 'c1', 'b1', 'b2', 'b2', 'c1', 'b1', 'b2', 'c2', 'b2', 'b1', 'c1', 'b1', 'c1', 'c2', 'b2', 'c1', 'c2' ];
+    var expectedDws = [ 'd', 'f', 'e', 'd', 'b1', 'b2', 'c1', 'b2', 'b1', 'c2', 'b1', 'c1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c2', 'c1', 'c2', 'b1', 'b2', 'b1', 'c2', 'b1', 'c2', 'g', 'b2', 'c1', 'g', 'c1', 'c2', 'b2', 'b1', 'b2', 'c1', 'g', 'b1', 'b2', 'c1', 'b2', 'b1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'b2', 'c1', 'g', 'a0', 'd', 'f', 'e', 'd', 'b1', 'b2', 'c1', 'b2', 'b1', 'c2', 'b1', 'c1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c2', 'c1', 'c2', 'b1', 'b2', 'b1', 'c2', 'b1', 'c2', 'g', 'b2', 'c1', 'g', 'c1', 'c2', 'b2', 'b1', 'b2', 'c1', 'g', 'b1', 'b2', 'c1', 'b2', 'b1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'b2', 'c1', 'g', 'a0', 'd', 'f', 'e', 'd', 'b1', 'b2', 'c1', 'b2', 'b1', 'c2', 'b1', 'c1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c2', 'c1', 'c2', 'b1', 'b2', 'b1', 'c2', 'b1', 'c2', 'g', 'b2', 'c1', 'g', 'c1', 'c2', 'b2', 'b1', 'b2', 'c1', 'g', 'b1', 'b2', 'c1', 'b2', 'b1', 'c2', 'b2', 'c1', 'c2', 'b1', 'c1', 'c2', 'b2', 'c1', 'g', 'a1' ];
+    var expectedUpContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedUpContinueUp =  [ true, true, true, true, false, true, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, false, false, false, false, false, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, true, true, false, true, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, false, false, false, false, false, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, true, true, false, true, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, false, false, false, false, false, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, false, false, true, false, false ];
+    var expectedUpVisited = [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedDownContinueNode = [ true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true ];
+    var expectedDownContinueUp = [ false, true, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, false, false, false, false, false, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, true, true, false, true, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, false, false, false, false, false, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, true, true, false, true, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, false, false, false, false, false, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, false, false, true, false, false, true, true, true, true ];
+    var expectedDownVisited = [ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ];
+    var expectedVisited = null;
+    var expectedLogStr =
+`
+up a0
+ up d
+   up e
+     up f
+       up d
+       down d
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+       up b1
+       down b1
+       up b2
+       down b2
+     down c1
+     up c2
+       up b2
+       down b2
+       up b1
+       down b1
+     down c2
+   down b1
+   up c2
+     up b2
+       up c1
+       down c1
+       up c2
+       down c2
+     down b2
+     up b1
+       up c1
+       down c1
+       up c2
+       down c2
+     down b1
+   down c2
+   up g
+     up b1
+       up c1
+       down c1
+       up c2
+       down c2
+     down b1
+     up c2
+       up b2
+       down b2
+       up b1
+       down b1
+     down c2
+     up g
+       up b1
+       down b1
+       up c2
+       down c2
+       up g
+       down g
+       up b2
+       down b2
+       up c1
+       down c1
+     down g
+     up b2
+       up c1
+       down c1
+       up c2
+       down c2
+     down b2
+     up c1
+       up b1
+       down b1
+       up b2
+       down b2
+     down c1
+   down g
+   up b2
+     up c1
+       up b1
+       down b1
+       up b2
+       down b2
+     down c1
+     up c2
+       up b2
+       down b2
+       up b1
+       down b1
+     down c2
+   down b2
+   up c1
+     up b1
+       up c1
+       down c1
+       up c2
+       down c2
+     down b1
+     up b2
+       up c1
+       down c1
+       up c2
+       down c2
+     down b2
+   down c1
+ down g
+down a0
+up a0
+ up d
+   up e
+     up f
+       up d
+       down d
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+       up b1
+       down b1
+       up b2
+       down b2
+     down c1
+     up c2
+       up b2
+       down b2
+       up b1
+       down b1
+     down c2
+   down b1
+   up c2
+     up b2
+       up c1
+       down c1
+       up c2
+       down c2
+     down b2
+     up b1
+       up c1
+       down c1
+       up c2
+       down c2
+     down b1
+   down c2
+   up g
+     up b1
+       up c1
+       down c1
+       up c2
+       down c2
+     down b1
+     up c2
+       up b2
+       down b2
+       up b1
+       down b1
+     down c2
+     up g
+       up b1
+       down b1
+       up c2
+       down c2
+       up g
+       down g
+       up b2
+       down b2
+       up c1
+       down c1
+     down g
+     up b2
+       up c1
+       down c1
+       up c2
+       down c2
+     down b2
+     up c1
+       up b1
+       down b1
+       up b2
+       down b2
+     down c1
+   down g
+   up b2
+     up c1
+       up b1
+       down b1
+       up b2
+       down b2
+     down c1
+     up c2
+       up b2
+       down b2
+       up b1
+       down b1
+     down c2
+   down b2
+   up c1
+     up b1
+       up c1
+       down c1
+       up c2
+       down c2
+     down b1
+     up b2
+       up c1
+       down c1
+       up c2
+       down c2
+     down b2
+   down c1
+ down g
+down a0
+up a1
+ up d
+   up e
+     up f
+       up d
+       down d
+     down f
+   down e
+ down d
+ up g
+   up b1
+     up c1
+       up b1
+       down b1
+       up b2
+       down b2
+     down c1
+     up c2
+       up b2
+       down b2
+       up b1
+       down b1
+     down c2
+   down b1
+   up c2
+     up b2
+       up c1
+       down c1
+       up c2
+       down c2
+     down b2
+     up b1
+       up c1
+       down c1
+       up c2
+       down c2
+     down b1
+   down c2
+   up g
+     up b1
+       up c1
+       down c1
+       up c2
+       down c2
+     down b1
+     up c2
+       up b2
+       down b2
+       up b1
+       down b1
+     down c2
+     up g
+       up b1
+       down b1
+       up c2
+       down c2
+       up g
+       down g
+       up b2
+       down b2
+       up c1
+       down c1
+     down g
+     up b2
+       up c1
+       down c1
+       up c2
+       down c2
+     down b2
+     up c1
+       up b1
+       down b1
+       up b2
+       down b2
+     down c1
+   down g
+   up b2
+     up c1
+       up b1
+       down b1
+       up b2
+       down b2
+     down c1
+     up c2
+       up b2
+       down b2
+       up b1
+       down b1
+     down c2
+   down b2
+   up c1
+     up b1
+       up c1
+       down c1
+       up c2
+       down c2
+     down b1
+     up b2
+       up c1
+       down c1
+       up c2
+       down c2
+     down b2
+   down c1
+ down g
+down a1
+`
+
+    test.identical( group.nodesToNames( nds ), expectedNds );
+    test.identical( group.nodesToNames( ups ), expectedUps );
+    test.identical( group.nodesToNames( dws ), expectedDws );
+    test.identical( upContinueNode, expectedUpContinueNode );
+    test.identical( upContinueUp, expectedUpContinueUp );
+    test.identical( upVisited, expectedUpVisited );
+    test.identical( downContinueNode, expectedDownContinueNode );
+    test.identical( downContinueUp, expectedDownContinueUp );
+    test.identical( downVisited, expectedDownVisited );
+    test.identical( o2.visitedContainer, expectedVisited );
+    test.equivalent( logStr, expectedLogStr );
+
+    /* - */
+
+    test.close( 'fast : ' + o.fast );
+  }
+
+  /* - */
+
+  function log( srcStr )
+  {
+    _.assert( arguments.length === 1 );
+    logStr += srcStr + '\n';
+    /* logger.log( srcStr ); */
+  }
+
+  function clean()
+  {
+    logStr = '\n';
+    ups = [];
+    dws = [];
+    nds = [];
+    upContinueNode = [];
+    downContinueNode = [];
+    upContinueUp = [];
+    downContinueUp = [];
+    upVisited = [];
+    downVisited = [];
+  }
+
+  function onNode( node, it )
+  {
+    nds.push( node );
+  }
+
+  function onUp( node, it )
+  {
+    log( _.strDup( '  ', it.level ) + ' up ' + node.name );
+    upContinueNode.push( it.continueNode );
+    upContinueUp.push( it.continueUp );
+    upVisited.push( it.visited );
+    ups.push( node );
+  }
+
+  function onUp2( node, it )
+  {
+    if( it.level >= 4 )
+    it.continueUp = false;
+    onUp( node, it );
+  }
+
+  function onDown( node, it )
+  {
+    log( _.strDup( '  ', it.level ) + ' down ' + node.name );
+    downContinueNode.push( it.continueNode );
+    downContinueUp.push( it.continueUp );
+    downVisited.push( it.visited );
+    dws.push( node );
+  }
+
+} /* end of function lookDfsJunctionsAllVariants2AllSiblings2 */
+
+lookDfsJunctionsAllVariants2AllSiblings2.timeOut = 30000;
 
 //
 
@@ -7350,7 +18094,7 @@ function lookCfsExcluding( test )
 
   function handleDown2( node, it )
   {
-    dws.push( node );
+    onDown( node, it );
   }
 
   function onNode( node, it )
@@ -7958,18 +18702,12 @@ function lookCfsRepeatsRoots( test )
   {
     if( it.level >= 2 )
     it.continueUp = false;
-    upContinueNode.push( it.continueNode );
-    upContinueUp.push( it.continueUp );
-    upVisited.push( it.visited );
-    ups.push( node );
+    onUp( node, it );
   }
 
   function onDown2( node, it )
   {
-    downContinueNode.push( it.continueNode );
-    downContinueUp.push( it.continueUp );
-    downVisited.push( it.visited );
-    dws.push( node );
+    onDown( node, it );
   }
 
   function onNode3( node, it )
@@ -7981,18 +18719,12 @@ function lookCfsRepeatsRoots( test )
   {
     if( it.level >= 3 )
     it.continueUp = false;
-    upContinueNode.push( it.continueNode );
-    upContinueUp.push( it.continueUp );
-    upVisited.push( it.visited );
-    ups.push( node );
+    onUp( node, it );
   }
 
   function onDown3( node, it )
   {
-    downContinueNode.push( it.continueNode );
-    downContinueUp.push( it.continueUp );
-    downVisited.push( it.visited );
-    dws.push( node );
+    onDown( node, it );
   }
 
 } /* end of lookCfsRepeatsRoots */
@@ -9952,7 +20684,7 @@ function topSortCycledSourceBasedFastBfs( test )
 
 //
 
-function topSortCycledSourceBasedPreciseBfs( test )
+function topSortCycledSourceBasedPrecise( test )
 {
   let context = this;
 
@@ -9965,7 +20697,7 @@ function topSortCycledSourceBasedPreciseBfs( test )
 
   test.description = 'all';
   var group = gr.sys.nodesGroup();
-  var got = group.topSortCycledSourceBasedPreciseBfs( gr.nodes );
+  var got = group.topSortCycledSourceBasedPrecise( gr.nodes );
   var expected = [ 'a', 'b', 'c' ];
   test.identical( group.nodesToNames( got ), expected );
   group.finit();
@@ -9974,9 +20706,7 @@ function topSortCycledSourceBasedPreciseBfs( test )
 
   test.description = 'none';
   var group = gr.sys.nodesGroup();
-  debugger;
-  var got = group.topSortCycledSourceBasedPreciseBfs( [] );
-  debugger;
+  var got = group.topSortCycledSourceBasedPrecise( [] );
   var expected = [];
   test.identical( group.nodesToNames( got ), expected );
   group.finit();
@@ -9992,7 +20722,7 @@ function topSortCycledSourceBasedPreciseBfs( test )
 
   test.description = 'explicit';
   var group = gr.sys.nodesGroup();
-  var got = group.topSortCycledSourceBasedPreciseBfs( gr.nodes );
+  var got = group.topSortCycledSourceBasedPrecise( gr.nodes );
   var expected = [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h' ];
   test.identical( group.nodesToNames( got ), expected );
   group.finit();
@@ -10007,14 +20737,14 @@ function topSortCycledSourceBasedPreciseBfs( test )
 
   test.description = 'all';
   var group = gr.sys.nodesGroup();
-  var got = group.topSortCycledSourceBasedPreciseBfs( gr.nodes );
+  var got = group.topSortCycledSourceBasedPrecise( gr.nodes );
   var expected = [ 'a', 'd', 'e', 'b', 'f', 'c', 'g', 'h', 'k', 'j', 'i', 'l', 'm' ];
   test.identical( group.nodesToNames( got ), expected );
   group.finit();
 
   test.description = 'rootsToAllReachable a';
   var group = gr.sys.nodesGroup();
-  var got = group.topSortCycledSourceBasedPreciseBfs( group.rootsToAllReachable( gr.a ) );
+  var got = group.topSortCycledSourceBasedPrecise( group.rootsToAllReachable( gr.a ) );
   var expected = [ 'a', 'b', 'c', 'g', 'h', 'k', 'j', 'i', 'l', 'm' ];
   test.identical( group.nodesToNames( got ), expected );
   group.finit();
@@ -10032,8 +20762,8 @@ function topSortCycledSourceBasedPreciseBfs( test )
   test.description = 'explicit all';
   var group = gr.sys.nodesGroup();
   logger.log( group.exportInfo({ nodes : gr.nodes }) );
-  var expected = [ 'j', 'd', 'g', 'e', 'a', 'c', 'b', 'i', 'f', 'h' ]
-  var got = group.topSortCycledSourceBasedPreciseBfs( gr.nodes );
+  var expected = [ 'j', 'd', 'g', 'e', 'a', 'c', 'b', 'i', 'f', 'h' ];
+  var got = group.topSortCycledSourceBasedPrecise( gr.nodes );
   test.identical( group.nodesToNames( got ), expected );
   group.finit();
 
@@ -10041,7 +20771,7 @@ function topSortCycledSourceBasedPreciseBfs( test )
 
   test.description = 'not j';
   var group = gr.sys.nodesGroup();
-  var got = group.topSortCycledSourceBasedPreciseBfs([ gr.a, gr.b, gr.c, gr.d, gr.e, gr.f, gr.g, gr.h, gr.i ]);
+  var got = group.topSortCycledSourceBasedPrecise([ gr.a, gr.b, gr.c, gr.d, gr.e, gr.f, gr.g, gr.h, gr.i ]);
   var expected = [ 'd', 'g', 'e', 'a', 'c', 'b', 'i', 'f', 'h' ];
   test.identical( group.nodesToNames( got ), expected );
   group.finit();
@@ -10050,7 +20780,7 @@ function topSortCycledSourceBasedPreciseBfs( test )
 
   test.description = 'not j, not d';
   var group = gr.sys.nodesGroup();
-  var got = group.topSortCycledSourceBasedPreciseBfs([ gr.a, gr.b, gr.c, gr.e, gr.f, gr.g, gr.h, gr.i ]);
+  var got = group.topSortCycledSourceBasedPrecise([ gr.a, gr.b, gr.c, gr.e, gr.f, gr.g, gr.h, gr.i ]);
   var expected = [ 'g', 'e', 'a', 'c', 'b', 'i', 'h', 'f' ];
   test.identical( group.nodesToNames( got ), expected );
 
@@ -10058,7 +20788,7 @@ function topSortCycledSourceBasedPreciseBfs( test )
 
   test.description = 'c, e';
   var group = gr.sys.nodesGroup();
-  test.shouldThrowErrorSync( () => group.topSortCycledSourceBasedPreciseBfs([ gr.c, gr.e ]) );
+  test.shouldThrowErrorSync( () => group.topSortCycledSourceBasedPrecise([ gr.c, gr.e ]) );
   group.finit();
 
   gr.sys.finit();
@@ -10788,7 +21518,7 @@ function nodesStronglyConnectedCollectionJunctionsDfs( test )
   {
     return collection2.group.nodeToName( dnode ) + ' : ' + group.nodesToNames( dnode.originalOutNodes ).join( '.' );
   }).toArray().original;
-  var expected = [ 'd+e+f : e.f.d', 'b2+c1+b1+c2 : c1.c2.b1.b2', 'g : b1.c2.b2.c1', 'a1+a0 : d.g' ];
+  var expected = [ 'd+e+f : e.f.d', 'b2+c1+b1+c2 : c1.c2.b1.b2', 'g : b1.c2.g.b2.c1', 'a1+a0 : d.g' ];
   test.identical( originalOutNodes, expected );
 
   gr.sys.finit();
@@ -10815,121 +21545,146 @@ function rootsExportInfoTree( test )
   var group = gr.sys.nodesGroup();
   var expected =
 `
-+-- a
-  +-- b
-  +-- c
+ +-- a
+   +-- b
+   | +-- a
+   +-- c
 `
-  var infoAsTree = group.rootsExportInfoTree( gr.a );
-  test.equivalent( infoAsTree, expected );
+  var treeInfo = group.rootsExportInfoTree( gr.a );
+  test.equivalent( treeInfo, expected );
   logger.log( 'Tree' );
-  logger.log( infoAsTree );
+  logger.log( treeInfo );
   group.finit();
 
   test.description = 'array of a';
   var group = gr.sys.nodesGroup();
   var expected =
 `
-+-- a
-  +-- b
-  +-- c
+ +-- a
+   +-- b
+   | +-- a
+   +-- c
 `
-  var infoAsTree = group.rootsExportInfoTree([ gr.a ]);
-  test.equivalent( infoAsTree, expected );
+  var treeInfo = group.rootsExportInfoTree([ gr.a ]);
+  test.equivalent( treeInfo, expected );
   logger.log( 'Tree' );
-  logger.log( infoAsTree );
+  logger.log( treeInfo );
   group.finit();
 
   test.description = 'set of a';
   var group = gr.sys.nodesGroup();
   var expected =
 `
-+-- a
-  +-- b
-  +-- c
+ +-- a
+   +-- b
+   | +-- a
+   +-- c
 `
-  var infoAsTree = group.rootsExportInfoTree( new Set([ gr.a ]) );
-  test.equivalent( infoAsTree, expected );
+  var treeInfo = group.rootsExportInfoTree( new Set([ gr.a ]) );
+  test.equivalent( treeInfo, expected );
   logger.log( 'Tree' );
-  logger.log( infoAsTree );
+  logger.log( treeInfo );
   group.finit();
 
   test.description = 'b';
   var group = gr.sys.nodesGroup();
   var expected =
 `
-+-- b
-  +-- a
-    +-- c
+ +-- b
+   +-- a
+     +-- b
+     +-- c
 `
-  var infoAsTree = group.rootsExportInfoTree( gr.b );
-  test.equivalent( infoAsTree, expected );
+  var treeInfo = group.rootsExportInfoTree( gr.b );
+  test.equivalent( treeInfo, expected );
   logger.log( 'Tree' );
-  logger.log( infoAsTree );
+  logger.log( treeInfo );
   group.finit();
 
   test.description = 'array of b';
   var group = gr.sys.nodesGroup();
   var expected =
 `
-+-- b
-  +-- a
-    +-- c
+ +-- b
+   +-- a
+     +-- b
+     +-- c
 `
-  var infoAsTree = group.rootsExportInfoTree([ gr.b ]);
-  test.equivalent( infoAsTree, expected );
+  var treeInfo = group.rootsExportInfoTree([ gr.b ]);
+  test.equivalent( treeInfo, expected );
   logger.log( 'Tree' );
-  logger.log( infoAsTree );
+  logger.log( treeInfo );
   group.finit();
 
   test.description = 'set of b';
   var group = gr.sys.nodesGroup();
   var expected =
 `
-+-- b
-  +-- a
-    +-- c
+ +-- b
+   +-- a
+     +-- b
+     +-- c
 `
-  var infoAsTree = group.rootsExportInfoTree( new Set([ gr.b ]) );
-  test.equivalent( infoAsTree, expected );
+  var treeInfo = group.rootsExportInfoTree( new Set([ gr.b ]) );
+  test.equivalent( treeInfo, expected );
   logger.log( 'Tree' );
-  logger.log( infoAsTree );
+  logger.log( treeInfo );
+  group.finit();
+
+  test.description = 'array of a';
+  var group = gr.sys.nodesGroup();
+  var expected =
+`
+ +-- a
+   +-- b
+   | +-- a
+   +-- c
+`
+  var treeInfo = group.rootsExportInfoTree([ gr.a ]);
+  test.equivalent( treeInfo, expected );
+  logger.log( 'Tree' );
+  logger.log( treeInfo );
   group.finit();
 
   test.description = 'array of a, b';
   var group = gr.sys.nodesGroup();
   var expected =
 `
-+-- a
-| +-- b
-| +-- c
-|
-+-- b
-    +-- a
-      +-- c
+ +-- a
+ | +-- b
+ | | +-- a
+ | +-- c
+ |
+ +-- b
+   +-- a
+     +-- b
+     +-- c
 `
-  var infoAsTree = group.rootsExportInfoTree([ gr.a, gr.b ]);
-  test.equivalent( infoAsTree, expected );
+  var treeInfo = group.rootsExportInfoTree([ gr.a, gr.b ]);
+  test.equivalent( treeInfo, expected );
   logger.log( 'Tree' );
-  logger.log( infoAsTree );
+  logger.log( treeInfo );
   group.finit();
 
   test.description = 'set of a, b';
   var group = gr.sys.nodesGroup();
   var expected =
 `
-+-- a
-| +-- b
-| +-- c
-|
-+-- b
-    +-- a
-      +-- c
+ +-- a
+ | +-- b
+ | | +-- a
+ | +-- c
+ |
+ +-- b
+   +-- a
+     +-- b
+     +-- c
 `
 
-  var infoAsTree = group.rootsExportInfoTree( new Set([ gr.a, gr.b ]) );
-  test.equivalent( infoAsTree, expected );
+  var treeInfo = group.rootsExportInfoTree( new Set([ gr.a, gr.b ]) );
+  test.equivalent( treeInfo, expected );
   logger.log( 'Tree' );
-  logger.log( infoAsTree );
+  logger.log( treeInfo );
   group.finit();
 
   gr.sys.finit();
@@ -10946,22 +21701,28 @@ function rootsExportInfoTree( test )
   var group = gr.sys.nodesGroup();
   var expected =
 `
-+-- a
- +-- d
- | +-- b
- |   +-- f
- |     +-- e
- |       +-- c
- +-- f
-   +-- e
-     +-- c
-       +-- d
-         +-- b
+ +-- a
+   +-- d
+   | +-- b
+   |   +-- d
+   |   +-- f
+   |     +-- e
+   |       +-- c
+   |         +-- d
+   |         +-- f
+   +-- f
+     +-- e
+       +-- c
+         +-- d
+         | +-- b
+         |   +-- d
+         |   +-- f
+         +-- f
 `
-  var infoAsTree = group.rootsExportInfoTree( gr.a );
-  test.equivalent( infoAsTree, expected );
+  var treeInfo = group.rootsExportInfoTree( gr.a );
+  test.equivalent( treeInfo, expected );
   logger.log( 'Tree' );
-  logger.log( infoAsTree );
+  logger.log( treeInfo );
   group.finit();
 
   test.description = 'b';
@@ -10970,44 +21731,56 @@ function rootsExportInfoTree( test )
 `
  +-- b
    +-- d
+   | +-- b
    +-- f
      +-- e
        +-- c
          +-- d
+         | +-- b
+         +-- f
 `
-  var infoAsTree = group.rootsExportInfoTree( gr.b );
-  test.equivalent( infoAsTree, expected );
+  var treeInfo = group.rootsExportInfoTree( gr.b );
+  test.equivalent( treeInfo, expected );
   logger.log( 'Tree' );
-  logger.log( infoAsTree );
+  logger.log( treeInfo );
   group.finit();
 
   test.description = 'array of a, b';
   var group = gr.sys.nodesGroup();
   var expected =
 `
-+-- a
-| +-- d
-| | +-- b
-| |   +-- f
-| |     +-- e
-| |       +-- c
-| +-- f
-|   +-- e
-|     +-- c
-|       +-- d
-|         +-- b
-|
-+-- b
- +-- d
- +-- f
-   +-- e
-     +-- c
-       +-- d
+ +-- a
+ | +-- d
+ | | +-- b
+ | |   +-- d
+ | |   +-- f
+ | |     +-- e
+ | |       +-- c
+ | |         +-- d
+ | |         +-- f
+ | +-- f
+ |   +-- e
+ |     +-- c
+ |       +-- d
+ |       | +-- b
+ |       |   +-- d
+ |       |   +-- f
+ |       +-- f
+ |
+ +-- b
+   +-- d
+   | +-- b
+   +-- f
+     +-- e
+       +-- c
+         +-- d
+         | +-- b
+         +-- f
 `
-  var infoAsTree = group.rootsExportInfoTree([ gr.a, gr.b ]);
-  test.equivalent( infoAsTree, expected );
+  var treeInfo = group.rootsExportInfoTree([ gr.a, gr.b ]);
+  test.equivalent( treeInfo, expected );
   logger.log( 'Tree' );
-  logger.log( infoAsTree );
+  logger.log( treeInfo );
   group.finit();
 
   gr.sys.finit();
@@ -11024,109 +21797,137 @@ function rootsExportInfoTree( test )
   test.description = 'single a';
   var group = gr.sys.nodesGroup();
   var expected =
-  `+-- a
-     +-- b
-       +-- e
-       | +-- c
-       | +-- h
-       |   +-- i
-       |     +-- f
-       +-- f
+`
+ +-- a
+   +-- b
+     +-- e
+     | +-- a
+     | +-- c
+     | | +-- b
+     | +-- h
+     |   +-- i
+     |     +-- f
+     |     +-- h
+     +-- f
   `
 
-  var infoAsTree = group.rootsExportInfoTree([ gr.a ]);
-  test.equivalent( infoAsTree, expected );
+  var treeInfo = group.rootsExportInfoTree([ gr.a ]);
+  test.equivalent( treeInfo, expected );
   logger.log( 'Tree' );
-  logger.log( infoAsTree );
+  logger.log( treeInfo );
   group.finit();
 
   test.description = 'single b';
   var group = gr.sys.nodesGroup();
   var expected =
-  `+-- b
-     +-- e
-     | +-- a
-     | +-- c
-     | +-- h
-     |   +-- i
-     |     +-- f
-     +-- f
   `
-  var infoAsTree = group.rootsExportInfoTree([ gr.b ]);
+ +-- b
+   +-- e
+   | +-- a
+   | | +-- b
+   | +-- c
+   | | +-- b
+   | +-- h
+   |   +-- i
+   |     +-- f
+   |     +-- h
+   +-- f
+  `
+  var treeInfo = group.rootsExportInfoTree([ gr.b ]);
   var group = gr.sys.nodesGroup();
-  test.equivalent( infoAsTree, expected );
+  test.equivalent( treeInfo, expected );
   logger.log( 'Tree' );
-  logger.log( infoAsTree );
+  logger.log( treeInfo );
   group.finit();
 
   test.description = 'multiple: a, b, c';
   var expected =
-  `+-- a
-     | +-- b
-     |   +-- e
-     |   | +-- c
-     |   | +-- h
-     |   |   +-- i
-     |   |     +-- f
-     |   +-- f
-     |
-     +-- b
-     | +-- e
-     | | +-- a
-     | | +-- c
-     | | +-- h
-     | |   +-- i
-     | |     +-- f
-     | +-- f
-     |
-     +-- c
-       +-- b
-         +-- e
-         | +-- a
-         | +-- h
-         |   +-- i
-         |     +-- f
-         +-- f
   `
-  var infoAsTree = group.rootsExportInfoTree([ gr.a, gr.b, gr.c ]);
+ +-- a
+ | +-- b
+ |   +-- e
+ |   | +-- a
+ |   | +-- c
+ |   | | +-- b
+ |   | +-- h
+ |   |   +-- i
+ |   |     +-- f
+ |   |     +-- h
+ |   +-- f
+ |
+ +-- b
+ | +-- e
+ | | +-- a
+ | | | +-- b
+ | | +-- c
+ | | | +-- b
+ | | +-- h
+ | |   +-- i
+ | |     +-- f
+ | |     +-- h
+ | +-- f
+ |
+ +-- c
+   +-- b
+     +-- e
+     | +-- a
+     | | +-- b
+     | +-- c
+     | +-- h
+     |   +-- i
+     |     +-- f
+     |     +-- h
+     +-- f
+  `
+  var treeInfo = group.rootsExportInfoTree([ gr.a, gr.b, gr.c ]);
   var group = gr.sys.nodesGroup();
-  test.equivalent( infoAsTree, expected );
+  test.equivalent( treeInfo, expected );
   logger.log( 'Tree' );
-  logger.log( infoAsTree );
+  logger.log( treeInfo );
   group.finit();
 
   test.description = 'multiple, rootsDelimiting : 0';
   var group = gr.sys.nodesGroup();
   var expected =
-  `+-- a
-   | +-- b
-   |   +-- e
-   |   | +-- c
-   |   | +-- h
-   |   |   +-- i
-   |   |     +-- f
-   |   +-- f
-   +-- b
-   | +-- e
-   | | +-- a
-   | | +-- c
-   | | +-- h
-   | |   +-- i
-   | |     +-- f
-   | +-- f
-   +-- c
-     +-- b
-       +-- e
-       | +-- a
-       | +-- h
-       |   +-- i
-       |     +-- f
-       +-- f
   `
-  var infoAsTree = group.rootsExportInfoTree( [ gr.a, gr.b, gr.c ], { rootsDelimiting : 0 } );
-  test.equivalent( infoAsTree, expected );
+ +-- a
+ | +-- b
+ |   +-- e
+ |   | +-- a
+ |   | +-- c
+ |   | | +-- b
+ |   | +-- h
+ |   |   +-- i
+ |   |     +-- f
+ |   |     +-- h
+ |   +-- f
+ +-- b
+ | +-- e
+ | | +-- a
+ | | | +-- b
+ | | +-- c
+ | | | +-- b
+ | | +-- h
+ | |   +-- i
+ | |     +-- f
+ | |     +-- h
+ | +-- f
+ +-- c
+   +-- b
+     +-- e
+     | +-- a
+     | | +-- b
+     | +-- c
+     | +-- h
+     |   +-- i
+     |     +-- f
+     |     +-- h
+     +-- f
+  `
+  var treeInfo = group.rootsExportInfoTree( [ gr.a, gr.b, gr.c ], { rootsDelimiting : 0 } );
+  test.equivalent( treeInfo, expected );
   logger.log( 'Tree' );
-  logger.log( infoAsTree );
+  logger.log( treeInfo );
   group.finit();
 
   test.description = 'multiple + sourcesOnlyAmong a, g';
@@ -11136,15 +21937,16 @@ function rootsExportInfoTree( test )
   test.identical( group.nodesToNames( sources.original ), exp );
   var exp =
 `
-+-- g
-  +-- h
-    +-- i
-      +-- f
+ +-- g
+   +-- h
+     +-- i
+       +-- f
+       +-- h
 `
-  var infoAsTree = group.rootsExportInfoTree( sources );
-  test.equivalent( infoAsTree, exp );
+  var treeInfo = group.rootsExportInfoTree( sources );
+  test.equivalent( treeInfo, exp );
   logger.log( 'Tree' );
-  logger.log( infoAsTree );
+  logger.log( treeInfo );
 
   test.description = 'multiple + leastIndegreeOnlyAmong a';
   var group = gr.sys.nodesGroup();
@@ -11156,40 +21958,50 @@ function rootsExportInfoTree( test )
  +-- a
  | +-- b
  |   +-- e
+ |   | +-- a
  |   | +-- c
+ |   | | +-- b
  |   | +-- h
  |   |   +-- i
  |   |     +-- f
+ |   |     +-- h
  |   +-- f
  |
  +-- e
  | +-- a
  | | +-- b
+ | |   +-- e
  | |   +-- f
  | +-- c
  | | +-- b
+ | |   +-- e
  | |   +-- f
  | +-- h
  |   +-- i
  |     +-- f
+ |     +-- h
  |
  +-- c
  | +-- b
  |   +-- e
  |   | +-- a
+ |   | | +-- b
+ |   | +-- c
  |   | +-- h
  |   |   +-- i
  |   |     +-- f
+ |   |     +-- h
  |   +-- f
  |
  +-- i
    +-- f
    +-- h
+     +-- i
 `
-  var infoAsTree = group.rootsExportInfoTree( sources );
-  test.equivalent( infoAsTree, exp );
+  var treeInfo = group.rootsExportInfoTree( sources );
+  test.equivalent( treeInfo, exp );
   logger.log( 'Tree' );
-  logger.log( infoAsTree );
+  logger.log( treeInfo );
 
   test.description = 'multiple + leastOutdegreeOnlyAmong a';
   var group = gr.sys.nodesGroup();
@@ -11197,10 +22009,10 @@ function rootsExportInfoTree( test )
   var sources = group.leastOutdegreeOnlyAmong( group.rootsToAllReachable([ gr.a ]) );
   test.identical( group.nodesToNames( sources.original ), exp );
   var exp = `+-- f`;
-  var infoAsTree = group.rootsExportInfoTree( sources );
-  test.equivalent( infoAsTree, exp );
+  var treeInfo = group.rootsExportInfoTree( sources );
+  test.equivalent( treeInfo, exp );
   logger.log( 'Tree' );
-  logger.log( infoAsTree );
+  logger.log( treeInfo );
 
   test.description = 'multiple + sourcesOnlyAmong a';
   var group = gr.sys.nodesGroup();
@@ -11208,30 +22020,16 @@ function rootsExportInfoTree( test )
   var sources = group.sourcesOnlyAmong( group.rootsToAllReachable([ gr.a ]) );
   test.identical( group.nodesToNames( sources.original ), exp );
   var exp = '';
-  var infoAsTree = group.rootsExportInfoTree( sources );
-  test.equivalent( infoAsTree, exp );
+  var treeInfo = group.rootsExportInfoTree( sources );
+  test.equivalent( treeInfo, exp );
   logger.log( 'Tree' );
-  logger.log( infoAsTree );
-
-/*
-
-   ---- e → c
-  |     ↓ ↖ ↓
-  | d → a → b
-  | ↓       ↓
-  | g       f
-  |  ↘      ↑
-   - → h ⇄  i
-
-    j
-
-*/
+  logger.log( treeInfo );
 
 } /* end of function rootsExportInfoTree */
 
 //
 
-function rootsExportInfoTreeJunctions( test )
+function rootsExportInfoTreeJunctionsTrivial( test )
 {
   let context = this;
 
@@ -11250,15 +22048,608 @@ function rootsExportInfoTreeJunctions( test )
  +-- a0
    +-- c
    | +-- b2
+   | | +-- a2
+   | | +-- a0
+   | | +-- a1
    | +-- b1
+   |   +-- a1
+   |   +-- a0
+   |   +-- a2
    +-- b1
+   | +-- a1
+   | +-- a0
+   | +-- a2
    +-- b2
+     +-- a2
+     +-- a0
+     +-- a1
 `
-  var infoAsTree = group.rootsExportInfoTree( gr.a0 );
-  test.equivalent( infoAsTree, expected );
+  var treeInfo = group.rootsExportInfoTree( gr.a0 );
+  test.equivalent( treeInfo, expected );
   logger.log( 'Tree' );
-  logger.log( infoAsTree );
+  logger.log( treeInfo );
   group.finit();
+
+  test.description = 'empty array';
+  var group = gr.sys.nodesGroup();
+  var expected =
+`
+`
+  var treeInfo = group.rootsExportInfoTree( [] );
+  test.equivalent( treeInfo, expected );
+  logger.log( 'Tree' );
+  logger.log( treeInfo );
+  group.finit();
+
+  test.description = 'empty set';
+  var group = gr.sys.nodesGroup();
+  var expected =
+`
+`
+  var treeInfo = group.rootsExportInfoTree( new Set );
+  test.equivalent( treeInfo, expected );
+  logger.log( 'Tree' );
+  logger.log( treeInfo );
+  group.finit();
+
+  gr.sys.finit();
+
+  /* - */
+
+}
+
+//
+
+function rootsExportInfoTreeJunctions( test )
+{
+  let context = this;
+
+  /* - */
+
+  test.case = 'cycledJunctions5';
+  var gr = context.cycledJunctions5();
+  var group = gr.sys.nodesGroup();
+  logger.log( group.nodesInfoExport( gr.nodes ) );
+  group.finit();
+
+//   test.description = 'default';
+//   var group = gr.sys.nodesGroup();
+//   var expected =
+// `
+//  +-- a0
+//    +-- d
+//    | +-- e
+//    |   +-- f
+//    +-- g
+//      +-- b1
+//      | +-- c1
+//      | +-- c2
+//      +-- c2
+//      | +-- b2
+//      | +-- b1
+//      +-- b2
+//      | +-- c1
+//      | +-- c2
+//      +-- c1
+//        +-- b1
+//        +-- b2
+// `
+//   var treeInfo = group.rootsExportInfoTree( [ gr.a0, gr.a0, gr.a1 ] );
+//   test.equivalent( treeInfo, expected );
+//   logger.log( 'Tree' );
+//   logger.log( treeInfo );
+//   group.finit();
+
+  /* */
+
+  test.description = 'allSiblings:0 allVariants:0';
+  var group = gr.sys.nodesGroup();
+  var expected =
+`
+ +-- a0
+   +-- d
+   | +-- e
+   |   +-- f
+   |     +-- d
+   +-- g
+     +-- b1
+     | +-- c1
+     |   +-- b1
+     +-- c2
+     | +-- b2
+     |   +-- c1
+     +-- g
+`
+  var treeInfo = group.rootsExportInfoTree( [ gr.a0, gr.a0, gr.a1 ], { allSiblings : 0, allVariants : 0 } );
+  test.equivalent( treeInfo, expected );
+  logger.log( 'Tree' );
+  logger.log( treeInfo );
+  group.finit();
+
+  /* */
+
+  test.description = 'allSiblings:0 allVariants:1 ';
+  var group = gr.sys.nodesGroup();
+  var expected =
+`
+ +-- a0
+ | +-- d
+ | | +-- e
+ | |   +-- f
+ | |     +-- d
+ | +-- g
+ |   +-- b1
+ |   | +-- c1
+ |   | | +-- b1
+ |   | | +-- b2
+ |   | +-- c2
+ |   +-- c2
+ |   | +-- b2
+ |   | | +-- c1
+ |   | | +-- c2
+ |   | +-- b1
+ |   +-- g
+ |   +-- b2
+ |   +-- c1
+ |
+ +-- a1
+`
+  var treeInfo = group.rootsExportInfoTree( [ gr.a0, gr.a0, gr.a1 ], { allSiblings : 0, allVariants : 1 } );
+  test.equivalent( treeInfo, expected );
+  logger.log( 'Tree' );
+  logger.log( treeInfo );
+  group.finit();
+
+  /* */
+
+  test.description = 'allSiblings:0 allVariants:2 ';
+  var group = gr.sys.nodesGroup();
+  var expected =
+`
+ +-- a0
+ | +-- d
+ | | +-- e
+ | |   +-- f
+ | |     +-- d
+ | +-- g
+ |   +-- b1
+ |   | +-- c1
+ |   | | +-- b1
+ |   | | +-- b2
+ |   | +-- c2
+ |   |   +-- b2
+ |   |   +-- b1
+ |   +-- c2
+ |   | +-- b2
+ |   | | +-- c1
+ |   | | +-- c2
+ |   | +-- b1
+ |   |   +-- c1
+ |   |   +-- c2
+ |   +-- g
+ |   +-- b2
+ |   | +-- c1
+ |   | | +-- b1
+ |   | | +-- b2
+ |   | +-- c2
+ |   |   +-- b2
+ |   |   +-- b1
+ |   +-- c1
+ |     +-- b1
+ |     | +-- c1
+ |     | +-- c2
+ |     +-- b2
+ |       +-- c1
+ |       +-- c2
+ |
+ +-- a1
+   +-- d
+   | +-- e
+   |   +-- f
+   |     +-- d
+   +-- g
+     +-- b1
+     | +-- c1
+     | | +-- b1
+     | | +-- b2
+     | +-- c2
+     |   +-- b2
+     |   +-- b1
+     +-- c2
+     | +-- b2
+     | | +-- c1
+     | | +-- c2
+     | +-- b1
+     |   +-- c1
+     |   +-- c2
+     +-- g
+     +-- b2
+     | +-- c1
+     | | +-- b1
+     | | +-- b2
+     | +-- c2
+     |   +-- b2
+     |   +-- b1
+     +-- c1
+       +-- b1
+       | +-- c1
+       | +-- c2
+       +-- b2
+         +-- c1
+         +-- c2
+`
+  var treeInfo = group.rootsExportInfoTree( [ gr.a0, gr.a0, gr.a1 ], { allSiblings : 0, allVariants : 2 } );
+  test.equivalent( treeInfo, expected );
+  logger.log( 'Tree' );
+  logger.log( treeInfo );
+  group.finit();
+
+  /* */
+
+  test.description = 'allSiblings:1 allVariants:0';
+  var group = gr.sys.nodesGroup();
+  var expected =
+`
+ +-- a0
+ | +-- d
+ | | +-- e
+ | |   +-- f
+ | |     +-- d
+ | +-- g
+ |   +-- b1
+ |   | +-- c1
+ |   |   +-- b1
+ |   +-- c2
+ |   | +-- b2
+ |   |   +-- c1
+ |   +-- g
+ |
+ +-- a0
+`
+  var treeInfo = group.rootsExportInfoTree( [ gr.a0, gr.a0, gr.a1 ], { allSiblings : 1, allVariants : 0 } );
+  test.equivalent( treeInfo, expected );
+  logger.log( 'Tree' );
+  logger.log( treeInfo );
+  group.finit();
+
+  /* */
+
+  test.description = 'allSiblings:1 allVariants:1 ';
+  var group = gr.sys.nodesGroup();
+  var expected =
+`
+ +-- a0
+ | +-- d
+ | | +-- e
+ | |   +-- f
+ | |     +-- d
+ | +-- g
+ |   +-- b1
+ |   | +-- c1
+ |   | | +-- b1
+ |   | | +-- b2
+ |   | +-- c2
+ |   +-- c2
+ |   | +-- b2
+ |   | | +-- c1
+ |   | | +-- c2
+ |   | +-- b1
+ |   +-- g
+ |   +-- b2
+ |   +-- c1
+ |
+ +-- a0
+ |
+ +-- a1
+`
+  var treeInfo = group.rootsExportInfoTree( [ gr.a0, gr.a0, gr.a1 ], { allSiblings : 1, allVariants : 1 } );
+  test.equivalent( treeInfo, expected );
+  logger.log( 'Tree' );
+  logger.log( treeInfo );
+  group.finit();
+
+  /* */
+
+  test.description = 'allSiblings:1 allVariants:2 ';
+  var group = gr.sys.nodesGroup();
+  var expected =
+`
+ +-- a0
+ | +-- d
+ | | +-- e
+ | |   +-- f
+ | |     +-- d
+ | +-- g
+ |   +-- b1
+ |   | +-- c1
+ |   | | +-- b1
+ |   | | +-- b2
+ |   | +-- c2
+ |   |   +-- b2
+ |   |   +-- b1
+ |   +-- c2
+ |   | +-- b2
+ |   | | +-- c1
+ |   | | +-- c2
+ |   | +-- b1
+ |   |   +-- c1
+ |   |   +-- c2
+ |   +-- g
+ |   +-- b2
+ |   | +-- c1
+ |   | | +-- b1
+ |   | | +-- b2
+ |   | +-- c2
+ |   |   +-- b2
+ |   |   +-- b1
+ |   +-- c1
+ |     +-- b1
+ |     | +-- c1
+ |     | +-- c2
+ |     +-- b2
+ |       +-- c1
+ |       +-- c2
+ |
+ +-- a0
+ |
+ +-- a1
+   +-- d
+   | +-- e
+   |   +-- f
+   |     +-- d
+   +-- g
+     +-- b1
+     | +-- c1
+     | | +-- b1
+     | | +-- b2
+     | +-- c2
+     |   +-- b2
+     |   +-- b1
+     +-- c2
+     | +-- b2
+     | | +-- c1
+     | | +-- c2
+     | +-- b1
+     |   +-- c1
+     |   +-- c2
+     +-- g
+     +-- b2
+     | +-- c1
+     | | +-- b1
+     | | +-- b2
+     | +-- c2
+     |   +-- b2
+     |   +-- b1
+     +-- c1
+       +-- b1
+       | +-- c1
+       | +-- c2
+       +-- b2
+         +-- c1
+         +-- c2
+`
+  var treeInfo = group.rootsExportInfoTree( [ gr.a0, gr.a0, gr.a1 ], { allSiblings : 1, allVariants : 2 } );
+  test.equivalent( treeInfo, expected );
+  logger.log( 'Tree' );
+  logger.log( treeInfo );
+  group.finit();
+
+  /* */
+
+  test.description = 'allSiblings:2 allVariants:0';
+  var group = gr.sys.nodesGroup();
+  var expected =
+`
+ +-- a0
+ | +-- d
+ | | +-- e
+ | |   +-- f
+ | |     +-- d
+ | +-- g
+ |   +-- b1
+ |   | +-- c1
+ |   |   +-- b1
+ |   +-- c2
+ |   | +-- b2
+ |   |   +-- c1
+ |   +-- g
+ |
+ +-- a0
+   +-- d
+   | +-- e
+   |   +-- f
+   |     +-- d
+   +-- g
+     +-- b1
+     | +-- c1
+     |   +-- b1
+     +-- c2
+     | +-- b2
+     |   +-- c1
+     +-- g
+`
+  var treeInfo = group.rootsExportInfoTree( [ gr.a0, gr.a0, gr.a1 ], { allSiblings : 2, allVariants : 0 } );
+  test.equivalent( treeInfo, expected );
+  logger.log( 'Tree' );
+  logger.log( treeInfo );
+  group.finit();
+
+  /* */
+
+  test.description = 'allSiblings:2 allVariants:1 ';
+  var group = gr.sys.nodesGroup();
+  var expected =
+`
+ +-- a0
+ | +-- d
+ | | +-- e
+ | |   +-- f
+ | |     +-- d
+ | +-- g
+ |   +-- b1
+ |   | +-- c1
+ |   | | +-- b1
+ |   | | +-- b2
+ |   | +-- c2
+ |   +-- c2
+ |   | +-- b2
+ |   | | +-- c1
+ |   | | +-- c2
+ |   | +-- b1
+ |   +-- g
+ |   +-- b2
+ |   +-- c1
+ |
+ +-- a0
+ | +-- d
+ | | +-- e
+ | |   +-- f
+ | |     +-- d
+ | +-- g
+ |   +-- b1
+ |   | +-- c1
+ |   | | +-- b1
+ |   | | +-- b2
+ |   | +-- c2
+ |   +-- c2
+ |   | +-- b2
+ |   | | +-- c1
+ |   | | +-- c2
+ |   | +-- b1
+ |   +-- g
+ |   +-- b2
+ |   +-- c1
+ |
+ +-- a1
+`
+  var treeInfo = group.rootsExportInfoTree( [ gr.a0, gr.a0, gr.a1 ], { allSiblings : 2, allVariants : 1 } );
+  test.equivalent( treeInfo, expected );
+  logger.log( 'Tree' );
+  logger.log( treeInfo );
+  group.finit();
+
+  /* */
+
+  test.description = 'allSiblings:2 allVariants:2 ';
+  var group = gr.sys.nodesGroup();
+  var expected =
+`
+ +-- a0
+ | +-- d
+ | | +-- e
+ | |   +-- f
+ | |     +-- d
+ | +-- g
+ |   +-- b1
+ |   | +-- c1
+ |   | | +-- b1
+ |   | | +-- b2
+ |   | +-- c2
+ |   |   +-- b2
+ |   |   +-- b1
+ |   +-- c2
+ |   | +-- b2
+ |   | | +-- c1
+ |   | | +-- c2
+ |   | +-- b1
+ |   |   +-- c1
+ |   |   +-- c2
+ |   +-- g
+ |   +-- b2
+ |   | +-- c1
+ |   | | +-- b1
+ |   | | +-- b2
+ |   | +-- c2
+ |   |   +-- b2
+ |   |   +-- b1
+ |   +-- c1
+ |     +-- b1
+ |     | +-- c1
+ |     | +-- c2
+ |     +-- b2
+ |       +-- c1
+ |       +-- c2
+ |
+ +-- a0
+ | +-- d
+ | | +-- e
+ | |   +-- f
+ | |     +-- d
+ | +-- g
+ |   +-- b1
+ |   | +-- c1
+ |   | | +-- b1
+ |   | | +-- b2
+ |   | +-- c2
+ |   |   +-- b2
+ |   |   +-- b1
+ |   +-- c2
+ |   | +-- b2
+ |   | | +-- c1
+ |   | | +-- c2
+ |   | +-- b1
+ |   |   +-- c1
+ |   |   +-- c2
+ |   +-- g
+ |   +-- b2
+ |   | +-- c1
+ |   | | +-- b1
+ |   | | +-- b2
+ |   | +-- c2
+ |   |   +-- b2
+ |   |   +-- b1
+ |   +-- c1
+ |     +-- b1
+ |     | +-- c1
+ |     | +-- c2
+ |     +-- b2
+ |       +-- c1
+ |       +-- c2
+ |
+ +-- a1
+   +-- d
+   | +-- e
+   |   +-- f
+   |     +-- d
+   +-- g
+     +-- b1
+     | +-- c1
+     | | +-- b1
+     | | +-- b2
+     | +-- c2
+     |   +-- b2
+     |   +-- b1
+     +-- c2
+     | +-- b2
+     | | +-- c1
+     | | +-- c2
+     | +-- b1
+     |   +-- c1
+     |   +-- c2
+     +-- g
+     +-- b2
+     | +-- c1
+     | | +-- b1
+     | | +-- b2
+     | +-- c2
+     |   +-- b2
+     |   +-- b1
+     +-- c1
+       +-- b1
+       | +-- c1
+       | +-- c2
+       +-- b2
+         +-- c1
+         +-- c2
+
+`
+  var treeInfo = group.rootsExportInfoTree( [ gr.a0, gr.a0, gr.a1 ], { allSiblings : 2, allVariants : 2 } );
+  test.equivalent( treeInfo, expected );
+  logger.log( 'Tree' );
+  logger.log( treeInfo );
+  group.finit();
+
+  /* */
 
   gr.sys.finit();
 
@@ -11280,6 +22671,7 @@ var Self =
   {
 
     dag6,
+    cycled0Scc,
     cycled1Scc,
     cycled2Scc,
     cycled3Scc,
@@ -11320,6 +22712,11 @@ var Self =
     sourcesOnlyAmong,
     leastMostDegreeAmong,
 
+/*
+qqq : add missing look*Junction* test routines
+ask for more details
+*/
+
     lookBfs,
     lookBfsVisitedContainter,
     lookBfsSuspending,
@@ -11327,7 +22724,13 @@ var Self =
     lookBfsExcluding,
     lookBfsRevisitingTrivial,
     lookBfsRepeatsRoots,
+    lookBfsRepeatsRootsAllSiblings0,
+    lookBfsRepeatsRootsAllSiblings1,
+    lookBfsRepeatsRootsAllSiblings2,
     lookBfsJunctions,
+    lookBfsJunctionsAllVariants0,
+    lookBfsJunctionsAllVariants1,
+    lookBfsJunctionsAllVariants2,
 
     lookDfs,
     lookDfsVisitedContainter,
@@ -11336,7 +22739,22 @@ var Self =
     lookDfsExcluding,
     lookDfsRevisitingTrivial,
     lookDfsRepeatsRoots,
+    lookDfsRepeatsRootsAllSiblings0,
+    lookDfsRepeatsRootsAllSiblings1,
+    lookDfsRepeatsRootsAllSiblings2,
     lookDfsJunctions,
+    lookDfsJunctionsAllVariants0,
+    lookDfsJunctionsAllVariants0AllSiblings0,
+    lookDfsJunctionsAllVariants0AllSiblings1,
+    lookDfsJunctionsAllVariants0AllSiblings2,
+    lookDfsJunctionsAllVariants1,
+    lookDfsJunctionsAllVariants1AllSiblings0,
+    lookDfsJunctionsAllVariants1AllSiblings1,
+    lookDfsJunctionsAllVariants1AllSiblings2,
+    lookDfsJunctionsAllVariants2,
+    lookDfsJunctionsAllVariants2AllSiblings0,
+    lookDfsJunctionsAllVariants2AllSiblings1,
+    lookDfsJunctionsAllVariants2AllSiblings2,
 
     lookCfs,
     lookCfsVisitedContainter,
@@ -11354,7 +22772,7 @@ var Self =
     dagTopSortDfs,
     topSortLeastDegreeBfs,
     topSortCycledSourceBasedFastBfs,
-    topSortCycledSourceBasedPreciseBfs,
+    topSortCycledSourceBasedPrecise,
 
     // connectivity
 
@@ -11369,6 +22787,7 @@ var Self =
     nodesStronglyConnectedCollectionJunctionsDfs,
 
     rootsExportInfoTree,
+    rootsExportInfoTreeJunctionsTrivial,
     rootsExportInfoTreeJunctions,
 
   },
