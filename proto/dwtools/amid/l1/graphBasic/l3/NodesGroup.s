@@ -1747,9 +1747,9 @@ let _lookDefaults =
   visitedContainer : null,
 
   left : 1, /* qqq : cover option left */
-  revisiting : 0,
-  allVariants : null,
-  allSiblings : null,
+  revisiting : 0, /* [ 0, 1, 2, 3 ] */
+  allSiblings : null, /* [ 0, 1, 2 ] */
+  allVariants : null, /* [ 0, 1, 2 ] */
   fast : 1,
 
   onBegin : null,
@@ -3204,6 +3204,7 @@ function topSortCycledSourceBasedPrecise( nodes )
 
   /* */
 
+  let frontier = sys.ContainerAdapterFrom( new Set() );
   let result = [];
   layers2.each( ( layer ) =>
   {
@@ -3211,40 +3212,91 @@ function topSortCycledSourceBasedPrecise( nodes )
     let added = sys.ContainerAdapterFrom( new Set() );
     let nodeToInNodes = new HashMap();
     let nodeToOutNodes = new HashMap();
+    // let close = layer.make().only( frontier ); /* xxx : only does not work properly */
+    let close = layer.make().only( _.self, frontier );
+
     layer.each( ( node ) => nodeToInNodes.set( node, group.nodeInNodesFor( node ).only( null, layer ).but( _.self, result ) ) );
     layer.each( ( node ) => nodeToOutNodes.set( node, group.nodeOutNodesFor( node ).only( null, layer ).but( _.self, result ) ) );
-    if( !layer.any( ( node ) => addFastMaybe( node ) ) )
-    {
-      layer.most( ( node ) => nodeToOutNodes.get( node ).length ).first( ( node ) => add( node ) );
-    }
 
     while( layer.length )
     {
-      if( !nodeToOutNodes.get( prev ).first( ( node2 ) => addFastMaybe( node2 ) ) )
+
+      while( close.length )
       {
-        _.assert( added.length > 0 );
-        added.empty();
-        layer.most( ( node ) => nodeToOutNodes.get( node ).length ).first( ( node ) => add( node ) );
+        close
+        .least( ( node ) => nodeToInNodes.get( node ).length )
+        .most( ( node ) => nodeToOutNodes.get( node ).length )
+        .each( ( node ) =>
+        {
+          add( node );
+        });
       }
+
+      if( layer.length )
+      layer
+      .least( ( node ) => nodeToInNodes.get( node ).length )
+      .most( ( node ) => nodeToOutNodes.get( node ).length )
+      .first( ( node ) => add( node ) );
+
     }
 
-    function addFastMaybe( node )
-    {
-      let inNodes = nodeToInNodes.get( node );
-      if( !inNodes.length )
-      return add( node );
-      else
-      return false;
-    }
+    // if( !layer.any( ( node ) => addFastMaybe( node ) ) )
+    // {
+    //   layer.most( ( node ) => nodeToOutNodes.get( node ).length ).first( ( node ) => add( node ) );
+    // }
+    //
+    // while( layer.length )
+    // {
+    //   /* xxx : temp assert */
+    //   // debugger;
+    //   // _.assert( _.all( group.nodeOutNodesFor( prev ).map( ( node ) =>
+    //   // {
+    //   //   debugger;
+    //   //   _.assert( layer.has( node ), () => `Current layer does not have node ${group.nodeToName( node )}` );
+    //   // })));
+    //   debugger;
+    //   let prevOut = nodeToOutNodes.get( prev );
+    //   prevOut.any( ( node2 ) =>
+    //   // if( !prevOut.first( ( node2 ) => addFastMaybe( node2 ) ) )
+    //   {
+    //     if( !layer.has( node2 ) )
+    //     return false;
+    //     if( !addFastMaybe( node2 ) )
+    //     {
+    //       _.assert( added.length > 0 );
+    //       added.empty();
+    //       layer.most( ( node ) => nodeToOutNodes.get( node ).length ).first( ( node ) =>
+    //       {
+    //         add( node );
+    //       });
+    //       return true;
+    //     }
+    //     return false;
+    //   });
+    //
+    // }
+    //
+    // function addFastMaybe( node )
+    // {
+    //   let inNodes = nodeToInNodes.get( node );
+    //   if( !inNodes.length )
+    //   return add( node );
+    //   else
+    //   return false;
+    // }
 
     function add( node )
     {
       _.assert( !!node );
-      nodeToOutNodes.get( node ).each( ( node2 ) => nodeToInNodes.get( node2 ).removeOnce( node ) );
-      nodeToInNodes.get( node ).each( ( node2 ) => nodeToOutNodes.get( node2 ).removeOnce( node ) );
+      let outNodes = group.nodeOutNodesFor( node );
       added.append( node );
       result.push( node );
-      layer.removedOnce( node );
+      layer.removeOnceStrictly( node );
+      close.removeOnce( node );
+      frontier.appendContainerOnce( outNodes );
+      close.appendContainerOnce( outNodes.only( null, layer ) );
+      nodeToOutNodes.get( node ).each( ( node2 ) => nodeToInNodes.get( node2 ).removeOnce( node ) );
+      nodeToInNodes.get( node ).each( ( node2 ) => nodeToOutNodes.get( node2 ).removeOnce( node ) );
       prev = node;
       return true;
     }
@@ -3803,7 +3855,7 @@ function nodesStronglyConnectedCollectionDfs( nodes )
     });
   }
 
-  debugger;
+  // debugger;
 
   if( group.direct && !group.onNodeInNodes )
   group.cacheInNodesFromOutNodesOnce( nodes );

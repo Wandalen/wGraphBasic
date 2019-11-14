@@ -129,6 +129,33 @@ function cycled2Scc()
     d
 */
 
+/*
+revistings:0
+DFS
+a
+-b
+-c
+--e
+
+revistings:1
+DFS
+a
+-b
+-c
+--e
+---b
+
+revistings:2
+DFS
+a
+-b
+--a
+-c
+--e
+---b
+----a
+*/
+
   a.nodes.push( b, c );
   b.nodes.push( a );
   // c.nodes.push( a, e );
@@ -20713,6 +20740,15 @@ function topSortCycledSourceBasedPrecise( test )
 
   /* */
 
+  test.description = 'several';
+  var group = gr.sys.nodesGroup();
+  var got = group.topSortCycledSourceBasedPrecise( [ ... gr.nodes, ... gr.nodes ] );
+  var expected = [ 'a', 'b', 'c' ];
+  test.identical( group.nodesToNames( got ), expected );
+  group.finit();
+
+  /* */
+
   gr.sys.finit();
 
   /* - */
@@ -20738,14 +20774,19 @@ function topSortCycledSourceBasedPrecise( test )
   test.description = 'all';
   var group = gr.sys.nodesGroup();
   var got = group.topSortCycledSourceBasedPrecise( gr.nodes );
-  var expected = [ 'a', 'd', 'e', 'b', 'f', 'c', 'g', 'h', 'k', 'j', 'i', 'l', 'm' ];
+  // var expected = [ 'a', 'd', 'e', 'b', 'f', 'c', 'g', 'h', 'k', 'j', 'i', 'l', 'm' ];
+  // var expected = [ 'a', 'b', 'd', 'e', 'f', 'c', 'g', 'h', 'k', 'i', 'l', 'm', 'j' ];
+  var expected = [ 'd', 'e', 'b', 'a', 'f', 'c', 'g', 'h', 'k', 'i', 'l', 'm', 'j' ];
   test.identical( group.nodesToNames( got ), expected );
   group.finit();
 
   test.description = 'rootsToAllReachable a';
   var group = gr.sys.nodesGroup();
   var got = group.topSortCycledSourceBasedPrecise( group.rootsToAllReachable( gr.a ) );
-  var expected = [ 'a', 'b', 'c', 'g', 'h', 'k', 'j', 'i', 'l', 'm' ];
+  // var expected = [ 'a', 'b', 'c', 'g', 'h', 'k', 'j', 'i', 'l', 'm' ];
+  // var expected = [ 'a', 'b', 'c', 'g', 'h', 'k', 'i', 'l', 'j', 'm' ];
+  // var expected = [ 'a', 'b', 'c', 'g', 'h', 'k', 'i', 'l', 'm', 'j' ]
+  var expected = [ 'b', 'a', 'c', 'g', 'h', 'k', 'i', 'l', 'm', 'j' ];
   test.identical( group.nodesToNames( got ), expected );
   group.finit();
 
@@ -20762,17 +20803,32 @@ function topSortCycledSourceBasedPrecise( test )
   test.description = 'explicit all';
   var group = gr.sys.nodesGroup();
   logger.log( group.exportInfo({ nodes : gr.nodes }) );
-  var expected = [ 'j', 'd', 'g', 'e', 'a', 'c', 'b', 'i', 'f', 'h' ];
+  // var expected = [ 'j', 'd', 'g', 'e', 'a', 'c', 'b', 'i', 'f', 'h' ];
+  var expected = [ 'j', 'd', 'g', 'a', 'b', 'e', 'c', 'h', 'i', 'f' ];
   var got = group.topSortCycledSourceBasedPrecise( gr.nodes );
   test.identical( group.nodesToNames( got ), expected );
   group.finit();
+
+/*
+
+   ---- e → c
+  |     ↓ ↖ ↓
+  | d → a → b
+  | ↓       ↓
+  | g       f
+  |  ↘      ↑
+   - → h ⇄  i
+
+    j
+
+*/
 
   /* */
 
   test.description = 'not j';
   var group = gr.sys.nodesGroup();
   var got = group.topSortCycledSourceBasedPrecise([ gr.a, gr.b, gr.c, gr.d, gr.e, gr.f, gr.g, gr.h, gr.i ]);
-  var expected = [ 'd', 'g', 'e', 'a', 'c', 'b', 'i', 'f', 'h' ];
+  var expected = [ 'd', 'g', 'a', 'b', 'e', 'c', 'h', 'i', 'f' ];
   test.identical( group.nodesToNames( got ), expected );
   group.finit();
 
@@ -20781,7 +20837,9 @@ function topSortCycledSourceBasedPrecise( test )
   test.description = 'not j, not d';
   var group = gr.sys.nodesGroup();
   var got = group.topSortCycledSourceBasedPrecise([ gr.a, gr.b, gr.c, gr.e, gr.f, gr.g, gr.h, gr.i ]);
-  var expected = [ 'g', 'e', 'a', 'c', 'b', 'i', 'h', 'f' ];
+  // var expected = [ 'g', 'e', 'a', 'c', 'b', 'i', 'h', 'f' ];
+  // var expected = [ 'e', 'a', 'c', 'b', 'g', 'h', 'i', 'f' ];
+  var expected = [ 'g', 'e', 'a', 'c', 'b', 'h', 'i', 'f' ];
   test.identical( group.nodesToNames( got ), expected );
 
   /* */
@@ -20790,6 +20848,44 @@ function topSortCycledSourceBasedPrecise( test )
   var group = gr.sys.nodesGroup();
   test.shouldThrowErrorSync( () => group.topSortCycledSourceBasedPrecise([ gr.c, gr.e ]) );
   group.finit();
+
+  gr.sys.finit();
+
+  /* - */
+}
+
+//
+
+function topSortCycledSourceBasedPreciseJunction( test )
+{
+  let context = this;
+
+  /* - */
+
+  test.case = 'cycledJunctions5';
+  var gr = context.cycledJunctions5();
+
+  /* */
+
+  test.description = 'direct';
+  var group = gr.sys.nodesGroup();
+  // var expected = [ 'a1', 'a0', 'd', 'e', 'f', 'g', 'b2', 'b1', 'c1', 'c2' ];
+  var expected = [ 'a1', 'a0', 'd', 'g', 'e', 'f', 'b2', 'c1', 'c2', 'b1' ];
+  var got = group.topSortCycledSourceBasedPrecise( gr.nodes );
+  test.identical( group.nodesToNames( got ), expected );
+  group.finit();
+
+  /* */
+
+  test.description = 'reverse';
+  var group = gr.sys.nodesGroup();
+  // var expected = [ 'a0', 'a1', 'f', 'd', 'e', 'g', 'c1', 'c2', 'b1', 'b2' ];
+  var expected = [ 'a0', 'a1', 'd', 'g', 'e', 'f', 'c1', 'b1', 'b2', 'c2' ];
+  var got = group.topSortCycledSourceBasedPrecise( gr.nodes.slice().reverse() );
+  test.identical( group.nodesToNames( got ), expected );
+  group.finit();
+
+  /* */
 
   gr.sys.finit();
 
@@ -21386,21 +21482,21 @@ function nodesStronglyConnectedCollectionJunctionsDfs( test )
   {
     return collection2.group.nodeToName( dnode ) + ' : ' + collection2.group.nodesToNames( dnode.outNodes ).join( '.' );
   }).toArray().original;
-  var expected = [ 'a2+b1+c+a1+a0+b2 : ' ];
+  var expected = [ 'a2+b1+c+b2+a1+a0 : ' ];
   test.identical( outNodes, expected );
 
   var inNodes = collection2.nodes.map( ( dnode ) =>
   {
     return collection2.group.nodeToName( dnode ) + ' : ' + collection2.group.nodesToNames( dnode.inNodes ).join( '.' );
   }).toArray().original;
-  var expected = [ 'a2+b1+c+a1+a0+b2 : ' ];
+  var expected = [ 'a2+b1+c+b2+a1+a0 : ' ];
   test.identical( inNodes, expected );
 
   var originalOutNodes = collection2.nodes.map( ( dnode ) =>
   {
     return collection2.group.nodeToName( dnode ) + ' : ' + group.nodesToNames( dnode.originalOutNodes ).join( '.' );
   }).toArray().original;
-  var expected = [ 'a2+b1+c+a1+a0+b2 : b1.c.b2.a1.a0.a2' ];
+  var expected = [ 'a2+b1+c+b2+a1+a0 : b1.c.b2.a1.a0.a2' ];
   test.identical( originalOutNodes, expected );
 
   gr.sys.finit();
@@ -21465,21 +21561,21 @@ function nodesStronglyConnectedCollectionJunctionsDfs( test )
   {
     return collection2.group.nodeToName( dnode ) + ' : ' + collection2.group.nodesToNames( dnode.outNodes ).join( '.' );
   }).toArray().original;
-  var expected = [ 'd+e+f : ', 'b2+c1+b1+c2 : ', 'g : b2+c1+b1+c2', 'a : d+e+f.g' ];
+  var expected = [ 'd+e+f : ', 'b2+c1+c2+b1 : ', 'g : b2+c1+c2+b1', 'a : d+e+f.g' ];
   test.identical( outNodes, expected );
 
   var inNodes = collection2.nodes.map( ( dnode ) =>
   {
     return collection2.group.nodeToName( dnode ) + ' : ' + collection2.group.nodesToNames( dnode.inNodes ).join( '.' );
   }).toArray().original;
-  var expected = [ 'd+e+f : a', 'b2+c1+b1+c2 : g', 'g : a', 'a : ' ];
+  var expected = [ 'd+e+f : a', 'b2+c1+c2+b1 : g', 'g : a', 'a : ' ];
   test.identical( inNodes, expected );
 
   var originalOutNodes = collection2.nodes.map( ( dnode ) =>
   {
     return collection2.group.nodeToName( dnode ) + ' : ' + group.nodesToNames( dnode.originalOutNodes ).join( '.' );
   }).toArray().original;
-  var expected = [ 'd+e+f : e.f.d', 'b2+c1+b1+c2 : c1.c2.b1.b2', 'g : b1.c2.b2.c1', 'a : d.g' ];
+  var expected = [ 'd+e+f : e.f.d', 'b2+c1+c2+b1 : c1.c2.b1.b2', 'g : b1.c2.b2.c1', 'a : d.g' ];
   test.identical( originalOutNodes, expected );
 
   gr.sys.finit();
@@ -21504,21 +21600,21 @@ function nodesStronglyConnectedCollectionJunctionsDfs( test )
   {
     return collection2.group.nodeToName( dnode ) + ' : ' + collection2.group.nodesToNames( dnode.outNodes ).join( '.' );
   }).toArray().original;
-  var expected = [ 'd+e+f : ', 'b2+c1+b1+c2 : ', 'g : b2+c1+b1+c2', 'a1+a0 : d+e+f.g' ];
+  var expected = [ 'd+e+f : ', 'b2+c1+c2+b1 : ', 'g : b2+c1+c2+b1', 'a1+a0 : d+e+f.g' ];
   test.identical( outNodes, expected );
 
   var inNodes = collection2.nodes.map( ( dnode ) =>
   {
     return collection2.group.nodeToName( dnode ) + ' : ' + collection2.group.nodesToNames( dnode.inNodes ).join( '.' );
   }).toArray().original;
-  var expected = [ 'd+e+f : a1+a0', 'b2+c1+b1+c2 : g', 'g : a1+a0', 'a1+a0 : ' ];
+  var expected = [ 'd+e+f : a1+a0', 'b2+c1+c2+b1 : g', 'g : a1+a0', 'a1+a0 : ' ];
   test.identical( inNodes, expected );
 
   var originalOutNodes = collection2.nodes.map( ( dnode ) =>
   {
     return collection2.group.nodeToName( dnode ) + ' : ' + group.nodesToNames( dnode.originalOutNodes ).join( '.' );
   }).toArray().original;
-  var expected = [ 'd+e+f : e.f.d', 'b2+c1+b1+c2 : c1.c2.b1.b2', 'g : b1.c2.g.b2.c1', 'a1+a0 : d.g' ];
+  var expected = [ 'd+e+f : e.f.d', 'b2+c1+c2+b1 : c1.c2.b1.b2', 'g : b1.c2.g.b2.c1', 'a1+a0 : d.g' ];
   test.identical( originalOutNodes, expected );
 
   gr.sys.finit();
@@ -22773,6 +22869,7 @@ ask for more details
     topSortLeastDegreeBfs,
     topSortCycledSourceBasedFastBfs,
     topSortCycledSourceBasedPrecise,
+    topSortCycledSourceBasedPreciseJunction,
 
     // connectivity
 
