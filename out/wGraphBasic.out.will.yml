@@ -165,6 +165,14 @@ module:
           - ../proto/dwtools/abase
           - ../proto/dwtools/amid
           - ../proto/dwtools/amid/l1
+          - ../proto/dwtools/amid/l1/-graphBasic
+          - ../proto/dwtools/amid/l1/-graphBasic/IncludeBasic.s
+          - ../proto/dwtools/amid/l1/-graphBasic/IncludeTop.s
+          - ../proto/dwtools/amid/l1/-graphBasic/l1
+          - ../proto/dwtools/amid/l1/-graphBasic/l1/Abstract.s
+          - ../proto/dwtools/amid/l1/-graphBasic/l3
+          - ../proto/dwtools/amid/l1/-graphBasic/l3/NodesGroup.s
+          - ../proto/dwtools/amid/l1/-graphBasic/l3/System.s
           - ../proto/dwtools/amid/l1/graph.test
           - ../proto/dwtools/amid/l1/graph.test/AbstractGraph.test.s
           - ../proto/dwtools/amid/l1/graphBasic
@@ -174,7 +182,10 @@ module:
           - ../proto/dwtools/amid/l1/graphBasic/l1/Abstract.s
           - ../proto/dwtools/amid/l1/graphBasic/l3
           - ../proto/dwtools/amid/l1/graphBasic/l3/NodesGroup.s
-          - ../proto/dwtools/amid/l1/graphBasic/l3/System.s
+          - ../proto/dwtools/amid/l1/graphBasic/l5
+          - ../proto/dwtools/amid/l1/graphBasic/l5/NodesCollection.s
+          - ../proto/dwtools/amid/l1/graphBasic/l7
+          - ../proto/dwtools/amid/l1/graphBasic/l7/System.s
           - ../proto/dwtools/atop
     submodule:
       wTools:

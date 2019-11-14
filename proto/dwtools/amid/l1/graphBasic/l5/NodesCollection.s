@@ -73,7 +73,7 @@ function _MethodFromGroup( o )
 
   _.assert( _.routineIs( originalMethod ), `Class ${Group.name} does not have method ${methodName}` );
   _.assert( _.mapLike( originalMethod.properties ) );
-  _.assert( !!originalMethod.properties.forCollection );
+  _.assert( !!originalMethod.properties.forCollection, `Method ${o.methodName} is not for collection` );
 
   if( originalMethod.defaults )
   {
@@ -114,8 +114,26 @@ function _MethodFromGroup( o )
     _.assert( originalMethod.input === '(*Node)' );
     _.routineExtend( collectionMethod, originalMethod );
   }
+  else if( originalMethod.input === '(*Junction)' )
+  {
+    let wrap =
+    {
+      [ methodName ] : function()
+      {
+        let collection = this;
+        let sys = collection.sys;
+        let group = collection.group;
+        _.assert( arguments.length === 0 );
+        _.assert( 0, 'not tested' );
+        return originalMethod.call( group, group.nodesToJunctions( collection.nodes ).once() );
+      }
+    }
+    collectionMethod = wrap[ methodName ];
+    _.assert( originalMethod.input === '(*Junction)' );
+    _.routineExtend( collectionMethod, originalMethod );
+  }
+  else _.assert( 0, `Not clear how what is input of ${methodName}` );
 
-  // debugger;
   return collectionMethod;
 }
 
@@ -571,10 +589,17 @@ let Extend =
   nodesToNamesTry : _MethodFromGroup( 'nodesToNamesTry' ),
   nodesJunctions : _MethodFromGroup( 'nodesJunctions' ),
 
+  // junctionsAre : _MethodFromGroup( 'junctionsAre' ),
+  // junctionsAreAll : _MethodFromGroup( 'junctionsAreAll' ),
+  // junctionsAreAny : _MethodFromGroup( 'junctionsAreAny' ),
+  // junctionsAreNone : _MethodFromGroup( 'junctionsAreNone' ),
+  // junctionsNodes : _MethodFromGroup( 'junctionsNodes' ),
+
   junctionsAre : _MethodFromGroup( 'junctionsAre' ),
   junctionsAreAll : _MethodFromGroup( 'junctionsAreAll' ),
   junctionsAreAny : _MethodFromGroup( 'junctionsAreAny' ),
   junctionsAreNone : _MethodFromGroup( 'junctionsAreNone' ),
+  junctionsToNames : _MethodFromGroup( 'junctionsToNames' ),
   junctionsNodes : _MethodFromGroup( 'junctionsNodes' ),
 
   // nodes

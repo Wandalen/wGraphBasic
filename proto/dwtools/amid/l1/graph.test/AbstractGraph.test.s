@@ -267,9 +267,11 @@ function cycled4Scc()
 
 //
 
-function _cycledJunctions( gr )
+function _cycledJunctions( gr, o )
 {
   let context = this;
+
+  o = _.routineOptions( _cycledJunctions, o );
 
   gr.length = gr.nodes.length;
   gr.sys = new _.graph.AbstractGraphSystem
@@ -342,9 +344,13 @@ function _cycledJunctions( gr )
 
 }
 
+_cycledJunctions.defaults =
+{
+}
+
 //
 
-function cycledJunctionsTriplet()
+function cycledJunctionsTriplet( o )
 {
   let context = this;
   var a0 = { name : 'a0', nodes : [] }
@@ -371,12 +377,12 @@ function cycledJunctionsTriplet()
 
   let gr = Object.create( null );
   gr.nodes = [ a0, a1, a2, b1, b2, c ];
-  return context._cycledJunctions( gr );
+  return context._cycledJunctions( gr, o );
 }
 
 //
 
-function cycledJunctions2()
+function cycledJunctions2( o )
 {
   let context = this;
   var a0 = { name : 'a0', nodes : [] }
@@ -415,12 +421,12 @@ function cycledJunctions2()
 
   let gr = Object.create( null );
   gr.nodes = [ a0, a1, a2, b, c, d, e, f, g ];
-  return context._cycledJunctions( gr );
+  return context._cycledJunctions( gr, o );
 }
 
 //
 
-function cycledJunctions3()
+function cycledJunctions3( o )
 {
   let context = this;
   var a = { name : 'a', nodes : [] }
@@ -455,12 +461,12 @@ function cycledJunctions3()
 
   let gr = Object.create( null );
   gr.nodes = [ a, b, c1, c2, d, e, f, g ];
-  return context._cycledJunctions( gr );
+  return context._cycledJunctions( gr, o );
 }
 
 //
 
-function cycledJunctions4()
+function cycledJunctions4( o )
 {
   let context = this;
   var a = { name : 'a', nodes : [] }
@@ -498,12 +504,12 @@ function cycledJunctions4()
 
   let gr = Object.create( null );
   gr.nodes = [ a, b1, b2, c1, c2, d, e, f, g ];
-  return context._cycledJunctions( gr );
+  return context._cycledJunctions( gr, o );
 }
 
 //
 
-function cycledJunctions5()
+function cycledJunctions5( o )
 {
   let context = this;
   var a0 = { name : 'a0', nodes : [] }
@@ -546,7 +552,7 @@ function cycledJunctions5()
   /*
     a1 should be in the end of the list
   */
-  return context._cycledJunctions( gr );
+  return context._cycledJunctions( gr, o );
 }
 
 //
@@ -1172,8 +1178,7 @@ function cacheInNodesJunctions( test )
 `
 a : g
 b : a
-c1 : b
-c2 : b
+c1+c2 : b
 d : a+f
 e : d
 f : e

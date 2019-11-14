@@ -46,22 +46,47 @@ visiting rules
 function _Vectorize_functor_functor( originalVectorize )
 {
   _.assert( _.routineIs( originalVectorize ) )
+
   return function vectorize( r )
   {
     _.assert( _.routineIs( r ) );
     _.assert( arguments.length === 1 );
 
+    // if( r.name === 'nodeIs' )
+    // debugger;
+
     let result = originalVectorize( r );
     _.assert( _.routineIs( result ) );
     if( r.properties && r.input === 'Node' )
     {
-      result.input = '(*Node)';
-      result.properties = result.properties || Object.create( null );
-      if( result.properties.forCollection === undefined )
-      result.properties.forCollection = true;
+      routineAdjust( result );
+      // result.input = '(*Node)';
+      // result.properties = result.properties || Object.create( null );
+      // if( result.properties.forCollection === undefined )
+      // result.properties.forCollection = true;
+    }
+    if( r.properties && r.input === 'Junction' )
+    {
+      routineAdjust( result );
+      // result.input = '(*Junction)';
+      // result.properties = result.properties || Object.create( null );
+      // if( result.properties.forCollection === undefined )
+      // result.properties.forCollection = true;
     }
     return result;
   }
+
+  function routineAdjust( r )
+  {
+    _.assert( _.strIs( r.input ) );
+    _.assert( _.objectIs( r.properties ) );
+    r.input = `(*${r.input})`;
+    r.properties = r.properties || Object.create( null );
+    if( r.properties.forCollection === undefined )
+    r.properties.forCollection = true;
+    return r;
+  }
+
 }
 
 let Vectorize = _Vectorize_functor_functor( _Vectorize );
@@ -272,14 +297,15 @@ function cacheInNodesFromOutNodesUpdate( nodes )
   if( !group._inNodesCacheHash )
   group._inNodesCacheHash = new HashMap();
 
-  nodes.each( ( node1 ) =>
+  nodes.each( ( node ) =>
   {
-    group._inNodesCacheHash.set( node1, sys.ContainerAdapterFrom( new Set ) );
+    let junction = group.nodeJunction( node );
+    group._inNodesCacheHash.set( junction, sys.ContainerAdapterFrom( new Set ) );
   });
 
-  nodes.each( ( node1 ) =>
+  nodes.each( ( node ) =>
   {
-    group.cacheInNodesFromOutNodesUpdateNode( node1 );
+    group.cacheInNodesFromOutNodesUpdateNode( node );
   });
 
   return group._inNodesCacheHash;
@@ -296,24 +322,25 @@ function cacheInNodesFromOutNodesUpdateNode( node )
 {
   let group = this;
   let sys = group.sys;
+  let junction = group.nodeJunction( node );
 
   _.assert( arguments.length === 0 || arguments.length === 1 );
-  _.assert( !!group.nodeIs( node ) );
   _.assert( !!group.onNodeInNodes );
   _.assert( !!group._inNodesCacheHash );
 
-  if( !group._inNodesCacheHash.has( node ) )
-  group._inNodesCacheHash.set( node, sys.ContainerAdapterFrom( new Set ) );
+  if( !group._inNodesCacheHash.has( junction ) )
+  group._inNodesCacheHash.set( junction, sys.ContainerAdapterFrom( new Set ) );
 
   let directNeighbours = group.nodeOutNodesFor( node );
   directNeighbours = sys.ContainerAdapterFrom( directNeighbours );
   directNeighbours.each( ( node2 ) =>
   {
-    let inNodes = group._inNodesCacheHash.get( node2 );
+    let junction2 = group.nodeJunction( node2 );
+    let inNodes = group._inNodesCacheHash.get( junction2 );
     if( !inNodes )
     {
       inNodes = sys.ContainerAdapterFrom( new Set );
-      group._inNodesCacheHash.set( node2, inNodes );
+      group._inNodesCacheHash.set( junction2, inNodes );
     }
     _.assert( !!inNodes, `Cant retrive in nodes of ${group.nodeToQualifiedName( node2 )} from cache` );
     inNodes.push( node );
@@ -331,9 +358,9 @@ function cacheInNodesExportInfo()
   let result = '';
 
   if( group._inNodesCacheHash )
-  group._inNodesCacheHash.forEach( ( inNodes, node ) =>
+  group._inNodesCacheHash.forEach( ( inNodes, junction ) =>
   {
-    result += group.nodeToName( node ) + ' : ' + group.nodesToNames( inNodes ).join( '+' ) + '\n';
+    result += group.junctionToName( junction ) + ' : ' + group.nodesToNames( inNodes ).join( '+' ) + '\n';
   });
 
   return result;
@@ -360,11 +387,20 @@ function optionsExport()
   let group = this;
   let sys = group.sys;
   let result = Object.create( null );
-  result.onNodeName = group.onNodeName;
-  result.onNodeJunction = group.onNodeJunction;
+
   result.onNodeIs = group.onNodeIs;
+  result.onNodeName = group.onNodeName;
+  result.onNodeQualifiedName = group.onNodeQualifiedName;
   result.onNodeOutNodes = group.onNodeOutNodes;
   result.onNodeInNodes = group.onNodeInNodes;
+  result.onNodeInfoExport = group.onNodeInfoExport;
+  result.onNodeFrom = group.onNodeFrom;
+  result.onNodeJunction = group.onNodeJunction;
+
+  result.onJunctionIs = group.onJunctionIs;
+  result.onJunctionName = group.onJunctionName;
+  result.onJunctionNodes = group.onJunctionNodes;
+
   return result
 }
 
@@ -506,6 +542,110 @@ routine.input = 'Node';
 
 //
 
+/**
+ * @summary Returns name of node. Takes single argument - a node.
+ * @param {Object} node Node descriptor.
+ * @function nodeToName
+ * @returns {String} Returns name of node.
+ * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesGroup#
+ */
+
+function nodeToName( node )
+{
+  let group = this;
+  let sys = group.sys;
+  let result;
+
+  _.assert( !!group.nodeIs( node ), 'Expects node' );
+  _.assert( arguments.length === 1 );
+
+  result = group.onNodeName( node );
+
+  _.assert( _.primitiveIs( result ) && result !== undefined, 'Cant get name for the node' );
+
+  return String( result );
+}
+
+var routine = nodeToName;
+var properties = routine.properties = Object.create( null );
+routine.input = 'Node';
+
+//
+
+function nodeToNameTry( node )
+{
+  let group = this;
+  let sys = group.sys;
+  if( !group.nodeIs( node ) )
+  return undefined;
+  _.assert( arguments.length === 1 );
+  return group.nodeToName( node );
+}
+
+var routine = nodeToNameTry;
+var properties = routine.properties = Object.create( null );
+routine.input = 'Node';
+
+//
+
+/**
+ * @summary Returns qualified name of node. Takes single argument - a node.
+ * @param {Object} node Node descriptor.
+ * @function nodeToQualifiedName
+ * @returns {String} Returns name of node.
+ * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesGroup#
+ */
+
+function nodeToQualifiedName( node )
+{
+  let group = this;
+  let sys = group.sys;
+  let result;
+
+  _.assert( !!group.nodeIs( node ), 'Expects node' );
+  _.assert( arguments.length === 1 );
+
+  if( group.onNodeQualifiedName === null )
+  {
+    result = 'node::' + group.nodeToName( node );
+  }
+  else
+  {
+    result = group.onNodeQualifiedName( node );
+  }
+
+  _.assert( _.primitiveIs( result ) && result !== undefined, 'Cant get qualified name for the node' );
+
+  return String( result );
+}
+
+//
+
+/**
+ * @summary Try to return qualified name of node. Takes single argument - a node.
+ * @param {Object} node Node descriptor.
+ * @function nodeToQualifiedNameTry
+ * @returns {String} Returns name of node.
+ * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesGroup#
+ */
+
+function nodeToQualifiedNameTry( node )
+{
+  let group = this;
+  let sys = group.sys;
+  try
+  {
+    let result = group.nodeToQualifiedName( node );
+    return result;
+  }
+  catch( err )
+  {
+    return '';
+  }
+}
+
+//
+
 function nodeIndegree( node )
 {
   let group = this;
@@ -589,117 +729,20 @@ function nodeJunction( node )
   let sys = group.sys;
   _.assert( !!group.nodeIs( node ), 'Not a node' );
   _.assert( arguments.length === 1 );
-  _.assert( _.routineIs( group.onNodeJunction ), 'Group does not have defined callback {- onNodeJunction -}' );
-  let result = group.onNodeJunction( node );
-  _.assert( result !== undefined, `No junction for a node` );
-  return result;
-}
-
-var routine = nodeJunction;
-var properties = routine.properties = Object.create( null );
-routine.input = 'Node';
-
-//
-
-/**
- * @summary Returns qualified name of node. Takes single argument - a node.
- * @param {Object} node Node descriptor.
- * @function nodeToQualifiedName
- * @returns {String} Returns name of node.
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesGroup#
- */
-
-function nodeToQualifiedName( node )
-{
-  let group = this;
-  let sys = group.sys;
-  let result;
-
-  _.assert( !!group.nodeIs( node ), 'Expects node' );
-  _.assert( arguments.length === 1 );
-
-  if( group.onNodeQualifiedName === null )
+  if( group.onNodeJunction )
   {
-    result = 'node::' + group.nodeToName( node );
+    _.assert( _.routineIs( group.onNodeJunction ), 'Group does not have defined callback {- onNodeJunction -}' );
+    let result = group.onNodeJunction( node );
+    _.assert( result !== undefined, `No junction for a node` );
+    return result;
   }
   else
   {
-    result = group.onNodeQualifiedName( node );
-  }
-
-  _.assert( _.primitiveIs( result ) && result !== undefined, 'Cant get qualified name for the node' );
-
-  return String( result );
-}
-
-//
-
-/**
- * @summary Try to return qualified name of node. Takes single argument - a node.
- * @param {Object} node Node descriptor.
- * @function nodeToQualifiedNameTry
- * @returns {String} Returns name of node.
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesGroup#
- */
-
-function nodeToQualifiedNameTry( node )
-{
-  let group = this;
-  let sys = group.sys;
-  try
-  {
-    let result = group.nodeToQualifiedName( node );
-    return result;
-  }
-  catch( err )
-  {
-    return '';
+    return node;
   }
 }
 
-//
-
-/**
- * @summary Returns name of node. Takes single argument - a node.
- * @param {Object} node Node descriptor.
- * @function nodeToName
- * @returns {String} Returns name of node.
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesGroup#
- */
-
-function nodeToName( node )
-{
-  let group = this;
-  let sys = group.sys;
-  let result;
-
-  _.assert( !!group.nodeIs( node ), 'Expects node' );
-  _.assert( arguments.length === 1 );
-
-  result = group.onNodeName( node );
-
-  _.assert( _.primitiveIs( result ) && result !== undefined, 'Cant get name for the node' );
-
-  return String( result );
-}
-
-var routine = nodeToName;
-var properties = routine.properties = Object.create( null );
-routine.input = 'Node';
-
-//
-
-function nodeToNameTry( node )
-{
-  let group = this;
-  let sys = group.sys;
-  if( !group.nodeIs( node ) )
-  return undefined;
-  _.assert( arguments.length === 1 );
-  return group.nodeToName( node );
-}
-
-var routine = nodeToNameTry;
+var routine = nodeJunction;
 var properties = routine.properties = Object.create( null );
 routine.input = 'Node';
 
@@ -799,7 +842,7 @@ function rootsExportInfoTree( roots, opts )
   opts = _.routineOptions( rootsExportInfoTree, opts );
 
   if( opts.onNodeName === null )
-  opts.onNodeName = defaultOnNodeName;
+  opts.onNodeName = group.onNodeName || defaultOnNodeName;
 
   _.assert( opts.dtab1.length === opts.dtab2.length );
   _.assert( arguments.length === 0 || arguments.length === 1 || arguments.length === 2 );
@@ -997,7 +1040,40 @@ function junctionIs( junction )
 
 var routine = junctionIs;
 var properties = routine.properties = Object.create( null );
-routine.input = 'Node';
+routine.input = 'Junction';
+
+//
+
+/**
+ * @summary Returns name of junction. Takes single argument - a junction.
+ * @param {Object} junction Node descriptor.
+ * @function junctionToName
+ * @returns {String} Returns name of junction.
+ * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesGroup#
+ */
+
+function junctionToName( junction )
+{
+  let group = this;
+  let sys = group.sys;
+  let result;
+
+  _.assert( !!group.junctionIs( junction ), 'Expects junction' );
+  _.assert( arguments.length === 1 );
+
+  if( group.onNodeJunction )
+  result = group.onJunctionName( junction );
+  else
+  result = group.onNodeName( junction );
+
+  _.assert( _.primitiveIs( result ) && result !== undefined, 'Cant get name for the junction' );
+
+  return String( result );
+}
+
+var routine = junctionToName;
+var properties = routine.properties = Object.create( null );
+routine.input = 'Junction';
 
 //
 
@@ -1015,7 +1091,7 @@ function junctionNodes( junction )
 
 var routine = junctionNodes;
 var properties = routine.properties = Object.create( null );
-routine.input = 'Node';
+routine.input = 'Junction';
 
 // --
 // filter
@@ -3247,7 +3323,6 @@ function topSortCycledSourceBasedPrecise( nodes )
     //
     // while( layer.length )
     // {
-    //   /* xxx : temp assert */
     //   // debugger;
     //   // _.assert( _.all( group.nodeOutNodesFor( prev ).map( ( node ) =>
     //   // {
@@ -3847,15 +3922,13 @@ function nodesStronglyConnectedCollectionDfs( nodes )
     junctionToNodes = new HashMap();
     nodes.each( ( node ) =>
     {
-      let junction = group.nodeJunction( node ); /* qqq : implement test orutine *Junction for nodesStronglyConnectedCollectionDfs */
+      let junction = group.nodeJunction( node ); /* qqq : implement test routine *Junction for nodesStronglyConnectedCollectionDfs */
       if( !junctionToNodes.has( junction ) )
       junctionToNodes.set( junction, [ node ] )
       else
       junctionToNodes.set( junction, _.arrayAppend( junctionToNodes.get( junction ), node ) )
     });
   }
-
-  // debugger;
 
   if( group.direct && !group.onNodeInNodes )
   group.cacheInNodesFromOutNodesOnce( nodes );
@@ -4058,7 +4131,7 @@ properties.forCollection = 1;
 // etc
 // --
 
-function _NodeNameFromFieldName( node )
+function _NameFromFieldName( node )
 {
   return node.name;
 }
@@ -4077,8 +4150,7 @@ function _IsDefinedNotNull( node )
 function _inNodesFromGroupCache( node )
 {
   let group = this;
-  let outNodes = group._inNodesCacheHash.get( node );
-  // _.assert( _.setIs( outNodes ), 'No cache for the node' );
+  let outNodes = group._inNodesCacheHash.get( group.nodeJunction( node ) );
   _.assert( _.containerAdapter.is( outNodes ), `No cache for the ${group.nodeToQualifiedName( node )}` );
   return outNodes;
 }
@@ -4120,7 +4192,7 @@ let Aggregates =
 {
 
   onNodeIs : _IsDefinedNotNull,
-  onNodeName : _NodeNameFromFieldName,
+  onNodeName : _NameFromFieldName,
   onNodeQualifiedName : null,
   onNodeOutNodes : _NodesFromFieldNodes,
   onNodeInNodes : null,
@@ -4129,6 +4201,7 @@ let Aggregates =
   onNodeJunction : null, /* qqq : cover by tests */
 
   onJunctionIs : _IsDefinedNotNull,
+  onJunctionName : _NameFromFieldName,
   onJunctionNodes : null,
 
 }
@@ -4147,7 +4220,7 @@ let Restricts =
 let Statics =
 {
 
-  _NodeNameFromFieldName,
+  _NameFromFieldName,
   _IsDefinedNotNull,
 
   _NodesFromFieldNodes,
@@ -4217,6 +4290,15 @@ let Extend =
   nodesAreAny : VectorizeAny( nodeIs ),
   nodesAreNone : VectorizeNone( nodeIs ),
 
+  nodeToName,
+  nodesToNames : Vectorize( nodeToName ),
+  nodeToNameTry,
+  nodesToNamesTry : Vectorize( nodeToNameTry ),
+  nodeToQualifiedName,
+  nodesToQualifiedNames : Vectorize( nodeToQualifiedName ),
+  nodeToQualifiedNameTry,
+  nodesToQualifiedNamesTry : Vectorize( nodeToQualifiedNameTry ),
+
   nodeIndegree,
   nodesIndegree : Vectorize( nodeIndegree ),
   nodeOutdegree,
@@ -4229,15 +4311,6 @@ let Extend =
   nodesInNodesFor : Vectorize( nodeInNodesFor ),
   nodeJunction,
   nodesJunctions : Vectorize( nodeJunction ),
-
-  nodeToQualifiedName,
-  nodesToQualifiedNames : Vectorize( nodeToQualifiedName ),
-  nodeToQualifiedNameTry,
-  nodesToQualifiedNamesTry : Vectorize( nodeToQualifiedNameTry ),
-  nodeToName,
-  nodesToNames : Vectorize( nodeToName ),
-  nodeToNameTry,
-  nodesToNamesTry : Vectorize( nodeToNameTry ),
 
   // node exporter
 
@@ -4255,6 +4328,8 @@ let Extend =
   junctionsAreAny : VectorizeAny( junctionIs ),
   junctionsAreNone : VectorizeNone( junctionIs ),
 
+  junctionToName,
+  junctionsToNames : Vectorize( junctionToName ),
   junctionNodes,
   junctionsNodes : Vectorize( junctionNodes ),
 
@@ -4332,7 +4407,7 @@ let Extend =
 
   // defaults
 
-  _NodeNameFromFieldName,
+  _NameFromFieldName,
   _IsDefinedNotNull,
   _inNodesFromGroupCache,
 
