@@ -749,6 +749,39 @@ function cycledAsymetricChi()
   return gr;
 }
 
+//
+
+function petersenGraph()
+{
+  let context = this;
+  var a = { name : 'a', nodes : [] };
+  var b = { name : 'b', nodes : [] };
+  var c = { name : 'c', nodes : [] };
+  var d = { name : 'd', nodes : [] };
+  var e = { name : 'e', nodes : [] };
+  var f = { name : 'f', nodes : [] };
+  var g = { name : 'g', nodes : [] };
+  var h = { name : 'h', nodes : [] };
+  var i = { name : 'i', nodes : [] };
+  var j = { name : 'j', nodes : [] };
+
+/*
+
+   ┌──────a──────┐
+  ┌       |       ┐
+  e──┐   ┌f┐   ┌──b
+  |  |  /   \  |  |
+  │  j──┼───┼──g  |
+  |  |  |┌──┼──┘  |
+   \ └─/─┼──┐\   /
+    |  | |  | |  |
+    | ┌i─┘  └─h┐ |
+    |/          \|
+    d────────────c
+
+*/
+
+}
 // --
 // tests
 // --
