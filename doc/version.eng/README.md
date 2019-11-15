@@ -190,6 +190,34 @@
     The junction is a relation between two or more nodes of a graph, making algorithms treat those distinct nodes as the same node.
 </details>
 
+<details>
+  <summary><a href=".">
+    Diameter of a graph
+  </a></summary>
+    Diameter of a graph is the longest of the shortest path of the graph.
+</details>
+
+<details>
+  <summary><a href=".">
+    Node remoteness
+  </a></summary>
+    Node remoteness - is its distance from the furthest node.
+</details>
+
+<details>
+  <summary><a href=".">
+    Center node
+  </a></summary>
+    Center node - node with minimum remoteness. All diameters go though the center. A graph has at most 2 centers.
+</details>
+
+<details>
+  <summary><a href=".">
+    Centroid node
+  </a></summary>
+    Centroid node - a node of the graph when removed minimizes largest remaining component. A graph has at most 2 centroids.
+</details>
+
 ## Tutorials
 
 <details><summary><a href="./tutorial/Abstract.md">
