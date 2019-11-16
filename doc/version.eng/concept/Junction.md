@@ -4,7 +4,7 @@ The junction is a relation between two or more nodes of a graph, making algorith
 
 Nodes connected with a junction are called variants of the junction, or variants of the node. A junction can be used to join several unconnected graphs into one connected graph or to add short-cut from one location in the graph to another. Junction and edge are different concepts. The junction is undirected. Edge does not turn different nodes into one node.
 
-#### Implementation
+### Implementation
 
 The introduction of junctions let traverse more complex graphs in which several nodes could represent the same entity. We implemented junction introducing three custom callbacks to the class AbstractNodesGroup:
 
@@ -18,7 +18,7 @@ Callbacks onJunctionIs and onJunctionNodes are optimal. Callback onJunctionIs an
 
 Implementations of graph algorithms realize the concept with the help of callback onEvaluate of lower-level general functions, like container.appendOnce and other. Many methods of containers supports callback onEvaluate what makes the process of implementation of concept junction easier.  Callback onEvaluate evaluates an element of a container returning its value for comparison with another element. The prime application of callback onEvaluate has been sorting and searching algorithms.
 
-#### Demonstration
+### Demonstration
 
 Let's look at how adding junction to a random graph changes outcomes of the breadth-first search algorithm.
 

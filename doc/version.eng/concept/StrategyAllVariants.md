@@ -1,4 +1,4 @@
-# Option allVariants
+## Option allVariants
 
 An option that controls the ability to re-visit a nodes in graph with junctions.
 

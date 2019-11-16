@@ -3,6 +3,8 @@
 
 Collection of abstract data structures and algorithms to process graphs. The module does not bound to any specific format of a graph, so providing adapters toy may use it with anyone. It implements depth-first search, breadth-first search, extracting strongly connected components, topological sort, shortest path search, and others.
 
+![Graph](doc/images/junction/WithoutLegend.png)
+
 ## Documenration
 
 Index of concepts behind the module and tutorials you may find [her](doc/version.eng/README.md).

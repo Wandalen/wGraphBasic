@@ -1,6 +1,6 @@
-# Revisiting strategy
+## Revisiting strategy
 
-The revisiting strategy of a search algorithm is a strategy to handle more multiple visits of a node.
+The revisiting strategy of a search algorithm is a strategy to handle multiple encountering of a node.
 
 There are multiple strategies for visiting a node in a cycle. Search option revisiting manage search algorithms aspect of revisiting node. The simplest two scenarios are avoiding second visiting of a node, `revisiting : 0` does exactly that and ignoring the fact that graph can have a cycle, `revisiting : 3` does precisely that.
 
@@ -20,7 +20,7 @@ You may see how DFS with revisiting strategy `revisiting : 1` works on the diagr
 
 ![DfsRevisiting1.png](../../images/searchOptions/Revisiting1.png)
 
-This strategy works similarly to strategy `revisiting : 1`, but it allows revisiting if and only if the path to the node does not have it. This strategy use stack instead of set to collect nodes and pop visited node from the stack after leaving it. That's why revisiting of a node can take place if the node is reachable from multiple paths. That's why an edge `fh` is used, despite the fact node `h` is visited. Node `h` is visited 2 times, the first path is `acfgh`, and the second path to node `f` is `abcfh`. Both paths have only one visit of node `h`. In contrast, the first path to node b is `ab`, and the second path to the node is `abdeb`. That's why the second visit to node `b` does not happen. Path cant has a repeat of a node with the strategy.
+This strategy works similarly to strategy `revisiting : 1`, but it allows revisiting if and only if the walk to the node does not have it. This strategy use stack instead of set to collect nodes and pop visited node from the stack after leaving it. That's why revisiting of a node can take place if the node is reachable from multiple paths. That's why an edge `fh` is used, despite the fact node `h` is visited. Node `h` is visited 2 times, the first walk is `acfgh`, and the second walk to node `f` is `abcfh`. Both paths have only one visit of node `h`. In contrast, the first walk to node b is `ab`, and the second walk to the node is `abdeb`. That's why the second visit to node `b` does not happen. Path cant has a repeat of a node with the strategy.
 
 ### Revisiting : 2
 
@@ -28,7 +28,7 @@ You may see how DFS with revisiting strategy `revisiting : 2` works on the diagr
 
 ![DfsRevisiting2.png](../../images/searchOptions/Revisiting2.png)
 
-Revisiting strategy `revisiting : 1` work similarly to strategy `revisiting : 1`, but it allows algorithm enters a node second time, but with the restriction it has to get back after visiting such node. As well as `revisiting : 1` the strategy use stack for collecting visited nodes. On the diagram, you may see that two visits to node `b` take place. At the first visit path is `ab` and at the second path is `abdeb`. After visiting node `b` second time algorithm turns back and does not continue searching out nodes of node `b`. Node `f` visited twice because of the same reason. The first visit of node `f` has path `acf` and the second `acfgf`.
+Revisiting strategy `revisiting : 1` work similarly to strategy `revisiting : 1`, but it allows algorithm enters a node second time, but with the restriction it has to get back after visiting such node. As well as `revisiting : 1` the strategy use stack for collecting visited nodes. On the diagram, you may see that two visits to node `b` take place. At the first visit walk is `ab` and at the second walk is `abdeb`. After visiting node `b` second time algorithm turns back and does not continue searching out nodes of node `b`. Node `f` visited twice because of the same reason. The first visit of node `f` has walk `acf` and the second `acfgf`.
 
 ### Revisiting : 3
 

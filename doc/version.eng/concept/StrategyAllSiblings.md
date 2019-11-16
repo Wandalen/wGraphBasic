@@ -1,4 +1,4 @@
-# Option allSiblings
+## Option allSiblings
 
 An option that controls the ability to re-visit a node if it has sibling nodes.
 
