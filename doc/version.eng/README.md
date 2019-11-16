@@ -51,6 +51,13 @@
 </details>
 
 <details>
+  <summary><a href="concept/StrategyRevisiting.md">
+    Revisiting strategy
+  </a></summary>
+    The revisiting strategy of a search algorithm is a strategy to handle more multiple visits of a node.
+</details>
+
+<details>
   <summary><a href=".">
     Directed acycled graph ~ DAG
   </a></summary>
