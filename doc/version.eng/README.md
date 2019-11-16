@@ -69,7 +69,7 @@
 </details>
 
 <details>
-  <summary><a href="concept/Subgraph.md#Walk--Chaing">
+  <summary><a href="concept/Subgraph.md#Walk--Chain">
     Walk ~ Chain
   </a></summary>
     Walk is a subgraph sequentially connected vertices of original graph. Also called chain. Walk can have more than one correspondence of a node of the original graph. Walk can have more than one correspondence of an edge of the original graph. In other word both vertices and edges of the original graph can be repeated in the walk.
