@@ -69,7 +69,7 @@
 </details>
 
 <details>
-  <summary><a href="concept/Subgraph.md#Walk">
+  <summary><a href="concept/Subgraph.md#Walk--Chaing">
     Walk ~ Chain
   </a></summary>
     Walk is a subgraph sequentially connected vertices of original graph. Also called chain. Walk can have more than one correspondence of a node of the original graph. Walk can have more than one correspondence of an edge of the original graph. In other word both vertices and edges of the original graph can be repeated in the walk.
@@ -104,7 +104,7 @@
 </details>
 
 <details>
-  <summary><a href="concept/Subgraph.md#Closed-trail">
+  <summary><a href="concept/Subgraph.md#Closed-trail--Circuit">
     Closed trail ~ Circuit
   </a></summary>
     Closed trail is a trail which has cycle decomposition. Closed trail is also called circuit.
@@ -125,7 +125,7 @@
 </details>
 
 <details>
-  <summary><a href="concept/Subgraph.md#Closed-path">
+  <summary><a href="concept/Subgraph.md#Closed-path--Cycle">
     Closed path ~ Cycle
   </a></summary>
     Closed path is a path which has cycle decomposition. Closed path is also called circuit.
