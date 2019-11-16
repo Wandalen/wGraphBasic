@@ -48,7 +48,7 @@
 </details>
 
 <details>
-  <summary><a href="concept/Subgraph.md#Induced_subgraph">
+  <summary><a href="concept/Subgraph.md#Induced-subgraph">
     Induced subgraph
   </a></summary>
     Induced subgraph of a graph is another graph formed from subset of vertices of original graph and all edges of the original graph which have both endpoints in the induced subgraph.
@@ -62,7 +62,7 @@
 </details>
 
 <details>
-  <summary><a href="concept/Subgraph.md#Spanning_subgraph">
+  <summary><a href="concept/Subgraph.md#Spanning-subgraph">
     Spanning subgraph
   </a></summary>
     Spanning subgraph of a graph is another graph formed from all vertices of the original graph.
@@ -76,14 +76,14 @@
 </details>
 
 <details>
-  <summary><a href="concept/Subgraph.md#Open_walk">
+  <summary><a href="concept/Subgraph.md#Open-walk">
     Open walk
   </a></summary>
     Open walk is a walk which does not have cycle decomposition.
 </details>
 
 <details>
-  <summary><a href="concept/Subgraph.md#Closed_walk">
+  <summary><a href="concept/Subgraph.md#Closed-walk">
     Closed walk
   </a></summary>
     Closed walk is a walk which has cycle decomposition.
@@ -97,14 +97,14 @@
 </details>
 
 <details>
-  <summary><a href="concept/Subgraph.md#Open_trail">
+  <summary><a href="concept/Subgraph.md#Open-trail">
     Open trail
   </a></summary>
     Open trail is a trail which does not have cycle decomposition.
 </details>
 
 <details>
-  <summary><a href="concept/Subgraph.md#Closed_trail">
+  <summary><a href="concept/Subgraph.md#Closed-trail">
     Closed trail ~ Circuit
   </a></summary>
     Closed trail is a trail which has cycle decomposition. Closed trail is also called circuit.
@@ -118,14 +118,14 @@
 </details>
 
 <details>
-  <summary><a href="concept/Subgraph.md#Open_path">
+  <summary><a href="concept/Subgraph.md#Open-path">
     Open path
   </a></summary>
     Open path is a path which does not have cycle decomposition.
 </details>
 
 <details>
-  <summary><a href="concept/Subgraph.md#Closed_path">
+  <summary><a href="concept/Subgraph.md#Closed-path">
     Closed path ~ Cycle
   </a></summary>
     Closed path is a path which has cycle decomposition. Closed path is also called circuit.
@@ -146,14 +146,14 @@
 </details>
 
 <details>
-  <summary><a href="concept/Subgraph.md#Graph_decomposition">
+  <summary><a href="concept/Subgraph.md#Graph-decomposition">
     Graph decomposition
   </a></summary>
     Graph decomposition - partitioning of edges of a graph.
 </details>
 
 <details>
-  <summary><a href="concept/Subgraph.md#Cycle_decomposition">
+  <summary><a href="concept/Subgraph.md#Cycle-decomposition">
     Cycle decomposition
   </a></summary>
     Cycle decomposition - graph decomposition each element of which is cycle. Cycle decomposition possible only for even graph.
