@@ -26,7 +26,7 @@ Siblings strategy `allSiblings : 1` allows algorithm revisit node of the graph i
 
 You may see how DFS with allSiblings strategy `allSiblings : 2` works on the diagram "DFS traversal allSiblings:2, revisiting:1", where an original graph is on the left side and traversal tree of the graph on the right side. The `revisiting` option uses to show difference in search algorithm.
 
-![AllSiblings1.png](../../images/searchOptions/AllSiblings1.png)
+![AllSiblings1.png](../../images/searchOptions/AllSiblings2.png)
 
 Siblings strategy `allSiblings : 2` works similar to strategy `allSiblings : 1`, but when the algorithm revisits child node, it continues the traversal and ignores a value of the option `revisiting` and the results of the previous traversal. As you may see, the algorithm revisits node `f`, ignores option `revisiting : 1` and continues the traversal to nodes `g` and `h`. So implementation of search algorithm `allSiblings : 2` is the slowest and it is good for complete traversal of trees, graphs of which has multiple edges in pairs of nodes.
 
