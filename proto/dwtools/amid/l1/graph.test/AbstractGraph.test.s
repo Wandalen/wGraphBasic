@@ -767,20 +767,37 @@ function petersenGraph()
 
 /*
 
-   ┌──────a──────┐
-  ┌       |       ┐
-  e──┐   ┌f┐   ┌──b
-  |  |  /   \  |  |
-  │  j──┼───┼──g  |
-  |  |  |┌──┼──┘  |
-   \ └─/─┼──┐\   /
-    |  | |  | |  |
-    | ┌i─┘  └─h┐ |
-    |/          \|
-    d────────────c
+   ┌────── a ──────┐
+  ┌        |        ┐
+  e ─┐   ┌ f ┐    ┌─ b
+  |  |   /    \   |  |
+  │  j ──┼────┼── g  |
+  |  |   | ┌───┼──┘  |
+   \ └──/──┼──┐ \   /
+    |   |  |  | |  |
+    | ┌ i ─┘  └─ h ┐ |
+    |/              \|
+    d ────────────── c
 
 */
 
+  a.nodes.push( e, b, f );
+  b.nodes.push( a, c, g );
+  c.nodes.push( b, d, h );
+  d.nodes.push( c, e, i );
+  e.nodes.push( d, a, j );
+  f.nodes.push( a, i, h );
+  g.nodes.push( b, j, i );
+  h.nodes.push( c, f, j );
+  i.nodes.push( d, g, f );
+  j.nodes.push( e, h, g );
+
+  let gr = {}
+  gr.sys = new _.graph.AbstractGraphSystem({ onNodeName : ( node ) => node.name });
+  gr.nodes = [ a, b, c, d, e, f, g, h, i, j ];
+  gr.nodes.forEach( ( e ) => gr[ e.name ] = e );
+
+  return gr;
 }
 // --
 // tests
