@@ -111,6 +111,13 @@
 </details>
 
 <details>
+  <summary><a href="concept/Subgraph.md#Euler-trail">
+    Euler trail
+  </a></summary>
+    Euler trail - trail that visits every edge exactly once.
+</details>
+
+<details>
   <summary><a href="concept/Subgraph.md#Path">
     Path
   </a></summary>

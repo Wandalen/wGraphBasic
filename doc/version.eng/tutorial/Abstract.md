@@ -22,5 +22,6 @@ Among advantages of this implementation of graph algorithms over other:
 - Find a random diameter.
 - Find number of diameters.
 - Find a centroid.
+- Is event, does euler trail exist?
 
 [Back to content](../README.md#Tutorials)

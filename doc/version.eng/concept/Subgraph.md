@@ -38,6 +38,10 @@ The open trail is a trail that does not have cycle decomposition.
 
 The closed trail is a trail that has cycle decomposition. The closed trail is also called circuit.
 
+## Euler trail
+
+Euler trail - trail that visits every edge exactly once.
+
 ## Path
 
 The path is a walk each edge of the original graph of which has one or none corresponding edge in the walk and each vertex of the original graph of which has one or none corresponding vertex in the walk. In other words, neither vertices nor edges of the original graph can be repeated in the path.

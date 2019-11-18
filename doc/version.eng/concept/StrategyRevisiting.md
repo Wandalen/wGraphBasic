@@ -2,7 +2,7 @@
 
 The revisiting strategy of a search algorithm is a strategy to handle multiple encountering of a node.
 
-There are multiple strategies for visiting a node in a cycle. Search option revisiting manage search algorithms aspect of revisiting node. The simplest two scenarios are avoiding second visiting of a node, `revisiting : 0` does exactly that and ignoring the fact that graph can have a cycle, `revisiting : 3` does precisely that.
+There are multiple strategies for visiting a node in a cycle. Search option revisiting manages search algorithms aspect of revisiting node. The simplest two scenarios are avoiding second visiting of a node, `revisiting : 0` does exactly that and ignoring the fact that graph can have a cycle, `revisiting : 3` does precisely that.
 
 This strategy is an option for such search algorithms as DFS, BFS, CFS.
 
@@ -12,7 +12,7 @@ You may see how DFS with revisiting strategy `revisiting : 0` works on the diagr
 
 ![DfsRevisiting0.png](../../images/searchOptions/Revisiting0.png)
 
-With revisiting strategy, `revisiting : 0` search algorithm visit nodes of the graph at most once. This strategy is implemented with the help of some kind of container that collects a set of visited nodes. That container does not get empty, only adding of nodes take place within the revisiting strategy `revisiting : 0`. As you may see, edge `eb` is never used, and after visiting node `e` algorithm get back to node `d`, because `b` was visited. Same exclusion takes place in case of edge `fh`. Only one of two edges `cf` really used because of revisiting strategy `revisiting : 0`.
+With revisiting strategy, `revisiting : 0` search algorithm visits nodes of the graph at most once. This strategy is implemented with the help of container of some kind that collects a set of visited nodes. That container does not get empty, only adding of nodes take place within the revisiting strategy `revisiting : 0`. As you may see, edge `eb` is never used, and after visiting node `e` algorithm get back to node `d`, because `b` was visited. Same exclusion takes place in case of edge `fh`. Only one of two edges `cf` really used because of revisiting strategy `revisiting : 0`.
 
 ### Revisiting : 1
 
