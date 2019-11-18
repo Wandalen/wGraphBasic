@@ -302,7 +302,7 @@
 
 <details>
   <summary><a href="concept/StrategyAllSiblings.md">
-    Siblings strategy
+    Siblings revisiting strategy
   </a></summary>
     The siblings strategy of a search algorithm is a strategy to handle multiple edges that connect pares of a parent and a child nodes.
 </details>
