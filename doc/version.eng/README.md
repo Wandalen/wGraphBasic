@@ -308,6 +308,13 @@
 </details>
 
 <details>
+  <summary><a href="concept/StrategyAllVariants.md">
+    Junction revisiting strategy
+  </a></summary>
+    The junction revisiting strategy of a search algorithm is a strategy to handle junction nodes.
+</details>
+
+<details>
   <summary><a href=".">
     Low-link value
   </a></summary>
