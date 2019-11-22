@@ -308,6 +308,20 @@
 </details>
 
 <details>
+  <summary><a href="concept/StrategyAllSiblings.md">
+    Siblings revisiting strategy
+  </a></summary>
+    The siblings strategy of a search algorithm is a strategy to handle multiple edges that connect pares of a parent and a child nodes.
+</details>
+
+<details>
+  <summary><a href="concept/StrategyAllVariants.md">
+    Junction revisiting strategy
+  </a></summary>
+    The junction revisiting strategy of a search algorithm is a strategy to handle junction nodes.
+</details>
+
+<details>
   <summary><a href=".">
     Low-link value
   </a></summary>
