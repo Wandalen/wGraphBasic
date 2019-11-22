@@ -1950,7 +1950,6 @@ function lookBfs_body( o )
     let siblingsContainer;
 
     it.layers.push( nodes.original );
-
     /* qqq : optimize. add proper condition */
     // if( ( o.revisiting >= 1 && o.allVariants === 0 ) || ( o.revisiting === 0 && o.allVariants === 1 ) )
     siblingsContainer = sys.ContainerAdapterFrom( new Set )
@@ -2029,7 +2028,7 @@ function lookBfs_body( o )
       nodeDown( it );
       return true;
     });
-    nodes.filter( nodes, ( node, k ) =>
+    nodes.filterRight( nodes, ( node, k ) =>
     {
       [ it.continueUp, it.continueNode, it.visited ] = nodesStatus.get( k );
       return it.continueNode ? node : undefined;
@@ -3290,7 +3289,7 @@ function topSortCycledSourceBasedPrecise( nodes )
     let nodeToOutNodes = new HashMap();
     // let close = layer.make().only( frontier ); /* xxx : only does not work properly */
     let close = layer.make().only( _.self, frontier );
-
+    
     layer.each( ( node ) => nodeToInNodes.set( node, group.nodeInNodesFor( node ).only( null, layer ).but( _.self, result ) ) );
     layer.each( ( node ) => nodeToOutNodes.set( node, group.nodeOutNodesFor( node ).only( null, layer ).but( _.self, result ) ) );
 
@@ -3307,7 +3306,6 @@ function topSortCycledSourceBasedPrecise( nodes )
           add( node );
         });
       }
-
       if( layer.length )
       layer
       .least( ( node ) => nodeToInNodes.get( node ).length )
@@ -3549,7 +3547,6 @@ function pairIsConnectedDfs( pair )
   _.assert( !!group.nodeIs( node1 ) );
   _.assert( !!group.nodeIs( node2 ) );
 
-  debugger;
   let r = group.lookDfs
   ({
     roots : node1,
