@@ -121,7 +121,7 @@ function finit()
   let sys = group.sys;
 
   let collections = _.make( group.collections );
-  _.empty( group.collections );
+  _.container.empty( group.collections );
 
   _.assert( collections !== group.collections );
   _.assert( group.collections.length === 0 );
