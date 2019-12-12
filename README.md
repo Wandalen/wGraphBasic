@@ -11,7 +11,7 @@ Index of concepts behind the module and tutorials you may find [her](doc/version
 
 ## Sample
 
-```
+``` js
 require( '..' );
 let _ = wTools;
 
