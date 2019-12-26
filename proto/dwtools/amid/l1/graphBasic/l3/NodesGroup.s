@@ -11,8 +11,8 @@
 let _ = _global_.wTools;
 let Parent = null;
 let ContainerAdapter = _.containerAdapter.Abstract;
-let SetContainerAdapter = _.containerAdapter.Set;
-let ArrayContainerAdapter = _.containerAdapter.Array;
+let ContainerAdapterSet = _.containerAdapter.Set;
+let ContainerAdapterArray = _.containerAdapter.Array;
 let _Vectorize = _.routineDefaults( null, _.vectorize, { vectorizingContainerAdapter : 1, unwrapingContainerAdapter : 0 } );
 let _VectorizeAll = _.routineDefaults( null, _.vectorizeAll, { vectorizingContainerAdapter : 1, unwrapingContainerAdapter : 0 } );
 let _VectorizeAny = _.routineDefaults( null, _.vectorizeAny, { vectorizingContainerAdapter : 1, unwrapingContainerAdapter : 0 } );
@@ -121,7 +121,7 @@ function finit()
   let sys = group.sys;
 
   let collections = _.make( group.collections );
-  _.empty( group.collections );
+  _.container.empty( group.collections );
 
   _.assert( collections !== group.collections );
   _.assert( group.collections.length === 0 );

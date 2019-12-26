@@ -37,8 +37,8 @@ Distance layers :: array of arrays of nodes. First layer has origin or zero-dist
 
 let _ = _global_.wTools;
 let ContainerAdapter = _.containerAdapter.Abstract;
-let SetContainerAdapter = _.containerAdapter.Set;
-let ArrayContainerAdapter = _.containerAdapter.Array;
+let ContainerAdapterSet = _.containerAdapter.Set;
+let ContainerAdapterArray = _.containerAdapter.Array;
 let Vectorize = _.routineDefaults( null, _.vectorize, { vectorizingContainerAdapter : 1, unwrapingContainerAdapter : 0 } );
 let VectorizeAll = _.routineDefaults( null, _.vectorizeAll, { vectorizingContainerAdapter : 1, unwrapingContainerAdapter : 0 } );
 let VectorizeAny = _.routineDefaults( null, _.vectorizeAny, { vectorizingContainerAdapter : 1, unwrapingContainerAdapter : 0 } );
@@ -384,7 +384,7 @@ function ContainerIsSet( src )
 {
   if( _.setLike( src ) )
   return true;
-  if( src instanceof SetContainerAdapter )
+  if( src instanceof ContainerAdapterSet )
   return true;
   return false;
 }
@@ -403,7 +403,7 @@ function ContainerIsArray( src )
 {
   if( _.arrayLike( src ) )
   return true;
-  if( src instanceof ArrayContainerAdapter )
+  if( src instanceof ContainerAdapterArray )
   return true;
   return false;
 }
@@ -548,8 +548,8 @@ let Statics =
   ContainerAdapterFrom,
 
   ContainerAdapter,
-  SetContainerAdapter,
-  ArrayContainerAdapter,
+  ContainerAdapterSet,
+  ContainerAdapterArray,
 
 }
 

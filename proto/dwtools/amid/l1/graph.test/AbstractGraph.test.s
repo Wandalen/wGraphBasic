@@ -3969,7 +3969,7 @@ function lookBfsExcluding( test )
     ])
     var expectedLdws =
     [
-      // new Set([ 'c', 'd' ]),
+      new Set([ 'c', 'd' ]),
       new Set([ 'b' ])
     ]
     test.identical( nds, expectedNds );
