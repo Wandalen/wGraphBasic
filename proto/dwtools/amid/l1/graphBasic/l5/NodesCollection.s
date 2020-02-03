@@ -106,7 +106,7 @@ function _MethodFromGroup( o )
         let collection = this;
         let sys = collection.sys;
         let group = collection.group;
-        _.assert( arguments.length === 0 );
+        _.assert( arguments.length === 0, 'Expects no arguments' );
         return originalMethod.call( group, collection.nodes );
       }
     }
@@ -123,7 +123,7 @@ function _MethodFromGroup( o )
         let collection = this;
         let sys = collection.sys;
         let group = collection.group;
-        _.assert( arguments.length === 0 );
+        _.assert( arguments.length === 0, 'Expects no arguments' );
         _.assert( 0, 'not tested' );
         return originalMethod.call( group, group.nodesToJunctions( collection.nodes ).once() );
       }

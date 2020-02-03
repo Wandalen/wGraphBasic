@@ -452,7 +452,7 @@ function OriginalOfAdapter( src )
 
 function ContainerMake()
 {
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
   return new Set;
   // return new Array;
 }
@@ -469,7 +469,7 @@ function ContainerMake()
 
 function ContainerAdapterMake()
 {
-  _.assert( arguments.length === 0 );
+  _.assert( arguments.length === 0, 'Expects no arguments' );
   return this.ContainerAdapterFrom( this.ContainerMake() );
 }
 
@@ -640,14 +640,14 @@ _.classDeclare
 
 _.Copyable.mixin( Self );
 
-_.staticDeclare
+_.staticDeclare /* xxx : remove */
 ({
   prototype : _.graph.AbstractNodesGroup.prototype,
   name : 'System',
   value : Self,
 });
 
-_.staticDeclare
+_.staticDeclare /* xxx : remove */
 ({
   prototype : _.graph.AbstractNodesCollection.prototype,
   name : 'System',

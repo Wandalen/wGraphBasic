@@ -22,11 +22,11 @@ Implementations of graph algorithms realize the concept with the help of callbac
 
 Let's look at how adding junction to a random graph changes outcomes of the breadth-first search algorithm.
 
-![logo](../../images/nodeJunction/BfsWithoutJunctions.png)
+![logo](../../image/nodeJunction/BfsWithoutJunctions.png)
 
 On diagram "Bfs without junctions" you may see run of BFS on a graph without any junction.
 
-![logo](../../images/nodeJunction/BfsWithJunctions.png)
+![logo](../../image/nodeJunction/BfsWithJunctions.png)
 
 Adding junction between nodes 5 and 17 to the graph changes the course of the algorithm. You may see it on the diagram "Bfs with junctions". Joining nodes 5 and 17 into junction makes to spread of frontier as if those nodes where one.
 
