@@ -53,5 +53,5 @@ console.log( group.nodesExportInfo() ); // print information about nodes relatio
 ## Try out
 ```
 npm install
-node sample/Sample.s
+node sample/Sample.js
 ```
