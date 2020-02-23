@@ -2,10 +2,13 @@ format: outwillfile-2.0
 root:
   - wGraphBasic.out
 consistency:
-  ../.ex.will.yml: &ref_0
+  wGraphBasic.out.will.yml: &ref_0
+    hash: b94d9a0caef76882ec8199289c6b540a
+    size: 39726
+  ../.ex.will.yml: &ref_1
     hash: 3ad31457175874d0c2ec7122331605fc
     size: 2006
-  ../.im.will.yml: &ref_1
+  ../.im.will.yml: &ref_2
     hash: c614e4aaa5864510026d36a79c14b9f2
     size: 4956
 module:
@@ -21,19 +24,19 @@ module:
         topological sort, shortest path search, and others.
       enabled: 1
       version: 0.4.0
-      interpreters: &ref_2
+      interpreters:
         - njs >= 8.0.0
         - chrome >= 60.0.0
         - firefox >= 60.0.0
-      keywords: &ref_3
+      keywords:
         - wTools
         - graph
       license: MIT
       author: Kostiantyn Wandalen <wanalen@willbe.so>
-      contributors: &ref_4
+      contributors:
         - Kostiantyn Wandalen <wanalen@willbe.so>
       npm.name: wgraphbasic
-      npm.scripts: &ref_5
+      npm.scripts:
         test: wtest .run proto/**
         docgen: wdocgen .build proto
     path:
@@ -716,6 +719,24 @@ module:
           content: prime
         inherit:
           - files.transpile
+      exported.proto.export:
+        opts:
+          reflector: 'reflector::exported.proto.export*'
+        criterion:
+          generated: 1
+          content: proto
+          export: 1
+        inherit:
+          - files.reflect
+      exported.files.proto.export:
+        opts:
+          reflector: 'reflector::exported.files.proto.export*'
+        criterion:
+          generated: 1
+          content: proto
+          export: 1
+        inherit:
+          - files.reflect
     build:
       proto.export:
         steps:
@@ -804,8 +825,9 @@ module:
           content: proto
           export: 1
     consistency:
-      ../.ex.will.yml: *ref_0
-      ../.im.will.yml: *ref_1
+      wGraphBasic.out.will.yml: *ref_0
+      ../.ex.will.yml: *ref_1
+      ../.im.will.yml: *ref_2
   ../:
     about:
       name: wGraphBasic
@@ -818,13 +840,21 @@ module:
         topological sort, shortest path search, and others.
       enabled: 1
       version: 0.4.0
-      interpreters: *ref_2
-      keywords: *ref_3
+      interpreters:
+        - njs >= 8.0.0
+        - chrome >= 60.0.0
+        - firefox >= 60.0.0
+      keywords:
+        - wTools
+        - graph
       license: MIT
       author: Kostiantyn Wandalen <wanalen@willbe.so>
-      contributors: *ref_4
+      contributors:
+        - Kostiantyn Wandalen <wanalen@willbe.so>
       npm.name: wgraphbasic
-      npm.scripts: *ref_5
+      npm.scripts:
+        test: wtest .run proto/**
+        docgen: wdocgen .build proto
     path:
       module.willfiles:
         criterion:
@@ -1496,3 +1526,6 @@ module:
       ../.im.will.yml:
         hash: c614e4aaa5864510026d36a79c14b9f2
         size: 4956
+      wGraphBasic.out.will.yml:
+        hash: b94d9a0caef76882ec8199289c6b540a
+        size: 39726
