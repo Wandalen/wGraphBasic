@@ -1197,9 +1197,9 @@ function collectionClone( test )
   test.identical( gr.sys.nodeDescriptorsHash.size, 0 );
   test.identical( gr.sys.groups.length, 0 );
   test.identical( gr.sys.groups.length, 0 );
-  test.is( group.finitedIs() );
-  test.is( collection.finitedIs() );
-  test.is( collection2.finitedIs() );
+  test.is( group.isFinited() );
+  test.is( collection.isFinited() );
+  test.is( collection2.isFinited() );
 
   /* */
 

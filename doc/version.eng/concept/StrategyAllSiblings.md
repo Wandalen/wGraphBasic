@@ -8,7 +8,7 @@ This strategy is an option for such search algorithms as DFS, BFS, CFS.
 
 You may see how DFS with all-siblings strategy `allSiblings : 0` works on the diagram "DFS traversal allSiblings:0, revisiting:1", where an original graph is on the left side and traversal tree of the graph on the right side. The [`revisiting`](./StrategyRevisiting.md) option uses to show the difference in a search algorithm.
 
-![AllSiblings0.png](../../images/searchOptions/AllSiblings0.png)
+![AllSiblings0.png](../../image/searchOptions/AllSiblings0.png)
 
 With all-siblings strategy, `allSiblings : 0` search algorithm uses only one edge from one to another node and ignores all duplicates. As you may see, the second edge `cf` is never used because the algorithm treated two edges `cf` as one edge.
 
@@ -16,7 +16,7 @@ With all-siblings strategy, `allSiblings : 0` search algorithm uses only one edg
 
 You may see how DFS with all-siblings strategy `allSiblings : 1` works on the diagram "DFS traversal allSiblings:1, revisiting:1", where an original graph is on the left side and traversal tree of the graph on the right side.
 
-![AllSiblings1.png](../../images/searchOptions/AllSiblings1.png)
+![AllSiblings1.png](../../image/searchOptions/AllSiblings1.png)
 
 Strategy `allSiblings : 1` allows algorithm revisit node of the graph if it has a few edges from the parent node. But unlike `allSiblings : 2`, there does not take place getting deeper than that. As you may see, the algorithm revisits node `f` and get back to `c` because without going in depth the second time.
 

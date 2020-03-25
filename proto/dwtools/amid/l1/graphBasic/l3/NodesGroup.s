@@ -3289,7 +3289,7 @@ function topSortCycledSourceBasedPrecise( nodes )
     let nodeToOutNodes = new HashMap();
     // let close = layer.make().only( frontier ); /* xxx : only does not work properly */
     let close = layer.make().only( _.self, frontier );
-    
+
     layer.each( ( node ) => nodeToInNodes.set( node, group.nodeInNodesFor( node ).only( null, layer ).but( _.self, result ) ) );
     layer.each( ( node ) => nodeToOutNodes.set( node, group.nodeOutNodesFor( node ).only( null, layer ).but( _.self, result ) ) );
 
@@ -4211,7 +4211,7 @@ let Associates =
 
 let Restricts =
 {
-  _inNodesCacheHash : null,
+  _inNodesCacheHash : null, /* xxx : remove? */
 }
 
 let Statics =

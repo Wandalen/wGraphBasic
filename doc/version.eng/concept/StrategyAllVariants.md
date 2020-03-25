@@ -8,7 +8,7 @@ This strategy is an option for such search algorithms as DFS, BFS, CFS.
 
 You may see how DFS with all-revisiting strategy `allVariants : 0` works on the diagram "DFS traversal allVariants:0, revisiting:1", where an original graph is on the left side and traversal tree of the graph on the right side. The [`revisiting`](./StrategyRevisiting.md) option uses to show difference in search algorithm.
 
-![AllVariants0.png](../../images/searchOptions/AllVariants0.png)
+![AllVariants0.png](../../image/searchOptions/AllVariants0.png)
 
 With all-variants strategy `allVariants : 0` search algorithm uses only connected node and ignores the fact that graph has junction nodes. As you may see, after the walk `bde` algorithm continues the walk to node `c` and does not visit node `f`.
 
@@ -16,7 +16,7 @@ With all-variants strategy `allVariants : 0` search algorithm uses only connecte
 
 You may see how DFS with all-variants strategy `allVariants : 1` works on the diagram "DFS traversal allVariants:1, revisiting:1", where an original graph is on the left side and traversal tree of the graph on the right side. 
 
-![AllVariants1.png](../../images/searchOptions/AllVariants1.png)
+![AllVariants1.png](../../image/searchOptions/AllVariants1.png)
 
 Strategy `allVariants : 1` allows algorithm revisit junction nodes of the graph. But unlike `AllVariants : 2`, there does not take place getting deeper than that. As you may see, the algorithm revisits node `f` and get back to `c` because without going in depth the second time.
 
@@ -24,7 +24,7 @@ Strategy `allVariants : 1` allows algorithm revisit junction nodes of the graph.
 
 You may see how DFS with all-variants strategy `allVariants : 2` works on the diagram "DFS traversal allVariants:2, revisiting:1", where an original graph is on the left side and traversal tree of the graph on the right side.
 
-![AllVariants2.png](../../images/searchOptions/AllVariants2.png)
+![AllVariants2.png](../../image/searchOptions/AllVariants2.png)
 
 Strategy `allsVariants : 2` works similar to strategy `AllVariants : 1`, but when the algorithm revisits a junction node, it continues the traversal in depth. As you may see, the algorithm revisits node `f` and continues the traversal to junction node `b`. So such a search is the slowest among 3.
 

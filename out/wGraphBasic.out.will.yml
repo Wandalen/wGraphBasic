@@ -3,8 +3,8 @@ root:
   - wGraphBasic.out
 consistency:
   wGraphBasic.out.will.yml: &ref_0
-    hash: a4948bd194922722292d20022f7cf4d8
-    size: 39087
+    hash: b94d9a0caef76882ec8199289c6b540a
+    size: 39726
   ../.ex.will.yml: &ref_1
     hash: 3ad31457175874d0c2ec7122331605fc
     size: 2006

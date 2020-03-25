@@ -3,7 +3,7 @@
 
 Collection of abstract data structures and algorithms to process graphs. The module does not bound to any specific format of a graph, so providing adapters toy may use it with anyone. It implements depth-first search, breadth-first search, extracting strongly connected components, topological sort, shortest path search, and others.
 
-![Graph](doc/images/junction/WithoutLegend.png)
+![Graph](doc/image/junction/WithoutLegend.png)
 
 ## Documenration
 
@@ -53,5 +53,5 @@ console.log( group.nodesExportInfo() ); // print information about nodes relatio
 ## Try out
 ```
 npm install
-node sample/Sample.s
+node sample/Sample.js
 ```
