@@ -5,7 +5,8 @@
 /**
  * @classdesc Class to operate graph as collection of nodes.
  * @class wAbstractNodesCollection
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph
+ * @namespace wTools
+ * @module Tools/mid/AbstractGraphs.wTools.graph
  */
 
 let _ = _global_.wTools;
@@ -282,7 +283,9 @@ function nodesSet( nodes )
  * @summary Returns true if group has provided node. Takes node handle as argument.
  * @param {Object} node Node descriptor.
  * @function hasNode
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesCollection#
+ * @class wAbstractNodesCollection
+ * @namespace wTools
+ * @module Tools/mid/AbstractGraphs.wTools.graph
  */
 
 function hasNode( node )
@@ -301,7 +304,9 @@ function hasNode( node )
  * @param {Object} node Node.
  * @function _nodeAdd
  * @returns {Number} Returns id of added node.
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesCollection#
+ * @class wAbstractNodesCollection
+ * @namespace wTools
+ * @module Tools/mid/AbstractGraphs.wTools.graph
  */
 
 function _nodeAdd( node )
@@ -348,7 +353,9 @@ function _nodeAdd( node )
  * @param {Object} node Node to add .
  * @function nodeAdd
  * @returns {Number} Returns id of added node.
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesCollection#
+ * @class wAbstractNodesCollection
+ * @namespace wTools
+ * @module Tools/mid/AbstractGraphs.wTools.graph
  */
 
  /**
@@ -356,7 +363,9 @@ function _nodeAdd( node )
  * @param {Array} node Array of nodes.
  * @function nodesAdd
  * @returns {Node} Returns added node.
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesCollection#
+ * @class wAbstractNodesCollection
+ * @namespace wTools
+ * @module Tools/mid/AbstractGraphs.wTools.graph
  */
 
 function nodeAdd( node )
@@ -379,7 +388,9 @@ function nodeAdd( node )
  * @param {Object} node Node.
  * @function _nodeAddOnce
  * @returns {Number} Returns id of added node.
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesCollection#
+ * @class wAbstractNodesCollection
+ * @namespace wTools
+ * @module Tools/mid/AbstractGraphs.wTools.graph
  */
 
 /**
@@ -387,7 +398,9 @@ function nodeAdd( node )
  * @param {Object} node Node.
  * @function nodeAddOnce
  * @returns {Number} Returns id of added node.
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesCollection#
+ * @class wAbstractNodesCollection
+ * @namespace wTools
+ * @module Tools/mid/AbstractGraphs.wTools.graph
  */
 
  /**
@@ -395,7 +408,9 @@ function nodeAdd( node )
  * @param {Array of Node} node Array of nodes.
  * @function nodesAddOnce
  * @returns {Array} Returns array of ids of added nodes.
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesCollection#
+ * @class wAbstractNodesCollection
+ * @namespace wTools
+ * @module Tools/mid/AbstractGraphs.wTools.graph
  */
 
 function _nodeAddOnce( node )
@@ -434,7 +449,9 @@ function nodeAddOnce( node )
  * @function nodeDelete
  * @returns {Number} Returns id of removed node.
  * @throws {Error} If system doesn't have node with such `node`.
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesCollection#
+ * @class wAbstractNodesCollection
+ * @namespace wTools
+ * @module Tools/mid/AbstractGraphs.wTools.graph
  */
 
 function nodeDelete( node )
@@ -477,7 +494,9 @@ function nodeDelete( node )
  * @function nodesDelete
  * @returns {Array} Returns array with ids of removed nodes.
  * @throws {Error} If system doesn't have node with such `node`.
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesCollection#
+ * @class wAbstractNodesCollection
+ * @namespace wTools
+ * @module Tools/mid/AbstractGraphs.wTools.graph
  */
 
 let _nodesDelete = Vectorize( nodeDelete );
