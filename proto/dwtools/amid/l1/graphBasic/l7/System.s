@@ -32,7 +32,8 @@ Distance layers :: array of arrays of nodes. First layer has origin or zero-dist
 /**
  * @classdesc Class to operate system of graphs.
  * @class wAbstractGraphSystem
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph
+ * @namespace wTools.graph
+ * @module Tools/mid/AbstractGraphs
  */
 
 let _ = _global_.wTools;
@@ -82,7 +83,9 @@ function finit()
  * @summary Makes group of nodes. Returns instance of {@link module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesGroup wTools.graph.AbstractNodesGroup}
  * @param {Object} o Options for instance.
  * @function nodesGroup
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractGraphSystem
+ * @class wAbstractGraphSystem
+ * @namespace wTools.graph
+ * @module Tools/mid/AbstractGraphs
  */
 
 function nodesGroup( o )
@@ -104,7 +107,9 @@ function nodesGroup( o )
  * @summary Makes group of nodes. New group does not inherit common fields. Returns instance of {@link module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesGroup wTools.graph.AbstractNodesGroup}
  * @param {Object} o Options for instance.
  * @function nodesGroupDifferent
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractGraphSystem
+ * @class wAbstractGraphSystem
+ * @namespace wTools.graph
+ * @module Tools/mid/AbstractGraphs
  */
 
 function nodesGroupDifferent( o )
@@ -144,7 +149,9 @@ nodesCollection.defaults =
 //  * @summary Returns true if entity `id` is a node id.
 //  * @param {} id Source entity
 //  * @function idIs
-//  * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractGraphSystem
+//  * @class wAbstractGraphSystem
+//  * @namespace wTools.graph
+//  * @module Tools/mid/AbstractGraphs
 //  */
 //
 // function idIs( id )
@@ -166,7 +173,9 @@ nodesCollection.defaults =
  * @param {Object} nodeHandle Node descriptor.
  * @function hasNode
  * @throws {Error} If system doesn't have a node `nodeHandle`.
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractGraphSystem
+ * @class wAbstractGraphSystem
+ * @namespace wTools.graph
+ * @module Tools/mid/AbstractGraphs
  */
 
 function hasNode( nodeHandle )
@@ -183,7 +192,9 @@ function hasNode( nodeHandle )
 //  * @description Doesn't throw error if can't get id of node.
 //  * @param {Object} nodeHandle Node descriptor.
 //  * @function nodeToIdTry
-//  * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractGraphSystem
+//  * @class wAbstractGraphSystem
+//  * @namespace wTools.graph
+//  * @module Tools/mid/AbstractGraphs
 //  */
 //
 // function nodeToIdTry( nodeHandle )
@@ -200,7 +211,9 @@ function hasNode( nodeHandle )
 //  * @param {Object} nodeHandle Node descriptor.
 //  * @function nodeToId
 //  * @throws {Error} If node with descriptor `nodeHandle` doesn't exist in system.
-//  * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractGraphSystem
+//  * @class wAbstractGraphSystem
+//  * @namespace wTools.graph
+//  * @module Tools/mid/AbstractGraphs
 //  */
 //
 // function nodeToId( nodeHandle )
@@ -236,7 +249,9 @@ function hasNode( nodeHandle )
  * @summary Returns descriptor of node with id `nodeId`
  * @param {Number} nodeId Id of target node.
  * @function nodeDescriptorWithNode
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractGraphSystem
+ * @class wAbstractGraphSystem
+ * @namespace wTools.graph
+ * @module Tools/mid/AbstractGraphs
  */
 
 function nodeDescriptorWithNode( node )
@@ -273,7 +288,9 @@ function nodeDescriptorWith( node )
  * @summary Returns descriptor of node with id `nodeId`. Creates new descriptor if needed.
  * @param {Number} node Node.
  * @function nodeDescriptorObtain
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractGraphSystem
+ * @class wAbstractGraphSystem
+ * @namespace wTools.graph
+ * @module Tools/mid/AbstractGraphs
  */
 
 function nodeDescriptorObtain( node )
@@ -358,7 +375,9 @@ function nodeDescriptorDec( node )
  *
  * @function ContainerIs
  * @return {boolean} True if it is such thing.
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractGraphSystem#
+ * @class wAbstractGraphSystem
+ * @namespace wTools
+ * @module Tools/mid/AbstractGraphs.wTools.graph
  */
 
 function ContainerIs( src )
@@ -377,7 +396,9 @@ function ContainerIs( src )
  *
  * @function ContainerIsSet
  * @return {boolean} True if it is such thing.
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractGraphSystem#
+ * @class wAbstractGraphSystem
+ * @namespace wTools
+ * @module Tools/mid/AbstractGraphs.wTools.graph
  */
 
 function ContainerIsSet( src )
@@ -396,7 +417,9 @@ function ContainerIsSet( src )
  *
  * @function ContainerIsArray
  * @return {boolean} True if it is such thing.
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractGraphSystem#
+ * @class wAbstractGraphSystem
+ * @namespace wTools
+ * @module Tools/mid/AbstractGraphs.wTools.graph
  */
 
 function ContainerIsArray( src )
@@ -415,7 +438,9 @@ function ContainerIsArray( src )
  *
  * @function ContainerIs
  * @return {boolean} True if it is such thing.
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractGraphSystem#
+ * @class wAbstractGraphSystem
+ * @namespace wTools
+ * @module Tools/mid/AbstractGraphs.wTools.graph
  */
 
 function ContainerAdapterIs( src )
@@ -432,7 +457,9 @@ function ContainerAdapterIs( src )
  *
  * @function OriginalOfAdapter
  * @return {container} Container of the adaptor.
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractGraphSystem#
+ * @class wAbstractGraphSystem
+ * @namespace wTools
+ * @module Tools/mid/AbstractGraphs.wTools.graph
  */
 
 function OriginalOfAdapter( src )
@@ -447,7 +474,9 @@ function OriginalOfAdapter( src )
  *
  * @function ContainerMake
  * @return {Container} Return new empty container for node. Empty Array by default.
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractGraphSystem#
+ * @class wAbstractGraphSystem
+ * @namespace wTools
+ * @module Tools/mid/AbstractGraphs.wTools.graph
  */
 
 function ContainerMake()
@@ -464,7 +493,9 @@ function ContainerMake()
  *
  * @function ContainerAdapterMake
  * @return {ContainerAdapter} Return new empty container for node. Empty Array by default.
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractGraphSystem#
+ * @class wAbstractGraphSystem
+ * @namespace wTools
+ * @module Tools/mid/AbstractGraphs.wTools.graph
  */
 
 function ContainerAdapterMake()
@@ -480,7 +511,9 @@ function ContainerAdapterMake()
  *
  * @function ContainerAdapterFrom
  * @return {ContainerAdapter} Return ContainerAdapter not making a new one if passed in is such.
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractGraphSystem#
+ * @class wAbstractGraphSystem
+ * @namespace wTools
+ * @module Tools/mid/AbstractGraphs.wTools.graph
  */
 
 function ContainerAdapterFrom( container )

@@ -5,7 +5,8 @@
 /**
  * @classdesc Class to operate graph as group of nodes.
  * @class wAbstractNodesGroup
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph
+ * @namespace wTools.graph
+ * @module Tools/mid/AbstractGraphsgraph
  */
 
 let _ = _global_.wTools;
@@ -438,7 +439,9 @@ exportStructure.defaults =
  *  2 : 3
  *  3 :
  * @function exportInfo
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesGroup#
+ * @class wAbstractNodesGroup
+ * @namespace wTools
+ * @module Tools/mid/AbstractGraphs.wTools.graph
  */
 
 function exportInfo( o )
@@ -474,7 +477,9 @@ routine.properties =
  * @summary Returns descriptor of node with id `nodeId`.
  * @param {Number} nodeId Id of target node.
  * @function nodeDescriptorWithNode
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesGroup#
+ * @class wAbstractNodesGroup
+ * @namespace wTools
+ * @module Tools/mid/AbstractGraphs.wTools.graph
  */
 
 function nodeDescriptorWithNode( nodeId )
@@ -499,7 +504,9 @@ function nodeDescriptorWith( nodeId )
  * @summary Returns descriptor of node with id `nodeId`. Creates new descriptor if it doesn't exist.
  * @param {Number} node Node.
  * @function nodeDescriptorObtain
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesGroup#
+ * @class wAbstractNodesGroup
+ * @namespace wTools
+ * @module Tools/mid/AbstractGraphs.wTools.graph
  */
 
 function nodeDescriptorObtain( node )
@@ -526,7 +533,9 @@ function nodeDescriptorDelete( nodeId )
  * @summary Returns true if provided entity `node` is a node.
  * @param {Object} node Node descriptor.
  * @function nodeIs
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesGroup#
+ * @class wAbstractNodesGroup
+ * @namespace wTools
+ * @module Tools/mid/AbstractGraphs.wTools.graph
  */
 
 function nodeIs( node )
@@ -547,7 +556,9 @@ routine.input = 'Node';
  * @param {Object} node Node descriptor.
  * @function nodeToName
  * @returns {String} Returns name of node.
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesGroup#
+ * @class wAbstractNodesGroup
+ * @namespace wTools
+ * @module Tools/mid/AbstractGraphs.wTools.graph
  */
 
 function nodeToName( node )
@@ -593,7 +604,9 @@ routine.input = 'Node';
  * @param {Object} node Node descriptor.
  * @function nodeToQualifiedName
  * @returns {String} Returns name of node.
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesGroup#
+ * @class wAbstractNodesGroup
+ * @namespace wTools
+ * @module Tools/mid/AbstractGraphs.wTools.graph
  */
 
 function nodeToQualifiedName( node )
@@ -626,7 +639,9 @@ function nodeToQualifiedName( node )
  * @param {Object} node Node descriptor.
  * @function nodeToQualifiedNameTry
  * @returns {String} Returns name of node.
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesGroup#
+ * @class wAbstractNodesGroup
+ * @namespace wTools
+ * @module Tools/mid/AbstractGraphs.wTools.graph
  */
 
 function nodeToQualifiedNameTry( node )
@@ -1028,7 +1043,9 @@ rootsExportInfoTree.defaults =
  * @summary Returns true if provided entity is a junction.
  * @param {*} junction Junction descriptor.
  * @function junctionIs
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesGroup#
+ * @class wAbstractNodesGroup
+ * @namespace wTools
+ * @module Tools/mid/AbstractGraphs.wTools.graph
  */
 
 function junctionIs( junction )
@@ -1049,7 +1066,9 @@ routine.input = 'Junction';
  * @param {Object} junction Node descriptor.
  * @function junctionToName
  * @returns {String} Returns name of junction.
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesGroup#
+ * @class wAbstractNodesGroup
+ * @namespace wTools
+ * @module Tools/mid/AbstractGraphs.wTools.graph
  */
 
 function junctionToName( junction )
@@ -1396,7 +1415,9 @@ properties.forCollection = 1;
  *
  * @function sourcesFromNodes
  * @return {Conainer of Node} Returns cotainer of nodes.
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesGroup#
+ * @class wAbstractNodesGroup
+ * @namespace wTools
+ * @module Tools/mid/AbstractGraphs.wTools.graph
  */
 
 function sourcesFromNodes( dstNodes, srcNodes )
@@ -1434,7 +1455,9 @@ function sourcesFromNodes( dstNodes, srcNodes )
  *
  * @function sourcesFromRoots
  * @return {Conainer of Node} Returns cotainer of nodes.
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesGroup#
+ * @class wAbstractNodesGroup
+ * @namespace wTools
+ * @module Tools/mid/AbstractGraphs.wTools.graph
  */
 
 function sourcesFromRoots( dstNodes, srcRoots )
@@ -1467,7 +1490,9 @@ function sourcesFromRoots( dstNodes, srcRoots )
  *
  * @function rootsToAllReachable
  * @return {Array of Node|Set of Node} Returns cotainer of nodes.
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesGroup#
+ * @class wAbstractNodesGroup
+ * @namespace wTools
+ * @module Tools/mid/AbstractGraphs.wTools.graph
  */
 
 function rootsToAllReachable( dstNodes, srcRoots )
@@ -1499,7 +1524,9 @@ function rootsToAllReachable( dstNodes, srcRoots )
  *
  * @function rootsToAll
  * @return {Array of Node|Set of Node} Returns array with sorted nodes.
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesGroup#
+ * @class wAbstractNodesGroup
+ * @namespace wTools
+ * @module Tools/mid/AbstractGraphs.wTools.graph
  */
 
 function rootsToAll( dstNodes, srcRoots )
@@ -1549,7 +1576,9 @@ function rootsToAll( dstNodes, srcRoots )
  *
  * @function asNodes
  * @return {Array|Set} Returns array with sorted nodes.
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesGroup#
+ * @class wAbstractNodesGroup
+ * @namespace wTools
+ * @module Tools/mid/AbstractGraphs.wTools.graph
  */
 
 function asNodes( nodes )
@@ -1579,7 +1608,9 @@ properties.forCollection = 0;
  *
  * @function asNodesPreferSet
  * @return {Array|Set} Returns array with sorted nodes.
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesGroup#
+ * @class wAbstractNodesGroup
+ * @namespace wTools
+ * @module Tools/mid/AbstractGraphs.wTools.graph
  */
 
 function asNodesPreferSet( nodes )
@@ -1622,7 +1653,9 @@ properties.forCollection = 0;
  *
  * @function asNodesPreferArray
  * @return {Array|Set} Returns array with sorted nodes.
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesGroup#
+ * @class wAbstractNodesGroup
+ * @namespace wTools
+ * @module Tools/mid/AbstractGraphs.wTools.graph
  */
 
 function asNodesPreferArray( nodes )
@@ -1666,7 +1699,9 @@ properties.forCollection = 0;
  *
  * @function asNodesAdapter
  * @return {ContainerAdapter} Returns array with sorted nodes.
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesGroup#
+ * @class wAbstractNodesGroup
+ * @namespace wTools
+ * @module Tools/mid/AbstractGraphs.wTools.graph
  */
 
 function asNodesAdapter( nodes )
@@ -1872,7 +1907,9 @@ let _lookDefaults =
  *
  * @function lookBfs
  * @return {Array} Returns array of layers that are reachable from provided nodes `o.roots`.
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesGroup#
+ * @class wAbstractNodesGroup
+ * @namespace wTools
+ * @module Tools/mid/AbstractGraphs.wTools.graph
  */
 
 function lookBfs_body( o )
@@ -2328,7 +2365,9 @@ let lookBfs = _.routineFromPreAndBody( _look_pre, lookBfs_body );
  *
  * @function lookDfs
  * @return {Array} Returns array of layers that are reachable from provided nodes `o.roots`.
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesGroup#
+ * @class wAbstractNodesGroup
+ * @namespace wTools
+ * @module Tools/mid/AbstractGraphs.wTools.graph
  */
 
 function lookDfs_body( o )
@@ -2907,7 +2946,9 @@ let lookCfs = _.routineFromPreAndBody( _look_pre, lookCfs_body );
  *
  * @function dagTopSortDfs
  * @return {Array} Returns array with sorted nodes.
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesGroup#
+ * @class wAbstractNodesGroup
+ * @namespace wTools
+ * @module Tools/mid/AbstractGraphs.wTools.graph
  */
 
 function dagTopSortDfs( nodes )
@@ -3190,7 +3231,9 @@ defaults.method = lookCfs;
  *
  * @function topSortLeastDegreeBfs
  * @return {Array} Returns array with sorted layers.
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesGroup#
+ * @class wAbstractNodesGroup
+ * @namespace wTools
+ * @module Tools/mid/AbstractGraphs.wTools.graph
  */
 
 function topSortLeastDegreeBfs( nodes )
@@ -3395,7 +3438,9 @@ properties.forCollection = 1;
  * @returns {Array of Node} Returns array of nodes.
  * @param {Pair of Node} pair Pair o nodes.
  * @function pairDirectedPathGetDfs
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesGroup#
+ * @class wAbstractNodesGroup
+ * @namespace wTools
+ * @module Tools/mid/AbstractGraphs.wTools.graph
  */
 
 function pairDirectedPathGetDfs( pair )
@@ -3471,7 +3516,9 @@ function pairDirectedPathGetDfs( pair )
  * @returns {boolean} Returns true if exists.
  * @param {Pair of Node} pair Pair o nodes.
  * @function pairDirectedPathExistsDfs
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesGroup#
+ * @class wAbstractNodesGroup
+ * @namespace wTools
+ * @module Tools/mid/AbstractGraphs.wTools.graph
  */
 
 function pairDirectedPathExistsDfs( pair )
@@ -3529,7 +3576,9 @@ function pairDirectedPathExistsDfs( pair )
  * @param {Object} node1 First node.
  * @param {Object} node2 Second node.
  * @function pairIsConnectedDfs
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesGroup#
+ * @class wAbstractNodesGroup
+ * @namespace wTools
+ * @module Tools/mid/AbstractGraphs.wTools.graph
  */
 
 function pairIsConnectedDfs( pair )
@@ -3614,7 +3663,9 @@ function pairIsConnectedDfs( pair )
  * @param {Object} node1 First node.
  * @param {Object} node2 Second node.
  * @function pairIsConnectedStronglyDfs
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesGroup#
+ * @class wAbstractNodesGroup
+ * @namespace wTools
+ * @module Tools/mid/AbstractGraphs.wTools.graph
  */
 
 function pairIsConnectedStronglyDfs( pair )
@@ -3739,7 +3790,9 @@ function pairIsConnectedStronglyDfs( pair )
  *
  * @function nodesConnectedLayersDfs
  * @returns {Array} Returns array of arrays. Each inner array contains ids of connected nodes.
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesGroup#
+ * @class wAbstractNodesGroup
+ * @namespace wTools
+ * @module Tools/mid/AbstractGraphs.wTools.graph
  */
 
 function nodesConnectedLayersDfs( nodes )
