@@ -147,7 +147,7 @@ nodesCollection.defaults =
 //
 // /**
 //  * @summary Returns true if entity `id` is a node id.
-//  * @param {} id Source entity
+//  * @param {*} id Source entity
 //  * @function idIs
 //  * @class wAbstractGraphSystem
 //  * @namespace wTools.graph
