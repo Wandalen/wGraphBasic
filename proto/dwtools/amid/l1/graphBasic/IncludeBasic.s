@@ -16,7 +16,7 @@ if( typeof module !== 'undefined' )
 
 /**
  * @summary Collection of abstract data structures and algorithms to process graphs.
- * @namespace "wTools.graph"
+ * @namespace wTools.graph
  * @module Tools/mid/AbstractGraphs
 */
 
