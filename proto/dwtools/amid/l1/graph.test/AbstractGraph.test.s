@@ -7708,7 +7708,9 @@ function lookDfs( test )
 
   logger.log( group.exportInfo({ nodes : gr.nodes }) );
 
-  test.case = 'all'; /* */
+  /* */
+
+  test.case = 'all';
 
   clean();
   group.lookDfs({ roots : gr.nodes, onUp : onUp, onDown : onDown, onNode : onNode });
@@ -7719,7 +7721,9 @@ function lookDfs( test )
   test.identical( group.nodesToNames( ups ), expectedUps );
   test.identical( group.nodesToNames( dws ), expectedDws );
 
-  test.case = 'only a'; /* */
+  /* */
+
+  test.case = 'only a';
 
   clean();
   group.lookDfs({ roots : gr.a, onUp : onUp, onDown : onDown, onNode : onNode });
@@ -7730,7 +7734,9 @@ function lookDfs( test )
   test.identical( group.nodesToNames( ups ), expectedUps );
   test.identical( group.nodesToNames( dws ), expectedDws );
 
-  test.case = 'only d'; /* */
+  /* */
+
+  test.case = 'only d';
 
   clean();
   group.lookDfs({ roots : gr.d, onUp : onUp, onDown : onDown, onNode : onNode });
