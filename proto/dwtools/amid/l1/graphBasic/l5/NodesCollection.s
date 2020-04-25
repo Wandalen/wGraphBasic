@@ -551,7 +551,7 @@ let Forbids =
 
 let Accessors =
 {
-  nodes : { setter : nodesSet },
+  nodes : { set : nodesSet },
 }
 
 // --
