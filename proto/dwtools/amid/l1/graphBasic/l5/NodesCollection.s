@@ -680,7 +680,7 @@ _AssertMethods();
 
 //
 
-if( typeof module !== 'undefined' && module !== null )
+if( typeof module !== 'undefined' )
 module[ 'exports' ] = Self;
 _.graph[ Self.shortName ] = Self;
 

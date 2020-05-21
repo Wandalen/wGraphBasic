@@ -26,7 +26,7 @@ var Self = _global_.wTools.graph = _global_.wTools.graph || Object.create( null 
 
 //
 
-if( typeof module !== 'undefined' && module !== null )
+if( typeof module !== 'undefined' )
 module[ 'exports' ] = Self;
 
 })();
