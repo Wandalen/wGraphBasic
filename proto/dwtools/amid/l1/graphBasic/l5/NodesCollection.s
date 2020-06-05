@@ -234,21 +234,21 @@ function copy( o )
 
 // //
 //
-// function exportInfo( o )
+// function exportString( o )
 // {
 //   let collection = this;
 //   let sys = collection.sys;
 //   let group = collection.group;
 //
-//   o = _.routineOptions( exportInfo, arguments );
+//   o = _.routineOptions( exportString, arguments );
 //   o.nodes = collection.nodes;
 //
-//   return group.exportInfo( o );
+//   return group.exportString( o );
 // }
 //
-// var defaults = exportInfo.defaults =
+// var defaults = exportString.defaults =
 // {
-//   ... Group.prototype.exportInfo.defaults,
+//   ... Group.prototype.exportString.defaults,
 // }
 //
 // delete defaults.nodes;
@@ -571,7 +571,7 @@ let Extend =
 
   // from group
 
-  exportInfo : _MethodFromGroup( 'exportInfo' ),
+  exportString : _MethodFromGroup( 'exportString' ),
   leastIndegreeAmong : _MethodFromGroup( 'leastIndegreeAmong' ),
   mostIndegreeAmong : _MethodFromGroup( 'mostIndegreeAmong' ),
   leastOutdegreeAmong : _MethodFromGroup( 'leastOutdegreeAmong' ),

@@ -825,13 +825,13 @@ function makeByNodes( test )
   test.identical( gr.sys.nodeDescriptorsHash.size, 5 );
   test.identical( collection.nodes.length, 5 );
   test.identical( collection.nodesToNames().toArray().original, [ 'a', 'b', 'c', 'd', 'e' ] );
-  logger.log( collection.exportInfo() );
+  logger.log( collection.exportString() );
 
   collection.nodeDelete( gr.d );
   test.identical( gr.sys.nodeDescriptorsHash.size, 4 );
   test.identical( collection.nodes.length, 4 );
   test.identical( collection.nodesToNames().toArray().original, [ 'a', 'b', 'c', 'e' ] );
-  logger.log( collection.exportInfo() );
+  logger.log( collection.exportString() );
 
   collection.finit();
   test.identical( gr.sys.nodeDescriptorsHash.size, 0 );
@@ -854,25 +854,25 @@ function makeByNodes( test )
   test.identical( gr.sys.nodeDescriptorsHash.size, 5 );
   test.identical( collection.nodes.length, 5 );
   test.identical( collection.nodesToNames().toArray().original, [ 'a', 'b', 'c', 'd', 'e' ] );
-  logger.log( collection.exportInfo() );
+  logger.log( collection.exportString() );
 
   collection.nodesDelete([ gr.a, gr.d ]);
   test.identical( gr.sys.nodeDescriptorsHash.size, 3 );
   test.identical( collection.nodes.length, 3 );
   test.identical( collection.nodesToNames().toArray().original, [ 'b', 'c', 'e' ] );
-  logger.log( collection.exportInfo() );
+  logger.log( collection.exportString() );
 
   collection.nodesDelete([ gr.b, gr.c ]);
   test.identical( gr.sys.nodeDescriptorsHash.size, 1 );
   test.identical( collection.nodes.length, 1 );
   test.identical( collection.nodesToNames().toArray().original, [ 'e' ] );
-  logger.log( collection.exportInfo() );
+  logger.log( collection.exportString() );
 
   collection.nodesDelete();
   test.identical( gr.sys.nodeDescriptorsHash.size, 0 );
   test.identical( collection.nodes.length, 0 );
   test.identical( collection.nodesToNames().toArray().original, [] );
-  logger.log( collection.exportInfo() );
+  logger.log( collection.exportString() );
 
   collection.finit();
   test.identical( gr.sys.nodeDescriptorsHash.size, 0 );
@@ -940,13 +940,13 @@ function makeByNodesWithInts( test )
   test.identical( gr.sys.nodeDescriptorsHash.size, 5 );
   test.identical( collection.nodes.length, 5 );
   test.identical( collection.nodesToNames().toArray().original, [ '11', '12', '13', '14', '15' ] );
-  logger.log( collection.exportInfo() );
+  logger.log( collection.exportString() );
 
   collection.nodeDelete( gr.d );
   test.identical( gr.sys.nodeDescriptorsHash.size, 4 );
   test.identical( collection.nodes.length, 4 );
   test.identical( collection.nodesToNames().toArray().original, [ '11', '12', '13', '15' ] );
-  logger.log( collection.exportInfo() );
+  logger.log( collection.exportString() );
 
   collection.finit();
   test.identical( gr.sys.nodeDescriptorsHash.size, 0 );
@@ -1007,25 +1007,25 @@ function makeByNodesWithInts( test )
   test.identical( gr.sys.nodeDescriptorsHash.size, 5 );
   test.identical( collection.nodes.length, 5 );
   test.identical( collection.nodesToNames().toArray().original, [ '11', '12', '13', '14', '15' ] );
-  logger.log( collection.exportInfo() );
+  logger.log( collection.exportString() );
 
   collection.nodesDelete([ gr.a, gr.d ]);
   test.identical( gr.sys.nodeDescriptorsHash.size, 3 );
   test.identical( collection.nodes.length, 3 );
   test.identical( collection.nodesToNames().toArray().original, [ '12', '13', '15' ] );
-  logger.log( collection.exportInfo() );
+  logger.log( collection.exportString() );
 
   collection.nodesDelete( gr.b, gr.c );
   test.identical( gr.sys.nodeDescriptorsHash.size, 1 );
   test.identical( collection.nodes.length, 1 );
   test.identical( collection.nodesToNames().toArray().original, [ '15' ] );
-  logger.log( collection.exportInfo() );
+  logger.log( collection.exportString() );
 
   collection.nodesDelete();
   test.identical( gr.sys.nodeDescriptorsHash.size, 0 );
   test.identical( collection.nodes.length, 0 );
   test.identical( collection.nodesToNames().toArray().original, [] );
-  logger.log( collection.exportInfo() );
+  logger.log( collection.exportString() );
 
   collection.finit();
   test.identical( gr.sys.nodeDescriptorsHash.size, 0 );
@@ -1053,7 +1053,7 @@ function groupClone( test )
   test.identical( gr.sys.groups.length, 2 );
   test.identical( group.nodesToNames( gr.nodes ), [ 'a', 'b', 'c', 'd', 'e' ] );
   test.identical( group2.nodesToNames( gr.nodes ), [ 'a', 'b', 'c', 'd', 'e' ] );
-  logger.log( group.exportInfo({ nodes : gr.nodes }) );
+  logger.log( group.exportString({ nodes : gr.nodes }) );
 
   group.finit();
   test.identical( gr.sys.nodeDescriptorsHash.size, 0 );
@@ -1091,7 +1091,7 @@ function collectionClone( test )
   test.identical( gr.sys.collections.length, 2 );
   test.identical( collection.group.nodesToNames( collection.nodes ).toArray().original, [ 'a', 'b', 'c', 'd', 'e' ] );
   test.identical( collection2.group.nodesToNames( collection2.nodes ).toArray().original, [ 'a', 'b', 'c', 'd', 'e' ] );
-  logger.log( collection.exportInfo() );
+  logger.log( collection.exportString() );
 
   collection.finit();
   test.identical( gr.sys.nodeDescriptorsHash.size, 5 );
@@ -1130,7 +1130,7 @@ function collectionClone( test )
   test.identical( gr.sys.collections.length, 2 );
   test.identical( collection.group.nodesToNames( collection.nodes ).toArray().original, [ 'b', 'c', 'd', 'e' ] );
   test.identical( collection2.group.nodesToNames( collection2.nodes ).toArray().original, [ 'a', 'c', 'd', 'e' ] );
-  logger.log( collection.exportInfo() );
+  logger.log( collection.exportString() );
 
   collection2.nodeDelete( gr.a )
   collection.nodeDelete( gr.b );
@@ -1148,7 +1148,7 @@ function collectionClone( test )
   test.identical( gr.sys.collections.length, 2 );
   test.identical( collection.group.nodesToNames( collection.nodes ).toArray().original, [ 'c', 'd', 'e' ] );
   test.identical( collection2.group.nodesToNames( collection2.nodes ).toArray().original, [ 'c', 'd', 'e' ] );
-  logger.log( collection.exportInfo() );
+  logger.log( collection.exportString() );
 
   collection.finit();
   test.identical( gr.sys.nodeDescriptorsHash.size, 3 );
@@ -1190,7 +1190,7 @@ function collectionClone( test )
   test.is( collection.group === collection2.group );
   test.identical( collection.group.nodesToNames( collection.nodes ).toArray().original, [ 'c', 'd', 'e' ] );
   test.identical( collection2.group.nodesToNames( collection2.nodes ).toArray().original, [ 'a', 'd', 'e' ] );
-  logger.log( collection.exportInfo() );
+  logger.log( collection.exportString() );
 
   var group = collection.group;
   group.finit();
@@ -1257,20 +1257,20 @@ function reverse( test )
   var group2 = group.clone();
 
   group2.cacheInNodesFromOutNodesOnce( gr.nodes );
-  group2.exportInfo({ nodes : gr.nodes });
+  group2.exportString({ nodes : gr.nodes });
   group2.reverse();
 
   var exp =
 `a : b
 b : a
 c : a`
-  test.identical( group2.exportInfo({ nodes : gr.nodes }), exp );
+  test.identical( group2.exportString({ nodes : gr.nodes }), exp );
 
   var exp =
 `a : b c
 b : a
 c : `
-  test.identical( group.exportInfo({ nodes : gr.nodes }), exp );
+  test.identical( group.exportString({ nodes : gr.nodes }), exp );
 
   gr.sys.finit();
 
@@ -1292,7 +1292,7 @@ g : h
 h : i
 i : f h
 j :`
-  test.equivalent( group2.exportInfo({ nodes : gr.nodes }), exp );
+  test.equivalent( group2.exportString({ nodes : gr.nodes }), exp );
   var exp =
 `a : b
 b : e f
@@ -1304,12 +1304,12 @@ g : h
 h : i
 i : f h
 j :`
-  test.equivalent( group.exportInfo({ nodes : gr.nodes }), exp );
+  test.equivalent( group.exportString({ nodes : gr.nodes }), exp );
 
   group2.cacheInNodesFromOutNodesOnce( gr.nodes );
-  group2.exportInfo({ nodes : gr.nodes });
+  group2.exportString({ nodes : gr.nodes });
   group2.reverse();
-  group2.exportInfo({ nodes : gr.nodes });
+  group2.exportString({ nodes : gr.nodes });
 
   var exp =
 `a : b
@@ -1322,7 +1322,7 @@ g : h
 h : i
 i : f h
 j :`
-  test.equivalent( group.exportInfo({ nodes : gr.nodes }), exp );
+  test.equivalent( group.exportString({ nodes : gr.nodes }), exp );
 
   var exp =
 `a : d e
@@ -1335,7 +1335,7 @@ g : d
 h : e g i
 i : h
 j : `
-  test.equivalent( group2.exportInfo({ nodes : gr.nodes }), exp );
+  test.equivalent( group2.exportString({ nodes : gr.nodes }), exp );
 
   test.identical( gr.nodes.length, 10 );
   test.identical( gr.sys.groups.length, 2 );
@@ -2298,7 +2298,7 @@ function lookBfs( test )
   var group = gr.sys.nodesGroup();
 
   test.identical( gr.nodes.length, 10 );
-  logger.log( group.exportInfo({ nodes : gr.nodes }) );
+  logger.log( group.exportString({ nodes : gr.nodes }) );
 
   /* */
 
@@ -7706,7 +7706,7 @@ function lookDfs( test )
   var gr = context.cycled4Scc();
   var group = gr.sys.nodesGroup();
 
-  logger.log( group.exportInfo({ nodes : gr.nodes }) );
+  logger.log( group.exportString({ nodes : gr.nodes }) );
 
   /* */
 
@@ -20583,7 +20583,7 @@ function topSortLeastDegreeBfs( test )
 
   var gr = context.cycled4Scc();
   var group = gr.sys.nodesGroup();
-  logger.log( group.exportInfo({ nodes : gr.nodes }) );
+  logger.log( group.exportString({ nodes : gr.nodes }) );
   group.finit();
 
   /* */
@@ -20651,7 +20651,7 @@ function topSortLeastDegreeBfs( test )
 
   var gr = context.cycled1Scc();
   var group = gr.sys.nodesGroup();
-  logger.log( group.exportInfo({ nodes : gr.nodes }) );
+  logger.log( group.exportString({ nodes : gr.nodes }) );
 
   /* */
 
@@ -20736,7 +20736,7 @@ function topSortCycledSourceBasedFastBfs( test )
 
   test.description = 'explicit all';
   var group = gr.sys.nodesGroup();
-  logger.log( group.exportInfo({ nodes : gr.nodes }) );
+  logger.log( group.exportString({ nodes : gr.nodes }) );
   var expected = [ 'j', 'd', 'a', 'g', 'b', 'h', 'e', 'f', 'i', 'c' ];
   var got = group.topSortCycledSourceBasedFastBfs( gr.nodes );
   test.identical( group.nodesToNames( got ), expected );
@@ -20864,7 +20864,7 @@ function topSortCycledSourceBasedPrecise( test )
 
   test.description = 'explicit all';
   var group = gr.sys.nodesGroup();
-  logger.log( group.exportInfo({ nodes : gr.nodes }) );
+  logger.log( group.exportString({ nodes : gr.nodes }) );
   // var expected = [ 'j', 'd', 'g', 'e', 'a', 'c', 'b', 'i', 'f', 'h' ];
   var expected = [ 'j', 'd', 'g', 'a', 'b', 'e', 'c', 'h', 'i', 'f' ];
   var got = group.topSortCycledSourceBasedPrecise( gr.nodes );
@@ -20969,7 +20969,7 @@ function pairDirectedPathGetDfs( test )
   var gr = context.cycled3Scc();
   var group = gr.sys.nodesGroup();
   test.identical( gr.nodes.length, 8 );
-  logger.log( group.exportInfo({ nodes : gr.nodes }) );
+  logger.log( group.exportString({ nodes : gr.nodes }) );
 
   test.description = 'a';
 
@@ -21053,7 +21053,7 @@ function pairDirectedPathExistsDfs( test )
   var gr = context.cycled3Scc();
   var group = gr.sys.nodesGroup();
   test.identical( gr.nodes.length, 8 );
-  logger.log( group.exportInfo({ nodes : gr.nodes }) );
+  logger.log( group.exportString({ nodes : gr.nodes }) );
 
   test.description = 'a';
 
@@ -21132,7 +21132,7 @@ function pairIsConnectedDfs( test )
   var gr = context.cycled3Scc();
   var group = gr.sys.nodesGroup();
   test.identical( gr.nodes.length, 8 );
-  logger.log( group.exportInfo({ nodes : gr.nodes }) );
+  logger.log( group.exportString({ nodes : gr.nodes }) );
 
   test.description = 'a';
 
@@ -21210,7 +21210,7 @@ function pairIsConnectedStronglyDfs( test )
   var gr = context.cycled3Scc();
   var group = gr.sys.nodesGroup();
   test.identical( gr.nodes.length, 8 );
-  logger.log( group.exportInfo({ nodes : gr.nodes }) );
+  logger.log( group.exportString({ nodes : gr.nodes }) );
 
   test.description = 'a';
 
@@ -21290,7 +21290,7 @@ function nodesConnectedLayersDfs( test )
   var gr = context.cycled3Scc();
   var group = gr.sys.nodesGroup();
   test.identical( gr.nodes.length, 8 );
-  logger.log( group.exportInfo({ nodes : gr.nodes }) );
+  logger.log( group.exportString({ nodes : gr.nodes }) );
 
   test.description = 'explicit';
   var layers = group.nodesConnectedLayersDfs( gr.nodes );
@@ -21333,7 +21333,7 @@ function nodesStronglyConnectedLayersDfs( test )
   var gr = context.cycled4Scc();
   var group = gr.sys.nodesGroup();
   test.identical( gr.nodes.length, 10 );
-  logger.log( group.exportInfo({ nodes : gr.nodes }) );
+  logger.log( group.exportString({ nodes : gr.nodes }) );
 
   var layers = group.nodesStronglyConnectedLayersDfs( gr.nodes );
   var exp =
@@ -21368,7 +21368,7 @@ function nodesStronglyConnectedCollectionDfs( test )
   var group = gr.sys.nodesGroup({});
 
   logger.log( 'Original' );
-  logger.log( group.exportInfo({ nodes : gr.nodes }) );
+  logger.log( group.exportString({ nodes : gr.nodes }) );
 
   var collection2 = group.nodesStronglyConnectedCollectionDfs( gr.nodes );
   collection2.group.onNodeName = function onNodeName( dnode )
@@ -21376,7 +21376,7 @@ function nodesStronglyConnectedCollectionDfs( test )
     debugger;
     return group.nodesToNames( dnode.originalNodes ).join( '+' );
   }
-  logger.log( 'Strongly connected tree :\n' + collection2.exportInfo() );
+  logger.log( 'Strongly connected tree :\n' + collection2.exportString() );
   var originalNodesNames = collection2.nodes.map( ( node ) => group.nodesToNames( node.originalNodes ).toArray().original ).toArray().original;
   var expected = [ [ 'c' ], [ 'a', 'b' ] ];
   test.identical( originalNodesNames, expected );
@@ -21484,7 +21484,7 @@ function nodesStronglyConnectedCollectionDfs( test )
   var expected = [ 'j : ', 'f : ', 'i+h : f', 'g : i+h', 'a+b+e+c : f.i+h', 'd : a+b+e+c.g' ];
   test.identical( outNodes, expected );
   logger.log( 'Tree' );
-  logger.log( collection2.exportInfo() );
+  logger.log( collection2.exportString() );
 
   /* */
 
@@ -21499,7 +21499,7 @@ function nodesStronglyConnectedCollectionDfs( test )
   var expected = [ 'f : ', 'i+h : f', 'g : i+h', 'a+b+e+c : f.i+h', 'd : a+b+e+c.g' ];
   test.identical( outNodes, expected );
   logger.log( 'Tree' );
-  logger.log( collection2.exportInfo() );
+  logger.log( collection2.exportString() );
 
   /* */
 

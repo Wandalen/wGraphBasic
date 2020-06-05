@@ -438,18 +438,18 @@ exportStructure.defaults =
  *  1 : 2
  *  2 : 3
  *  3 :
- * @function exportInfo
+ * @function exportString
  * @class wAbstractNodesGroup
  * @namespace wTools
  * @module Tools/mid/AbstractGraphs.wTools.graph
  */
 
-function exportInfo( o )
+function exportString( o )
 {
   let group = this;
   let sys = group.sys;
 
-  o = _.routineOptions( exportInfo, arguments );
+  o = _.routineOptions( exportString, arguments );
 
   o.nodes = group.asNodesAdapter( o.nodes );
 
@@ -458,7 +458,7 @@ function exportInfo( o )
   return result;
 }
 
-var routine = exportInfo;
+var routine = exportString;
 
 routine.defaults =
 {
@@ -4323,7 +4323,7 @@ let Extend =
 
   optionsExport,
   exportStructure,
-  exportInfo,
+  exportString,
 
   // descriptor
 
