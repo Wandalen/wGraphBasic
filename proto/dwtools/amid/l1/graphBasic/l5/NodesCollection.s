@@ -16,7 +16,8 @@ let Vectorize = _.routineDefaults( null, _.vectorize, { vectorizingContainerAdap
 let VectorizeAll = _.routineDefaults( null, _.vectorizeAll, { vectorizingContainerAdapter : 1, unwrapingContainerAdapter : 0 } );
 let VectorizeAny = _.routineDefaults( null, _.vectorizeAny, { vectorizingContainerAdapter : 1, unwrapingContainerAdapter : 0 } );
 let VectorizeNone = _.routineDefaults( null, _.vectorizeNone, { vectorizingContainerAdapter : 1, unwrapingContainerAdapter : 0 } );
-let Self = function wAbstractNodesCollection( o )
+let Self = wAbstractNodesCollection;
+function wAbstractNodesCollection( o )
 {
   return _.workpiece.construct( Self, this, arguments );
 }

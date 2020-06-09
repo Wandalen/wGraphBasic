@@ -45,7 +45,8 @@ let VectorizeAll = _.routineDefaults( null, _.vectorizeAll, { vectorizingContain
 let VectorizeAny = _.routineDefaults( null, _.vectorizeAny, { vectorizingContainerAdapter : 1, unwrapingContainerAdapter : 0 } );
 let VectorizeNone = _.routineDefaults( null, _.vectorizeNone, { vectorizingContainerAdapter : 1, unwrapingContainerAdapter : 0 } );
 let Parent = null;
-let Self = function wAbstractGraphSystem( o )
+let Self = wAbstractGraphSystem;
+function wAbstractGraphSystem( o )
 {
   return _.workpiece.construct( Self, this, arguments );
 }
