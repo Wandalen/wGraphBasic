@@ -2702,31 +2702,6 @@ function lookCfs_body( o )
   let allDirect = o.left ? 'allLeft' : 'allRight';
   let allRevert = o.left ? 'allRight' : 'allLeft';
 
-  // _.routineOptions( lookCfs, o );
-  //
-  // o.roots = group.asNodesAdapter( o.roots );
-  // if( o.revisiting < 3 && o.visitedContainer === null )
-  // o.visitedContainer = o.revisiting === 2 ? new Array() : new Set();
-  // if( o.visitedContainer )
-  // o.visitedContainer = sys.ContainerAdapterFrom( o.visitedContainer );
-  // if( o.allVariants === null )
-  // o.allVariants = o.revisiting === 0 ? 0 : 1;
-  // // if( o.onNodeJunction === null )
-  // let onNodeJunction = o.allVariants === 2 ? null : group.onNodeJunction;
-  //
-  // if( Config.debug )
-  // {
-  //   _.assert( arguments.length === 1 );
-  //   _.assert( group.nodesAreAll( o.roots ) );
-  //   _.assert( 0 <= o.revisiting && o.revisiting <= 3 );
-  //   _.assert( 0 <= o.allVariants && o.allVariants <= 2 );
-  //   _.assert( o.roots.all( ( node ) => group.nodeIs( node ) ) );
-  //   _.assert( !o.visitedContainer || o.revisiting !== 2 || _.arrayIs( o.visitedContainer.original ) )
-  // }
-  //
-  // let allDirect = o.left ? 'allLeft' : 'allRight';
-
-  // let iterator = Object.create( null );
   let iterator = o;
   iterator.iterator = iterator;
   iterator.options = o;
@@ -3024,9 +2999,6 @@ function each_pre( routine, args )
   o.result = [];
   o.result = group.asNodesAdapter( o.result );
 
-  // if( o.roots === undefined || o.roots === null )
-  // o.roots = group.nodes;
-  // else
   o.roots = group.asNodesAdapter( o.roots );
 
   if( Config.debug )
@@ -3057,6 +3029,8 @@ function each_pre( routine, args )
   return o;
 }
 
+//
+
 function each_body( o )
 {
   let group = this;
@@ -3084,13 +3058,6 @@ function each_body( o )
 
   function handleNode( node, it )
   {
-
-    // if( _global_.debugger )
-    // if( node.absoluteName === 'module::z / module::a0 / relation::PathTools' )
-    // debugger;
-    // if( _global_.debugger )
-    // if( node.absoluteName === 'module::z / module::a / relation::PathTools' )
-    // debugger;
 
     if( o.onNode )
     o.onNode.apply( this, arguments );
@@ -3127,13 +3094,6 @@ function each_body( o )
       if( !o.withTerminals && degree === 0 )
       it.included = false;
     }
-
-    // if( _global_.debugger )
-    // if( node.absoluteName === 'module::z / module::a0 / relation::PathTools' )
-    // debugger;
-    // if( _global_.debugger )
-    // if( node.absoluteName === 'module::z / module::a / relation::PathTools' )
-    // debugger;
 
     if( o.onUp )
     o.onUp.apply( this, arguments );
@@ -4422,7 +4382,8 @@ let Extend =
   lookBfs,
   lookDfs,
   lookCfs,
-  look : lookDfs,
+  // look,
+  // look : lookDfs,
   /* qqq xxx : implement method loog with option algorithm : 'dfs' */
 
   each,
