@@ -4423,6 +4423,7 @@ let Extend =
   lookDfs,
   lookCfs,
   look : lookDfs,
+  /* qqq xxx : implement method loog with option algorithm : 'dfs' */
 
   each,
   eachBfs,
