@@ -1,5 +1,5 @@
 
-# module::GraphBasic [![Status](https://github.com/Wandalen/wGraphBasic/workflows/Test/badge.svg)](https://github.com/Wandalen/wGraphBasic/actions?query=workflow%3ATest) [![experimental](https://img.shields.io/badge/stability-experimental-orange.svg)](https://github.com/emersion/stability-badges#experimental)
+# module::GraphBasic [![Status](https://github.com/Wandalen/wGraphBasic/workflows/Publish/badge.svg)](https://github.com/Wandalen/wGraphBasic/actions?query=workflow%3APublish) [![experimental](https://img.shields.io/badge/stability-experimental-orange.svg)](https://github.com/emersion/stability-badges#experimental)
 
 Collection of abstract data structures and algorithms to process graphs. The module does not bound to any specific format of a graph, so providing adapters toy may use it with anyone. It implements depth-first search, breadth-first search, extracting strongly connected components, topological sort, shortest path search, and others.
 
