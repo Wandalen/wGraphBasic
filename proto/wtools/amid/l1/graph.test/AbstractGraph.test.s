@@ -2339,7 +2339,7 @@ function lookBfs( test )
   test.case = 'only a';
 
   clean();
-  var layers = group.lookBfs({ roots : gr.a, onNode, onUp, onDown, onLayerUp, onLayerDown }); debugger;
+  var layers = group.lookBfs({ roots : gr.a, onNode, onUp, onDown, onLayerUp, onLayerDown });
 
   var expected =
   [
@@ -3714,13 +3714,11 @@ function lookBfsExcluding( test )
 
   function onLayerUp( nodes, it )
   {
-    debugger;
     lups.push( _.containerAdapter.toOriginal( group.nodesToNames( nodes ) ) );
   }
 
   function onLayerUp3( nodes, it )
   {
-    debugger;
     if( it.level > 1 )
     it.continueNode = 0;
     if( it.continueNode )
@@ -3729,7 +3727,6 @@ function lookBfsExcluding( test )
 
   function onLayerUp4( nodes, it )
   {
-    debugger;
     if( it.level > 0 )
     it.continueUp = false;
     onLayerUp( nodes, it );
@@ -4305,7 +4302,6 @@ function lookBfsRevisitingTrivial( test )
 
   function onDown( node, it )
   {
-    debugger;
     console.log( 'down', node.name );
     downContinueNode.push( it.continueNode );
     downContinueUp.push( it.continueUp );
@@ -6424,7 +6420,6 @@ down a0
     onUp( node, it );
     if( it.level >= 4 )
     {
-      debugger;
       it.continueUp = false;
     }
   }
@@ -6807,7 +6802,6 @@ down a0
     onUp( node, it );
     if( it.level >= 4 )
     {
-      debugger;
       it.continueUp = false;
     }
   }
@@ -7226,7 +7220,6 @@ down a0
     onUp( node, it );
     if( it.level >= 4 )
     {
-      debugger;
       it.continueUp = false;
     }
   }
@@ -7649,7 +7642,6 @@ down a0
     onUp( node, it );
     if( it.level >= 4 )
     {
-      debugger;
       it.continueUp = false;
     }
   }
@@ -17681,7 +17673,6 @@ function lookCfsRevisiting( test )
     var expectedUps = [ 'a', 'b', 'd', 'c', 'e', 'f' ];
     var expectedDws = [ 'c', 'b', 'e', 'f', 'd', 'a' ];
 
-    debugger;
     test.identical( group.nodesToNames( ups ), expectedUps );
     test.identical( group.nodesToNames( dws ), expectedDws );
 
@@ -21373,7 +21364,6 @@ function nodesStronglyConnectedCollectionDfs( test )
   var collection2 = group.nodesStronglyConnectedCollectionDfs( gr.nodes );
   collection2.group.onNodeName = function onNodeName( dnode )
   {
-    debugger;
     return group.nodesToNames( dnode.originalNodes ).join( '+' );
   }
   logger.log( 'Strongly connected tree :\n' + collection2.exportString() );

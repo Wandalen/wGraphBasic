@@ -3207,9 +3207,7 @@ function topSortLeastDegreeBfs( nodes )
   _.assert( arguments.length === 0 || arguments.length === 1 );
 
   let sources = group.leastIndegreeOnlyAmong( nodes );
-  debugger;
   let layers = group.lookBfs({ roots : sources });
-  debugger;
   return _.arrayFlatten( layers );
 }
 
@@ -3226,9 +3224,6 @@ function topSortCycledSourceBasedFastBfs( nodes )
   let group = this;
   let sys = group.sys;
 
-  // if( nodes === undefined )
-  // nodes = group.nodes;
-  // else
   nodes = group.asNodesAdapter( nodes )
 
   _.assert( arguments.length === 0 || arguments.length === 1 );
@@ -3243,9 +3238,7 @@ function topSortCycledSourceBasedFastBfs( nodes )
   let sources2 = sources1.flatFilter( ( node ) => node.originalNodes );
   collection.finit();
 
-  debugger;
   let layers = group.lookBfs({ roots : sources2 });
-  debugger;
 
   return _.arrayFlatten( layers );
 }
@@ -3566,7 +3559,6 @@ function pairIsConnectedDfs( pair )
     onUp : onUp1,
     onBegin,
   });
-  debugger;
 
   if( r )
   return true;
@@ -3644,7 +3636,6 @@ function pairIsConnectedStronglyDfs( pair )
   _.assert( !!group.nodeIs( node1 ) );
   _.assert( !!group.nodeIs( node2 ) );
 
-  debugger;
   let r = group.lookDfs
   ({
     roots : node1,
@@ -3654,7 +3645,6 @@ function pairIsConnectedStronglyDfs( pair )
     onUp : onUp1,
     onBegin,
   });
-  debugger;
 
   if( !r )
   return false;
@@ -3789,7 +3779,6 @@ function nodesConnectedLayersDfs( nodes )
 
   function handleUp( node, it )
   {
-    debugger;
     groups[ groups.length-1 ].push( node );
   }
 
@@ -4456,5 +4445,7 @@ _.Copyable.mixin( Self );
 if( typeof module !== 'undefined' )
 module[ 'exports' ] = Self;
 _.graph[ Self.shortName ] = Self;
+
+_.assert( _.routineIs( _.graph.AbstractNodesGroup.prototype.nodeToQualifiedNameTry ) );
 
 })();

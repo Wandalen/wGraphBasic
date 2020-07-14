@@ -316,7 +316,7 @@ function _nodeAdd( node )
   let sys = collection.sys;
   let group = collection.group;
 
-  _.assert( !collection.nodes.has( node ), () => `The collection already has ${collection.nodeToQualifiedNameTry( node )}` );
+  _.assert( !collection.nodes.has( node ), () => `The collection already has ${group.nodeToQualifiedNameTry( node )}` );
   collection.nodes.appendOnceStrictly( node );
 
   sys.nodeDescriptorInc( node );
@@ -466,7 +466,7 @@ function nodeDelete( node )
   _.assert( arguments.length === 1 );
   _.assert( !!group.nodeIs( node ), 'Expects node' );
   // _.assert( descriptor === null || descriptor.count > 0, 'The system does not have information about number of the node' );
-  _.assert( collection.nodes.has( node ), () => `The collection does not have ${collection.nodeToQualifiedNameTry( node )}` );
+  _.assert( collection.nodes.has( node ), () => `The collection does not have ${group.nodeToQualifiedNameTry( node )}` );
   collection.nodes.removedOnceStrictly( node );
 
   sys.nodeDescriptorDec( node );
