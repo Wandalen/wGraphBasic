@@ -5,7 +5,7 @@
 if( typeof module !== 'undefined' )
 {
 
-  var _ = require( '../../../../wtools/Tools.s' );
+  let _ = require( '../../../../wtools/Tools.s' );
 
   _.include( 'wTesting' );
 
@@ -13,7 +13,7 @@ if( typeof module !== 'undefined' )
 
 }
 
-var _ = _global_.wTools;
+let _ = _global_.wTools;
 
 // --
 // context
@@ -22809,7 +22809,7 @@ function rootsExportInfoTreeJunctions( test )
 // declare
 // --
 
-var Self =
+let Self =
 {
 
   name : 'Tools.mid.AbstractGraph',

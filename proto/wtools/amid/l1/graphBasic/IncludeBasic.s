@@ -20,9 +20,9 @@ if( typeof module !== 'undefined' )
  * @module Tools/mid/AbstractGraphs
 */
 
-var _ = _global_.wTools;
-var Parent = null;
-var Self = _global_.wTools.graph = _global_.wTools.graph || Object.create( null );
+let _ = _global_.wTools;
+let Parent = null;
+let Self = _global_.wTools.graph = _global_.wTools.graph || Object.create( null );
 
 //
 
