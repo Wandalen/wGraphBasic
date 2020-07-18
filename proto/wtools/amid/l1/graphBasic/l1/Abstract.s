@@ -13,12 +13,12 @@ _.assert( !!Self );
 // declare
 // --
 
-var Extend =
+var Extension =
 {
 }
 
 //
 
-_.mapExtend( Self, Extend );
+_.mapExtend( Self, Extension );
 
 })();
