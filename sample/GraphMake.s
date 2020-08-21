@@ -1,4 +1,4 @@
-require( '..' );
+require( 'wgraphbasic' );
 let _ = wTools;
 
 /*
@@ -12,9 +12,9 @@ Strcuture of nodes is arbitrary. It could even be instance of a primitive type.
 Group of nodes should have handlers which should return lists of neighbour nodes.
 */
 
-var a = { name : 'a', nodes : [] } // 1
-var b = { name : 'b', nodes : [] } // 2
-var c = { name : 'c', nodes : [] } // 3
+var a = { name : 'a', nodes : [] }; // 1
+var b = { name : 'b', nodes : [] }; // 2
+var c = { name : 'c', nodes : [] }; // 3
 
 // declare lists neighbour nodes
 
@@ -24,10 +24,9 @@ b.nodes.push( c ); // add edge between nodes b and c
 /* declare the graph */
 
 var sys = new _.graph.AbstractGraphSystem(); // declare sysyem of graphs
-var group = sys.groupMake(); // declare group of nodes
-group.nodesAdd([ a, b, c ]); // add nodes to the group
+var group = sys.nodesGroup(); // declare group of nodes
 
-console.log( group.nodesExportInfo() ); // print information about nodes relation
+console.log( group.nodesInfoExport([ a, b, c ]) ); // print information about nodes relation
 
 /*
     1 : 2
