@@ -17,6 +17,6 @@
     "url" : "https://github.com/Wandalen/wGraphBasic/issues"
   },
   "dependencies" : { "wTools" : "" },
-  "devDependencies" : { "wTesting" : "" },
+  "devDependencies" : { "wTesting" : "", "eslint" : "7.1.0", "wgraphbasic" : "file:." },
   "keywords" : [ "wTools" ]
 }
