@@ -10,7 +10,7 @@
 if( typeof module !== 'undefined' )
 {
 
-  let _ = require( '../../../Tools.s' );
+  let _ = require( '../../../../wtools/Tools.s' );
 
   require( './IncludeBasic.s' );
 
@@ -23,7 +23,7 @@ if( typeof module !== 'undefined' )
 
 //
 
-if( typeof module !== 'undefined' && module !== null )
+if( typeof module !== 'undefined' )
 module[ 'exports' ] = wTools.graph;
 
 })();

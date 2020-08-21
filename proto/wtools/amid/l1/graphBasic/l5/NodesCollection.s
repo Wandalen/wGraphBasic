@@ -5,7 +5,8 @@
 /**
  * @classdesc Class to operate graph as collection of nodes.
  * @class wAbstractNodesCollection
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph
+ * @namespace wTools
+ * @module Tools/mid/AbstractGraphs.wTools.graph
  */
 
 let _ = _global_.wTools;
@@ -15,7 +16,8 @@ let Vectorize = _.routineDefaults( null, _.vectorize, { vectorizingContainerAdap
 let VectorizeAll = _.routineDefaults( null, _.vectorizeAll, { vectorizingContainerAdapter : 1, unwrapingContainerAdapter : 0 } );
 let VectorizeAny = _.routineDefaults( null, _.vectorizeAny, { vectorizingContainerAdapter : 1, unwrapingContainerAdapter : 0 } );
 let VectorizeNone = _.routineDefaults( null, _.vectorizeNone, { vectorizingContainerAdapter : 1, unwrapingContainerAdapter : 0 } );
-let Self = function wAbstractNodesCollection( o )
+let Self = wAbstractNodesCollection;
+function wAbstractNodesCollection( o )
 {
   return _.workpiece.construct( Self, this, arguments );
 }
@@ -233,21 +235,21 @@ function copy( o )
 
 // //
 //
-// function exportInfo( o )
+// function exportString( o )
 // {
 //   let collection = this;
 //   let sys = collection.sys;
 //   let group = collection.group;
 //
-//   o = _.routineOptions( exportInfo, arguments );
+//   o = _.routineOptions( exportString, arguments );
 //   o.nodes = collection.nodes;
 //
-//   return group.exportInfo( o );
+//   return group.exportString( o );
 // }
 //
-// var defaults = exportInfo.defaults =
+// var defaults = exportString.defaults =
 // {
-//   ... Group.prototype.exportInfo.defaults,
+//   ... Group.prototype.exportString.defaults,
 // }
 //
 // delete defaults.nodes;
@@ -282,7 +284,9 @@ function nodesSet( nodes )
  * @summary Returns true if group has provided node. Takes node handle as argument.
  * @param {Object} node Node descriptor.
  * @function hasNode
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesCollection#
+ * @class wAbstractNodesCollection
+ * @namespace wTools
+ * @module Tools/mid/AbstractGraphs.wTools.graph
  */
 
 function hasNode( node )
@@ -301,7 +305,9 @@ function hasNode( node )
  * @param {Object} node Node.
  * @function _nodeAdd
  * @returns {Number} Returns id of added node.
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesCollection#
+ * @class wAbstractNodesCollection
+ * @namespace wTools
+ * @module Tools/mid/AbstractGraphs.wTools.graph
  */
 
 function _nodeAdd( node )
@@ -310,7 +316,7 @@ function _nodeAdd( node )
   let sys = collection.sys;
   let group = collection.group;
 
-  _.assert( !collection.nodes.has( node ), () => `The collection already has ${collection.nodeToQualifiedNameTry( node )}` );
+  _.assert( !collection.nodes.has( node ), () => `The collection already has ${group.nodeToQualifiedNameTry( node )}` );
   collection.nodes.appendOnceStrictly( node );
 
   sys.nodeDescriptorInc( node );
@@ -348,7 +354,9 @@ function _nodeAdd( node )
  * @param {Object} node Node to add .
  * @function nodeAdd
  * @returns {Number} Returns id of added node.
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesCollection#
+ * @class wAbstractNodesCollection
+ * @namespace wTools
+ * @module Tools/mid/AbstractGraphs.wTools.graph
  */
 
  /**
@@ -356,7 +364,9 @@ function _nodeAdd( node )
  * @param {Array} node Array of nodes.
  * @function nodesAdd
  * @returns {Node} Returns added node.
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesCollection#
+ * @class wAbstractNodesCollection
+ * @namespace wTools
+ * @module Tools/mid/AbstractGraphs.wTools.graph
  */
 
 function nodeAdd( node )
@@ -379,7 +389,9 @@ function nodeAdd( node )
  * @param {Object} node Node.
  * @function _nodeAddOnce
  * @returns {Number} Returns id of added node.
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesCollection#
+ * @class wAbstractNodesCollection
+ * @namespace wTools
+ * @module Tools/mid/AbstractGraphs.wTools.graph
  */
 
 /**
@@ -387,7 +399,9 @@ function nodeAdd( node )
  * @param {Object} node Node.
  * @function nodeAddOnce
  * @returns {Number} Returns id of added node.
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesCollection#
+ * @class wAbstractNodesCollection
+ * @namespace wTools
+ * @module Tools/mid/AbstractGraphs.wTools.graph
  */
 
  /**
@@ -395,7 +409,9 @@ function nodeAdd( node )
  * @param {Array of Node} node Array of nodes.
  * @function nodesAddOnce
  * @returns {Array} Returns array of ids of added nodes.
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesCollection#
+ * @class wAbstractNodesCollection
+ * @namespace wTools
+ * @module Tools/mid/AbstractGraphs.wTools.graph
  */
 
 function _nodeAddOnce( node )
@@ -434,7 +450,9 @@ function nodeAddOnce( node )
  * @function nodeDelete
  * @returns {Number} Returns id of removed node.
  * @throws {Error} If system doesn't have node with such `node`.
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesCollection#
+ * @class wAbstractNodesCollection
+ * @namespace wTools
+ * @module Tools/mid/AbstractGraphs.wTools.graph
  */
 
 function nodeDelete( node )
@@ -448,7 +466,7 @@ function nodeDelete( node )
   _.assert( arguments.length === 1 );
   _.assert( !!group.nodeIs( node ), 'Expects node' );
   // _.assert( descriptor === null || descriptor.count > 0, 'The system does not have information about number of the node' );
-  _.assert( collection.nodes.has( node ), () => `The collection does not have ${collection.nodeToQualifiedNameTry( node )}` );
+  _.assert( collection.nodes.has( node ), () => `The collection does not have ${group.nodeToQualifiedNameTry( node )}` );
   collection.nodes.removedOnceStrictly( node );
 
   sys.nodeDescriptorDec( node );
@@ -477,7 +495,9 @@ function nodeDelete( node )
  * @function nodesDelete
  * @returns {Array} Returns array with ids of removed nodes.
  * @throws {Error} If system doesn't have node with such `node`.
- * @memberof module:Tools/mid/AbstractGraphs.wTools.graph.wAbstractNodesCollection#
+ * @class wAbstractNodesCollection
+ * @namespace wTools
+ * @module Tools/mid/AbstractGraphs.wTools.graph
  */
 
 let _nodesDelete = Vectorize( nodeDelete );
@@ -532,14 +552,14 @@ let Forbids =
 
 let Accessors =
 {
-  nodes : { setter : nodesSet },
+  nodes : { set : nodesSet },
 }
 
 // --
 // declare
 // --
 
-let Extend =
+let Extension =
 {
 
   // inter
@@ -552,7 +572,7 @@ let Extend =
 
   // from group
 
-  exportInfo : _MethodFromGroup( 'exportInfo' ),
+  exportString : _MethodFromGroup( 'exportString' ),
   leastIndegreeAmong : _MethodFromGroup( 'leastIndegreeAmong' ),
   mostIndegreeAmong : _MethodFromGroup( 'mostIndegreeAmong' ),
   leastOutdegreeAmong : _MethodFromGroup( 'leastOutdegreeAmong' ),
@@ -652,7 +672,7 @@ _.classDeclare
 ({
   cls : Self,
   parent : Parent,
-  extend : Extend,
+  extend : Extension,
 });
 
 _.Copyable.mixin( Self );
@@ -661,7 +681,7 @@ _AssertMethods();
 
 //
 
-if( typeof module !== 'undefined' && module !== null )
+if( typeof module !== 'undefined' )
 module[ 'exports' ] = Self;
 _.graph[ Self.shortName ] = Self;
 
