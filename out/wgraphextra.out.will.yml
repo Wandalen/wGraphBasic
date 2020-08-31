@@ -1,6 +1,6 @@
 format: outwillfile-2.0
 root:
-  - wgraphextra.out
+  - wgraphbasic.out
 consistency:
   ../.ex.will.yml: &ref_0
     hash: 771d9682336ad4ea35ecf97bc85011f8
@@ -9,9 +9,9 @@ consistency:
     hash: 063972b7e6d38c3703362894c5d6a854
     size: 5055
 module:
-  wgraphextra.out:
+  wgraphbasic.out:
     about:
-      name: wgraphextra
+      name: wgraphbasic
       org: noorg
       description: >-
         Collection of abstract data structures and algorithms to process graphs.
@@ -32,7 +32,7 @@ module:
       author: Kostiantyn Wandalen <wanalen@01.school>
       contributors: &ref_4
         - Kostiantyn Wandalen <wanalen@01.school>
-      npm.name: wgraphextra
+      npm.name: wgraphbasic
       npm.scripts: &ref_5
         test: 'wtest .run proto/** rapidity:-1'
         docgen: wdocgen .build proto
@@ -40,11 +40,11 @@ module:
       module.willfiles:
         criterion:
           predefined: 1
-        path: wgraphextra.out.will.yml
+        path: wgraphbasic.out.will.yml
       module.common:
         criterion:
           predefined: 1
-        path: wgraphextra.out
+        path: wgraphbasic.out
       module.original.willfiles:
         criterion:
           predefined: 1
@@ -65,13 +65,13 @@ module:
         criterion:
           predefined: 1
       repository:
-        path: 'git+https:///github.com/Wandalen/wgraphextra.git'
+        path: 'git+https:///github.com/Wandalen/wgraphbasic.git'
       origins:
         path:
-          - 'git+https:///github.com/Wandalen/wgraphextra.git'
-          - 'npm:///wgraphextra'
+          - 'git+https:///github.com/Wandalen/wgraphbasic.git'
+          - 'npm:///wgraphbasic'
       bugtracker:
-        path: 'https:///github.com/Wandalen/wgraphextra/issues'
+        path: 'https:///github.com/Wandalen/wgraphbasic/issues'
       in:
         path: .
       out:
@@ -182,7 +182,7 @@ module:
         path: 'npm:///wTools'
         autoExporting: 0
         enabled: 0
-      wgraphextra:
+      wgraphbasic:
         path: 'hd://..'
         autoExporting: 0
         enabled: 0
@@ -799,7 +799,7 @@ module:
       ../.im.will.yml: *ref_1
   ../:
     about:
-      name: wgraphextra
+      name: wgraphbasic
       org: noorg
       description: >-
         Collection of abstract data structures and algorithms to process graphs.
@@ -814,7 +814,7 @@ module:
       license: MIT
       author: Kostiantyn Wandalen <wanalen@01.school>
       contributors: *ref_4
-      npm.name: wgraphextra
+      npm.name: wgraphbasic
       npm.scripts: *ref_5
     path:
       module.willfiles:
@@ -832,7 +832,7 @@ module:
       module.peer.willfiles:
         criterion:
           predefined: 1
-        path: out/wgraphextra.out.will.yml
+        path: out/wgraphbasic.out.will.yml
       module.peer.in:
         criterion:
           predefined: 1
@@ -845,13 +845,13 @@ module:
         criterion:
           predefined: 1
       repository:
-        path: 'git+https:///github.com/Wandalen/wgraphextra.git'
+        path: 'git+https:///github.com/Wandalen/wgraphbasic.git'
       origins:
         path:
-          - 'git+https:///github.com/Wandalen/wgraphextra.git'
-          - 'npm:///wgraphextra'
+          - 'git+https:///github.com/Wandalen/wgraphbasic.git'
+          - 'npm:///wgraphbasic'
       bugtracker:
-        path: 'https:///github.com/Wandalen/wgraphextra/issues'
+        path: 'https:///github.com/Wandalen/wgraphbasic/issues'
       in:
         path: .
       out:
@@ -929,7 +929,7 @@ module:
         path: 'npm:///wTools'
         autoExporting: 0
         enabled: 0
-      wgraphextra:
+      wgraphbasic:
         path: 'hd://.'
         autoExporting: 0
         enabled: 0

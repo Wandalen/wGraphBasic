@@ -1,5 +1,5 @@
 {
-  "name" : "wgraphextra",
+  "name" : "wgraphbasic",
   "version" : "0.3.155",
   "description" : "Collection of abstract data structures and algorithms to process graphs. The module does not bound to any specific format of a graph, so providing adapters toy may use it with anyone. It implements depth-first search, breadth-first search, extracting strongly connected components, topological sort, shortest path search, and others.",
   "author" : "Kostiantyn Wandalen <wanalen@01.school>",
@@ -10,11 +10,11 @@
   "repository" :
   {
     "type" : "git",
-    "url" : "https://github.com/Wandalen/wgraphextra.git"
+    "url" : "https://github.com/Wandalen/wgraphbasic.git"
   },
   "bugs" :
   {
-    "url" : "https://github.com/Wandalen/wgraphextra/issues"
+    "url" : "https://github.com/Wandalen/wgraphbasic/issues"
   },
   "dependencies" : { "wTools" : "alpha" },
   "devDependencies" : { "eslint" : "7.1.0", "wgraphbasic" : "file:.", "wTesting" : "alpha" },

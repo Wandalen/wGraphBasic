@@ -361,5 +361,5 @@
 <details><summary><a href="./tutorial/Abstract.md">
       Abstract
   </a></summary>
-  General information about the module GraphExtra.
+  General information about the module GraphBasic.
 </details>

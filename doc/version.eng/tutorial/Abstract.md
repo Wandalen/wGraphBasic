@@ -1,6 +1,6 @@
 # Abstract
 
-General information about the module GraphExtra.
+General information about the module GraphBasic.
 
 ![Graph](../../image/nodeJunction/WithoutLegend.png)
 

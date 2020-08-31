@@ -4,7 +4,7 @@ submodule :
   wTools :
     path : npm:///wTools
     enabled : 0 # submodule
-  wgraphextra :
+  wgraphbasic :
     path : hd://.
     enabled : 0 # submodule
     criterion :
