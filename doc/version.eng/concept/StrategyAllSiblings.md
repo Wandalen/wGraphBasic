@@ -24,7 +24,7 @@ Strategy `allSiblings : 1` allows algorithm revisit node of the graph if it has 
 
 You may see how DFS with strategy `allSiblings : 2` works on the diagram "DFS traversal allSiblings:2, revisiting:1", where an original graph is on the left side and traversal tree of the graph on the right side.
 
-![AllSiblings1.png](../../image/searchOptions/AllSiblings2.png)
+![AllSiblings2.png](../../images/searchOptions/AllSiblings2.png)
 
 Strategy `allSiblings : 2` works similar to strategy `allSiblings : 1`, but when the algorithm revisits a child node, it continues the traversal in depth. As you may see, the algorithm revisits node `f` and continues the traversal to nodes `g` and `h`. So such a search is the slowest among 3.
 
