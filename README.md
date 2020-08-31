@@ -1,5 +1,5 @@
 
-# module::GraphBasic [![status](https://github.com/Wandalen/wGraphBasic/workflows/publish/badge.svg)](https://github.com/Wandalen/wGraphBasic/actions?query=workflow%3Apublish) [![experimental](https://img.shields.io/badge/stability-experimental-orange.svg)](https://github.com/emersion/stability-badges#experimental)
+# module::GraphExtra [![status](https://github.com/Wandalen/wgraphextra/workflows/publish/badge.svg)](https://github.com/Wandalen/wgraphextra/actions?query=workflow%3Apublish) [![experimental](https://img.shields.io/badge/stability-experimental-orange.svg)](https://github.com/emersion/stability-badges#experimental)
 
 Collection of abstract data structures and algorithms to process graphs. The module does not bound to any specific format of a graph, so providing adapters toy may use it with anyone. It implements depth-first search, breadth-first search, extracting strongly connected components, topological sort, shortest path search, and others.
 
@@ -52,14 +52,14 @@ console.log( group.nodesExportInfo() ); // print information about nodes relatio
 
 ## Try out from the repository
 ```
-git clone https://github.com/Wandalen/wGraphBasic
-cd wGraphBasic
+git clone https://github.com/Wandalen/wgraphextra
+cd wgraphextra
 npm install
 node sample/Sample.s
 ```
 
 ## To add to your project
 ```
-npm add 'wgraphbasic@alpha'
+npm add 'wgraphextra@alpha'
 ```
 
