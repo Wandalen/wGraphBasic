@@ -1812,7 +1812,7 @@ function _routineArguments2( dstNodes, srcNodes )
 // traverser
 // --
 
-function _look_pre( routine, args )
+function _look_head( routine, args )
 {
   let group = this;
   let sys = group.sys;
@@ -2330,7 +2330,7 @@ lookBfs_body.defaults =
 
 }
 
-let lookBfs = _.routineFromPreAndBody( _look_pre, lookBfs_body );
+let lookBfs = _.routineUnite( _look_head, lookBfs_body );
 
 //
 
@@ -2680,7 +2680,7 @@ lookDfs_body.defaults =
 
 }
 
-let lookDfs = _.routineFromPreAndBody( _look_pre, lookDfs_body );
+let lookDfs = _.routineUnite( _look_head, lookDfs_body );
 
 //
 
@@ -2749,7 +2749,7 @@ function lookCfs_body( o )
       if( o.revisiting === 0 )
       outNodes2 = sys.ContainerAdapterFrom( [] );
 
-      outNodes[ allDirect ]( ( node, n ) => pre( node, n, it, level, nodesStatus, outNodes2 ) );
+      outNodes[ allDirect ]( ( node, n ) => head( node, n, it, level, nodesStatus, outNodes2 ) );
       outNodes2.all( ( node, n ) => post( node, it, nodesStatus ) );
 
       it.level = level;
@@ -2772,7 +2772,7 @@ function lookCfs_body( o )
 
   /* */
 
-  function pre( node, n, it, level, nodesStatus, outNodes2 )
+  function head( node, n, it, level, nodesStatus, outNodes2 )
   {
 
     it.level = level + 1;
@@ -2885,7 +2885,7 @@ lookCfs_body.defaults =
 
 }
 
-let lookCfs = _.routineFromPreAndBody( _look_pre, lookCfs_body );
+let lookCfs = _.routineUnite( _look_head, lookCfs_body );
 
 // --
 // orderer
@@ -2976,7 +2976,7 @@ properties.forCollection = 1;
 
 //
 
-function each_pre( routine, args )
+function each_head( routine, args )
 {
   let group = this;
   let sys = group.sys;
@@ -3137,17 +3137,17 @@ defaults.withStem = 1;
 defaults.withTerminals = 1;
 defaults.withBranches = 1;
 
-let each = _.routineFromPreAndBody( each_pre, each_body );
+let each = _.routineUnite( each_head, each_body );
 
-let eachBfs = _.routineFromPreAndBody( each_pre, each_body );
+let eachBfs = _.routineUnite( each_head, each_body );
 var defaults = eachBfs.defaults;
 defaults.method = lookBfs;
 
-let eachDfs = _.routineFromPreAndBody( each_pre, each_body );
+let eachDfs = _.routineUnite( each_head, each_body );
 var defaults = eachDfs.defaults;
 defaults.method = lookDfs;
 
-let eachCfs = _.routineFromPreAndBody( each_pre, each_body );
+let eachCfs = _.routineUnite( each_head, each_body );
 var defaults = eachCfs.defaults;
 defaults.method = lookCfs;
 
