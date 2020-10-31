@@ -1727,7 +1727,7 @@ function nodeFrom( node )
   let result = node;
   if( group.onNodeFrom )
   result = group.onNodeFrom( node );
-  _.assert( !!group.nodeIs( result ), () => `Cant get node from ${_.strShort( result )}` );
+  _.assert( !!group.nodeIs( result ), () => `Cant get node from ${_.strEntityShort( result )}` );
   return result;
 }
 
