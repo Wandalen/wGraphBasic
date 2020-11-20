@@ -911,8 +911,8 @@ function makeByNodesWithInts( test )
     return String( node );
   }
 
-  test.is( gr.sys === collection.sys );
-  test.is( gr.sys === collection.group.sys );
+  test.true( gr.sys === collection.sys );
+  test.true( gr.sys === collection.group.sys );
   test.identical( gr.sys.groups.length, 1 );
 
   gr.a = 11;
@@ -963,8 +963,8 @@ function makeByNodesWithInts( test )
   gr.sys = new _.graph.AbstractGraphSystem({ onNodeName : onNodeName });
   var collection = gr.sys.nodesCollection();
 
-  test.is( gr.sys.onNodeName === onNodeName );
-  test.is( collection.group.onNodeName === onNodeName );
+  test.true( gr.sys.onNodeName === onNodeName );
+  test.true( collection.group.onNodeName === onNodeName );
 
   collection.group.onNodeOutNodes = function onNodeOutNodes( node )
   {
@@ -980,8 +980,8 @@ function makeByNodesWithInts( test )
     return String( node );
   }
 
-  test.is( gr.sys === collection.sys );
-  test.is( gr.sys === collection.group.sys );
+  test.true( gr.sys === collection.sys );
+  test.true( gr.sys === collection.group.sys );
   test.identical( gr.sys.groups.length, 1 );
   test.identical( gr.sys.collections.length, 1 );
 
@@ -1187,7 +1187,7 @@ function collectionClone( test )
   test.identical( collection2.nodes.length, 3 );
   test.identical( gr.sys.collections.length, 2 );
   test.identical( gr.sys.groups.length, 1 );
-  test.is( collection.group === collection2.group );
+  test.true( collection.group === collection2.group );
   test.identical( collection.group.nodesToNames( collection.nodes ).toArray().original, [ 'c', 'd', 'e' ] );
   test.identical( collection2.group.nodesToNames( collection2.nodes ).toArray().original, [ 'a', 'd', 'e' ] );
   logger.log( collection.exportString() );
@@ -1197,9 +1197,9 @@ function collectionClone( test )
   test.identical( gr.sys.nodeDescriptorsHash.size, 0 );
   test.identical( gr.sys.groups.length, 0 );
   test.identical( gr.sys.groups.length, 0 );
-  test.is( group.isFinited() );
-  test.is( collection.isFinited() );
-  test.is( collection2.isFinited() );
+  test.true( group.isFinited() );
+  test.true( collection.isFinited() );
+  test.true( collection2.isFinited() );
 
   /* */
 
@@ -1420,23 +1420,23 @@ function asNodes( test )
   var dst = gr.a;
   var got = group.asNodes( dst );
   test.identical( group.nodesToNames( got ), exp );
-  test.is( _.setIs( got ) );
+  test.true( _.setIs( got ) );
 
   test.case = '[ a ]';
   var exp = [ 'a' ];
   var dst = [ gr.a ];
   var got = group.asNodes( dst );
   test.identical( group.nodesToNames( got ), exp );
-  test.is( _.arrayIs( got ) );
-  test.is( got === dst )
+  test.true( _.arrayIs( got ) );
+  test.true( got === dst )
 
   test.case = '[ a, b ]';
   var exp = [ 'a', 'b' ];
   var dst = [ gr.a, gr.b ];
   var got = group.asNodes( dst );
   test.identical( group.nodesToNames( got ), exp );
-  test.is( _.arrayIs( got ) );
-  test.is( got === dst )
+  test.true( _.arrayIs( got ) );
+  test.true( got === dst )
 
   gr.sys.finit();
 
@@ -1454,23 +1454,23 @@ function asNodes( test )
   var dst = gr.a;
   var got = group.asNodes( dst );
   test.identical( group.nodesToNames( got ), exp );
-  test.is( _.setIs( got ) );
+  test.true( _.setIs( got ) );
 
   test.case = '[ a ]';
   var exp = new Set([ 'a' ]);
   var dst = new Set([ gr.a ]);
   var got = group.asNodes( dst );
   test.identical( group.nodesToNames( got ), exp );
-  test.is( _.setIs( got ) );
-  test.is( got === dst )
+  test.true( _.setIs( got ) );
+  test.true( got === dst )
 
   test.case = '[ a, b ]';
   var exp = new Set([ 'a', 'b' ]);
   var dst = new Set([ gr.a, gr.b ]);
   var got = group.asNodes( dst );
   test.identical( group.nodesToNames( got ), exp );
-  test.is( _.setIs( got ) );
-  test.is( got === dst )
+  test.true( _.setIs( got ) );
+  test.true( got === dst )
 
   gr.sys.finit();
 
@@ -1662,7 +1662,7 @@ function sourcesFromRoots( test )
   var dst = [ gr.a ];
   var got = group.sourcesFromRoots( dst );
   test.identical( _.containerAdapter.toOriginal( group.nodesToNames( got ) ), exp );
-  test.is( got === dst );
+  test.true( got === dst );
   group.finit();
 
   test.case = '[ a, c ]';
@@ -1671,7 +1671,7 @@ function sourcesFromRoots( test )
   var dst = [ gr.a, gr.c ];
   var got = group.sourcesFromRoots( dst );
   test.identical( _.containerAdapter.toOriginal( group.nodesToNames( got ) ), exp );
-  test.is( got === dst );
+  test.true( got === dst );
   group.finit();
 
   test.case = '[ a, b ]';
@@ -1680,7 +1680,7 @@ function sourcesFromRoots( test )
   var dst = [ gr.a, gr.b ];
   var got = group.sourcesFromRoots( dst );
   test.identical( _.containerAdapter.toOriginal( group.nodesToNames( got ) ), exp );
-  test.is( got === dst );
+  test.true( got === dst );
   group.finit();
 
   test.case = '[ j, a, b ]';
@@ -1689,7 +1689,7 @@ function sourcesFromRoots( test )
   var dst = [ gr.j, gr.a, gr.b ];
   var got = group.sourcesFromRoots( dst );
   test.identical( _.containerAdapter.toOriginal( group.nodesToNames( got ) ), exp );
-  test.is( got === dst )
+  test.true( got === dst )
   group.finit();
 
   gr.sys.finit();
@@ -1708,28 +1708,28 @@ function sourcesFromRoots( test )
   var dst = [ gr.a, gr.c ];
   var got = group.sourcesFromRoots( dst );
   test.identical( _.containerAdapter.toOriginal( group.nodesToNames( got ) ), exp );
-  test.is( got === dst );
+  test.true( got === dst );
 
   test.case = '[ a ]';
   var exp = [ 'a', 'b', 'e', 'c' ];
   var dst = [ gr.a ];
   var got = group.sourcesFromRoots( dst );
   test.identical( _.containerAdapter.toOriginal( group.nodesToNames( got ) ), exp );
-  test.is( got === dst );
+  test.true( got === dst );
 
   test.case = '[ a, b ]';
   var exp = [ 'a', 'b', 'e', 'c' ];
   var dst = [ gr.a, gr.b ];
   var got = group.sourcesFromRoots( dst );
   test.identical( _.containerAdapter.toOriginal( group.nodesToNames( got ) ), exp );
-  test.is( got === dst );
+  test.true( got === dst );
 
   test.case = '[ j, a, b ]';
   var exp = [ 'j', 'a', 'b', 'e', 'c' ];
   var dst = [ gr.j, gr.a, gr.b ];
   var got = group.sourcesFromRoots( dst );
   test.identical( _.containerAdapter.toOriginal( group.nodesToNames( got ) ), exp );
-  test.is( got === dst )
+  test.true( got === dst )
 
   gr.sys.finit();
 
@@ -1747,7 +1747,7 @@ function sourcesFromRoots( test )
   var dst = new Set([ gr.a ]);
   var got = group.sourcesFromRoots( dst );
   test.identical( _.containerAdapter.toOriginal( group.nodesToNames( got ) ), exp );
-  test.is( got === dst );
+  test.true( got === dst );
   group.finit();
 
   test.case = '[ a, c ]';
@@ -1756,7 +1756,7 @@ function sourcesFromRoots( test )
   var dst = new Set([ gr.a, gr.c ]);
   var got = group.sourcesFromRoots( dst );
   test.identical( _.containerAdapter.toOriginal( group.nodesToNames( got ) ), exp );
-  test.is( got === dst );
+  test.true( got === dst );
   group.finit();
 
   test.case = '[ a, b ]';
@@ -1765,7 +1765,7 @@ function sourcesFromRoots( test )
   var dst = new Set([ gr.a, gr.b ]);
   var got = group.sourcesFromRoots( dst );
   test.identical( _.containerAdapter.toOriginal( group.nodesToNames( got ) ), exp );
-  test.is( got === dst );
+  test.true( got === dst );
   group.finit();
 
   test.case = '[ j, a, b ]';
@@ -1774,7 +1774,7 @@ function sourcesFromRoots( test )
   var dst = new Set([ gr.j, gr.a, gr.b ]);
   var got = group.sourcesFromRoots( dst );
   test.identical( _.containerAdapter.toOriginal( group.nodesToNames( got ) ), exp );
-  test.is( got === dst )
+  test.true( got === dst )
   group.finit();
 
   gr.sys.finit();
@@ -1809,28 +1809,28 @@ function rootsToAllReachable( test )
   var dst = [ gr.a ];
   var got = group.rootsToAllReachable( dst );
   test.identical( group.nodesToNames( got ), exp );
-  test.is( got === dst )
+  test.true( got === dst )
 
   test.case = '[ a, c ]';
   var exp = [ 'a', 'c', 'b', 'e', 'h', 'i', 'f' ];
   var dst = [ gr.a, gr.c ];
   var got = group.rootsToAllReachable( dst );
   test.identical( group.nodesToNames( got ), exp );
-  test.is( got === dst )
+  test.true( got === dst )
 
   test.case = '[ a, b ]';
   var exp = [ 'a', 'b', 'e', 'c', 'h', 'i', 'f' ];
   var dst = [ gr.a, gr.b ];
   var got = group.rootsToAllReachable( dst );
   test.identical( group.nodesToNames( got ), exp );
-  test.is( got === dst )
+  test.true( got === dst )
 
   test.case = '[ j, a, b ]';
   var exp = [ 'j', 'a', 'b', 'e', 'c', 'h', 'i', 'f' ];
   var dst = [ gr.j, gr.a, gr.b ];
   var got = group.rootsToAllReachable( dst );
   test.identical( group.nodesToNames( got ), exp );
-  test.is( got === dst )
+  test.true( got === dst )
 
   gr.sys.finit();
 
@@ -1854,28 +1854,28 @@ function rootsToAllReachable( test )
   var dst = new Set([ gr.a ]);
   var got = group.rootsToAllReachable( dst );
   test.identical( group.nodesToNames( got ), exp );
-  test.is( got === dst )
+  test.true( got === dst )
 
   test.case = '[ a, c ]';
   var exp = new Set([ 'a', 'c', 'b', 'e', 'h', 'i', 'f' ]);
   var dst = new Set([ gr.a, gr.c ]);
   var got = group.rootsToAllReachable( dst );
   test.identical( group.nodesToNames( got ), exp );
-  test.is( got === dst )
+  test.true( got === dst )
 
   test.case = '[ a, b ]';
   var exp = new Set([ 'a', 'b', 'e', 'c', 'h', 'i', 'f' ]);
   var dst = new Set([ gr.a, gr.b ]);
   var got = group.rootsToAllReachable( dst );
   test.identical( group.nodesToNames( got ), exp );
-  test.is( got === dst )
+  test.true( got === dst )
 
   test.case = '[ j, a, b ]';
   var exp = new Set([ 'j', 'a', 'b', 'e', 'c', 'h', 'i', 'f' ]);
   var dst = new Set([ gr.j, gr.a, gr.b ]);
   var got = group.rootsToAllReachable( dst );
   test.identical( group.nodesToNames( got ), exp );
-  test.is( got === dst )
+  test.true( got === dst )
 
   gr.sys.finit();
 
@@ -1942,7 +1942,7 @@ function rootsToAll( test )
   var got = group.rootsToAll( dst );
   test.identical( group.nodesToNames( got ), exp );
   test.identical( got.length, gr.nodes.length-3 );
-  test.is( got === dst )
+  test.true( got === dst )
 
   test.case = '[ a, c ]';
   var exp = [ 'a', 'c', 'b', 'e', 'h', 'i', 'f' ];  /* d, g, j */
@@ -1950,7 +1950,7 @@ function rootsToAll( test )
   var got = group.rootsToAll( dst );
   test.identical( group.nodesToNames( got ), exp );
   test.identical( got.length, gr.nodes.length-3 );
-  test.is( got === dst )
+  test.true( got === dst )
 
   test.case = '[ a, b ]';
   var exp = [ 'a', 'b', 'e', 'c', 'h', 'i', 'f' ];  /* d, g, j */
@@ -1958,7 +1958,7 @@ function rootsToAll( test )
   var got = group.rootsToAll( dst );
   test.identical( group.nodesToNames( got ), exp );
   test.identical( got.length, gr.nodes.length-3 );
-  test.is( got === dst )
+  test.true( got === dst )
 
   test.case = '[ j, a, b ]';
   var exp = [ 'j', 'a', 'b', 'e', 'c', 'h', 'i', 'f' ];  /* d, g */
@@ -1966,7 +1966,7 @@ function rootsToAll( test )
   var got = group.rootsToAll( dst );
   test.identical( group.nodesToNames( got ), exp );
   test.identical( got.length, gr.nodes.length-2 );
-  test.is( got === dst )
+  test.true( got === dst )
 
   gr.sys.finit();
 
@@ -1985,7 +1985,7 @@ function rootsToAll( test )
   var dst = gr.a;
   var got = group.rootsToAll( dst );
   got = _.containerAdapter.from( got );
-  test.is( got instanceof _.containerAdapter.Set );
+  test.true( got instanceof _.containerAdapter.Set );
   test.identical( group.nodesToNames( got ), exp );
   test.identical( got.length, gr.nodes.length-3 );
 
@@ -1995,10 +1995,10 @@ function rootsToAll( test )
   var dst = new Set([ gr.a ]);
   var got = group.rootsToAll( dst );
   got = _.containerAdapter.from( got );
-  test.is( got instanceof _.containerAdapter.Set );
+  test.true( got instanceof _.containerAdapter.Set );
   test.identical( group.nodesToNames( got ), exp );
   test.identical( got.length, gr.nodes.length-3 );
-  test.is( got.original === dst );
+  test.true( got.original === dst );
 
   test.case = '[ a, c ]';
   var exp = new Set([ 'a', 'c', 'b', 'e', 'h', 'i', 'f' ]); /* d, g, j */
@@ -2008,7 +2008,7 @@ function rootsToAll( test )
   got = _.containerAdapter.from( got );
   test.identical( group.nodesToNames( got ), exp );
   test.identical( got.length, gr.nodes.length-3 );
-  test.is( got.original === dst );
+  test.true( got.original === dst );
 
   test.case = '[ a, b ]';
   var exp = new Set([ 'a', 'b', 'e', 'c', 'h', 'i', 'f' ]); /* d, g, j */
@@ -2018,7 +2018,7 @@ function rootsToAll( test )
   got = _.containerAdapter.from( got );
   test.identical( group.nodesToNames( got ), exp );
   test.identical( got.length, gr.nodes.length-3 );
-  test.is( got.original === dst );
+  test.true( got.original === dst );
 
   test.case = '[ j, a, b ]';
   var exp = new Set([ 'j', 'a', 'b', 'e', 'c', 'h', 'i', 'f' ]); /* d, g */
@@ -2028,7 +2028,7 @@ function rootsToAll( test )
   got = _.containerAdapter.from( got );
   test.identical( group.nodesToNames( got ), exp );
   test.identical( got.length, gr.nodes.length-2 );
-  test.is( got.original === dst );
+  test.true( got.original === dst );
 
   gr.sys.finit();
 
