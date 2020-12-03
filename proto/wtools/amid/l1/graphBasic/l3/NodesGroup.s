@@ -1737,7 +1737,7 @@ function nodesFrom( nodes )
 {
   let group = this;
   let sys = group.sys;
-  let result = _.map( nodes, ( node ) => group.nodeFrom( node ) );
+  let result = _.map_( null, nodes, ( node ) => group.nodeFrom( node ) );
   return result;
 }
 
