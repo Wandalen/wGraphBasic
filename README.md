@@ -55,7 +55,7 @@ console.log( group.nodesExportInfo() ); // print information about nodes relatio
 git clone https://github.com/Wandalen/wgraphbasic
 cd wgraphbasic
 npm install
-node sample/Sample.s
+node sample/trivial/Sample.s
 ```
 
 ## To add to your project
