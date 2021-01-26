@@ -4,6 +4,9 @@ submodule :
   wTools :
     path : npm:///wTools
     enabled : 0 # submodule
+  wProto :
+    path : npm:///wProto
+    enabled : 0 # submodule
   wgraphbasic :
     path : hd://.
     enabled : 0 # submodule
