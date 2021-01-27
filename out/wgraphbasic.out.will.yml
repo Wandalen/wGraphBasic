@@ -6,8 +6,8 @@ consistency:
     hash: 1db87437567d226ae7ab5fa4f6956711
     size: 2019
   ../.im.will.yml: &ref_1
-    hash: c1639f864ec31c4f64d62ef0186cec45
-    size: 5119
+    hash: 91e78d0cc4d4b70d3eebc44a877809ca
+    size: 5189
 module:
   wgraphbasic.out:
     about:
@@ -184,6 +184,10 @@ module:
         enabled: 0
       wProto:
         path: npm:///wProto
+        autoExporting: 0
+        enabled: 0
+      wCopyable:
+        path: npm:///wCopyable
         autoExporting: 0
         enabled: 0
       wgraphbasic:
@@ -937,6 +941,10 @@ module:
         path: npm:///wProto
         autoExporting: 0
         enabled: 0
+      wCopyable:
+        path: npm:///wCopyable
+        autoExporting: 0
+        enabled: 0
       wgraphbasic:
         path: hd://.
         autoExporting: 0
@@ -1490,5 +1498,5 @@ module:
         hash: 1db87437567d226ae7ab5fa4f6956711
         size: 2019
       ../.im.will.yml:
-        hash: c1639f864ec31c4f64d62ef0186cec45
-        size: 5119
+        hash: 91e78d0cc4d4b70d3eebc44a877809ca
+        size: 5189
