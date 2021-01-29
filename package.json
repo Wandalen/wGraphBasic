@@ -1,23 +1,36 @@
 {
-  "name" : "wgraphbasic",
-  "version" : "0.3.192",
-  "description" : "Collection of abstract data structures and algorithms to process graphs. The module does not bound to any specific format of a graph, so providing adapters toy may use it with anyone. It implements depth-first search, breadth-first search, extracting strongly connected components, topological sort, shortest path search, and others.",
-  "author" : "Kostiantyn Wandalen <wanalen@01.school>",
-  "license" : "MIT",
-  "main" : "proto/wtools/amid/l1/graphBasic/IncludeTop.s",
-  "files" : [ "proto/wtools/amid/l1/graphBasic", "proto/wtools/Tools.s" ],
-  "scripts" : { "test" : "wtest .run 'proto/**' rapidity:-1", "docgen" : "wdocgen proto" },
-  "repository" :
-  {
-    "type" : "git",
-    "url" : "https://github.com/Wandalen/wgraphbasic.git"
+  "name": "wgraphbasic",
+  "version": "0.3.193",
+  "description": "Collection of abstract data structures and algorithms to process graphs. The module does not bound to any specific format of a graph, so providing adapters toy may use it with anyone. It implements depth-first search, breadth-first search, extracting strongly connected components, topological sort, shortest path search, and others.",
+  "author": "Kostiantyn Wandalen <wanalen@01.school>",
+  "license": "MIT",
+  "main": "proto/wtools/amid/l1/graphBasic/IncludeTop.s",
+  "files": [
+    "proto/wtools/amid/l1/graphBasic",
+    "proto/wtools/Tools.s"
+  ],
+  "scripts": {
+    "test": "wtest .run 'proto/**' rapidity:-1",
+    "docgen": "wdocgen proto"
   },
-  "bugs" :
-  {
-    "url" : "https://github.com/Wandalen/wgraphbasic/issues"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Wandalen/wgraphbasic.git"
   },
-  "dependencies" : { "wTools" : "alpha", "wProto" : "alpha", "wCopyable" : "alpha" },
-  "devDependencies" : { "eslint" : "7.1.0", "wgraphbasic" : "file:.", "wTesting" : "alpha" },
-  "keywords" : [ "wTools" ]
+  "bugs": {
+    "url": "https://github.com/Wandalen/wgraphbasic/issues"
+  },
+  "dependencies": {
+    "wTools": "alpha",
+    "wProto": "alpha",
+    "wCopyable": "alpha"
+  },
+  "devDependencies": {
+    "eslint": "7.1.0",
+    "wTesting": "alpha",
+    "wgraphbasic": "file:."
+  },
+  "keywords": [
+    "wTools"
+  ]
 }
-
