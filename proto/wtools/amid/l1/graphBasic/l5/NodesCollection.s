@@ -74,7 +74,7 @@ function _MethodFromGroup( o )
   let originalMethod = Group.prototype[ methodName ];
 
   _.assert( _.routineIs( originalMethod ), `Class ${Group.name} does not have method ${methodName}` );
-  _.assert( _.mapLike_( originalMethod.properties ) );
+  _.assert( _.mapLike( originalMethod.properties ) );
   _.assert( !!originalMethod.properties.forCollection, `Method ${o.methodName} is not for collection` );
 
   if( originalMethod.defaults )
