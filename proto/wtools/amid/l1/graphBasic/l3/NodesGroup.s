@@ -1727,7 +1727,7 @@ function nodeFrom( node )
   let result = node;
   if( group.onNodeFrom )
   result = group.onNodeFrom( node );
-  _.assert( !!group.nodeIs( result ), () => `Cant get node from ${_.strEntityShort( result )}` );
+  _.assert( !!group.nodeIs( result ), () => `Cant get node from ${_.entity.exportStringShortFine( result )}` );
   return result;
 }
 
@@ -3018,12 +3018,12 @@ function each_head( routine, args )
   _.assert
   (
     _.routineIs( o.method ),
-    () => 'Expects routine {- o.method -} either lookBfs, lookDfs, lookCfs, but got' + _.strType( o.method )
+    () => 'Expects routine {- o.method -} either lookBfs, lookDfs, lookCfs, but got' + _.entity.strType( o.method )
   );
   _.assert
   (
     o.method === group.lookBfs || o.method === group.lookDfs || o.method === group.lookCfs ,
-    () => 'Expects routine {- o.method -} either lookBfs, lookDfs, lookCfs, but got' + _.strType( o.method )
+    () => 'Expects routine {- o.method -} either lookBfs, lookDfs, lookCfs, but got' + _.entity.strType( o.method )
   );
 
   return o;
