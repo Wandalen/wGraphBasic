@@ -465,9 +465,10 @@ routine.defaults =
 {
   verbosity : 2,
   nodes : null,
+  it : null,
 }
 
-routine.properties =
+routine.properties = /* xxx : ? */
 {
   forCollection : 1,
 }
