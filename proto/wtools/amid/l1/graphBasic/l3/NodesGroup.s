@@ -2331,7 +2331,7 @@ lookBfs_body.defaults =
 
 }
 
-let lookBfs = _.routineUnite( _look_head, lookBfs_body );
+let lookBfs = _.routine.uniteCloning_( _look_head, lookBfs_body );
 
 //
 
@@ -2681,7 +2681,7 @@ lookDfs_body.defaults =
 
 }
 
-let lookDfs = _.routineUnite( _look_head, lookDfs_body );
+let lookDfs = _.routine.uniteCloning_( _look_head, lookDfs_body );
 
 //
 
@@ -2886,7 +2886,7 @@ lookCfs_body.defaults =
 
 }
 
-let lookCfs = _.routineUnite( _look_head, lookCfs_body );
+let lookCfs = _.routine.uniteCloning_( _look_head, lookCfs_body );
 
 // --
 // orderer
@@ -3138,17 +3138,17 @@ defaults.withStem = 1;
 defaults.withTerminals = 1;
 defaults.withBranches = 1;
 
-let each = _.routineUnite( each_head, each_body );
+let each = _.routine.uniteCloning_( each_head, each_body );
 
-let eachBfs = _.routineUnite( each_head, each_body );
+let eachBfs = _.routine.uniteCloning_( each_head, each_body );
 var defaults = eachBfs.defaults;
 defaults.method = lookBfs;
 
-let eachDfs = _.routineUnite( each_head, each_body );
+let eachDfs = _.routine.uniteCloning_( each_head, each_body );
 var defaults = eachDfs.defaults;
 defaults.method = lookDfs;
 
-let eachCfs = _.routineUnite( each_head, each_body );
+let eachCfs = _.routine.uniteCloning_( each_head, each_body );
 var defaults = eachCfs.defaults;
 defaults.method = lookCfs;
 
