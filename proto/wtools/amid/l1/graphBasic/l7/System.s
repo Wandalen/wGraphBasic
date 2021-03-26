@@ -36,7 +36,7 @@ Distance layers :: array of arrays of nodes. First layer has origin or zero-dist
  * @module Tools/mid/AbstractGraphs
  */
 
-let _ = _global_.wTools;
+const _ = _global_.wTools;
 let ContainerAdapter = _.containerAdapter.Abstract;
 let ContainerAdapterSet = _.containerAdapter.Set;
 let ContainerAdapterArray = _.containerAdapter.Array;
@@ -45,7 +45,7 @@ let VectorizeAll = _.routineDefaults( null, _.vectorizeAll, { vectorizingContain
 let VectorizeAny = _.routineDefaults( null, _.vectorizeAny, { vectorizingContainerAdapter : 1, unwrapingContainerAdapter : 0 } );
 let VectorizeNone = _.routineDefaults( null, _.vectorizeNone, { vectorizingContainerAdapter : 1, unwrapingContainerAdapter : 0 } );
 let Parent = null;
-let Self = wAbstractGraphSystem;
+const Self = wAbstractGraphSystem;
 function wAbstractGraphSystem( o )
 {
   return _.workpiece.construct( Self, this, arguments );
@@ -97,7 +97,7 @@ function nodesGroup( o )
   if( !o.sys )
   o.sys = sys;
 
-  _.mapSupplementNulls( o, _.mapButNulls( _.mapOnly( sys, sys.FieldsForGroup ) ) );
+  _.mapSupplementNulls( o, _.mapButNulls( _.mapOnly_( null, sys, sys.FieldsForGroup ) ) );
 
   return sys.Group( o );
 }

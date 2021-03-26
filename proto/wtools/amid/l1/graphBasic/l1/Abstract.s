@@ -4,9 +4,9 @@
 
 //
 
-let _ = _global_.wTools;
+const _ = _global_.wTools;
 let Parent = null;
-let Self = _global_.wTools.graph;
+const Self = _global_.wTools.graph;
 _.assert( !!Self );
 
 // --

@@ -9,7 +9,7 @@
  * @module Tools/mid/AbstractGraphsgraph
  */
 
-let _ = _global_.wTools;
+const _ = _global_.wTools;
 let Parent = null;
 let ContainerAdapter = _.containerAdapter.Abstract;
 let ContainerAdapterSet = _.containerAdapter.Set;
@@ -18,7 +18,7 @@ let _Vectorize = _.routineDefaults( null, _.vectorize, { vectorizingContainerAda
 let _VectorizeAll = _.routineDefaults( null, _.vectorizeAll, { vectorizingContainerAdapter : 1, unwrapingContainerAdapter : 0 } );
 let _VectorizeAny = _.routineDefaults( null, _.vectorizeAny, { vectorizingContainerAdapter : 1, unwrapingContainerAdapter : 0 } );
 let _VectorizeNone = _.routineDefaults( null, _.vectorizeNone, { vectorizingContainerAdapter : 1, unwrapingContainerAdapter : 0 } );
-let Self = wAbstractNodesGroup;
+const Self = wAbstractNodesGroup;
 function wAbstractNodesGroup( o )
 {
   return _.workpiece.construct( Self, this, arguments );
@@ -3040,7 +3040,7 @@ function each_body( o )
   _.assertRoutineOptions( each, o );
   _.assert( sys.ContainerIs( o.result ) );
 
-  let o2 = _.mapOnly( o, o.method.defaults );
+  let o2 = _.mapOnly_( null, o, o.method.defaults );
   o2.onNode = handleNode;
   o2.onUp = handleUp;
   o2.onDown = handleDown;
