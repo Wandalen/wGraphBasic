@@ -10,7 +10,7 @@
  */
 
 const _ = _global_.wTools;
-let Parent = null;
+const Parent = null;
 let ContainerAdapter = _.containerAdapter.Abstract;
 let ContainerAdapterSet = _.containerAdapter.Set;
 let ContainerAdapterArray = _.containerAdapter.Array;
@@ -1728,7 +1728,7 @@ function nodeFrom( node )
   let result = node;
   if( group.onNodeFrom )
   result = group.onNodeFrom( node );
-  _.assert( !!group.nodeIs( result ), () => `Cant get node from ${_.entity.exportStringShort( result )}` );
+  _.assert( !!group.nodeIs( result ), () => `Cant get node from ${_.entity.exportStringShallow( result )}` );
   return result;
 }
 

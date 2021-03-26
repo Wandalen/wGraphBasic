@@ -44,7 +44,7 @@ let Vectorize = _.routineDefaults( null, _.vectorize, { vectorizingContainerAdap
 let VectorizeAll = _.routineDefaults( null, _.vectorizeAll, { vectorizingContainerAdapter : 1, unwrapingContainerAdapter : 0 } );
 let VectorizeAny = _.routineDefaults( null, _.vectorizeAny, { vectorizingContainerAdapter : 1, unwrapingContainerAdapter : 0 } );
 let VectorizeNone = _.routineDefaults( null, _.vectorizeNone, { vectorizingContainerAdapter : 1, unwrapingContainerAdapter : 0 } );
-let Parent = null;
+const Parent = null;
 const Self = wAbstractGraphSystem;
 function wAbstractGraphSystem( o )
 {

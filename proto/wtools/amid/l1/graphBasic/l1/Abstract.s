@@ -5,7 +5,7 @@
 //
 
 const _ = _global_.wTools;
-let Parent = null;
+const Parent = null;
 const Self = _global_.wTools.graph;
 _.assert( !!Self );
 
