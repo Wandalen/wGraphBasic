@@ -5,7 +5,7 @@
   "author" : "Kostiantyn Wandalen <wanalen@01.school>",
   "license" : "MIT",
   "main" : "proto/wtools/amid/l1/graphBasic/IncludeTop.s",
-  "files" : [ "proto/wtools/amid/l1/graphBasic", "proto/wtools/Tools.s" ],
+  "files" : [ "proto/wtools/amid/l1/graphBasic", "proto/wtools/Tools.s", "proto/node_modules" ],
   "scripts" : { "test" : "wtest .run 'proto/**' rapidity:-1", "docgen" : "wdocgen proto" },
   "repository" :
   {
@@ -17,6 +17,6 @@
     "url" : "https://github.com/Wandalen/wgraphbasic/issues"
   },
   "dependencies" : { "wTools" : "", "wProto" : "", "wCopyable" : "" },
-  "devDependencies" : { "wTesting" : "", "eslint" : "7.1.0", "wgraphbasic" : "file:." },
+  "devDependencies" : { "wTesting" : "", "eslint" : "7.1.0" },
   "keywords" : [ "wTools" ]
 }
