@@ -929,7 +929,7 @@ function rootsExportInfoTree( roots, opts )
     let descriptors = lastNodes.get( node );
     if( !descriptors )
     return false;
-    return _.any( descriptors, ( descriptor ) => descriptor.downNode === downNode && descriptor.index === index );
+    return !!_.any( descriptors, ( descriptor ) => descriptor.downNode === downNode && descriptor.index === index );
     // lastNodes.has( prevIt.node ) && lastNodes.get( prevIt.node ).has( prevIt.down.node )
   }
 
