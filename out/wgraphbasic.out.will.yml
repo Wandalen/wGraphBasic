@@ -2,15 +2,12 @@ format: outwillfile-2.0
 root:
   - wgraphbasic.out
 consistency:
-  wgraphbasic.out.will.yml: &ref_0
-    hash: 5a4360a1413b1391ed1cbf9a511fa174
-    size: 39473
-  ../.ex.will.yml: &ref_1
+  ../.ex.will.yml: &ref_0
     hash: 1db87437567d226ae7ab5fa4f6956711
     size: 2019
-  ../.im.will.yml: &ref_2
-    hash: 91e78d0cc4d4b70d3eebc44a877809ca
-    size: 5189
+  ../.im.will.yml: &ref_1
+    hash: 0f1acf77d56c532bd9ea3d92ea54ae5c
+    size: 5154
 module:
   wgraphbasic.out:
     about:
@@ -24,19 +21,19 @@ module:
         topological sort, shortest path search, and others.
       enabled: 1
       version: 0.4.0
-      interpreters:
+      interpreters: &ref_2
         - njs >= 10.0.0
         - chrome >= 60.0.0
         - firefox >= 60.0.0
-      keywords:
+      keywords: &ref_3
         - wTools
         - graph
       license: MIT
       author: Kostiantyn Wandalen <wanalen@01.school>
-      contributors:
+      contributors: &ref_4
         - Kostiantyn Wandalen <wanalen@01.school>
       npm.name: wgraphbasic
-      npm.scripts:
+      npm.scripts: &ref_5
         test: 'wtest .run proto/** rapidity:-1'
         docgen: wdocgen .build proto
     path:
@@ -67,7 +64,7 @@ module:
       download:
         criterion:
           predefined: 1
-        path: ../
+        path: ..
       repository:
         path: 'git+https:///github.com/Wandalen/wgraphbasic.git'
       origins:
@@ -148,6 +145,10 @@ module:
           raw: compiled
           content: prime
         path: '{path::out.*=}/source/Index.s'
+      npm.proto.entry:
+        path:
+          - ../proto/wtools/amid/l1/graphBasic/IncludeTop.s
+          - ../proto/node_modules/wgraphbasic
       exported.dir.proto.export:
         criterion:
           generated: 1
@@ -721,24 +722,6 @@ module:
           content: prime
         inherit:
           - files.transpile
-      exported.proto.export:
-        opts:
-          filePath: 'reflector::exported.proto.export'
-        criterion:
-          generated: 1
-          content: proto
-          export: 1
-        inherit:
-          - files.reflect
-      exported.files.proto.export:
-        opts:
-          filePath: 'reflector::exported.files.proto.export'
-        criterion:
-          generated: 1
-          content: proto
-          export: 1
-        inherit:
-          - files.reflect
     build:
       proto.export:
         steps:
@@ -827,9 +810,8 @@ module:
           content: proto
           export: 1
     consistency:
-      wgraphbasic.out.will.yml: *ref_0
-      ../.ex.will.yml: *ref_1
-      ../.im.will.yml: *ref_2
+      ../.ex.will.yml: *ref_0
+      ../.im.will.yml: *ref_1
   ../:
     about:
       name: wgraphbasic
@@ -842,21 +824,13 @@ module:
         topological sort, shortest path search, and others.
       enabled: 1
       version: 0.4.0
-      interpreters:
-        - njs >= 10.0.0
-        - chrome >= 60.0.0
-        - firefox >= 60.0.0
-      keywords:
-        - wTools
-        - graph
+      interpreters: *ref_2
+      keywords: *ref_3
       license: MIT
       author: Kostiantyn Wandalen <wanalen@01.school>
-      contributors:
-        - Kostiantyn Wandalen <wanalen@01.school>
+      contributors: *ref_4
       npm.name: wgraphbasic
-      npm.scripts:
-        test: 'wtest .run proto/** rapidity:-1'
-        docgen: wdocgen .build proto
+      npm.scripts: *ref_5
     path:
       module.willfiles:
         criterion:
@@ -885,7 +859,7 @@ module:
       download:
         criterion:
           predefined: 1
-        path: ./
+        path: .
       repository:
         path: 'git+https:///github.com/Wandalen/wgraphbasic.git'
       origins:
@@ -966,6 +940,10 @@ module:
           raw: compiled
           content: prime
         path: '{path::out.*=}/source/Index.s'
+      npm.proto.entry:
+        path:
+          - proto/wtools/amid/l1/graphBasic/IncludeTop.s
+          - proto/node_modules/wgraphbasic
     submodule:
       wTools:
         path: 'npm:///wTools'
@@ -1532,6 +1510,5 @@ module:
         hash: 1db87437567d226ae7ab5fa4f6956711
         size: 2019
       ../.im.will.yml:
-        hash: 91e78d0cc4d4b70d3eebc44a877809ca
-        size: 5189
-      wgraphbasic.out.will.yml: *ref_0
+        hash: 0f1acf77d56c532bd9ea3d92ea54ae5c
+        size: 5154

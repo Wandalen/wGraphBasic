@@ -1,36 +1,22 @@
 {
-  "name": "wgraphbasic",
-  "version": "0.3.216",
-  "description": "Collection of abstract data structures and algorithms to process graphs. The module does not bound to any specific format of a graph, so providing adapters toy may use it with anyone. It implements depth-first search, breadth-first search, extracting strongly connected components, topological sort, shortest path search, and others.",
-  "author": "Kostiantyn Wandalen <wanalen@01.school>",
-  "license": "MIT",
-  "main": "proto/wtools/amid/l1/graphBasic/IncludeTop.s",
-  "files": [
-    "proto/wtools/amid/l1/graphBasic",
-    "proto/wtools/Tools.s",
-    "proto/node_modules"
-  ],
-  "scripts": {
-    "test": "wtest .run 'proto/**' rapidity:-1",
-    "docgen": "wdocgen proto"
+  "name" : "wgraphbasic",
+  "version" : "0.3.217",
+  "description" : "Collection of abstract data structures and algorithms to process graphs. The module does not bound to any specific format of a graph, so providing adapters toy may use it with anyone. It implements depth-first search, breadth-first search, extracting strongly connected components, topological sort, shortest path search, and others.",
+  "author" : "Kostiantyn Wandalen <wanalen@01.school>",
+  "license" : "MIT",
+  "main" : "/pro/module/wGraphBasic/proto/node_modules/wgraphbasic",
+  "files" : [ "proto/wtools/amid/l1/graphBasic", "proto/wtools/Tools.s", "proto/node_modules" ],
+  "scripts" : { "test" : "wtest .run 'proto/**' rapidity:-1", "docgen" : "wdocgen proto" },
+  "repository" :
+  {
+    "type" : "git",
+    "url" : "https://github.com/Wandalen/wgraphbasic.git"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Wandalen/wgraphbasic.git"
+  "bugs" :
+  {
+    "url" : "https://github.com/Wandalen/wgraphbasic/issues"
   },
-  "bugs": {
-    "url": "https://github.com/Wandalen/wgraphbasic/issues"
-  },
-  "dependencies": {
-    "wTools": "delta",
-    "wProto": "delta",
-    "wCopyable": "delta"
-  },
-  "devDependencies": {
-    "eslint": "7.1.0",
-    "wTesting": "delta"
-  },
-  "keywords": [
-    "wTools"
-  ]
+  "dependencies" : { "wTools" : "delta", "wProto" : "delta", "wCopyable" : "delta" },
+  "devDependencies" : { "eslint" : "7.1.0", "wTesting" : "delta" },
+  "keywords" : [ "wTools" ]
 }
