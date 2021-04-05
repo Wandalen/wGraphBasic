@@ -83,8 +83,8 @@ path:
       raw: compiled
       content: prime
   npm.proto.entry:
-    - /pro/module/wGraphBasic/proto/wtools/amid/l1/graphBasic/IncludeTop.s
-    - /pro/module/wGraphBasic/proto/node_modules/wgraphbasic
+    - proto/wtools/amid/l1/graphBasic/IncludeTop.s
+    - proto/node_modules/wgraphbasic
 reflector:
   reflect.proto:
     inherit: predefined.*
