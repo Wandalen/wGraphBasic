@@ -271,7 +271,7 @@ function _cycledJunctions( gr, o )
 {
   let context = this;
 
-  o = _.routineOptions( _cycledJunctions, o );
+  o = _.routine.options_( _cycledJunctions, o );
 
   gr.length = gr.nodes.length;
   gr.sys = new _.graph.AbstractGraphSystem

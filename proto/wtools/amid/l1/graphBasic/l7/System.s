@@ -128,7 +128,7 @@ function nodesGroupDifferent( o )
 function nodesCollection( o )
 {
   let sys = this;
-  o = _.routineOptions( nodesCollection, arguments );
+  o = _.routine.options_( nodesCollection, arguments );
   _.assert( arguments.length === 0 || arguments.length === 1 );
   if( !o.sys )
   o.sys = sys;
@@ -383,7 +383,7 @@ function nodeDescriptorDec( node )
 
 function ContainerIs( src )
 {
-  if( _.arrayLike( src ) || _.setLike( src ) )
+  if( _.argumentsArray.like( src ) || _.setLike( src ) )
   return true;
   if( src instanceof ContainerAdapter )
   return true;
@@ -425,7 +425,7 @@ function ContainerIsSet( src )
 
 function ContainerIsArray( src )
 {
-  if( _.arrayLike( src ) )
+  if( _.argumentsArray.like( src ) )
   return true;
   if( src instanceof ContainerAdapterArray )
   return true;

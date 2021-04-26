@@ -122,7 +122,7 @@ function finit()
   let group = this;
   let sys = group.sys;
 
-  let collections = _.make( group.collections );
+  let collections = _.entity.cloneShallow( group.collections );
   _.container.empty( group.collections );
 
   _.assert( collections !== group.collections );
@@ -413,7 +413,7 @@ function exportStructure( o )
   let group = this;
   let sys = group.sys;
 
-  o = _.routineOptions( exportStructure, arguments );
+  o = _.routine.options_( exportStructure, arguments );
 
   o.nodes = group.asNodesAdapter( o.nodes );
 
@@ -450,7 +450,7 @@ function exportString( o )
   let group = this;
   let sys = group.sys;
 
-  o = _.routineOptions( exportString, arguments );
+  o = _.routine.options_( exportString, arguments );
 
   o.nodes = group.asNodesAdapter( o.nodes );
 
@@ -856,7 +856,7 @@ function rootsExportInfoTree( roots, opts )
   let tab;
 
   roots = group._routineArguments1( roots );
-  opts = _.routineOptions( rootsExportInfoTree, opts );
+  opts = _.routine.options_( rootsExportInfoTree, opts );
 
   if( opts.onNodeName === null )
   opts.onNodeName = group.onNodeName || defaultOnNodeName;
@@ -1799,7 +1799,7 @@ function _routineArguments2( dstNodes, srcNodes )
   srcNodes = sys.ContainerAdapterFrom( srcNodes );
 
   if( dstNodes === null )
-  dstNodes = _.makeEmpty( srcNodes.original );
+  dstNodes = _.entity.makeEmpty( srcNodes.original );
   dstNodes = sys.ContainerAdapterFrom( dstNodes );
 
   _.assert( arguments.length === 0 || arguments.length === 1 || arguments.length === 2 );
@@ -1818,7 +1818,7 @@ function _look_head( routine, args )
   let group = this;
   let sys = group.sys;
 
-  let o = _.routineOptions( routine, args );
+  let o = _.routine.options_( routine, args );
 
   if( o.revisiting < 3 && o.visitedContainer === null )
   o.visitedContainer = o.revisiting === 2 ? new Array() : new Set();
@@ -1926,7 +1926,7 @@ function lookBfs_body( o )
   _.assert( 0 <= o.allVariants && o.allVariants <= 2 );
   _.assert( 0 <= o.allSiblings && o.allSiblings <= 2 );
 
-  _.assertRoutineOptions( lookBfs_body, o );
+  _.routine.assertOptions( lookBfs_body, o );
 
   let onNodeJunction = o.onNodeJunction === null ? group.onNodeJunction : o.onNodeJunction;
   let allDirect = o.left ? 'allLeft' : 'allRight';
@@ -2331,7 +2331,7 @@ lookBfs_body.defaults =
 
 }
 
-let lookBfs = _.routine.uniteCloning_( _look_head, lookBfs_body );
+let lookBfs = _.routine.uniteCloning_replaceByUnite( _look_head, lookBfs_body );
 
 //
 
@@ -2383,7 +2383,7 @@ function lookDfs_body( o )
   o.allSiblings = o.revisiting === 0 ? 0 : 2;
   _.assert( 0 <= o.allVariants && o.allVariants <= 2 );
   _.assert( 0 <= o.allSiblings && o.allSiblings <= 2 );
-  _.assertRoutineOptions( lookDfs_body, o );
+  _.routine.assertOptions( lookDfs_body, o );
 
   if( o.onIteration === null )
   {
@@ -2681,7 +2681,7 @@ lookDfs_body.defaults =
 
 }
 
-let lookDfs = _.routine.uniteCloning_( _look_head, lookDfs_body );
+let lookDfs = _.routine.uniteCloning_replaceByUnite( _look_head, lookDfs_body );
 
 //
 
@@ -2697,7 +2697,7 @@ function lookCfs_body( o )
   _.assert( 0 <= o.allVariants && o.allVariants <= 2 );
   _.assert( 0 <= o.allSiblings && o.allSiblings <= 2 );
 
-  _.assertRoutineOptions( lookCfs_body, o );
+  _.routine.assertOptions( lookCfs_body, o );
 
   let onNodeJunction = o.onNodeJunction === null ? group.onNodeJunction : o.onNodeJunction;
   let allDirect = o.left ? 'allLeft' : 'allRight';
@@ -2886,7 +2886,7 @@ lookCfs_body.defaults =
 
 }
 
-let lookCfs = _.routine.uniteCloning_( _look_head, lookCfs_body );
+let lookCfs = _.routine.uniteCloning_replaceByUnite( _look_head, lookCfs_body );
 
 // --
 // orderer
@@ -2994,7 +2994,7 @@ function each_head( routine, args )
   else if( o === undefined )
   o = {};
 
-  _.routineOptions( routine, o );
+  _.routine.options_( routine, o );
 
   if( o.result === null )
   o.result = [];
@@ -3037,7 +3037,7 @@ function each_body( o )
   let group = this;
   let sys = group.sys;
 
-  _.assertRoutineOptions( each, o );
+  _.routine.assertOptions( each, o );
   _.assert( sys.ContainerIs( o.result ) );
 
   let o2 = _.mapOnly_( null, o, o.method.defaults );
@@ -3138,17 +3138,17 @@ defaults.withStem = 1;
 defaults.withTerminals = 1;
 defaults.withBranches = 1;
 
-let each = _.routine.uniteCloning_( each_head, each_body );
+let each = _.routine.uniteCloning_replaceByUnite( each_head, each_body );
 
-let eachBfs = _.routine.uniteCloning_( each_head, each_body );
+let eachBfs = _.routine.uniteCloning_replaceByUnite( each_head, each_body );
 var defaults = eachBfs.defaults;
 defaults.method = lookBfs;
 
-let eachDfs = _.routine.uniteCloning_( each_head, each_body );
+let eachDfs = _.routine.uniteCloning_replaceByUnite( each_head, each_body );
 var defaults = eachDfs.defaults;
 defaults.method = lookDfs;
 
-let eachCfs = _.routine.uniteCloning_( each_head, each_body );
+let eachCfs = _.routine.uniteCloning_replaceByUnite( each_head, each_body );
 var defaults = eachCfs.defaults;
 defaults.method = lookCfs;
 

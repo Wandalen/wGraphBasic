@@ -86,7 +86,7 @@ function _MethodFromGroup( o )
         let collection = this;
         let sys = collection.sys;
         let group = collection.group;
-        o = _.routineOptions( collectionMethod, arguments );
+        o = _.routine.options_( collectionMethod, arguments );
         o.nodes = collection.nodes;
         return originalMethod.call( group, o );
       }
@@ -94,7 +94,7 @@ function _MethodFromGroup( o )
     collectionMethod = wrap[ methodName ];
     _.routineExtend( collectionMethod, originalMethod );
     _.assert( collectionMethod.defaults.nodes !== undefined );
-    collectionMethod.defaults = _.mapExtend( null, collectionMethod.defaults );
+    collectionMethod.defaults = _.props.extend( null, collectionMethod.defaults );
     delete collectionMethod.defaults.nodes;
     _.assert( collectionMethod.defaults.nodes === undefined );
     _.assert( originalMethod.defaults.nodes !== undefined );
@@ -241,7 +241,7 @@ function copy( o )
 //   let sys = collection.sys;
 //   let group = collection.group;
 //
-//   o = _.routineOptions( exportString, arguments );
+//   o = _.routine.options_( exportString, arguments );
 //   o.nodes = collection.nodes;
 //
 //   return group.exportString( o );
