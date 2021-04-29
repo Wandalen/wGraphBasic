@@ -152,7 +152,7 @@ function init( o )
 {
   let collection = this;
 
-  _.assert( _.objectIs( o ) );
+  _.assert( _.object.isBasic( o ) );
   _.assert( o.sys instanceof _.graph.AbstractGraphSystem );
 
   let sys = o.sys;
@@ -205,7 +205,7 @@ function precopy( o )
 {
   let collection = this;
 
-  _.assert( _.objectIs( o ) );
+  _.assert( _.object.isBasic( o ) );
   _.assert( arguments.length === 1 );
 
   if( o.sys !== undefined )
@@ -221,7 +221,7 @@ function copy( o )
 {
   let collection = this;
 
-  _.assert( _.objectIs( o ) );
+  _.assert( _.object.isBasic( o ) );
   _.assert( arguments.length === 1 );
 
   collection.precopy( o );

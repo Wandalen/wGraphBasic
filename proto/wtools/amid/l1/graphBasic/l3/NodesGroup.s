@@ -81,7 +81,7 @@ function _Vectorize_functor_functor( originalVectorize )
   function routineAdjust( r )
   {
     _.assert( _.strIs( r.input ) );
-    _.assert( _.objectIs( r.properties ) );
+    _.assert( _.object.isBasic( r.properties ) );
     r.input = `(*${r.input})`;
     r.properties = r.properties || Object.create( null );
     if( r.properties.forCollection === undefined )
