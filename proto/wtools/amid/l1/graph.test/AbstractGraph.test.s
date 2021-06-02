@@ -360,6 +360,9 @@ function cycledJunctionsTriplet( o )
   var b2 = { name : 'b2', nodes : [] }
   var c = { name : 'c', nodes : [] }
 
+  if( !arguments.length )
+  o = Object.create( null );
+
 /*
 
    a0 → b1 → a1
@@ -394,6 +397,9 @@ function cycledJunctions2( o )
   var e = { name : 'e', nodes : [] }
   var f = { name : 'f', nodes : [] }
   var g = { name : 'g', nodes : [] }
+
+  if( !arguments.length )
+  o = Object.create( null );
 
 /*
 
@@ -438,6 +444,9 @@ function cycledJunctions3( o )
   var f = { name : 'f', nodes : [] }
   var g = { name : 'g', nodes : [] }
 
+  if( !arguments.length )
+  o = Object.create( null );
+
 /*
 
    g ← c2
@@ -478,6 +487,9 @@ function cycledJunctions4( o )
   var e = { name : 'e', nodes : [] }
   var f = { name : 'f', nodes : [] }
   var g = { name : 'g', nodes : [] }
+
+  if( !arguments.length )
+  o = Object.create( null );
 
 /*
 
@@ -522,6 +534,9 @@ function cycledJunctions5( o )
   var e = { name : 'e', nodes : [] }
   var f = { name : 'f', nodes : [] }
   var g = { name : 'g', nodes : [] }
+
+  if( !arguments.length )
+  o = Object.create( null );
 
 /*
 
@@ -21697,7 +21712,7 @@ function rootsExportInfoTree( test )
    +-- b
    | +-- a
    +-- c
-`
+`;
   var treeInfo = group.rootsExportInfoTree( gr.a );
   test.equivalent( treeInfo, expected );
   logger.log( 'Tree' );
