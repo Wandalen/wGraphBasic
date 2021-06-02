@@ -6,8 +6,7 @@
 
 const _ = _global_.wTools;
 const Parent = null;
-const Self = _global_.wTools.graph;
-_.assert( !!Self );
+_.assert( !!_.graph );
 
 // --
 // declare
@@ -19,6 +18,6 @@ var Extension =
 
 //
 
-_.props.extend( Self, Extension );
+/* _.props.extend */Object.assign( _.graph, Extension );
 
 })();
