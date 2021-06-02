@@ -849,6 +849,8 @@ routine.input =
 function rootsExportInfoTree( roots, opts )
 {
   let group = this;
+  if( arguments.length === 1 )
+  opts = Object.create( null );
   let sys = group.sys;
   let result = '';
   let prevIt;
