@@ -2332,11 +2332,11 @@ function lookBfs( test )
   var expectedNds = [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j' ];
   var expectedUps = [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j' ];
   var expectedDws = [ 'j', 'i', 'h', 'g', 'f', 'e', 'd', 'c', 'b', 'a' ];
-  var expectedLups = _.setsFrom
-  ([
-    [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j' ],
-    [ 'b', 'e', 'f', 'b', 'a', 'g', 'a', 'c', 'h', 'h', 'i', 'f', 'h' ],
-  ]);
+  var expectedLups =
+  [
+    new Set([ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j' ]),
+    new Set([ 'b', 'e', 'f', 'b', 'a', 'g', 'a', 'c', 'h', 'h', 'i', 'f', 'h' ]),
+  ];
   var expectedLdws =
   [
     new Set([]),
@@ -3794,12 +3794,12 @@ function lookBfsExcluding( test )
     var expectedNds = [ 'a', 'b', 'd' ];
     var expectedUps = [ 'a', 'b', 'd' ];
     var expectedDws = [ 'd', 'b', 'a' ];
-    var expectedLups = _.setsFrom
-    ([
-      [ 'a' ],
-      [ 'b', 'd' ],
-      [ 'c', 'd', 'b', 'c', 'e', 'f' ],
-    ])
+    var expectedLups =
+    [
+      new Set([ 'a' ]),
+      new Set([ 'b', 'd' ]),
+      new Set([ 'c', 'd', 'b', 'c', 'e', 'f' ]),
+    ];
     var expectedLdws =
     [
       new Set([]),
@@ -3831,12 +3831,12 @@ function lookBfsExcluding( test )
     var expectedNds = [ 'b', 'c', 'd' ];
     var expectedUps = [ 'b', 'c', 'd' ];
     var expectedDws = [ 'd', 'c', 'b' ];
-    var expectedLups = _.setsFrom
-    ([
-      [ 'b' ],
-      [ 'c', 'd', 'b' ],
-      [ 'a', 'c', 'e', 'f' ]
-    ])
+    var expectedLups =
+    [
+      new Set([ 'b' ]),
+      new Set([ 'c', 'd', 'b' ]),
+      new Set([ 'a', 'c', 'e', 'f' ]),
+    ];
     var expectedLdws =
     [
       new Set([]),
@@ -3868,16 +3868,16 @@ function lookBfsExcluding( test )
     var expectedNds = [ 'a', 'b', 'd' ];
     var expectedUps = [ 'a', 'b', 'd' ];
     var expectedDws = [ 'd', 'b', 'a' ];
-    var expectedLups = _.setsFrom
-    ([
-      [ 'a' ],
-      [ 'b', 'd' ],
-    ])
+    var expectedLups =
+    [
+      new Set([ 'a' ]),
+      new Set([ 'b', 'd' ]),
+    ];
     var expectedLdws =
     [
       new Set([ 'b', 'd' ]),
       new Set([ 'a' ])
-    ]
+    ];
     test.identical( nds, expectedNds );
     test.identical( ups, expectedUps );
     test.identical( dws, expectedDws );
@@ -3903,16 +3903,16 @@ function lookBfsExcluding( test )
     var expectedNds = [ 'b', 'c', 'd' ];
     var expectedUps = [ 'b', 'c', 'd' ];
     var expectedDws = [ 'd', 'c', 'b' ];
-    var expectedLups = _.setsFrom
-    ([
-      [ 'b' ],
-      [ 'c', 'd', 'b' ]
-    ])
+    var expectedLups =
+    [
+      new Set([ 'b' ]),
+      new Set([ 'c', 'd', 'b' ]),
+    ];
     var expectedLdws =
     [
       new Set([ 'c', 'd' ]),
       new Set([ 'b' ])
-    ]
+    ];
     test.identical( nds, expectedNds );
     test.identical( ups, expectedUps );
     test.identical( dws, expectedDws );
@@ -3938,16 +3938,16 @@ function lookBfsExcluding( test )
     var expectedNds = [ 'a', 'b', 'd' ];
     var expectedUps = [ 'a', 'b', 'd' ];
     var expectedDws = [ 'd', 'b', 'a' ];
-    var expectedLups = _.setsFrom
-    ([
-      [ 'a' ],
-      [ 'b', 'd' ],
-    ])
-    var expectedLdws = _.setsFrom
-    ([
-      [ 'b', 'd' ],
-      [ 'a' ]
-    ])
+    var expectedLups =
+    [
+      new Set([ 'a' ]),
+      new Set([ 'b', 'd' ]),
+    ];
+    var expectedLdws =
+    [
+      new Set([ 'b', 'd' ]),
+      new Set([ 'a' ]),
+    ];
 
     test.identical( nds, expectedNds );
     test.identical( ups, expectedUps );
@@ -3974,16 +3974,16 @@ function lookBfsExcluding( test )
     var expectedNds = [ 'b', 'c', 'd' ];
     var expectedUps = [ 'b', 'c', 'd' ];
     var expectedDws = [ 'd', 'c', 'b' ];
-    var expectedLups = _.setsFrom
-    ([
-      [ 'b' ],
-      [ 'c', 'd', 'b' ],
-    ])
+    var expectedLups =
+    [
+      new Set([ 'b' ]),
+      new Set([ 'c', 'd', 'b' ]),
+    ];
     var expectedLdws =
     [
       new Set([ 'c', 'd' ]),
       new Set([ 'b' ])
-    ]
+    ];
     test.identical( nds, expectedNds );
     test.identical( ups, expectedUps );
     test.identical( dws, expectedDws );
@@ -4009,16 +4009,16 @@ function lookBfsExcluding( test )
     var expectedNds = [ 'a', 'b', 'd' ];
     var expectedUps = [ 'a', 'b', 'd' ];
     var expectedDws = [ 'd', 'b', 'a' ];
-    var expectedLups = _.setsFrom
-    ([
-      [ 'a' ],
-      [ 'b', 'd' ],
-    ])
+    var expectedLups =
+    [
+      new Set([ 'a' ]),
+      new Set([ 'b', 'd' ]),
+    ];
     var expectedLdws =
     [
       new Set([ 'b', 'd' ]),
       new Set([ 'a' ])
-    ]
+    ];
     test.identical( nds, expectedNds );
     test.identical( ups, expectedUps );
     test.identical( dws, expectedDws );
@@ -4044,16 +4044,16 @@ function lookBfsExcluding( test )
     var expectedNds = [ 'b', 'c', 'd' ];
     var expectedUps = [ 'b', 'c', 'd' ];
     var expectedDws = [ 'd', 'c', 'b' ];
-    var expectedLups = _.setsFrom
-    ([
-      [ 'b' ],
-      [ 'c', 'd', 'b' ]
-    ])
+    var expectedLups =
+    [
+      new Set([ 'b' ]),
+      new Set([ 'c', 'd', 'b' ]),
+    ];
     var expectedLdws =
     [
       new Set([ 'c', 'd' ]),
       new Set([ 'b' ])
-    ]
+    ];
     test.identical( nds, expectedNds );
     test.identical( ups, expectedUps );
     test.identical( dws, expectedDws );
