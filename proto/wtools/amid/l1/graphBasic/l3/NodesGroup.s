@@ -1593,7 +1593,9 @@ function asNodes( nodes )
   if( sys.ContainerIs( nodes ) )
   return nodes;
 
-  _.assert( group.nodeIs( nodes ) );
+  let nodeIs = group.nodeIs( nodes );
+  _.assert( nodeIs === true || nodeIs === _.maybe );
+  // _.assert( group.nodeIs( nodes ) ); /* Dmytro : group.nodeIs() returns symbol _.maybe, double negation can make not valid result for other symbols */
   nodes = new Set([ nodes ]);
   return nodes;
 }
