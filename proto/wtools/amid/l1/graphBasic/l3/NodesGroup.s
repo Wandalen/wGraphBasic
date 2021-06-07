@@ -1640,7 +1640,9 @@ function asNodesPreferSet( nodes )
   //   return nodes.toSet().original;
   // }
 
-  _.assert( group.nodeIs( nodes ) );
+  let nodeIs = group.nodeIs( nodes );
+  _.assert( nodeIs === true || nodeIs === _.maybe );
+  // _.assert( group.nodeIs( nodes ) );
   nodes = new Set([ nodes ]);
   return nodes;
 }
