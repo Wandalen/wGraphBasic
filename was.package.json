@@ -5,7 +5,7 @@
   "author" : "Kostiantyn Wandalen <wanalen@01.school>",
   "license" : "MIT",
   "main" : "proto/node_modules/wgraphbasic",
-  "files" : [ "proto/wtools/amid/l1/graphBasic", "proto/node_modules" ],
+  "files" : [ "proto/wtools/amid/l1/graphBasic", "proto/node_modules", "proto/node_modules/Tools", "proto/node_modules/wgraphbasic" ],
   "scripts" : { "test" : "wtest .run 'proto/**' rapidity:-1", "docgen" : "wdocgen proto" },
   "repository" :
   {
