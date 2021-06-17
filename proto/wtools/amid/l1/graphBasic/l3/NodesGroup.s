@@ -2059,7 +2059,7 @@ function lookBfs_body( o )
     o.visitedContainer.appendContainerOnce( siblingsContainer );
 
     if( nodes2.length )
-    levelUp( nodes2, it );
+    tabLevelUp( nodes2, it );
 
     /* */
 
@@ -2087,7 +2087,7 @@ function lookBfs_body( o )
 
   /* */
 
-  function levelUp( nodes2, it )
+  function tabLevelUp( nodes2, it )
   {
 
     if( !it.iterator.continue || !it.continueUp )
