@@ -1,22 +1,37 @@
 {
-  "name" : "wgraphbasic",
-  "version" : "0.3.242",
-  "description" : "Collection of abstract data structures and algorithms to process graphs. The module does not bound to any specific format of a graph, so providing adapters toy may use it with anyone. It implements depth-first search, breadth-first search, extracting strongly connected components, topological sort, shortest path search, and others.",
-  "author" : "Kostiantyn Wandalen <wanalen@01.school>",
-  "license" : "MIT",
-  "main" : "proto/node_modules/wgraphbasic",
-  "files" : [ "proto/wtools/amid/l1/graphBasic", "proto/node_modules", "proto/node_modules/Tools", "proto/node_modules/wgraphbasic" ],
-  "scripts" : { "test" : "wtest .run 'proto/**' rapidity:-1", "docgen" : "wdocgen proto" },
-  "repository" :
-  {
-    "type" : "git",
-    "url" : "https://github.com/Wandalen/wgraphbasic.git"
+  "name": "wgraphbasic",
+  "version": "0.3.243",
+  "description": "Collection of abstract data structures and algorithms to process graphs. The module does not bound to any specific format of a graph, so providing adapters toy may use it with anyone. It implements depth-first search, breadth-first search, extracting strongly connected components, topological sort, shortest path search, and others.",
+  "author": "Kostiantyn Wandalen <wanalen@01.school>",
+  "license": "MIT",
+  "main": "proto/node_modules/wgraphbasic",
+  "files": [
+    "proto/wtools/amid/l1/graphBasic",
+    "proto/node_modules",
+    "proto/node_modules/Tools",
+    "proto/node_modules/wgraphbasic"
+  ],
+  "scripts": {
+    "test": "wtest .run 'proto/**' rapidity:-1",
+    "docgen": "wdocgen proto"
   },
-  "bugs" :
-  {
-    "url" : "https://github.com/Wandalen/wgraphbasic/issues"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Wandalen/wgraphbasic.git"
   },
-  "dependencies" : { "wTools" : "", "wProto" : "", "wCopyable" : "" },
-  "devDependencies" : { "wTesting" : "", "eslint" : "7.1.0" },
-  "keywords" : [ "wTools" ]
+  "bugs": {
+    "url": "https://github.com/Wandalen/wgraphbasic/issues"
+  },
+  "dependencies": {
+    "wTools": "",
+    "wProto": "",
+    "wCopyable": ""
+  },
+  "devDependencies": {
+    "wTesting": "",
+    "eslint": "7.1.0"
+  },
+  "keywords": [
+    "wTools"
+  ]
 }
