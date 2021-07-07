@@ -22829,6 +22829,7 @@ const Proto =
 
   name : 'Tools.mid.AbstractGraph',
   silencing : 1,
+  routineTimeOut : 10000,
 
   context :
   {
