@@ -3,8 +3,8 @@ root:
   - wgraphbasic.out
 consistency:
   ../will.yml: &ref_0
-    hash: 5c700b4cf85ffcf50105761d926c753d
-    size: 6770
+    hash: 1c1ccf41385a12c8a1a645b95c5a6cd1
+    size: 6778
 module:
   wgraphbasic.out:
     about:
@@ -1477,5 +1477,5 @@ module:
           - 'build::npm'
     consistency:
       ../will.yml:
-        hash: 5c700b4cf85ffcf50105761d926c753d
-        size: 6770
+        hash: 1c1ccf41385a12c8a1a645b95c5a6cd1
+        size: 6778
