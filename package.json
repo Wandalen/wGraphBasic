@@ -1,8 +1,13 @@
 {
   "name": "wgraphbasic",
-  "version": "0.3.281",
+  "version": "0.3.282",
   "description": "Collection of abstract data structures and algorithms to process graphs. The module does not bound to any specific format of a graph, so providing adapters toy may use it with anyone. It implements depth-first search, breadth-first search, extracting strongly connected components, topological sort, shortest path search, and others.",
   "author": "Kostiantyn Wandalen <wandalen@obox.systems>",
+  "contributors": [
+    "Kostiantyn Wandalen <wandalen@obox.systems>",
+    "Volodymyr M. <volodymyr.migdal@gmail.com>",
+    "Dmytro Kryvoruchko <dm.vict.kr@gmail.com>"
+  ],
   "license": "MIT",
   "main": "proto/node_modules/wgraphbasic",
   "files": [
@@ -17,10 +22,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Wandalen/wgraphbasic.git"
+    "url": "https://github.com/Wandalen/wGraphBasic.git"
   },
   "bugs": {
-    "url": "https://github.com/Wandalen/wgraphbasic/issues"
+    "url": "https://github.com/Wandalen/wGraphBasic/issues"
   },
   "dependencies": {
     "wTools": "latest",

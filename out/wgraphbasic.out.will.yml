@@ -3,8 +3,8 @@ root:
   - wgraphbasic.out
 consistency:
   ../will.yml: &ref_0
-    hash: 1c1ccf41385a12c8a1a645b95c5a6cd1
-    size: 6778
+    hash: 0142b82f38bced1ef228a2298010899f
+    size: 6790
 module:
   wgraphbasic.out:
     about:
@@ -26,6 +26,8 @@ module:
         - graph
       contributors: &ref_2
         - Kostiantyn Wandalen <wandalen@obox.systems>
+        - Volodymyr M. <volodymyr.migdal@gmail.com>
+        - Dmytro Kryvoruchko <dm.vict.kr@gmail.com>
       interpreters: &ref_3
         - njs >= 10.0.0
         - chrome >= 60.0.0
@@ -59,13 +61,13 @@ module:
           predefined: 1
         path: ..
       repository:
-        path: 'git+https:///github.com/Wandalen/wgraphbasic.git'
+        path: 'git+https:///github.com/Wandalen/wGraphBasic.git'
       origins:
         path:
-          - 'git+https:///github.com/Wandalen/wgraphbasic.git'
+          - 'git+https:///github.com/Wandalen/wGraphBasic.git'
           - 'npm:///wgraphbasic'
       bugtracker:
-        path: 'https:///github.com/Wandalen/wgraphbasic/issues'
+        path: 'https:///github.com/Wandalen/wGraphBasic/issues'
       in:
         path: .
       out:
@@ -190,14 +192,8 @@ module:
         path: 'npm:///wCopyable'
         autoExporting: 0
         enabled: 0
-      wgraphbasic:
-        path: 'hd://..'
-        autoExporting: 0
-        enabled: 0
-        criterion:
-          development: 1
       eslint:
-        path: 'npm:///eslint#7.1.0'
+        path: 'npm:///eslint!7.32.0'
         autoExporting: 0
         enabled: 0
         criterion:
@@ -840,13 +836,13 @@ module:
           predefined: 1
         path: .
       repository:
-        path: 'git+https:///github.com/Wandalen/wgraphbasic.git'
+        path: 'git+https:///github.com/Wandalen/wGraphBasic.git'
       origins:
         path:
-          - 'git+https:///github.com/Wandalen/wgraphbasic.git'
+          - 'git+https:///github.com/Wandalen/wGraphBasic.git'
           - 'npm:///wgraphbasic'
       bugtracker:
-        path: 'https:///github.com/Wandalen/wgraphbasic/issues'
+        path: 'https:///github.com/Wandalen/wGraphBasic/issues'
       in:
         path: .
       out:
@@ -936,14 +932,8 @@ module:
         path: 'npm:///wCopyable'
         autoExporting: 0
         enabled: 0
-      wgraphbasic:
-        path: 'hd://.'
-        autoExporting: 0
-        enabled: 0
-        criterion:
-          development: 1
       eslint:
-        path: 'npm:///eslint#7.1.0'
+        path: 'npm:///eslint!7.32.0'
         autoExporting: 0
         enabled: 0
         criterion:
@@ -1477,5 +1467,5 @@ module:
           - 'build::npm'
     consistency:
       ../will.yml:
-        hash: 1c1ccf41385a12c8a1a645b95c5a6cd1
-        size: 6778
+        hash: 0142b82f38bced1ef228a2298010899f
+        size: 6790
