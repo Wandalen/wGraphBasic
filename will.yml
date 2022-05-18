@@ -16,6 +16,8 @@ about:
     - graph
   contributors:
     - Kostiantyn Wandalen <wandalen@obox.systems>
+    - Volodymyr M. <volodymyr.migdal@gmail.com>
+    - Dmytro Kryvoruchko <dm.vict.kr@gmail.com>
   interpreters:
     - njs >= 10.0.0
     - chrome >= 60.0.0
@@ -92,11 +94,11 @@ build:
       - 'build::release'
       - 'build::npm'
 path:
-  repository: 'git+https:///github.com/Wandalen/wgraphbasic.git'
+  repository: 'git+https:///github.com/Wandalen/wGraphBasic.git'
   origins:
-    - 'git+https:///github.com/Wandalen/wgraphbasic.git'
+    - 'git+https:///github.com/Wandalen/wGraphBasic.git'
     - 'npm:///wgraphbasic'
-  bugtracker: 'https:///github.com/Wandalen/wgraphbasic/issues'
+  bugtracker: 'https:///github.com/Wandalen/wGraphBasic/issues'
   in: .
   out: out
   temp:
@@ -294,13 +296,8 @@ submodule:
   wCopyable:
     path: 'npm:///wCopyable'
     enabled: 0
-  wgraphbasic:
-    path: 'hd://.'
-    enabled: 0
-    criterion:
-      development: 1
   eslint:
-    path: 'npm:///eslint#7.1.0'
+    path: 'npm:///eslint!7.32.0'
     enabled: 0
     criterion:
       development: 1
